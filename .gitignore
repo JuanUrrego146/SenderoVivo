@@ -1,0 +1,124 @@
+# ─────────────────────────────────────────────────────────────
+# Sendero Vivo — .gitignore
+# Regla dura: los assets pesados NUNCA entran a Git.
+# El material bruto de captura se guarda en dos ubicaciones
+# externas y se documenta dónde. Ver docs/arquitectura.md §8.
+# ─────────────────────────────────────────────────────────────
+
+# ── Node ─────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+.pnpm-store/
+*.tsbuildinfo
+
+# ── Build / distribución ─────────────────────────────────────
+dist/
+build/
+.cache/
+.parcel-cache/
+.vite/
+.rollup.cache/
+
+# ── Entorno ──────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Gaussian Splats: formatos pesados ────────────────────────
+# El PLY de entrenamiento es del orden de 1 GB por escena.
+*.ply
+*.splat
+*.ksplat
+
+# El SOG comprimido sigue pesando decenas de MB por escena.
+# Se publica en el hosting estático, no en el repositorio.
+*.sog
+*.lod-meta.json
+
+# SOG sin empaquetar (meta.json + imágenes WebP)
+assets/scenes/**/meta.json
+assets/scenes/**/*.webp
+
+# Proyectos de SuperSplat
+*.ssproj
+
+# ── Material bruto de captura ────────────────────────────────
+# Irrepetible sin volver a tener las mismas condiciones de luz.
+# Se respalda en dos ubicaciones externas el mismo día.
+assets/raw/
+captures/
+
+# Video de captura
+*.mov
+*.mp4
+*.MOV
+*.MP4
+*.avi
+*.mkv
+*.insv
+
+# Fotogramas extraídos del video
+frames/
+assets/frames/
+
+# Fotos en bruto
+*.dng
+*.DNG
+*.raw
+*.arw
+*.cr2
+*.cr3
+*.nef
+*.heic
+*.HEIC
+
+# Salidas intermedias de reconstrucción
+colmap/
+sparse/
+dense/
+*.bin.colmap
+
+# ── Assets pesados de terceros / intermedios ─────────────────
+*.blend1
+*.blend2
+*.fbx
+*.obj
+*.zip
+*.7z
+*.rar
+*.tar.gz
+
+# Modelos .glb optimizados SÍ se versionan (assets/models/),
+# pero los archivos fuente de modelado no:
+assets/models-src/
+*.blend
+
+# ── Audio en bruto ───────────────────────────────────────────
+assets/audio-raw/
+*.wav
+*.aiff
+*.flac
+
+# ── PlayCanvas / editor ──────────────────────────────────────
+.playcanvas/
+playcanvas-temp/
+
+# ── Herramientas y sistema ───────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+# ── Temporales de trabajo ────────────────────────────────────
+tmp/
+temp/
+*.log
