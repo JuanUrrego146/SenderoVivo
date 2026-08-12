@@ -15,26 +15,26 @@ Esa simplicidad es deliberada. El proyecto tiene el riesgo concentrado en la **p
 
 ```mermaid
 flowchart TB
-    subgraph campo["1. Campo , Quebrada La Vieja"]
+    subgraph campo["1. Campo, Quebrada La Vieja"]
         CAM["Celular iPhone 13<br/>Video 4K 60fps, manual"]
         GPS["Track GPS<br/>del recorrido"]
         AUD["Audio ambiente<br/>y cantos"]
     end
 
-    subgraph proc["2. Procesamiento , estación con GPU del equipo"]
+    subgraph proc["2. Procesamiento, estación con GPU del equipo"]
         FRM["Extraccion de cuadros"]
         SFM["SfM: poses de camara"]
         TRN["Entrenamiento 3DGS"]
         PLY["Escena .ply<br/>~1 GB"]
     end
 
-    subgraph edit["3. Edicion , navegador"]
+    subgraph edit["3. Edicion, navegador"]
         SS["SuperSplat<br/>limpieza, recorte, color"]
         ST["SplatTransform CLI<br/>compresion"]
         SOG["Escena .sog<br/>~15-20x mas liviana"]
     end
 
-    subgraph assets["4. Assets publicados , hosting estatico"]
+    subgraph assets["4. Assets publicados, hosting estatico"]
         S1["scene-01.sog"]
         S2["scene-02.sog"]
         S3["scene-03.sog"]
@@ -43,7 +43,7 @@ flowchart TB
         CFG["scenes.json<br/>pois.json<br/>track.json"]
     end
 
-    subgraph app["5. Aplicacion , PlayCanvas Engine 2.21"]
+    subgraph app["5. Aplicacion, PlayCanvas Engine 2.21"]
         ENG["Motor de recorrido"]
         POI["Sistema de POIs"]
         DATA["Capa de datos"]
@@ -518,7 +518,7 @@ Los tres archivos que gobiernan el contenido. **Cambiarlos es cambiar el product
 {
   "version": 1,
   "trail": {
-    "name": "Quebrada La Vieja , sector Claro de Luna, tramo de entrada",
+    "name": "Quebrada La Vieja, sector Claro de Luna, tramo de entrada",
     "totalLengthMeters": 200,
     "startAltitudeMeters": 2712,
     "elevationGainMeters": null,
@@ -693,24 +693,24 @@ SenderoVivo/
 │   └── backlog-jira.csv
 ├── scripts/
 │   └── sync-github.mjs         Sincroniza GitHub desde plan/backlog-jira.csv
-├── src/                        (código , desde el Sprint 3)
-│   ├── app/                    Juan      : main.js, cableado, onboarding, estados
-│   ├── engine/                 Alejandra , TourEngine, SceneLoader, TrailPath,
-│   │                                       CameraRig, QualityProfile, LodController
-│   ├── poi/                    David     : PoiManager, PoiCard, ModelViewer
-│   ├── data/                   David     : TrailDataLayer, GpsTrack
-│   ├── audio/                  David     : AmbienceController, SpatialAudioSource,
-│   │                                       AudioPlayer
-│   └── ui/                     Juan      : HudView y shell (diseño de Eybar + Alberto)
-├── styles/                     Eybar + Alberto , tokens.css, componentes
+├── src/                        (código, desde el Sprint 3)
+│   ├── app/                    Juan:      main.js, cableado, onboarding, estados
+│   ├── engine/                 Alejandra: TourEngine, SceneLoader, TrailPath,
+│   │                                      CameraRig, QualityProfile, LodController
+│   ├── poi/                    David:     PoiManager, PoiCard, ModelViewer
+│   ├── data/                   David:     TrailDataLayer, GpsTrack
+│   ├── audio/                  David:     AmbienceController, SpatialAudioSource,
+│   │                                      AudioPlayer
+│   └── ui/                     Juan:      HudView y shell (diseño de Eybar + Alberto)
+├── styles/                     Eybar + Alberto: tokens.css, componentes
 ├── config/
 │   ├── scenes.json
 │   ├── pois.json
 │   ├── track.json
 │   └── soundscape.json
 └── assets/
-    ├── raw/                    (ignorado por Git , video y capturas brutas)
-    ├── scenes/                 (ignorado , .sog)
+    ├── raw/                    (ignorado por Git, video y capturas brutas)
+    ├── scenes/                 (ignorado, .sog)
     ├── models/                 (.glb optimizados, con animación idle)
     ├── audio/
     └── text/

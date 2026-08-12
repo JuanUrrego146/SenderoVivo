@@ -79,15 +79,15 @@ Es la pantalla donde vive la interfaz. Jerarquía de arriba abajo:
 
 ```
 ┌──────────────────────────────────┐
-│  [ visor 3D , fondo black-900 ]  │  ← el modelo ocupa la mitad superior
+│   [ visor 3D, fondo black-900 ]  │  ← el modelo ocupa la mitad superior
 │      modelo girable + zoom       │     animación idle de aleteo activa
 ├──────────────────────────────────┤
 │  Colibrí chillón                 │  ← gray-050, 600, 22 px
 │  Colibri coruscans               │  ← green-300, cursiva, 15 px
 │                                  │
-│   Escuchar narración   0:48     │  ← control de audio, nunca automático
-│   Escuchar el canto             │  ← solo si type = "fauna"
-│   Ver transcripción             │  ← obligatorio si hay narración
+│   Escuchar narración      0:48   │  ← control de audio, nunca automático
+│   Escuchar el canto              │  ← solo si type = "fauna"
+│   Ver transcripción              │  ← obligatorio si hay narración
 │                                  │
 │  Vive entre 1.700 y 3.500 msnm   │  ← gray-200, 16 px
 │  Cómo identificarlo en campo…    │

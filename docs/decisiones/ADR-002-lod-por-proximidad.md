@@ -46,7 +46,7 @@ PlayCanvas ya expone LOD por distancia mediante `lodBaseDistance` y `lodMultipli
 
 ```javascript
 // src/engine/LodController.js
-app.scene.gsplat.lodBaseDistance = 2.0;  // m , primer nivel cubre la banda de alta densidad
+app.scene.gsplat.lodBaseDistance = 2.0;  // m, primer nivel cubre la banda de alta densidad
 app.scene.gsplat.lodMultiplier   = 2.0;  // 2 m → 4 m → 8 m → 16 m …
 ```
 

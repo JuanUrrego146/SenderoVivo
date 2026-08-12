@@ -34,8 +34,8 @@ const source = new pc.Entity('stream-source');
 source.addComponent('sound', {
   positional: true,
   distanceModel: 'linear',
-  refDistance: 2,      // m , [por ajustar con el material real]
-  maxDistance: 25,     // m , [por ajustar con el material real]
+  refDistance: 2,      // m, [por ajustar con el material real]
+  maxDistance: 25,     // m, [por ajustar con el material real]
   rollOffFactor: 1
 });
 source.sound.addSlot('water', { asset: waterLoopAsset, loop: true, autoPlay: false });

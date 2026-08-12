@@ -80,10 +80,10 @@ Donde dos ámbitos se tocan hay un contrato. Solo hay tres, y están escritas pa
 `TourEngine` publica la posición del recorrido; nadie la pide a la cámara.
 
 ```javascript
-// src/engine/TourEngine.js , Alejandra publica
+// src/engine/TourEngine.js, Alejandra publica
 this.events.fire('tour:progress', { distanceMeters, position, forward });
 
-// src/data/ y src/poi/ , David escucha
+// src/data/ y src/poi/, David escucha
 tourEngine.events.on('tour:progress', ({ distanceMeters }) => { … });
 ```
 
@@ -106,7 +106,7 @@ El oyente de audio espacial es la cámara. `QualityProfile` decide cuántas fuen
 
 ```javascript
 // Alejandra expone
-qualityProfile.maxSpatialAudioSources;   // 4 escritorio, 2 móvil , [por medir en S4]
+qualityProfile.maxSpatialAudioSources;   // 4 escritorio, 2 móvil, [por medir en S4]
 ```
 
 **Regla:** `src/audio/` no configura el motor, y `src/engine/` no reproduce sonido.

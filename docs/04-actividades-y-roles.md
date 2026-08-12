@@ -55,7 +55,7 @@ El enunciado pide **4 épicas × 2 sprints × 2 semanas = 16 semanas de esfuerzo
 
 ```mermaid
 gantt
-    title Cronograma Sendero Vivo , 11 ago a 28 nov de 2026
+    title Cronograma Sendero Vivo, 11 ago a 28 nov de 2026
     dateFormat YYYY-MM-DD
     axisFormat sem %W
 
