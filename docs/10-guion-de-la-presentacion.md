@@ -1,191 +1,151 @@
 # Guion de la presentación: Sendero Vivo
 
-> Versión 1,0, 11/08/2026 · Responsable: Juan Urrego
-> **Qué pide la actividad:** mostrar lo que está en **Jira**, el **repositorio**, la **visión del proyecto** y **alguna imagen de interfaz** o similar.
-> Formato: 10 diapositivas. Duración objetivo: **8–10 minutos**.
+> Versión 2,0, 11/08/2026 · Responsable: Juan Urrego
+> **Qué pide la actividad:** mostrar la **visión del proyecto**, lo que hay en **Jira**, lo que hay en el **repositorio** y alguna **imagen de interfaz** o similar.
+> **Dónde está:** diseño de Canva **SenderoVivo** (`DAHSC3fvR_Y`), 10 páginas, 1920 × 1080.
+> Duración objetivo: **8 a 10 minutos**, un minuto por diapositiva.
 
 ---
 
 ## Cómo usar este guion
 
-Cada diapositiva trae **qué se ve**, **qué se dice** y **de dónde sale el material**. El texto de "qué se dice" no es para leerlo: es el argumento, en el orden en que hay que darlo.
+Cada diapositiva trae **qué se ve**, **qué se dice** y **de dónde sale**. El texto de "qué se dice" no es para leerlo: es el argumento en el orden en que hay que darlo. La versión corta de cada argumento ya está en las **notas del orador** dentro de Canva.
 
 Regla de la presentación: **cada afirmación se muestra en pantalla o no se dice.** Si decimos que el backlog está en Jira, se ve Jira. Si decimos que el repositorio existe, se ve el repositorio.
+
+**La plantilla no se toca.** Estructura, tipografía y posiciones vienen del diseño. Lo único que cambia es el texto y las fotografías.
 
 ---
 
 ## D1 · Portada
 
-**Qué se ve**, Título, el fotograma más reconocible del sendero, los cuatro números del tramo.
+**Qué se ve:** título "Sendero Vivo", la frase de qué es el proyecto y dos fotografías.
 
-> **Sendero Vivo**
-> Recorrido virtual de 200 m del sector **Claro de Luna**, sendero de la Quebrada La Vieja, Cerros Orientales de Bogotá.
-> Capturado con Gaussian Splats. Navegable desde el navegador.
+**Qué se dice:** una frase, sin adornos: *«Capturamos 200 metros reales de un sendero de los Cerros y los volvemos un lugar que se puede recorrer, ver y escuchar desde cualquier navegador.»*
 
-**Qué se dice**, Una frase, sin adornos: *«Capturamos 200 metros reales de un sendero de los Cerros y los volvemos un lugar que se puede recorrer, tocar y escuchar desde cualquier navegador.»*
-
-**Material**, Portada de `55354807-Sendero_Vivo_Presentacion.pdf`.
+**De dónde sale:** README §1.
 
 ---
 
 ## D2 · El problema
 
-**Qué se ve**, Los tres números del sendero completo (7,3 km · +406 m · ~3 h) y las cuatro consecuencias.
+**Qué se ve:** título "Gratis, pero a ciegas" y el planteamiento del problema.
 
-**Qué se dice**, Los senderos son gratuitos y se reservan por app: el acceso está resuelto, **la información no**. De ahí salen cuatro cosas observables: la gente se devuelve a mitad de camino, se sale del trazado dentro de una reserva protegida, camina sin entender qué ve, y quien no puede subir nunca conoce el lugar.
+**Qué se dice:** los senderos son gratuitos y se reservan por la app del Acueducto. El acceso está resuelto, **la información no**. De ahí salen cuatro cosas observables: la gente se devuelve a mitad de camino, se sale del trazado dentro de una reserva protegida, camina sin entender qué ve, y quien no puede subir nunca conoce el lugar.
 
-**Material**, `docs/02-vision-de-proyecto.md` §1 · diapositiva 2 del PDF del equipo.
+**De dónde sale:** [`02-vision-de-proyecto.md`](02-vision-de-proyecto.md) §1.
 
 ---
 
-## D3 · La visión del proyecto
+## D3 · La propuesta
 
-> **Esta es la diapositiva que responde el punto "visión del proyecto" de la actividad.** Es el centro de la presentación: si solo se ve una, que sea esta.
+**Qué se ve:** título "Los 200 metros" y dos bloques: tres escenas encadenadas y recorrido guiado.
 
-**Qué se ve**, Los tres verbos, grandes, con un ejemplo debajo de cada uno.
+**Qué se dice:** comprometemos 200 metros, no el sendero completo, y esa es una decisión técnica, no de pereza. En un bosque cada metro es geometría nueva: no hay superficies repetibles y el navegador tiene un techo duro de memoria. Sobre esos 200 metros van cinco o seis puntos de interés de fauna, flora y patrimonio.
 
-| **Reconocer** | **Entender** | **Medir** |
+**De dónde sale:** README §Alcance, [`ADR-001`](decisiones/ADR-001-eleccion-de-sendero.md).
+
+---
+
+## D4 · La tecnología
+
+**Qué se ve:** título "Se captura, no se dibuja" y la explicación del método.
+
+**Qué se dice:** video 4K a 60 fps con celular, extracción de cuadros, entrenamiento 3D Gaussian Splatting, limpieza en SuperSplat, compresión a SOG y carga en PlayCanvas. Todo el stack es abierto y gratuito. La diferencia frente a un render es que quien llega al sendero **reconoce el lugar**.
+
+**De dónde sale:** [`03-avances-tecnologia.md`](03-avances-tecnologia.md).
+
+---
+
+## D5 · Lo que pedía la actividad
+
+**Qué se ve:** título "Lo que pedía la actividad" y los seis puntos resumidos.
+
+**Qué se dice:** los seis puntos están entregados y versionados. Principios de trabajo, visión de proyecto, avances de tecnología, actividades y roles con responsable, requerimientos y plan de trabajo. Se muestran las dos capturas.
+
+**De dónde sale:** documentos 01 a 04, el documento de requerimientos y el plan de trabajo.
+
+---
+
+## D6 · GitHub
+
+**Qué se ve:** título "El repositorio" y tres bloques: una rama por persona, una issue por historia, un solo origen de verdad.
+
+**Qué se dice:** ocho ramas, 51 issues, 42 etiquetas y 9 milestones. El punto que hay que defender es el último: **el backlog vive en un CSV y un script reconstruye GitHub a partir de él.** Mantener el mismo contenido escrito a mano en dos sitios garantiza que se desincronicen.
+
+**De dónde sale:** [`01-principios-de-trabajo.md`](01-principios-de-trabajo.md) §3, [`sync-github.mjs`](../scripts/sync-github.mjs).
+
+---
+
+## D7 · Jira
+
+**Qué se ve:** título "El tablero" y tres bloques: cuatro épicas, ocho sprints, quince entregas semanales.
+
+**Qué se dice:** el curso pide dos cosas que parecen contradecirse, sprints de dos semanas y entregas semanales. Se resuelven poniendo una capa sobre la otra: **el sprint es la unidad de compromiso y la semana es la unidad de entrega.** Cada historia lleva además etiqueta de semana, de W01 a W15, y no hay ninguna casilla persona × semana vacía.
+
+**De dónde sale:** [`plan_de_trabajo.md`](../plan/plan_de_trabajo.md) §7.4 y §8 bis.
+
+---
+
+## D8 · El equipo
+
+**Qué se ve:** título "Seis personas" y tres tarjetas: programación, arte 3D, diseño e interfaz.
+
+**Qué se dice:** doce horas semanales por persona es la exigencia del curso y es la base de todo el cálculo. Cada carpeta tiene un dueño y ese dueño es el revisor por defecto, así que **nadie aprueba su propio trabajo**.
+
+**De dónde sale:** [`04-actividades-y-roles.md`](04-actividades-y-roles.md), [`09-ambitos-de-los-tres-programadores.md`](09-ambitos-de-los-tres-programadores.md).
+
+---
+
+## D9 · Cronograma y campo
+
+**Qué se ve:** título "Quince semanas" y las cuatro salidas de campo.
+
+**Qué se dice:** del 11 de agosto al 28 de noviembre. La visita 1 es de **reconocimiento y no se graba**: va todo el equipo y ahí se deciden el tramo exacto, las etapas, los puntos de interés y el mapa sonoro. Este plan es una guía inicial y está previsto que la V1 lo cambie.
+
+**De dónde sale:** [`07-plan-de-visitas-de-campo.md`](07-plan-de-visitas-de-campo.md).
+
+---
+
+## D10 · Lo que sigue
+
+**Qué se ve:** título "Lo que sigue ahora" y los cuatro datos de referencia.
+
+**Qué se dice:** lo inmediato, antes de tener captura propia, es un **prototipo básico en PlayCanvas** que cargue una escena de prueba y permita moverse por ella. Sirve para validar el motor y el presupuesto de peso antes del Sprint 3. Se publica en una **web estática sobre HTTPS** y el enlace queda en el README. En paralelo, la semana 2 es la visita de reconocimiento.
+
+**De dónde sale:** README §Estado del proyecto, [`arquitectura.md`](arquitectura.md).
+
+---
+
+## Qué capturas hay que tomar y dónde van
+
+Canva no puede recibir capturas privadas de forma automática: hay que arrastrarlas dentro del diseño y soltarlas sobre la fotografía que ocupa el sitio. La imagen se sustituye y la posición no se mueve.
+
+| Diapositiva | Ranura | Qué capturar |
 |---|---|---|
-| Ver el camino real y saber a qué se va | Aves, plantas e historia del lugar, en fichas 3D | Altitud, distancia, desnivel y pendiente reales |
+| **D5** | fotografía **izquierda** (vertical) | Documento de requerimientos abierto en la **matriz de trazabilidad**, para que se vean las filas y las columnas |
+| **D5** | fotografía **derecha** (vertical) | **Jira**, backlog del proyecto SCRUM con las cuatro épicas desplegadas y el conteo de historias |
+| **D6** | fotografía **izquierda** | **GitHub**, pestaña Issues con el filtro por etiqueta `resp-` puesto, para que se vea el responsable |
+| **D6** | fotografía **derecha** | **GitHub**, lista de ramas (`Branches`) con las ocho visibles |
+| **D1, D2, D3, D4, D9** | todas | **Fotografías reales del sendero.** Las de la plantilla son de banco y no corresponden al lugar |
 
-**Qué se dice**, La decisión que define el proyecto es **capturado, no modelado**. Un bosque modelado a mano es la interpretación de un artista sobre cómo se ve un bosque. Un Gaussian Splat **es** el bosque, con su desorden y con la luz de esa mañana. Para una aplicación cuyo propósito es que reconozcas el lugar cuando llegues, esa diferencia es todo el producto.
+Además, dos capturas de apoyo por si sobra tiempo o el profesor pregunta:
 
-Cerrar con el alcance, porque un alcance cerrado también es parte de la visión: **200 m, tres escenas, 5–6 puntos de interés.** Y la lista de lo que no se hace es vinculante: no el sendero completo, no caminar libre, no app nativa, no VR, no dron, no un segundo sendero.
+- **Jira**, el tablero del Sprint 1 en curso, con las tarjetas en columnas.
+- **GitHub**, la vista de milestones, que muestra los nueve con su avance.
 
-**Material**, `docs/02-vision-de-proyecto.md` §3 y §4. En el documento de requerimientos, la visión está en la sección 3.1.
-
----
-
-## D4 · Así se ve
-
-**Qué se ve**, **Esta es la diapositiva de imagen de interfaz que pide la actividad.** Composición de tres piezas:
-
-1. La ficha de punto de interés con el visor 3D, colibrí chillón, nombre científico en cursiva, controles de audio.
-2. El HUD con los cuatro datos del recorrido.
-3. La paleta: grises, negros y verdes, con el verde-azulado de la quebrada.
-
-**Qué se dice**, La interfaz aparece sobre todo cuando el visitante toca un punto de interés. Paleta de grises, negros y verdes: **el fondo no compite con la escena capturada, y el verde marca lo vivo**. Un solo acento distinto, el verde-azulado, reservado para el agua y para los datos.
-
-**Material**, Diapositivas 3 y 6 del PDF del equipo · `docs/06-identidad-visual.md` §4 y §5 (los tokens y el esquema de la ficha están ahí, con los contrastes ya calculados).
-
-> **Pendiente de producir:** el mockup de la ficha con la paleta aplicada. Responsable: **Eybar Viasus**. Es lo único de la presentación que todavía no existe como imagen.
+> **Prioridad si no da tiempo a todo:** primero las de D6 (repositorio) y la de Jira en D5. La actividad pide explícitamente Jira y el repositorio.
 
 ---
 
-## D5 · Los puntos de interés
+## Reparto de la exposición
 
-**Qué se ve**, El recorrido con tres marcadores flotantes y una ficha abierta.
+| Diapositivas | Quién |
+|---|---|
+| D1, D2, D3 | Juan Urrego |
+| D4 | Alejandra Chambueta |
+| D5, D6, D7 | Juan Urrego |
+| D8 | Felipe Acevedo o Eybar Viasus |
+| D9, D10 | Juan Urrego |
 
-**Qué se dice**, Mientras se recorre aparecen marcadores anclados a **lugares reales** del tramo, no a la pantalla. Al tocarlos se abre la ficha:
-
-- El modelo 3D girable, **con animación de aleteo**, el ave se ve viva, no como una figura quieta.
-- Nombre común y nombre científico verificados contra fuente citable.
-- **Su canto**: grabado en el sendero.
-- A qué altura vive y **consejos para avistarla en campo**.
-
-Y hay puntos que no están vivos: **puertas derrumbadas, muros, monumentos, tramos de camino con historia**. Se ven en detalle, con su historia y con su fuente.
-
-**Material**, Diapositivas 4 y 5 del PDF del equipo · `docs/05-catalogo-fauna-y-flora.md`.
-
----
-
-## D6 · Lo que hay realmente en el sendero
-
-**Qué se ve**, Tabla corta: las cifras del Acueducto (119 aves, 63 mamíferos, 8 anfibios, 6 reptiles) y cuatro especies con su nombre científico.
-
-**Qué se dice**, El contenido no lo inventamos: la ficha oficial del Acueducto reporta 119 especies de aves y 63 de mamíferos para esta quebrada. El **zorro perro** (*Cerdocyon thous*) está reportado nominalmente para la Quebrada La Vieja y es el mamífero mediano más registrado en cámaras trampa de los Cerros.
-
-Y la regla de la que estamos más orgullosos: **lo que no está verificado contra fuente citable no se publica**, se marca como pendiente. Un dato biológico falso en una app que la gente se cree es un error del proyecto, no un detalle.
-
-**Material**, `docs/05-catalogo-fauna-y-flora.md` §2, §3 y §4, con las fuentes en §7.
-
----
-
-## D7 · El repositorio
-
-> **Esta es la diapositiva que responde el punto "repositorio" de la actividad.** Se muestra en vivo si hay red; si no, capturas.
-
-**Qué se ve**, `github.com/JuanUrrego146/SenderoVivo`, y dentro:
-
-- El árbol de ramas: `main` → `develop` → cuatro ramas de épica.
-- La lista de issues con sus etiquetas de sprint, épica y responsable.
-- Los milestones con fecha.
-- La carpeta `docs/` con los documentos.
-
-**Qué se dice**, El repositorio no es un sitio donde subir el código al final: es donde vive el trabajo desde el primer día. Ramas por épica con dueño, una issue por historia, etiquetas de sprint y de responsable, milestones con fecha real. **Cada issue cita el requerimiento que implementa**, si una tarea no traza a un RF, o sobra la tarea o falta el requerimiento.
-
-**Material**, El repositorio.
-
----
-
-## D8 · Jira
-
-> **Esta es la diapositiva que responde el punto "Jira" de la actividad.**
-
-**Qué se ve**, El proyecto **SCRUM** en Jira (unimilitar-team-ic64wte1.atlassian.net):
-
-- El tablero con las épicas E1–E4.
-- El backlog con las historias del Sprint 1 y del Sprint 2.
-- Una historia abierta, con sus subtareas y su responsable.
-
-**Qué se dice**, Cuatro épicas, ocho sprints de dos semanas, del 11 de agosto al 28 de noviembre. Cada historia tiene criterios de aceptación, subtareas repartidas por persona y su estimación en puntos. **Jira y GitHub están coordinados**: la misma numeración HU, las mismas etiquetas de sprint, los mismos responsables.
-
-Y el dato que exige el curso: **12 horas semanales por persona.** Seis personas, quince semanas: 1.080 horas de capacidad contra una demanda estimada de 1.052, con el margen del 50 % ya incluido.
-
-**Material**, Jira · `plan/backlog-jira.csv` · `plan/plan_de_trabajo.md` §6.
-
-> **Listo:** el proyecto **SCRUM** existe, con las 4 épicas y las 51 historias cargadas bajo ellas, cada una con responsable, sprint y puntos de historia.
-
----
-
-## D9 · Cómo se trabaja y quién hace qué
-
-**Qué se ve**, El equipo con sus roles y el reparto de carpetas de los tres programadores.
-
-**Qué se dice**, Seis personas, seis roles: un PM/integrador, tres programadores, un artista 3D y dos de UI/UX. Cada programador tiene **una carpeta, no un tema**: Alejandra el motor, David los puntos de interés, los datos y el audio, Juan el cableado y los contratos. Entre ámbitos hay **tres fronteras escritas**, para que nadie tenga que adivinar quién llama a quién.
-
-Y **cuatro visitas de campo de cinco horas**. La primera es la semana que viene: **reconocimiento, sin grabar**, con todo el equipo. Ahí se decide el tramo exacto, dónde van los puntos de interés y cómo suena el sendero. Grabar antes de haber decidido es como se pierde la única mañana buena.
-
-**Material**, `docs/09-ambitos-de-los-tres-programadores.md` · `docs/07-plan-de-visitas-de-campo.md`.
-
----
-
-## D10 · Cierre
-
-**Qué se ve**, La frase, y debajo el estado real.
-
-> **Capturamos un pedazo real de los Cerros y lo volvemos un lugar que se puede recorrer, tocar, escuchar y entender desde cualquier navegador.**
-
-**Qué se dice**, Estado honesto: la especificación, la arquitectura y el plan están cerrados; el repositorio y el backlog están montados; **todavía no hay código y no lo habrá hasta el Sprint 3**, porque antes hay que ir al sendero. La semana que viene vamos a reconocer el terreno.
-
-Y lo que este plan es de verdad: **una guía inicial, no el plan definitivo**. Lo que salga de la visita de reconocimiento va a cambiar cosas, y eso está previsto.
-
----
-
-## Antes de presentar: lista de comprobación
-
-| # | Qué | Responsable | Estado |
-|---|---|---|---|
-| 1 | ~~Crear el proyecto en Jira e importar el backlog~~ | Juan Urrego |  Hecho, proyecto `SCRUM`, 4 épicas y 51 historias |
-| 2 | ~~Desbloquear el push del repositorio~~ | Juan Urrego |  Hecho, 6 ramas en remoto, `develop` por defecto |
-| 3 | **Capturar los 3 pantallazos** (GitHub, Jira, documento) y soltarlos en las páginas 6, 7 y 9 de Canva | **Juan Urrego** |  **Bloqueante** |
-| 3b | Mockup de la ficha con la paleta aplicada (D4) | Eybar Viasus |  Pendiente |
-| 4 | Capturas de Jira y de GitHub por si falla la red | Juan Urrego |  Pendiente |
-| 5 | Confirmar la reserva de V1 en la app del Acueducto para las seis personas | Juan Urrego |  Pendiente |
-| 6 | Ensayo cronometrado | Todo el equipo |  Pendiente |
-
-**El punto 3 es el único bloqueante que queda.** Las diapositivas están montadas en Canva (SenderoVivoVisionYRoles) con el texto y las notas del orador; faltan las tres capturas, que no se pueden subir desde aquí porque el repositorio y Jira son privados y el conector de Canva solo acepta URLs públicas.
-
----
-
-## Qué pregunta el profesor, casi seguro
-
-| Pregunta | Respuesta corta | Dónde está el respaldo |
-|---|---|---|
-| ¿Por qué solo 200 metros? | En un bosque cada metro es geometría nueva y el navegador tiene un techo duro de memoria y de ordenamiento por profundidad. 200 m impecables valen más que 500 con ruido | `02-vision-de-proyecto.md` §4.2 |
-| ¿Y si el clima impide la captura? | Cuatro visitas, no una. V3 es la ventana de contingencia. Y el modelado 3D no depende de la captura, así que un retraso no paraliza al equipo | `07-plan-de-visitas-de-campo.md` §1.1 |
-| ¿Cómo saben que va a correr en un celular? | No lo sabemos todavía, y está escrito como riesgo R2 con tres planes de choque escalonados. Se mide en el Sprint 4 contra un dispositivo concreto | `03-avances-tecnologia.md` §7 |
-| ¿De dónde salen los datos de las especies? | De la ficha oficial del Acueducto y de fuentes citables. Lo no verificado va marcado y no se publica | `05-catalogo-fauna-y-flora.md` §7 |
-| ¿Cuántas horas dedica cada uno? | 12 h semanales por persona. Capacidad 1.080 h, demanda estimada 1.052 h con margen del 50 % incluido | `plan/plan_de_trabajo.md` §6 |
-| ¿Por qué tres programadores y no todos programando? | Porque el 48 % del esfuerzo es producción de contenido, no código. Modelar, capturar y grabar no es tiempo de programador | `plan/plan_de_trabajo.md` §6 |
-| ¿No están al 97 % de la capacidad? | Sí, y está escrito así en el plan. El colchón real son las 351 h de margen ya incluidas, no la holgura. Por eso la Etapa 4 no está comprometida | `plan/plan_de_trabajo.md` §7.1 |
+Es un reparto propuesto, no una imposición: lo importante es que **quien hizo cada cosa la cuente**.

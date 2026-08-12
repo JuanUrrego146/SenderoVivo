@@ -118,7 +118,7 @@ El resto del paquete:
 - [**7 · Plan de visitas de campo**](docs/07-plan-de-visitas-de-campo.md): las cuatro visitas, qué decide cada una y quién mira qué
 - [**8 · Ambientación sonora**](docs/08-ambientacion-sonora.md): audio binaural espacial: diseño, contrato de datos y presupuesto
 - [**9 · Ámbitos de los tres programadores**](docs/09-ambitos-de-los-tres-programadores.md): quién toca qué carpeta y las tres fronteras
-- [**10 · Guion de la presentación**](docs/10-guion-de-la-presentacion.md): las diez diapositivas y qué se dice en cada una
+- [**10 · Guion de la presentación**](docs/10-guion-de-la-presentacion.md): las diez diapositivas, qué se dice en cada una y qué capturas hay que tomar
 - [Arquitectura y diagramas](docs/arquitectura.md), casos de uso, módulos, secuencias, estados, contratos de datos e invariantes
 - [Análisis y especificación de requerimientos](docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx), **incluye la visión del proyecto**, 15 CUS, 32 RF, 16 RNF y matriz de trazabilidad
 - [Plan de trabajo](plan/plan_de_trabajo.md), estimación por RF y cronograma semana a semana
