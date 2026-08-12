@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "pois": [
+    {
+      "id": "poi-colibri-chillon",
+      "type": "fauna",
+      "commonName": "Colibrí chillón",
+      "scientificName": "Colibri coruscans",
+      "sceneId": "scene-01",
+      "anchor": { "x": 0, "y": 0, "z": 0 },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/colibri-chillon.glb",
+      "idleAnimation": "idle-flap",
+      "narrationUrl": "assets/audio/colibri-narracion.mp3",
+      "transcriptUrl": "assets/text/colibri-transcripcion.txt",
+      "birdCallUrl": "assets/audio/colibri-canto.mp3",
+      "altitudeRange": "1.700 – 3.500 msnm",
+      "fieldIdTips": "[por completar]",
+      "sightingTips": "[por completar tras V1]"
+    },
+    {
+      "id": "poi-muro-antiguo",
+      "type": "patrimonio",
+      "commonName": "[por identificar en V1]",
+      "sceneId": "scene-02",
+      "anchor": { "x": 0, "y": 0, "z": 0 },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/muro-antiguo.glb",
+      "historicalNote": "[por verificar]",
+      "period": "[por verificar]",
+      "sourceUrl": ""
+    }
+  ]
+}

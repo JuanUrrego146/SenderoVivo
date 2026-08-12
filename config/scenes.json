@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "trail": {
+    "name": "Quebrada La Vieja, sector Claro de Luna, tramo de entrada",
+    "totalLengthMeters": 200,
+    "startAltitudeMeters": 2712,
+    "elevationGainMeters": null,
+    "averageSlopePercent": null
+  },
+  "scenes": [
+    {
+      "id": "scene-01",
+      "order": 1,
+      "sogUrl": "assets/scenes/scene-01.sog",
+      "entryDistanceMeters": 0,
+      "exitDistanceMeters": 70,
+      "captureDate": "[por definir tras la captura V2]"
+    },
+    {
+      "id": "scene-02",
+      "order": 2,
+      "sogUrl": "assets/scenes/scene-02.sog",
+      "entryDistanceMeters": 70,
+      "exitDistanceMeters": 140,
+      "captureDate": "[por definir tras la captura V2]"
+    },
+    {
+      "id": "scene-03",
+      "order": 3,
+      "sogUrl": "assets/scenes/scene-03.sog",
+      "entryDistanceMeters": 140,
+      "exitDistanceMeters": 200,
+      "captureDate": "[por definir tras la captura V2]"
+    }
+  ]
+}
