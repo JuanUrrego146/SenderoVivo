@@ -122,3 +122,6 @@ desktop.ini
 tmp/
 temp/
 *.log
+
+# Archivos de bloqueo de Word
+~$*
