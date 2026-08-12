@@ -1,7 +1,7 @@
-# Plan de visitas de campo — Sendero Vivo
+# Plan de visitas de campo: Sendero Vivo
 
-> Versión 1,0 — 11/08/2026 · Responsable: Juan Urrego
-> Sector: **Claro de Luna — Quebrada La Vieja**, Cerros Orientales de Bogotá.
+> Versión 1,0, 11/08/2026 · Responsable: Juan Urrego
+> Sector: **Claro de Luna, Quebrada La Vieja**, Cerros Orientales de Bogotá.
 > Compromiso de tramo: **200 m desde el inicio del sendero.**
 
 ---
@@ -22,18 +22,18 @@
 ### 1.1 Cuáles están en el camino crítico
 
 ```
-V1 (reconocer) ──► V2 (capturar) ──► procesamiento ──► M2
+V1 (reconocer) ── V2 (capturar) ── procesamiento ── M2
                         │
-        V3 (audio y complemento) ····► S5 (fichas)     ← holgura
+        V3 (audio y complemento) ···· S5 (fichas)     ← holgura
                         │
-                       V4 (verificar) ·····► S4         ← holgura
+                       V4 (verificar) ····· S4         ← holgura
 ```
 
 **Solo V1 y V2 bloquean.** Si V3 o V4 se caen por clima, el proyecto sigue. Si V2 se cae, se activa la ventana de contingencia dentro de V3. Esto es lo que hace que cuatro visitas sean más seguras que dos, no solo más caras.
 
 ---
 
-## 2. V1 · Visita de reconocimiento — **sin grabar**
+## 2. V1 · Visita de reconocimiento: **sin grabar**
 
 | | |
 |---|---|
@@ -108,7 +108,7 @@ Se ejecuta el protocolo de captura **exactamente como está documentado** (`03-a
 
 Tiene doble función, y se decide cuál al terminar V2:
 
-- **Si V2 salió bien:** se dedica a lo que V2 no puede dar — **grabación de audio ambiente binaural** en las posiciones del mapa sonoro (§6), cantos de aves a primera hora, fotos de detalle para modelado, y el registro fotográfico de los POIs patrimoniales.
+- **Si V2 salió bien:** se dedica a lo que V2 no puede dar, **grabación de audio ambiente binaural** en las posiciones del mapa sonoro (§6), cantos de aves a primera hora, fotos de detalle para modelado, y el registro fotográfico de los POIs patrimoniales.
 - **Si V2 falló** (clima, material inservible): es la **ventana de contingencia** y se repite la captura completa. Es la sustituta de la "salida de contingencia" del plan original.
 
 ### V4 · Verificación en campo
@@ -161,11 +161,11 @@ Se introduce un tipo nuevo de POI: **`"patrimonio"`**.
 | `period` | Época aproximada. `[por verificar]` si no hay fuente |
 | `sourceUrl` | **Obligatorio.** La fuente citable de la afirmación histórica |
 
-**Regla igual de dura que con la biología:** un dato histórico sin fuente citable no se publica. Se marca `[por verificar]` y la ficha muestra lo que sí se sabe — que hay un muro, cómo es, dónde está — sin inventarle una historia.
+**Regla igual de dura que con la biología:** un dato histórico sin fuente citable no se publica. Se marca `[por verificar]` y la ficha muestra lo que sí se sabe, que hay un muro, cómo es, dónde está, sin inventarle una historia.
 
-**Candidatos ya conocidos:** el **puente de madera** (ya es POI confirmado) y la **señalización del sendero**. El resto —puertas, muros, monumentos, tramos de camino— **se identifican en V1**: hoy no sabemos qué hay y no vamos a suponerlo. Alberto Alemán lleva ese encargo.
+**Candidatos ya conocidos:** el **puente de madera** (ya es POI confirmado) y la **señalización del sendero**. El resto, puertas, muros, monumentos, tramos de camino, **se identifican en V1**: hoy no sabemos qué hay y no vamos a suponerlo. Alberto Alemán lleva ese encargo.
 
-> Contexto útil para la investigación posterior: los Cerros Orientales tienen un patrimonio de infraestructura de acueducto documentado —el sendero del Río San Francisco – Chorro de Padilla es el origen del primer acueducto de Bogotá—. Si en la Quebrada La Vieja aparece infraestructura análoga, hay dónde buscar fuente. Pero **no se afirma nada hasta verlo y verificarlo**.
+> Contexto útil para la investigación posterior: los Cerros Orientales tienen un patrimonio de infraestructura de acueducto documentado, el sendero del Río San Francisco – Chorro de Padilla es el origen del primer acueducto de Bogotá. Si en la Quebrada La Vieja aparece infraestructura análoga, hay dónde buscar fuente. Pero **no se afirma nada hasta verlo y verificarlo**.
 
 ---
 
@@ -185,7 +185,7 @@ Diseño técnico completo: [`08-ambientacion-sonora.md`](08-ambientacion-sonora.
 
 ---
 
-## 7. Reglas de campo — no negociables
+## 7. Reglas de campo: no negociables
 
 Vienen de `01-principios-de-trabajo.md` §9 y aplican a las cuatro visitas:
 

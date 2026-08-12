@@ -1,8 +1,8 @@
 # Sendero Vivo
 
-**Recorre 200 metros reales del sendero de la Quebrada La Vieja —sector Claro de Luna, Cerros Orientales de Bogotá— desde el navegador. Reconstruido con Gaussian Splats a partir de captura real, no modelado a mano.**
+**Recorre 200 metros reales del sendero de la Quebrada La Vieja, sector Claro de Luna, Cerros Orientales de Bogotá, desde el navegador. Reconstruido con Gaussian Splats a partir de captura real, no modelado a mano.**
 
-📦 Repositorio: [`JuanUrrego146/SenderoVivo`](https://github.com/JuanUrrego146/SenderoVivo)
+Repositorio: [`JuanUrrego146/SenderoVivo`](https://github.com/JuanUrrego146/SenderoVivo)
 
 ---
 
@@ -10,13 +10,13 @@
 
 Los senderos de los Cerros Orientales son gratuitos y se reservan por la app del Acueducto. El acceso está resuelto; la información no. Quien va por primera vez no sabe cuánto dura, qué tan duro es, hasta dónde va a alcanzar a llegar, ni por dónde va exactamente el camino autorizado. El sendero completo son **7,3 km, +406 m de desnivel y unas 3 horas**. La gente se devuelve a mitad de camino, se sale del trazado dentro de una reserva protegida, camina sobre bosque altoandino sin entender qué ve, y quien no puede subir nunca conoce el lugar.
 
-Sendero Vivo reconstruye **los primeros 200 metros** —el tramo de entrada, justo donde el visitante decide si sigue o se devuelve— y lo hace recorrible desde el navegador. La reconstrucción se hace con **Gaussian Splatting**: el sendero se **captura**, no se dibuja. Esa es la diferencia entre ver el render de alguien y reconocer el lugar cuando llegas.
+Sendero Vivo reconstruye **los primeros 200 metros**, el tramo de entrada, justo donde el visitante decide si sigue o se devuelve, y lo hace recorrible desde el navegador. La reconstrucción se hace con **Gaussian Splatting**: el sendero se **captura**, no se dibuja. Esa es la diferencia entre ver el render de alguien y reconocer el lugar cuando llegas.
 
 La propuesta se sostiene en tres verbos:
 
-- **Reconocer** — ver el camino real y saber a qué se va.
-- **Entender** — aves, plantas, ecosistema e historia del lugar en fichas 3D ancladas a lugares reales del tramo.
-- **Medir** — altitud, distancia, desnivel y pendiente reales, tomados con GPS en campo.
+- **Reconocer**: ver el camino real y saber a qué se va.
+- **Entender**: aves, plantas, ecosistema e historia del lugar en fichas 3D ancladas a lugares reales del tramo.
+- **Medir**: altitud, distancia, desnivel y pendiente reales, tomados con GPS en campo.
 
 Y una cuarta dimensión que no es visual: **ambientación sonora binaural con audio espacial 3D**. La quebrada se oye donde la quebrada está.
 
@@ -52,7 +52,7 @@ git pull origin develop
 | Motor | **PlayCanvas Engine 2.21.3** (MIT) |
 | Reconstrucción 3D | **3D Gaussian Splatting** (Kerbl et al., SIGGRAPH 2023) |
 | Edición de splats | **SuperSplat** (MIT, corre en el navegador) |
-| Formato de entrega | **SOG** — Spatially Ordered Gaussians, v2 |
+| Formato de entrega | **SOG**, Spatially Ordered Gaussians, v2 |
 | Compresión | **SplatTransform** CLI (`splat-transform in.ply out.sog`) |
 | Captura | Celular (iPhone 13 o equivalente), video 4K a 60 fps, todo manual |
 | Procesamiento | Estación con GPU del equipo |
@@ -74,7 +74,7 @@ git pull origin develop
 
 ### SÍ
 
-- **200 m desde el inicio del sendero**, en **3 escenas** encadenadas por etapas (0–70, 70–140, 140–200 m).
+- **200 m desde el inicio del sendero**: en **3 escenas** encadenadas por etapas (0–70, 70–140, 140–200 m).
 - **5–6 puntos de interés** completos, de tres tipos: **fauna**, **flora** y **patrimonio**.
 - **Fichas 3D**: modelo girable con zoom y **animación idle de aleteo**, nombre común y científico, narración, canto, altura de distribución, identificación en campo y **consejos de avistamiento**.
 - **Puntos de interés no vivos**: puertas derrumbadas, muros, monumentos y tramos de camino, con su historia y su fuente.
@@ -82,21 +82,21 @@ git pull origin develop
 - **Nivel de detalle por proximidad al recorrido** (LOD).
 - **Ambientación sonora binaural con audio espacial 3D** durante todo el recorrido.
 - **Datos del recorrido en pantalla**: altitud, distancia recorrida y restante, desnivel acumulado, pendiente, tiempo estimado al siguiente punto.
-- **Web para escritorio y celular**, sin instalación.
+- **Web para escritorio y celular**: sin instalación.
 
-### NO — lista vinculante
+### NO: lista vinculante
 
 Esto **no** se hace, y tampoco se propone como fase 2:
 
-- ❌ El sendero completo de 7,3 km
-- ❌ Caminar libre tipo videojuego
-- ❌ App nativa iOS/Android
-- ❌ Realidad virtual
-- ❌ Multijugador o funciones sociales
-- ❌ Captura con dron
-- ❌ Más de un sendero
+- El sendero completo de 7,3 km
+- Caminar libre tipo videojuego
+- App nativa iOS/Android
+- Realidad virtual
+- Multijugador o funciones sociales
+- Captura con dron
+- Más de un sendero
 
-**Por qué 200 m y no el sendero completo:** en un bosque cada metro es geometría nueva —no hay superficies repetibles— y el navegador tiene un techo duro de memoria y de coste de ordenamiento por profundidad. Capturar 7,3 km produciría un archivo que ningún celular puede cargar.
+**Por qué 200 m y no el sendero completo:** en un bosque cada metro es geometría nueva, no hay superficies repetibles, y el navegador tiene un techo duro de memoria y de coste de ordenamiento por profundidad. Capturar 7,3 km produciría un archivo que ningún celular puede cargar.
 
 > **Ampliar el tramo** (etapa 4, metros 200–260) **no está comprometido.** Se decide al cerrar el Sprint 2, con datos reales de peso y rendimiento. Ver [plan de trabajo](plan/plan_de_trabajo.md) §6.
 
@@ -106,24 +106,24 @@ Esto **no** se hace, y tampoco se propone como fase 2:
 
 Los cuatro primeros documentos son la entrega de la actividad del curso:
 
-- [**1 · Principios de trabajo**](docs/01-principios-de-trabajo.md) — definición de "hecho", ramas, revisión de código, ceremonias, canales, bloqueos
-- [**2 · Visión de proyecto**](docs/02-vision-de-proyecto.md) — problema, para quién, propuesta de valor, alcance, criterios de éxito, riesgos
-- [**3 · Avances a nivel de tecnología**](docs/03-avances-tecnologia.md) — investigación de 3DGS, SuperSplat, SOG y PlayCanvas; riesgos técnicos; qué queda por validar
-- [**4 · Actividades y roles**](docs/04-actividades-y-roles.md) — 4 épicas, 8 sprints, historias, criterios de aceptación y subtareas por persona
+- [**1 · Principios de trabajo**](docs/01-principios-de-trabajo.md): definición de "hecho", ramas, revisión de código, ceremonias, canales, bloqueos
+- [**2 · Visión de proyecto**](docs/02-vision-de-proyecto.md): problema, para quién, propuesta de valor, alcance, criterios de éxito, riesgos
+- [**3 · Avances a nivel de tecnología**](docs/03-avances-tecnologia.md): investigación de 3DGS, SuperSplat, SOG y PlayCanvas; riesgos técnicos; qué queda por validar
+- [**4 · Actividades y roles**](docs/04-actividades-y-roles.md): 4 épicas, 8 sprints, historias, criterios de aceptación y subtareas por persona
 
 El resto del paquete:
 
-- [**5 · Catálogo de fauna y flora**](docs/05-catalogo-fauna-y-flora.md) — qué hay realmente en el sendero, con fuentes y nivel de verificación
-- [**6 · Identidad visual**](docs/06-identidad-visual.md) — paleta de grises, negros y verdes, tipografía, tokens y contrastes calculados
-- [**7 · Plan de visitas de campo**](docs/07-plan-de-visitas-de-campo.md) — las cuatro visitas, qué decide cada una y quién mira qué
-- [**8 · Ambientación sonora**](docs/08-ambientacion-sonora.md) — audio binaural espacial: diseño, contrato de datos y presupuesto
-- [**9 · Ámbitos de los tres programadores**](docs/09-ambitos-de-los-tres-programadores.md) — quién toca qué carpeta y las tres fronteras
-- [**10 · Guion de la presentación**](docs/10-guion-de-la-presentacion.md) — las diez diapositivas y qué se dice en cada una
-- [Arquitectura y diagramas](docs/arquitectura.md) — casos de uso, módulos, secuencias, estados, contratos de datos e invariantes
-- [Análisis y especificación de requerimientos](docs/F_Analisis_de_Requerimientos_V1,1_SenderoVivo.docx) — **incluye la visión del proyecto**, 15 CUS, 32 RF, 16 RNF y matriz de trazabilidad
-- [Plan de trabajo](plan/plan_de_trabajo.md) — estimación por RF y cronograma semana a semana
+- [**5 · Catálogo de fauna y flora**](docs/05-catalogo-fauna-y-flora.md): qué hay realmente en el sendero, con fuentes y nivel de verificación
+- [**6 · Identidad visual**](docs/06-identidad-visual.md): paleta de grises, negros y verdes, tipografía, tokens y contrastes calculados
+- [**7 · Plan de visitas de campo**](docs/07-plan-de-visitas-de-campo.md): las cuatro visitas, qué decide cada una y quién mira qué
+- [**8 · Ambientación sonora**](docs/08-ambientacion-sonora.md): audio binaural espacial: diseño, contrato de datos y presupuesto
+- [**9 · Ámbitos de los tres programadores**](docs/09-ambitos-de-los-tres-programadores.md): quién toca qué carpeta y las tres fronteras
+- [**10 · Guion de la presentación**](docs/10-guion-de-la-presentacion.md): las diez diapositivas y qué se dice en cada una
+- [Arquitectura y diagramas](docs/arquitectura.md), casos de uso, módulos, secuencias, estados, contratos de datos e invariantes
+- [Análisis y especificación de requerimientos](docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx), **incluye la visión del proyecto**, 15 CUS, 32 RF, 16 RNF y matriz de trazabilidad
+- [Plan de trabajo](plan/plan_de_trabajo.md), estimación por RF y cronograma semana a semana
 - [Backlog importable a Jira](plan/backlog-jira.csv)
-- **Contexto para vibe coding** — `context-for-vibe-coding.md`. **No está en el repositorio a propósito**: vive en la máquina de cada quien. Pídeselo a Juan y déjalo en la raíz del proyecto
+- **Contexto para vibe coding**: `context-for-vibe-coding.md`. **No está en el repositorio a propósito**: vive en la máquina de cada quien. Pídeselo a Juan y déjalo en la raíz del proyecto
 
 **Decisiones de arquitectura:**
 
@@ -131,6 +131,65 @@ El resto del paquete:
 - [ADR-002 · Nivel de detalle por proximidad](docs/decisiones/ADR-002-lod-por-proximidad.md)
 - [ADR-003 · Audio binaural espacial](docs/decisiones/ADR-003-audio-binaural-espacial.md)
 - [ADR-004 · Reparto de ámbitos entre programadores](docs/decisiones/ADR-004-reparto-de-ambitos.md)
+
+---
+
+## Estado del proyecto
+
+Fecha de corte: **11 de agosto de 2026**, cierre de la primera semana. La planeación está terminada y cargada en las dos herramientas. El código arranca en el Sprint 3.
+
+### Lo que pedía la actividad y dónde está
+
+| Punto de la actividad | Entregado en |
+|---|---|
+| Principios de trabajo del equipo | [`docs/01-principios-de-trabajo.md`](docs/01-principios-de-trabajo.md) |
+| Visión de proyecto | [`docs/02-vision-de-proyecto.md`](docs/02-vision-de-proyecto.md) y §3.2 del documento de requerimientos |
+| Avances a nivel de tecnología | [`docs/03-avances-tecnologia.md`](docs/03-avances-tecnologia.md) |
+| Actividades y roles, con responsable | [`docs/04-actividades-y-roles.md`](docs/04-actividades-y-roles.md), y una persona asignada en cada issue |
+| Análisis y especificación de requerimientos | [`docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx`](docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx) |
+| Plan de trabajo con estimación | [`plan/plan_de_trabajo.md`](plan/plan_de_trabajo.md) |
+| Tablero de gestión | Jira, proyecto **SCRUM** |
+| Repositorio con control de versiones | este repositorio |
+
+### GitHub
+
+| Elemento | Estado |
+|---|---|
+| Ramas | 8: `main`, `develop` y **una por persona** (`dev/<nombre>`) |
+| Issues | **51**, una por historia de usuario, con etiqueta `resp-<persona>` |
+| Etiquetas | **42**: épica, sprint, responsable, tipo y semana (`W01`–`W15`) |
+| Milestones | **9**: S1, S2, S2b, S3, S4, S5, S6, S7 y Cierre |
+| Fuente de verdad del backlog | [`plan/backlog-jira.csv`](plan/backlog-jira.csv) |
+| Sincronización | `node scripts/sync-github.mjs` lee el CSV y crea o actualiza todo. Es idempotente |
+
+El backlog no está escrito a mano en dos sitios: el CSV manda y el script reconstruye GitHub a partir de él.
+
+### Jira
+
+Proyecto **SCRUM**, mismo contenido que el CSV y que las issues de GitHub.
+
+| Elemento | Cantidad |
+|---|---|
+| Épicas | 4 |
+| Historias | 51 |
+| Subtareas | 163 |
+| Puntos de historia | 397 |
+| Sprints | 8 de dos semanas |
+
+**Dos ritmos a la vez, y no se contradicen.** El **sprint** es la unidad de compromiso: lo que el equipo se compromete a terminar. La **semana** es la unidad de entrega: el curso exige entregar algo cada viernes. Por eso cada historia lleva además una etiqueta de semana (`W01` a `W15`), y ninguna persona tiene una semana vacía en las 15. La revisión de ese reparto está en [`plan/plan_de_trabajo.md`](plan/plan_de_trabajo.md) §7.4 y §8 bis.
+
+### Trabajo con ramas
+
+Cada quien tiene la suya y sube a ella cuando quiera. Se fusiona a `develop` por Pull Request al menos una vez por semana, coincidiendo con la entrega del viernes. No hay ramas por sprint ni por épica: las épicas se solapan y acabarían con dos personas dentro de la misma rama.
+
+### Lo que sigue
+
+1. **Prototipo básico en PlayCanvas.** Cargar una escena de prueba y moverse por ella, para validar el motor antes de tener captura propia.
+2. **Publicarlo en una web estática sobre HTTPS** y dejar el enlace en este README.
+3. **Visita de reconocimiento V1** (semana 2, 18–24 de agosto, todo el equipo, sin grabar): se decide el tramo exacto, las etapas, los POIs y el mapa sonoro.
+4. **Captura V2** (semana 3) y primer procesamiento a SOG.
+
+> **Enlace del prototipo:** `[pendiente de publicar]`
 
 ---
 
@@ -145,7 +204,7 @@ npm install
 npm run dev
 ```
 
-**Requisitos:** Node 24+ y un navegador vigente. Nada más — no hay backend, ni base de datos, ni servicios externos.
+**Requisitos:** Node 24+ y un navegador vigente. Nada más, no hay backend, ni base de datos, ni servicios externos.
 
 Para trabajar con las escenas capturadas:
 
@@ -220,12 +279,12 @@ Cada carpeta tiene un dueño. Tocar la carpeta de otro se avisa en la issue **an
 
 | Persona | Rol | Épica |
 |---|---|---|
-| **Juan Urrego** | PM + Programador / Integrador — arquitectura, contratos de datos, integración, despliegue | E1 |
-| **Alejandra Chambueta** | Programadora — motor de recorrido, carga de escenas SOG, cámara, LOD, rendimiento | E2 |
-| **David Beltrán** | Programador — sistema de POIs, fichas, audio espacial, capa de datos GPS | E3, E4 |
-| **Felipe Acevedo** | Artista 3D — modelado, animación y rigging de aves y plantas; optimización para web | E3 |
-| **Eybar Viasus** | Diseñador UI/UX — identidad visual, ficha de POI, visor 3D, HUD, sistema de diseño | E4 |
-| **Alberto Alemán** | UI/UX — onboarding, flujo de recorrido, contenido patrimonial, responsive, accesibilidad | E4 |
+| **Juan Urrego** | PM + Programador / Integrador, arquitectura, contratos de datos, integración, despliegue | E1 |
+| **Alejandra Chambueta** | Programadora, motor de recorrido, carga de escenas SOG, cámara, LOD, rendimiento | E2 |
+| **David Beltrán** | Programador, sistema de POIs, fichas, audio espacial, capa de datos GPS | E3, E4 |
+| **Felipe Acevedo** | Artista 3D, modelado, animación y rigging de aves y plantas; optimización para web | E3 |
+| **Eybar Viasus** | Diseñador UI/UX, identidad visual, ficha de POI, visor 3D, HUD, sistema de diseño | E4 |
+| **Alberto Alemán** | UI/UX, onboarding, flujo de recorrido, contenido patrimonial, responsive, accesibilidad | E4 |
 
 **Dedicación: 12 horas semanales por persona.**
 
@@ -245,7 +304,7 @@ Cada carpeta tiene un dueño. Tocar la carpeta de otro se avisa en la issue **an
 | S5 | E3 | 6 oct – 19 oct | Marcadores, fichas, visor 3D, audio de ficha y **ambientación espacial** |
 | S6 | E4 | 20 oct – 2 nov | Track GPS, HUD de altitud/distancia/desnivel/pendiente |
 | S7 | E4 | 3 nov – 16 nov | UI/UX final, responsive, onboarding, accesibilidad |
-| Cierre | — | 17 nov – 28 nov | Integración, pruebas, despliegue y entrega |
+| Cierre | | 17 nov – 28 nov | Integración, pruebas, despliegue y entrega |
 
 ### Las cuatro visitas de campo
 

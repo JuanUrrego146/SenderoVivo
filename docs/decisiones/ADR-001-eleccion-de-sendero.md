@@ -1,6 +1,6 @@
-# ADR-001 — Elección del sendero a capturar
+# ADR-001: Elección del sendero a capturar
 
-- **Estado:** Propuesta — se ratifica en el Sprint 1 (hito bloqueante, antes del viernes de la semana 1)
+- **Estado:** Propuesta, se ratifica en el Sprint 1 (hito bloqueante, antes del viernes de la semana 1)
 - **Fecha:** 11/08/2026
 - **Responsable de la decisión:** Juan Urrego (PM)
 - **Participan:** todo el equipo
@@ -37,42 +37,42 @@ Ordenados por peso. Los dos primeros son técnicos y dominan la decisión, porqu
 
 ## Opciones consideradas
 
-### Opción A — Quebrada La Vieja (Chapinero) · **elegida**
+### Opción A: Quebrada La Vieja (Chapinero) · **elegida**
 
 Calle 71 con Avenida Circunvalar. TransMilenio a 700 m.
 
 | Criterio | Valoración |
 |---|---|
-| C1 Elementos duros | **Alto** — escalones de piedra, barandas de madera y cauce rocoso a lo largo del tramo de entrada |
-| C2 Condiciones de captura | **Alto** — tramo de entrada acotado y con recorrido definido |
-| C3 Accesibilidad | **Alto** — 700 m desde TransMilenio |
-| C4 Contenido biológico | **Alto** — colibrí chillón (*Colibri coruscans*), helecho arbóreo, bosque altoandino |
-| C5 Repetición | **Alto** — cercanía y reserva por la app permiten volver con poca fricción |
+| C1 Elementos duros | **Alto**, escalones de piedra, barandas de madera y cauce rocoso a lo largo del tramo de entrada |
+| C2 Condiciones de captura | **Alto**, tramo de entrada acotado y con recorrido definido |
+| C3 Accesibilidad | **Alto**, 700 m desde TransMilenio |
+| C4 Contenido biológico | **Alto**, colibrí chillón (*Colibri coruscans*), helecho arbóreo, bosque altoandino |
+| C5 Repetición | **Alto**, cercanía y reserva por la app permiten volver con poca fricción |
 | C6 Patrimonio | Medio |
 
-### Opción B — Río San Francisco · Chorro de Padilla (La Candelaria / centro)
+### Opción B: Río San Francisco · Chorro de Padilla (La Candelaria / centro)
 
 | Criterio | Valoración |
 |---|---|
-| C1 Elementos duros | **Alto** — sendero de quebrada con elementos construidos |
-| C2 Condiciones de captura | Medio — `[por evaluar en la visita de reconocimiento]` |
-| C3 Accesibilidad | **Alto** — muy cerca del centro |
+| C1 Elementos duros | **Alto**, sendero de quebrada con elementos construidos |
+| C2 Condiciones de captura | Medio, `[por evaluar en la visita de reconocimiento]` |
+| C3 Accesibilidad | **Alto**, muy cerca del centro |
 | C4 Contenido biológico | Medio-alto `[por evaluar]` |
 | C5 Repetición | Alto |
-| C6 Patrimonio | **Muy alto** — origen del primer acueducto de Bogotá |
+| C6 Patrimonio | **Muy alto**, origen del primer acueducto de Bogotá |
 
 **Por qué no se elige:** su mayor fortaleza es el valor patrimonial (C6), que es el criterio de menor peso. Su proximidad al centro no aporta ventaja técnica frente a la Opción A, que ya está bien conectada. No hay ganancia en C1 ni en C2 que justifique cambiar.
 
 > El valor patrimonial de esta opción es real y notable. Se descarta por prioridad de criterios técnicos, no por falta de mérito.
 
-### Opción C — Santa Ana – La Aguadora (Usaquén)
+### Opción C: Santa Ana – La Aguadora (Usaquén)
 
 | Criterio | Valoración |
 |---|---|
-| C1 Elementos duros | **Bajo-medio** — el arranque es más abierto y tiene **menos elementos duros** |
-| C2 Condiciones de captura | **Bajo** — un arranque abierto complica la captura del tramo de entrada: menos referencias geométricas y luz más variable |
+| C1 Elementos duros | **Bajo-medio**, el arranque es más abierto y tiene **menos elementos duros** |
+| C2 Condiciones de captura | **Bajo**, un arranque abierto complica la captura del tramo de entrada: menos referencias geométricas y luz más variable |
 | C3 Accesibilidad | Medio `[por evaluar]` |
-| C4 Contenido biológico | **Alto** — sube a subpáramo, con vistas amplias |
+| C4 Contenido biológico | **Alto**, sube a subpáramo, con vistas amplias |
 | C5 Repetición | Medio |
 | C6 Patrimonio | Medio |
 
@@ -84,7 +84,7 @@ Calle 71 con Avenida Circunvalar. TransMilenio a 700 m.
 
 **Se captura el tramo de entrada de la Quebrada La Vieja (Opción A).**
 
-Cifras del tramo previsto — Altitud: **2.712 m** · Recorrido: **340 m** · Desnivel: **62 m** · Pendiente media: **9 %**. El tramo capturado en tres escenas será de **120 a 200 m** dentro de ese recorrido.
+Cifras del tramo previsto, Altitud: **2.712 m** · Recorrido: **340 m** · Desnivel: **62 m** · Pendiente media: **9 %**. El tramo capturado en tres escenas será de **120 a 200 m** dentro de ese recorrido.
 
 **El motivo determinante es C1.** Escalones de piedra, barandas de madera y cauce rocoso son exactamente el tipo de superficie que el Gaussian Splatting reconstruye bien, y son la mitigación directa del riesgo más grave del proyecto: que el bosque altoandino salga con ruido y flotantes. Las otras dos opciones o no mejoran ese criterio (B) o lo empeoran (C).
 
@@ -108,10 +108,10 @@ La accesibilidad (C3) refuerza la decisión: con dos ventanas de salida reservad
 
 ### Qué queda pendiente de verificar en campo
 
-- `[por medir en campo]` — Longitud exacta del tramo capturable en 3 escenas dentro del rango de 120–200 m.
-- `[por medir en campo]` — Ubicación precisa de los 5–6 POIs sobre el tramo.
-- `[por evaluar]` — Comportamiento real de la luz a primera hora bajo el dosel.
-- `[por evaluar]` — Si el cauce estorba la reconstrucción más de lo previsto, se recompone el encuadre de las pasadas.
+- `[por medir en campo]`, Longitud exacta del tramo capturable en 3 escenas dentro del rango de 120–200 m.
+- `[por medir en campo]`, Ubicación precisa de los 5–6 POIs sobre el tramo.
+- `[por evaluar]`, Comportamiento real de la luz a primera hora bajo el dosel.
+- `[por evaluar]`, Si el cauce estorba la reconstrucción más de lo previsto, se recompone el encuadre de las pasadas.
 
 ---
 
@@ -119,13 +119,13 @@ La accesibilidad (C3) refuerza la decisión: con dos ventanas de salida reservad
 
 **Alta hasta el final del Sprint 1; muy baja después.**
 
-Mientras solo haya material bruto, cambiar de sendero cuesta una salida de campo. Una vez entrenadas las escenas en S2, cambiar implica repetir S1 y S2 completos —cuatro semanas— y arrastraría todo el cronograma. Por eso la decisión es **hito bloqueante de la semana 1** y por eso la visita de reconocimiento a las tres opciones ocurre antes de reservar la salida de captura.
+Mientras solo haya material bruto, cambiar de sendero cuesta una salida de campo. Una vez entrenadas las escenas en S2, cambiar implica repetir S1 y S2 completos, cuatro semanas, y arrastraría todo el cronograma. Por eso la decisión es **hito bloqueante de la semana 1** y por eso la visita de reconocimiento a las tres opciones ocurre antes de reservar la salida de captura.
 
 Si la visita de reconocimiento contradice esta propuesta, **este ADR se actualiza antes de capturar**, no después.
 
 ---
 
-## Actualización — 11/08/2026
+## Actualización: 11/08/2026
 
 Dos precisiones posteriores a la redacción de este ADR. **No cambian la decisión de sendero**, solo la concretan:
 
@@ -142,5 +142,5 @@ La visita de reconocimiento pasa a tener historia propia y criterios de aceptaci
 
 - Alcance y riesgos: [`../02-vision-de-proyecto.md`](../02-vision-de-proyecto.md)
 - Limitaciones técnicas en vegetación densa (riesgo RT-3): [`../03-avances-tecnologia.md`](../03-avances-tecnologia.md)
-- Historia que ejecuta esta decisión: HU-01, Sprint 1 — [`../04-actividades-y-roles.md`](../04-actividades-y-roles.md)
+- Historia que ejecuta esta decisión: HU-01, Sprint 1, [`../04-actividades-y-roles.md`](../04-actividades-y-roles.md)
 - Plan de las cuatro visitas de campo: [`../07-plan-de-visitas-de-campo.md`](../07-plan-de-visitas-de-campo.md)

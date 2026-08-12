@@ -1,10 +1,10 @@
-# Avances a nivel de tecnología — Sendero Vivo
+# Avances a nivel de tecnología: Sendero Vivo
 
 > Punto 2 de la actividad del curso.
 > Investigación realizada entre el 4 y el 11 de agosto de 2026.
 > Responsable: Juan Urrego, con aportes de Alejandra Chambueta (motor) y Felipe Acevedo (assets).
 
-Este documento registra qué se investigó, qué se descargó y probó, qué se aprendió y —sobre todo— **qué quedó sin validar**. Las tres tecnologías centrales son nuevas para todo el equipo, así que la parte más útil de este documento es la última: la lista de lo que todavía no sabemos.
+Este documento registra qué se investigó, qué se descargó y probó, qué se aprendió y, sobre todo, **qué quedó sin validar**. Las tres tecnologías centrales son nuevas para todo el equipo, así que la parte más útil de este documento es la última: la lista de lo que todavía no sabemos.
 
 ---
 
@@ -31,7 +31,7 @@ Navegador de escritorio y celular
 | **3D Gaussian Splatting** | Técnica de reconstrucción y render de campos de radiancia | Investigación abierta (INRIA / MPII) | Formulación original SIGGRAPH 2023 |
 | **SuperSplat** | Editor de splats en el navegador | MIT, gratuito | Editor 2.x |
 | **SOG** | Formato comprimido de splats | Especificación abierta (v2) | Soportado desde engine 2.11.0 |
-| **SplatTransform** | CLI de conversión y compresión | Open source, vía npm | — |
+| **SplatTransform** | CLI de conversión y compresión | Open source, vía npm | |
 | **PlayCanvas Engine** | Motor 3D web | MIT | **2.21.3** (npm, ago 2026) |
 
 ---
@@ -42,7 +42,7 @@ Navegador de escritorio y celular
 
 Es una técnica de **reconstrucción y renderizado de campos de radiancia** presentada en *"3D Gaussian Splatting for Real-Time Radiance Field Rendering"* (Kerbl, Kopanas, Leimkühler y Drettakis), publicada en **ACM Transactions on Graphics / SIGGRAPH 2023**.
 
-En lugar de representar una escena con mallas y texturas —o con una red neuronal implícita como hacen los NeRF—, la escena se representa como **millones de gaussianas 3D**: elipsoides con posición, escala, rotación (cuaternión), opacidad y color dependiente de la dirección de vista (armónicos esféricos). Se parte de una nube de puntos dispersa obtenida por Structure-from-Motion, y se **optimizan** esas gaussianas contra las fotos originales hasta que el render coincide con lo capturado.
+En lugar de representar una escena con mallas y texturas, o con una red neuronal implícita como hacen los NeRF, la escena se representa como **millones de gaussianas 3D**: elipsoides con posición, escala, rotación (cuaternión), opacidad y color dependiente de la dirección de vista (armónicos esféricos). Se parte de una nube de puntos dispersa obtenida por Structure-from-Motion, y se **optimizan** esas gaussianas contra las fotos originales hasta que el render coincide con lo capturado.
 
 La contribución que hace que esto importe para nosotros: el render es por **rasterización**, no por trazado de rayos ni por evaluación de una red neuronal. Eso es lo que permite tiempo real (≥ 30 fps) con calidad de estado del arte, y lo que hace que la técnica sea viable en un navegador.
 
@@ -78,18 +78,18 @@ La guía de captura de PlayCanvas es la fuente que estamos siguiendo. Contrastad
 
 | Parámetro | Recomendación documentada | Nuestro protocolo | Estado |
 |---|---|---|---|
-| Dispositivo | iPhone 13 Pro+, Pixel 7+, Galaxy S22+ | iPhone 13 o equivalente | ✅ Alineado |
-| Resolución de video | **4K mínimo** (1080p no da suficiente detalle) | 4K | ✅ |
-| Cuadros por segundo | **60 fps o más** | 60 fps | ✅ |
-| Obturación | **mínimo 1/125 s** a pulso | 1/125 o más rápida | ✅ |
-| ISO | 100–400 (200–400 en día nublado) | Manual, lo más bajo posible | ✅ |
-| Exposición | **Bloqueada en manual** — evita parpadeo entre cuadros | Todo manual | ✅ Crítico |
-| Foco | **Manual, muy preferible** | Manual | ✅ |
-| Balance de blancos | Fijo | Manual | ✅ |
-| Iluminación | Día nublado: luz suave y uniforme | Día nublado, sin viento, primera hora | ✅ |
-| Solapamiento | 70–80 % entre vistas contiguas | Varias pasadas caminando despacio | ⚠️ Por validar en campo |
-| Extracción de cuadros | Cada 2.º–5.º cuadro según velocidad | Por definir tras la primera prueba | ⚠️ |
-| Qué evitar | Superficies reflectantes, objetos en movimiento, cambios de exposición | — | ⚠️ El agua del cauce y el follaje al viento son exactamente esto |
+| Dispositivo | iPhone 13 Pro+, Pixel 7+, Galaxy S22+ | iPhone 13 o equivalente |  Alineado |
+| Resolución de video | **4K mínimo** (1080p no da suficiente detalle) | 4K |  |
+| Cuadros por segundo | **60 fps o más** | 60 fps |  |
+| Obturación | **mínimo 1/125 s** a pulso | 1/125 o más rápida |  |
+| ISO | 100–400 (200–400 en día nublado) | Manual, lo más bajo posible |  |
+| Exposición | **Bloqueada en manual**, evita parpadeo entre cuadros | Todo manual |  Crítico |
+| Foco | **Manual, muy preferible** | Manual |  |
+| Balance de blancos | Fijo | Manual |  |
+| Iluminación | Día nublado: luz suave y uniforme | Día nublado, sin viento, primera hora |  |
+| Solapamiento | 70–80 % entre vistas contiguas | Varias pasadas caminando despacio |  Por validar en campo |
+| Extracción de cuadros | Cada 2.º–5.º cuadro según velocidad | Por definir tras la primera prueba |  |
+| Qué evitar | Superficies reflectantes, objetos en movimiento, cambios de exposición | |  El agua del cauce y el follaje al viento son exactamente esto |
 
 ### 3.1 Un hallazgo que hay que resolver antes de la salida
 
@@ -113,11 +113,11 @@ Lo relevante para nosotros:
 
 - **No hay nada que instalar.** Se abre en el navegador y se trabaja ahí.
 - **Nada se sube hasta que uno decide publicar**: el archivo se procesa localmente. Para material capturado dentro de una reserva protegida, esto no es un detalle menor.
-- Guarda proyectos en formato `.ssproj`, así que el trabajo de limpieza se puede retomar entre sesiones — importante porque la limpieza de tres escenas no se hace de una sentada.
+- Guarda proyectos en formato `.ssproj`, así que el trabajo de limpieza se puede retomar entre sesiones, importante porque la limpieza de tres escenas no se hace de una sentada.
 
 ### 4.2 Para qué lo vamos a usar
 
-1. **Eliminar flotantes** — gaussianas espurias con opacidad en el vacío, el artefacto típico de las capturas de exterior con vegetación.
+1. **Eliminar flotantes**, gaussianas espurias con opacidad en el vacío, el artefacto típico de las capturas de exterior con vegetación.
 2. **Recortar la escena** al tramo que nos interesa, quitando todo lo que quedó fuera del sendero.
 3. **Retoque de color** entre las tres escenas, para que al encadenarlas no se note el salto.
 4. Exportar hacia el paso de compresión.
@@ -128,7 +128,7 @@ Las versiones recientes incorporan además línea de tiempo para animación de c
 
 - Se abrió el editor y se cargaron escenas de ejemplo públicas.
 - Se recorrió el flujo de recorte y borrado de flotantes sobre una escena ajena.
-- **Falta probarlo sobre material propio**, que es donde aparecerán los problemas reales.
+- **Falta probarlo sobre material propio**: que es donde aparecerán los problemas reales.
 
 ---
 
@@ -140,7 +140,7 @@ Las versiones recientes incorporan además línea de tiempo para animación de c
 
 ### 5.2 Cómo funciona
 
-La idea central: en lugar de guardar millones de estructuras de datos, **los atributos de las gaussianas se "desenrollan" en imágenes 2D** — una imagen por atributo — y se guardan como WebP. Un dataset SOG se compone de:
+La idea central: en lugar de guardar millones de estructuras de datos, **los atributos de las gaussianas se "desenrollan" en imágenes 2D**, una imagen por atributo, y se guardan como WebP. Un dataset SOG se compone de:
 
 | Archivo | Qué guarda |
 |---|---|
@@ -161,7 +161,7 @@ Todo el conjunto se puede empaquetar en un único archivo `.sog` (un ZIP), que e
 ### 5.3 Cuánto comprime
 
 - Especificación: archivos típicamente **~15–20× más pequeños** que el PLY equivalente.
-- Caso de referencia publicado por PlayCanvas: una escena de **skate park con 4 millones de gaussianas** pasó de **1 GB en PLY a 42 MB en SOG** — una reducción del **~95 %**.
+- Caso de referencia publicado por PlayCanvas: una escena de **skate park con 4 millones de gaussianas** pasó de **1 GB en PLY a 42 MB en SOG**, una reducción del **~95 %**.
 - Frente al formato *Compressed PLY* que usaba SuperSplat, SOG comprime aproximadamente **2–3× mejor**.
 
 **La compresión es con pérdida por diseño** (viene de la cuantización). Es un intercambio consciente: sin ella no hay proyecto en móvil.
@@ -199,7 +199,7 @@ const entity = new pc.Entity();
 entity.addComponent('gsplat', { asset: assets[0] });
 ```
 
-Es una API sencilla, y eso importa: significa que nuestro esfuerzo de programación se va a ir en el **motor de recorrido, los POIs y la capa de datos** —que es donde está el producto— y no en pelear con la carga del splat.
+Es una API sencilla, y eso importa: significa que nuestro esfuerzo de programación se va a ir en el **motor de recorrido, los POIs y la capa de datos**, que es donde está el producto, y no en pelear con la carga del splat.
 
 ### 6.3 Rendimiento: lo que dice la documentación
 
@@ -209,15 +209,15 @@ Esta es la parte que más condiciona el diseño, y conviene tenerla explícita:
   ```javascript
   app.scene.gsplat.splatBudget = 1_000_000; // móvil
   ```
-  Referencias de la documentación: **~1 millón para móvil**, **3+ millones para escritorio**.
+Referencias de la documentación: **~1 millón para móvil**, **3+ millones para escritorio**.
 
 - **El cuello de botella principal es el *fill rate*, no la memoria.** El splatting es especialmente caro en tasa de relleno por el sobredibujo: cada píxel puede acumular decenas o cientos de fragmentos con mezcla alfa. Esto explica por qué una escena puede ir bien en una pantalla pequeña y colapsar al llenar la pantalla.
 
 - **Ordenamiento por profundidad en cada cuadro.** Todas las gaussianas visibles se ordenan por profundidad de cámara cada frame. El coste crece peor que linealmente con el número de gaussianas.
 
 - **Dos ajustes de escena con impacto directo:**
-  1. **Desactivar antialiasing** — multiplica los fragmentos procesados por píxel, que es justo lo caro aquí.
-  2. **Limitar el *device pixel ratio*** — reduce la resolución efectiva y por tanto el trabajo de fragmentos.
+  1. **Desactivar antialiasing**, multiplica los fragmentos procesados por píxel, que es justo lo caro aquí.
+  2. **Limitar el *device pixel ratio***, reduce la resolución efectiva y por tanto el trabajo de fragmentos.
 
 - **LOD por distancia:** `lodBaseDistance` y `lodMultiplier` controlan a qué distancia baja la calidad y con qué progresión geométrica (`lodBaseDistance * lodMultiplier^i`).
 
@@ -252,7 +252,7 @@ Es la tecnología que entra nueva al proyecto con la ambientación sonora. Decis
 
 ### Qué se va a usar
 
-PlayCanvas expone un **`SoundComponent`** construido sobre la **Web Audio API**. La espacialización binaural sale del `PannerNode` con **`panningModel: 'HRTF'`** — filtrado por función de transferencia relacionada con la cabeza, que es literalmente la definición de audio binaural.
+PlayCanvas expone un **`SoundComponent`** construido sobre la **Web Audio API**. La espacialización binaural sale del `PannerNode` con **`panningModel: 'HRTF'`**, filtrado por función de transferencia relacionada con la cabeza, que es literalmente la definición de audio binaural.
 
 ```javascript
 source.addComponent('sound', {
@@ -281,16 +281,16 @@ Nada de esto se ha ejecutado sobre material propio. La incógnita concreta y con
 
 ## 7. Riesgos técnicos reales
 
-### RT-1 — Peso de las escenas en móvil
+### RT-1: Peso de las escenas en móvil
 **Severidad: alta**
 
 Con 3 escenas y un presupuesto de ~1 M de gaussianas por escena en móvil, el peso por escena en SOG debería quedar en el orden de decenas de MB si extrapolamos el caso de referencia (4 M de gaussianas → 42 MB). Pero es una extrapolación, no una medición: la densidad de gaussianas que necesita un bosque no es la de un skate park.
 
-- **RNF-003 sigue con el umbral `[por definir tras la primera captura]`**, y así se queda hasta que haya una medición real. Poner un número ahora sería inventarlo.
-- **Primera medición: Sprint 2**, y es un criterio de "hecho" de esa escena.
+- **RNF-003 sigue con el umbral `[por definir tras la primera captura]`**: y así se queda hasta que haya una medición real. Poner un número ahora sería inventarlo.
+- **Primera medición: Sprint 2**: y es un criterio de "hecho" de esa escena.
 - **Respuestas escalonadas:** reducir gaussianas → recortar el tramo → Streamed SOG con LOD.
 
-### RT-2 — Rendimiento en gama media
+### RT-2: Rendimiento en gama media
 **Severidad: alta**
 
 RNF-001 pide ≥ 30 fps sostenidos en un celular de gama media de los últimos tres años. El problema no es la memoria sino el *fill rate*: en pantalla pequeña, el usuario está **dentro** de la escena, lo que maximiza el sobredibujo.
@@ -298,8 +298,8 @@ RNF-001 pide ≥ 30 fps sostenidos en un celular de gama media de los últimos t
 - Mitigación de partida: `splatBudget` diferenciado por dispositivo (RF-022), antialiasing desactivado, *device pixel ratio* limitado, LOD por distancia.
 - **Sin dispositivo de referencia definido todavía.** Hay que fijar uno concreto en S3 y medir siempre contra él: "gama media" sin modelo específico no es un criterio verificable.
 
-### RT-3 — Calidad de reconstrucción en vegetación densa
-**Severidad: alta — es el riesgo que puede cambiar el alcance**
+### RT-3: Calidad de reconstrucción en vegetación densa
+**Severidad: alta, es el riesgo que puede cambiar el alcance**
 
 Es una limitación conocida y documentada de la técnica, no un problema de nuestra ejecución. La literatura sobre reconstrucción de vegetación reporta que:
 
@@ -311,12 +311,12 @@ Al mismo tiempo, la evidencia también muestra que 3DGS reconstruye geometría *
 
 **Cómo lo enfrentamos:**
 1. El tramo se eligió por sus elementos duros: escalones de piedra, barandas de madera, cauce rocoso. Son el ancla geométrica.
-2. Día **sin viento** — el follaje en movimiento rompe la consistencia entre cuadros, que es la premisa del método.
+2. Día **sin viento**, el follaje en movimiento rompe la consistencia entre cuadros, que es la premisa del método.
 3. Varias pasadas a distintas alturas: más vistas del follaje, menos ambigüedad.
 4. Limpieza de flotantes en SuperSplat como paso obligatorio.
 5. **Si una escena sale inaceptable, se recorta el tramo.** 120 m impecables valen más que 200 m con ruido.
 
-### RT-4 — El agua del cauce
+### RT-4: El agua del cauce
 **Severidad: media**
 
 La guía de captura desaconseja explícitamente superficies reflectantes y objetos en movimiento. Un cauce rocoso con agua corriendo es ambas cosas a la vez. Las rocas se reconstruirán bien; la lámina de agua, probablemente no.
@@ -325,7 +325,7 @@ La guía de captura desaconseja explícitamente superficies reflectantes y objet
 - La composición de las tomas debe apoyarse en la roca y la baranda, no en el agua.
 - Si el resultado es malo, se acepta como característica de la captura: **no se modela agua a mano** (principio P1).
 
-### RT-5 — Correspondencia entre geometría reconstruida y datos GPS
+### RT-5: Correspondencia entre geometría reconstruida y datos GPS
 **Severidad: media**
 
 El entrenamiento produce una escena en unidades arbitrarias y con orientación arbitraria. La capa de datos (RF-013 a RF-016, RF-020) necesita metros reales y altitudes reales. La conexión entre ambos mundos depende del objeto de tamaño conocido incluido en la captura y del track GPS.
@@ -384,13 +384,13 @@ Lista abierta. Cada punto tiene dueño y sprint. Ninguno está resuelto hoy.
 
 | Herramienta | Estado | Nota |
 |---|---|---|
-| PlayCanvas Engine 2.21.3 | ✅ Instalado vía npm | Proyecto base levantado |
-| SuperSplat (editor web) | ✅ Probado | Sobre escenas de ejemplo públicas, no propias |
-| SplatTransform CLI | ⏳ Pendiente | Se instala en S2, cuando haya PLY que convertir |
-| Estación con GPU | ✅ Disponible | Del equipo. Especificaciones `[por documentar]` |
-| iPhone 13 o equivalente | ✅ Disponible | Del equipo |
-| Escenas SOG de ejemplo | ✅ Cargadas en el visor | Para calibrar peso y calidad esperados |
-| Track GPS de prueba | ⏳ Pendiente | Se graba en la salida de campo (S1) |
+| PlayCanvas Engine 2.21.3 |  Instalado vía npm | Proyecto base levantado |
+| SuperSplat (editor web) |  Probado | Sobre escenas de ejemplo públicas, no propias |
+| SplatTransform CLI |  Pendiente | Se instala en S2, cuando haya PLY que convertir |
+| Estación con GPU |  Disponible | Del equipo. Especificaciones `[por documentar]` |
+| iPhone 13 o equivalente |  Disponible | Del equipo |
+| Escenas SOG de ejemplo |  Cargadas en el visor | Para calibrar peso y calidad esperados |
+| Track GPS de prueba |  Pendiente | Se graba en la salida de campo (S1) |
 
 ---
 
@@ -398,27 +398,27 @@ Lista abierta. Cada punto tiene dueño y sprint. Ninguno está resuelto hoy.
 
 El stack está **cerrado, es gratuito y es open source de punta a punta** (MIT en motor y editor, especificación abierta en el formato). No hay dependencia de presupuesto ni de licencias, y el hardware necesario ya lo tiene el equipo.
 
-El riesgo del proyecto **no está en el software**: la API para cargar un SOG en PlayCanvas son seis líneas. Está en la física de la captura —una mañana nublada y sin viento, con exposición bloqueada, en un bosque de estructuras finas— y en lo que la técnica sabe hacer mal. Por eso el Sprint 1 se dedica entero a decidir el sendero y a preparar y ejecutar la salida, y por eso el plan de trabajo (`plan/plan_de_trabajo.md`) reserva un margen de estimación más amplio de lo habitual.
+El riesgo del proyecto **no está en el software**: la API para cargar un SOG en PlayCanvas son seis líneas. Está en la física de la captura, una mañana nublada y sin viento, con exposición bloqueada, en un bosque de estructuras finas, y en lo que la técnica sabe hacer mal. Por eso el Sprint 1 se dedica entero a decidir el sendero y a preparar y ejecutar la salida, y por eso el plan de trabajo (`plan/plan_de_trabajo.md`) reserva un margen de estimación más amplio de lo habitual.
 
 ---
 
 ## Fuentes consultadas
 
-- [3D Gaussian Splatting for Real-Time Radiance Field Rendering — Kerbl, Kopanas, Leimkühler, Drettakis (INRIA)](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/)
-- [SIGGRAPH — ficha del paper](https://history.siggraph.org/learning/3d-gaussian-splatting-for-real-time-radiance-field-rendering-by-kerbl-kopanas-leimkuehler-and-drettakis/)
-- [The SOG Format — PlayCanvas Developer Site](https://developer.playcanvas.com/user-manual/gaussian-splatting/formats/sog/)
+- [3D Gaussian Splatting for Real-Time Radiance Field Rendering, Kerbl, Kopanas, Leimkühler, Drettakis (INRIA)](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/)
+- [SIGGRAPH, ficha del paper](https://history.siggraph.org/learning/3d-gaussian-splatting-for-real-time-radiance-field-rendering-by-kerbl-kopanas-leimkuehler-and-drettakis/)
+- [The SOG Format, PlayCanvas Developer Site](https://developer.playcanvas.com/user-manual/gaussian-splatting/formats/sog/)
 - [PlayCanvas Open Sources SOG: The WebP of Gaussian Splatting](https://blog.playcanvas.com/playcanvas-open-sources-sog-format-for-gaussian-splatting/)
 - [PlayCanvas Adopts SOGS for 20x 3DGS Compression](https://blog.playcanvas.com/playcanvas-adopts-sogs-for-20x-3dgs-compression/)
-- [playcanvas/sogs — repositorio](https://github.com/playcanvas/sogs)
-- [SuperSplat Editor — PlayCanvas Developer Site](https://developer.playcanvas.com/user-manual/supersplat/editor/)
-- [playcanvas/supersplat — repositorio (MIT)](https://github.com/playcanvas/supersplat)
+- [playcanvas/sogs, repositorio](https://github.com/playcanvas/sogs)
+- [SuperSplat Editor, PlayCanvas Developer Site](https://developer.playcanvas.com/user-manual/supersplat/editor/)
+- [playcanvas/supersplat, repositorio (MIT)](https://github.com/playcanvas/supersplat)
 - [Introducing SplatTransform: CLI Tool for 3D Gaussian Splats](https://blog.playcanvas.com/introducing-splat-transform-cli-tool/)
-- [Taking Photos — guía de captura de PlayCanvas](https://developer.playcanvas.com/user-manual/gaussian-splatting/creating/taking-photos/)
-- [Recommended Tools — PlayCanvas](https://developer.playcanvas.com/user-manual/gaussian-splatting/creating/recommended-tools/)
-- [Performance — Building Splat Applications, PlayCanvas](https://developer.playcanvas.com/user-manual/gaussian-splatting/building/performance/)
-- [Streamed SOG / LOD Streaming — PlayCanvas](https://developer.playcanvas.com/user-manual/gaussian-splatting/building/lod-streaming/)
-- [GSplatComponent — PlayCanvas Engine API Reference](https://api.playcanvas.com/engine/classes/GSplatComponent.html)
-- [playcanvas — paquete npm (v2.21.3, MIT)](https://registry.npmjs.org/playcanvas/latest)
+- [Taking Photos, guía de captura de PlayCanvas](https://developer.playcanvas.com/user-manual/gaussian-splatting/creating/taking-photos/)
+- [Recommended Tools, PlayCanvas](https://developer.playcanvas.com/user-manual/gaussian-splatting/creating/recommended-tools/)
+- [Performance, Building Splat Applications, PlayCanvas](https://developer.playcanvas.com/user-manual/gaussian-splatting/building/performance/)
+- [Streamed SOG / LOD Streaming, PlayCanvas](https://developer.playcanvas.com/user-manual/gaussian-splatting/building/lod-streaming/)
+- [GSplatComponent, PlayCanvas Engine API Reference](https://api.playcanvas.com/engine/classes/GSplatComponent.html)
+- [playcanvas, paquete npm (v2.21.3, MIT)](https://registry.npmjs.org/playcanvas/latest)
 - [Seeing beyond vegetation: comparative occlusion analysis between MVS, NeRF and Gaussian Splatting](https://www.sciencedirect.com/science/article/pii/S2667393225000080)
 - [ForestSplat: Scalable and High-Fidelity Forestry Mapping Using 3D Gaussian Splatting](https://www.mdpi.com/2072-4292/17/6/993)
 - [WebSplatter: Enabling Cross-Device Efficient Gaussian Splatting in Web Browsers via WebGPU](https://arxiv.org/html/2602.03207v1)

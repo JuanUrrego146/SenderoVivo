@@ -1,7 +1,7 @@
-# Visión de proyecto — Sendero Vivo
+# Visión de proyecto: Sendero Vivo
 
 > Punto 1 de la actividad del curso (segunda mitad).
-> Versión 1,0 — 11 de agosto de 2026.
+> Versión 1,0, 11 de agosto de 2026.
 > Horizonte: 15 semanas (11 ago – 28 nov de 2026).
 
 ---
@@ -19,7 +19,7 @@ De ahí salen cuatro problemas concretos y observables:
 3. **Se camina sin entender lo que se ve.** Un colibrí chillón, un helecho arbóreo y un musgo de páramo pasan como "verde". El sendero tiene contenido biológico enorme y casi nadie tiene cómo leerlo.
 4. **Quien no puede subir, nunca conoce el lugar.** Condición física, edad, discapacidad, tiempo, distancia, miedo. El cerro está a 700 metros de un TransMilenio y aun así es inaccesible para mucha gente.
 
-**El problema, en una frase:** el sendero es público y gratuito, pero la información para recorrerlo con criterio —y la posibilidad de conocerlo sin subir— no existe.
+**El problema, en una frase:** el sendero es público y gratuito, pero la información para recorrerlo con criterio, y la posibilidad de conocerlo sin subir, no existe.
 
 ---
 
@@ -57,7 +57,7 @@ Preguntas abiertas que orientan la investigación con usuarios, pendiente de pro
 - ¿Qué sabe de las especies endémicas de los Cerros y qué le gustaría conocer?
 - ¿Con qué frecuencia explora lugares turísticos de la ciudad?
 
-Hay dos percepciones que el proyecto tiene que atacar directamente: la **incertidumbre** sobre qué tan exigente o largo es el sendero —el producto entero es un preámbulo a eso— y la **percepción de inseguridad**, que se combate con información, no con silencio.
+Hay dos percepciones que el proyecto tiene que atacar directamente: la **incertidumbre** sobre qué tan exigente o largo es el sendero, el producto entero es un preámbulo a eso, y la **percepción de inseguridad**, que se combate con información, no con silencio.
 
 ### 2.3 Qué hay ya en el mundo
 
@@ -72,7 +72,7 @@ La conclusión que da origen al proyecto: **la técnica ya funciona sobre sender
 
 ## 3. Propuesta de valor
 
-> **Sendero Vivo permite recorrer el tramo real de un sendero de los Cerros Orientales desde el navegador, reconstruido tal como es —capturado, no dibujado— para saber a qué se va, entender lo que se ve y medir lo que cuesta.**
+> **Sendero Vivo permite recorrer el tramo real de un sendero de los Cerros Orientales desde el navegador, reconstruido tal como es, capturado, no dibujado, para saber a qué se va, entender lo que se ve y medir lo que cuesta.**
 
 La propuesta se sostiene en tres verbos:
 
@@ -97,7 +97,7 @@ Esta es la decisión que define el proyecto. Un modelo 3D hecho a mano es la int
 
 ### 4.1 Lo que SÍ está en el alcance
 
-- **200 metros desde el inicio del sendero** —compromiso firme—, divididos en **3 escenas** encadenadas por etapas: 0–70, 70–140 y 140–200 m.
+- **200 metros desde el inicio del sendero**: compromiso firme, divididos en **3 escenas** encadenadas por etapas: 0–70, 70–140 y 140–200 m.
 - **5 a 6 puntos de interés** completos, de tres clases: **fauna**, **flora** y **patrimonio**.
 - **Fichas 3D de aves y plantas**: modelo girable con zoom, **animación idle de aleteo**, nombre común y científico, narración, canto, altura de distribución, identificación en campo y **consejos de avistamiento**.
 - **Puntos de interés no vivos**: puertas derrumbadas, muros, monumentos y tramos de camino, con su historia y su fuente citable.
@@ -106,7 +106,7 @@ Esta es la decisión que define el proyecto. Un modelo 3D hecho a mano es la int
 - **Ambientación sonora binaural con audio espacial 3D** durante todo el recorrido.
 - **Datos del recorrido en pantalla**: altitud, distancia recorrida y restante, desnivel acumulado, pendiente, tiempo estimado al siguiente punto.
 - **Identidad visual propia**: paleta de grises, negros y verdes que resalta la quebrada y la fauna.
-- **Web para escritorio y celular**, sin instalación.
+- **Web para escritorio y celular**: sin instalación.
 
 > **Ampliar el tramo más allá de los 200 m no está comprometido.** Si al cerrar el Sprint 2 hay holgura de peso, rendimiento y horas, se añade una cuarta etapa (200–260 m). Se decide entonces, con datos reales, y no antes.
 
@@ -114,15 +114,15 @@ Esta es la decisión que define el proyecto. Un modelo 3D hecho a mano es la int
 
 Esta lista es vinculante. No es una lista de "fase 2": es una lista de lo que este proyecto **no va a hacer**, y no se propone de nuevo.
 
-- ❌ El sendero completo de 7,3 km.
-- ❌ Caminar libre tipo videojuego (WASD, movimiento fuera del trazado).
-- ❌ App nativa iOS o Android.
-- ❌ Realidad virtual.
-- ❌ Multijugador o cualquier función social.
-- ❌ Captura con dron.
-- ❌ Más de un sendero.
+- El sendero completo de 7,3 km.
+- Caminar libre tipo videojuego (WASD, movimiento fuera del trazado).
+- App nativa iOS o Android.
+- Realidad virtual.
+- Multijugador o cualquier función social.
+- Captura con dron.
+- Más de un sendero.
 
-**Por qué el tramo y no el sendero completo:** en un bosque cada metro es geometría nueva —no hay superficies repetibles, no hay simplificación posible sin perder el sitio— y el navegador tiene un techo duro de memoria y de coste de ordenamiento por profundidad. Capturar 7,3 km produciría un archivo que ningún celular puede cargar. Se captura el primer tramo, justo donde el visitante decide si sigue o se devuelve, porque es exactamente el punto donde la información cambia la decisión.
+**Por qué el tramo y no el sendero completo:** en un bosque cada metro es geometría nueva, no hay superficies repetibles, no hay simplificación posible sin perder el sitio, y el navegador tiene un techo duro de memoria y de coste de ordenamiento por profundidad. Capturar 7,3 km produciría un archivo que ningún celular puede cargar. Se captura el primer tramo, justo donde el visitante decide si sigue o se devuelve, porque es exactamente el punto donde la información cambia la decisión.
 
 ### 4.3 Ubicación
 
@@ -136,8 +136,8 @@ El tramo tiene escalones de piedra, barandas de madera y cauce rocoso: superfici
 |---|---|---|
 | Longitud | **200 m** | Compromiso firme |
 | Altitud de inicio | **2.712 msnm** | Registro GPS público · `[por confirmar en V1]` |
-| Desnivel acumulado | — | **`[por medir en campo]`**, se cierra en V1 |
-| Pendiente media | — | **`[por medir en campo]`**, se cierra en V1 |
+| Desnivel acumulado | | **`[por medir en campo]`**, se cierra en V1 |
+| Pendiente media | | **`[por medir en campo]`**, se cierra en V1 |
 
 > Las cifras de 340 m de recorrido, 62 m de desnivel y 9 % de pendiente que aparecen en versiones anteriores de estos documentos corresponden al **tramo de referencia evaluado en ADR-001**, no al tramo comprometido de 200 m. No se reutilizan como si fueran las del tramo: se miden.
 
@@ -203,19 +203,19 @@ Medibles, verificables y con fecha. Si no se pueden comprobar, no son criterios.
 
 Ordenados por exposición (probabilidad × impacto). Los tres primeros son los que pueden hundir el proyecto.
 
-### R1 — La vegetación densa no se reconstruye bien
+### R1: La vegetación densa no se reconstruye bien
 **Probabilidad: alta · Impacto: alto**
 
 El Gaussian Splatting resuelve muy bien superficies duras y muy mal estructuras finas, translúcidas y en movimiento. Un bosque altoandino es exactamente eso: hojas delgadas, ramas finas, follaje que se mueve. La literatura reporta que el follaje denso introduce ruido y distorsiona la geometría, y que quedan "flotantes" (gaussianas con opacidad en el vacío).
 
 **Mitigación:**
 - El tramo se eligió por sus **elementos duros** (escalones de piedra, barandas, cauce): son el ancla geométrica de la reconstrucción.
-- Captura en **día nublado y sin viento** — el viento es el enemigo directo de este problema.
+- Captura en **día nublado y sin viento**, el viento es el enemigo directo de este problema.
 - Varias pasadas a distintas alturas para dar redundancia de vistas al follaje.
 - Limpieza de flotantes en SuperSplat como paso obligatorio del "hecho" de cada escena.
 - **Plan de choque:** si una escena sale inaceptable, se recorta el tramo. Es preferible entregar 120 m impecables que 200 m con ruido.
 
-### R2 — La escena pesa más de lo que aguanta un celular
+### R2: La escena pesa más de lo que aguanta un celular
 **Probabilidad: media-alta · Impacto: alto**
 
 La guía de rendimiento de PlayCanvas sugiere un presupuesto de **~1 millón de gaussianas en móvil** frente a 3+ millones en escritorio, y advierte que el cuello de botella real es el *fill rate* (sobredibujo con mezcla alfa), no solo la memoria.
@@ -227,7 +227,7 @@ La guía de rendimiento de PlayCanvas sugiere un presupuesto de **~1 millón de 
 - Desactivar antialiasing y limitar el *device pixel ratio* en móvil.
 - **Plan de choque:** Streamed SOG con LOD (`.lod-meta.json`), que carga niveles de detalle según distancia de cámara.
 
-### R3 — El clima impide la salida de campo
+### R3: El clima impide la salida de campo
 **Probabilidad: media · Impacto: alto**
 
 La captura exige día nublado, sin viento y a primera hora. En Bogotá esa ventana no se pide por anticipado. Si la salida de S1 falla, se corre todo el cronograma: E1 bloquea a E2, que bloquea a E4.
@@ -238,7 +238,7 @@ La captura exige día nublado, sin viento y a primera hora. En Bogotá esa venta
 - Checklist y ensayo de protocolo **antes** de la salida, para no gastar la ventana aprendiendo a usar el equipo.
 - E3 (modelado 3D de aves y plantas) **no depende de la captura**: si S1 se retrasa, Felipe sigue produciendo y el retraso no paraliza al equipo entero.
 
-### R4 — El equipo es primerizo en las tres tecnologías a la vez
+### R4: El equipo es primerizo en las tres tecnologías a la vez
 **Probabilidad: alta · Impacto: medio**
 
 Gaussian Splatting, SuperSplat/SOG y PlayCanvas, simultáneamente, sin experiencia previa.
@@ -249,7 +249,7 @@ Gaussian Splatting, SuperSplat/SOG y PlayCanvas, simultáneamente, sin experienc
 - Toda la investigación queda en `docs/03-avances-tecnologia.md`, no en la cabeza de quien la hizo.
 - Revisión cruzada obligatoria: el conocimiento no se queda en una sola persona.
 
-### R5 — El alcance se expande
+### R5: El alcance se expande
 **Probabilidad: media · Impacto: medio**
 
 Es un proyecto vistoso. Van a aparecer ideas: más senderos, VR, caminar libre.
@@ -259,7 +259,7 @@ Es un proyecto vistoso. Van a aparecer ideas: más senderos, VR, caminar libre.
 - Ninguna tarea entra al sprint sin trazar a un RF (principio P2).
 - Las ideas nuevas van al backlog y solo se discuten en revisión de sprint.
 
-### R6 — Descoordinación entre las cuatro épicas
+### R6: Descoordinación entre las cuatro épicas
 **Probabilidad: media · Impacto: medio**
 
 Cuatro épicas, seis personas, dos disciplinas distintas (producción de assets y programación) y un sprint corriendo en paralelo.
@@ -269,7 +269,7 @@ Cuatro épicas, seis personas, dos disciplinas distintas (producción de assets 
 - Un solo integrador responsable (Juan) y ramas por épica con dueño claro.
 - Fusión a `develop` al cierre de cada sprint, no al final de la épica.
 
-### R7 — Un dato biológico publicado resulta incorrecto
+### R7: Un dato biológico publicado resulta incorrecto
 **Probabilidad: baja · Impacto: medio-alto**
 
 Las fichas afirman nombres científicos y rangos de altitud. Un error se propaga como información confiable.
@@ -279,7 +279,7 @@ Las fichas afirman nombres científicos y rangos de altitud. Un error se propaga
 - Lo no verificado se marca `[por medir en campo]` o `[por verificar]`; nunca se rellena.
 - Felipe revisa toda ficha de fauna y flora antes de la demo.
 
-### R9 — El audio espacial no cabe en el presupuesto de rendimiento
+### R9: El audio espacial no cabe en el presupuesto de rendimiento
 **Probabilidad: media · Impacto: medio**
 
 El paneo HRTF cuesta CPU, y el proyecto ya tiene el rendimiento móvil ajustado (R2). Además, **Safari en iOS podría no aplicar HRTF real** y caer a paneo de igual potencia, con lo que la promesa binaural se perdería justo en la mitad de los dispositivos.
@@ -291,10 +291,10 @@ El paneo HRTF cuesta CPU, y el proyecto ya tiene el rendimiento móvil ajustado 
 - La prueba de HRTF en Safari se adelanta a **S3** (validación A3), no se deja para S5.
 - **Plan de choque:** bajar a 2 fuentes simultáneas, y en iOS degradar a paneo estéreo por distancia. **El audio no se desactiva**: es parte del producto.
 
-### R10 — La visita de reconocimiento no se hace, o se hace grabando
+### R10: La visita de reconocimiento no se hace, o se hace grabando
 **Probabilidad: media · Impacto: alto**
 
-V1 es la visita que decide el tramo, las etapas, los POIs y el mapa sonoro. Si no se hace —o si se convierte en una captura improvisada porque el día salió bueno— todo lo demás se decide a ciegas y la captura de V2 se hace sin criterio.
+V1 es la visita que decide el tramo, las etapas, los POIs y el mapa sonoro. Si no se hace, o si se convierte en una captura improvisada porque el día salió bueno, todo lo demás se decide a ciegas y la captura de V2 se hace sin criterio.
 
 **Mitigación:**
 - V1 tiene **historia propia, bloqueante y con criterios de aceptación verificables** (HU-42).
@@ -302,7 +302,7 @@ V1 es la visita que decide el tramo, las etapas, los POIs y el mapa sonoro. Si n
 - La regla «no se graba video de captura en V1» está escrita en el plan de campo y en la issue.
 - Si el día de V1 sale excepcionalmente bueno, **no se adelanta la captura**: se toma nota y se reserva V2 lo antes posible.
 
-### R8 — Pérdida del material de captura
+### R8: Pérdida del material de captura
 **Probabilidad: baja · Impacto: muy alto**
 
 El video bruto de la salida es irrepetible sin volver a tener las mismas condiciones de luz.
@@ -328,7 +328,7 @@ Tres condiciones concretas, no optimismo:
 - Alcance, roles y cronograma detallado: [`04-actividades-y-roles.md`](04-actividades-y-roles.md)
 - Investigación técnica y riesgos técnicos: [`03-avances-tecnologia.md`](03-avances-tecnologia.md)
 - Decisión de sendero: [`decisiones/ADR-001-eleccion-de-sendero.md`](decisiones/ADR-001-eleccion-de-sendero.md)
-- Requerimientos completos, **con esta visión incorporada en la sección 3.2**: `F_Analisis_de_Requerimientos_V1,1_SenderoVivo.docx`
+- Requerimientos completos, **con esta visión incorporada en la sección 3.2**: `F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx`
 - Catálogo de fauna y flora con fuentes: [`05-catalogo-fauna-y-flora.md`](05-catalogo-fauna-y-flora.md)
 - Identidad visual: [`06-identidad-visual.md`](06-identidad-visual.md)
 - Plan de visitas de campo: [`07-plan-de-visitas-de-campo.md`](07-plan-de-visitas-de-campo.md)

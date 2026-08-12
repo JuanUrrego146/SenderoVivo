@@ -1,6 +1,6 @@
-# Ambientación sonora — Sendero Vivo
+# Ambientación sonora: Sendero Vivo
 
-> Versión 1,0 — 11/08/2026 · Responsable: David Beltrán, con Alberto Alemán (contenido) y Felipe Acevedo (edición)
+> Versión 1,0, 11/08/2026 · Responsable: David Beltrán, con Alberto Alemán (contenido) y Felipe Acevedo (edición)
 > Decisión de arquitectura asociada: [`decisiones/ADR-003-audio-binaural-espacial.md`](decisiones/ADR-003-audio-binaural-espacial.md)
 
 ---
@@ -17,8 +17,8 @@ Traducido a algo construible: el visitante que recorre el tramo con audífonos d
 
 | Capa | Qué es | Espacializada | Ejemplo |
 |---|---|---|---|
-| **Lecho ambiente** (*ambience bed*) | Fondo continuo del bosque | No — estéreo fijo | Viento en el follaje, textura general del bosque |
-| **Fuentes puntuales** | Sonidos anclados a un lugar del tramo | **Sí — HRTF** | El cauce en el metro 45, un canto en un árbol concreto |
+| **Lecho ambiente** (*ambience bed*) | Fondo continuo del bosque | No, estéreo fijo | Viento en el follaje, textura general del bosque |
+| **Fuentes puntuales** | Sonidos anclados a un lugar del tramo | **Sí, HRTF** | El cauce en el metro 45, un canto en un árbol concreto |
 
 El lecho da continuidad; las fuentes puntuales dan el espacio. Separarlas es lo que permite que el lecho suene siempre igual (barato) y que solo las tres o cuatro fuentes cercanas se procesen espacialmente (caro).
 
@@ -26,7 +26,7 @@ El lecho da continuidad; las fuentes puntuales dan el espacio. Separarlas es lo 
 
 ## 3. Cómo se implementa
 
-PlayCanvas expone `SoundComponent` sobre la Web Audio API, y la espacialización binaural sale del `PannerNode` con modelo de paneo **HRTF** — que es, literalmente, la definición de audio binaural: filtrado por función de transferencia relacionada con la cabeza.
+PlayCanvas expone `SoundComponent` sobre la Web Audio API, y la espacialización binaural sale del `PannerNode` con modelo de paneo **HRTF**, que es, literalmente, la definición de audio binaural: filtrado por función de transferencia relacionada con la cabeza.
 
 ```javascript
 // Fuente puntual anclada al cauce, en src/audio/
@@ -34,15 +34,15 @@ const source = new pc.Entity('stream-source');
 source.addComponent('sound', {
   positional: true,
   distanceModel: 'linear',
-  refDistance: 2,      // m — [por ajustar con el material real]
-  maxDistance: 25,     // m — [por ajustar con el material real]
+  refDistance: 2,      // m , [por ajustar con el material real]
+  maxDistance: 25,     // m , [por ajustar con el material real]
   rollOffFactor: 1
 });
 source.sound.addSlot('water', { asset: waterLoopAsset, loop: true, autoPlay: false });
 source.setPosition(anchor.x, anchor.y, anchor.z);
 ```
 
-**El oyente es la cámara.** PlayCanvas usa la `AudioListener` de la cámara activa, así que la espacialización se actualiza sola conforme `TourEngine` mueve y gira la cámara. Ningún módulo de audio toca la cámara — eso sigue siendo invariante de arquitectura.
+**El oyente es la cámara.** PlayCanvas usa la `AudioListener` de la cámara activa, así que la espacialización se actualiza sola conforme `TourEngine` mueve y gira la cámara. Ningún módulo de audio toca la cámara, eso sigue siendo invariante de arquitectura.
 
 ### 3.1 Qué exige HRTF
 
@@ -50,7 +50,7 @@ El `panningModel: 'HRTF'` es más caro que `'equalpower'`. Por eso:
 
 - **Máximo 4 fuentes espaciales sonando a la vez.** Las demás se apagan por distancia.
 - El lecho ambiente **no** es posicional: es una pista estéreo, coste casi nulo.
-- En el perfil de calidad móvil, si el rendimiento no cierra, la primera palanca es bajar a 2 fuentes simultáneas — **no** desactivar el audio.
+- En el perfil de calidad móvil, si el rendimiento no cierra, la primera palanca es bajar a 2 fuentes simultáneas, **no** desactivar el audio.
 
 Esto es el RNF-016 (§6).
 
@@ -60,7 +60,7 @@ Esto es el RNF-016 (§6).
 
 **RNF-008 dice: el audio nunca se reproduce automáticamente.** Una ambientación "durante todo el recorrido" parece contradecirlo. No lo hace, si se define bien:
 
-> El lecho ambiente y las fuentes espaciales **arrancan con el gesto explícito con el que el visitante inicia el recorrido**, y nunca antes. Ese gesto —el botón «Iniciar recorrido»— es una acción del usuario, que es exactamente lo que RNF-008 exige y lo que las políticas de autoplay del navegador requieren de todos modos.
+> El lecho ambiente y las fuentes espaciales **arrancan con el gesto explícito con el que el visitante inicia el recorrido**, y nunca antes. Ese gesto, el botón «Iniciar recorrido», es una acción del usuario, que es exactamente lo que RNF-008 exige y lo que las políticas de autoplay del navegador requieren de todos modos.
 
 Reglas que lo hacen verificable:
 
@@ -106,12 +106,12 @@ Y refuerza los que ya existían: RNF-008 (nunca automático), RNF-006 (todo audi
 
 | Pieza | Carpeta | Dueño |
 |---|---|---|
-| `AmbienceController` — lecho continuo, arranque por gesto, silencio | `src/audio/` | **David Beltrán** |
-| `SpatialAudioSource` — fuente puntual HRTF anclada al tramo | `src/audio/` | **David Beltrán** |
-| `AudioPlayer` — narración y canto de la ficha | `src/audio/` | **David Beltrán** |
+| `AmbienceController`, lecho continuo, arranque por gesto, silencio | `src/audio/` | **David Beltrán** |
+| `SpatialAudioSource`, fuente puntual HRTF anclada al tramo | `src/audio/` | **David Beltrán** |
+| `AudioPlayer`, narración y canto de la ficha | `src/audio/` | **David Beltrán** |
 | Perfil de audio por dispositivo (nº de fuentes) | `src/engine/QualityProfile` | **Alejandra Chambueta** |
 | Grabación y edición del material | `assets/audio/` | Felipe Acevedo (edición), David Beltrán (grabación) |
-| Textos, transcripciones y el control de silencio en el HUD | — | Alberto Alemán (texto), Eybar Viasus (diseño) |
+| Textos, transcripciones y el control de silencio en el HUD | | Alberto Alemán (texto), Eybar Viasus (diseño) |
 
 Ver [`09-ambitos-de-los-tres-programadores.md`](09-ambitos-de-los-tres-programadores.md).
 

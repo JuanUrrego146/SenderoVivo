@@ -1,6 +1,6 @@
-# Ámbitos de los tres programadores — Sendero Vivo
+# Ámbitos de los tres programadores: Sendero Vivo
 
-> Versión 1,0 — 11/08/2026 · Responsable: Juan Urrego
+> Versión 1,0, 11/08/2026 · Responsable: Juan Urrego
 > Decisión asociada: [`decisiones/ADR-004-reparto-de-ambitos.md`](decisiones/ADR-004-reparto-de-ambitos.md)
 
 ---
@@ -25,7 +25,7 @@ Y las carpetas que no son de programación:
 
 | Carpeta | Dueño |
 |---|---|
-| `styles/` — tokens de color, tipografía, componentes | **Eybar Viasus** + **Alberto Alemán** |
+| `styles/`, tokens de color, tipografía, componentes | **Eybar Viasus** + **Alberto Alemán** |
 | `assets/models/` · `assets/audio/` | **Felipe Acevedo** |
 | `assets/scenes/` | **Juan Urrego** |
 | `docs/` · `plan/` | **Juan Urrego** |
@@ -34,7 +34,7 @@ Y las carpetas que no son de programación:
 
 ## 3. Qué hay dentro de cada ámbito
 
-### 3.1 `src/engine/` — Alejandra Chambueta
+### 3.1 `src/engine/`: Alejandra Chambueta
 
 | Módulo | Qué hace |
 |---|---|
@@ -47,7 +47,7 @@ Y las carpetas que no son de programación:
 
 **Nadie más escribe en `src/engine/`.** Ni para "un ajuste pequeño".
 
-### 3.2 `src/poi/`, `src/data/` y `src/audio/` — David Beltrán
+### 3.2 `src/poi/`, `src/data/` y `src/audio/`: David Beltrán
 
 | Carpeta | Módulos |
 |---|---|
@@ -57,15 +57,15 @@ Y las carpetas que no son de programación:
 
 Tres carpetas, un dueño, porque las tres responden a lo mismo: **lo que pasa cuando el visitante llega a un sitio**. El POI se activa, el dato cambia, el sonido se acerca. Separarlas entre dos personas obligaría a coordinar en cada historia de S5 y S6.
 
-### 3.3 `src/app/` y `src/ui/` — Juan Urrego
+### 3.3 `src/app/` y `src/ui/`: Juan Urrego
 
 | Carpeta | Qué hace |
 |---|---|
 | `src/app/` | `main.js`, arranque de la aplicación, cableado de módulos, gestión de estados globales, onboarding |
-| `src/ui/` | `HudView` y el shell de la interfaz — **implementación** del diseño de Eybar y Alberto |
+| `src/ui/` | `HudView` y el shell de la interfaz, **implementación** del diseño de Eybar y Alberto |
 | `config/` | `scenes.json`, `pois.json`, `track.json`, `soundscape.json` y sus esquemas de validación |
 
-Juan es el integrador: es quien conecta el motor de Alejandra con los POIs de David y con el diseño de Eybar y Alberto. Por eso `src/app/` es suyo — es la carpeta donde se ven los tres.
+Juan es el integrador: es quien conecta el motor de Alejandra con los POIs de David y con el diseño de Eybar y Alberto. Por eso `src/app/` es suyo, es la carpeta donde se ven los tres.
 
 **Aclaración sobre `src/ui/`:** Eybar y Alberto son diseñadores, no programadores. Ellos son **dueños del diseño** (`styles/`, especificación de componentes, textos); Juan es quien **implementa** `HudView` y el shell consumiendo esos tokens. Una PR que cambie la apariencia sin que el diseño esté en `styles/` se rechaza.
 
@@ -80,10 +80,10 @@ Donde dos ámbitos se tocan hay un contrato. Solo hay tres, y están escritas pa
 `TourEngine` publica la posición del recorrido; nadie la pide a la cámara.
 
 ```javascript
-// src/engine/TourEngine.js — Alejandra publica
+// src/engine/TourEngine.js , Alejandra publica
 this.events.fire('tour:progress', { distanceMeters, position, forward });
 
-// src/data/ y src/poi/ — David escucha
+// src/data/ y src/poi/ , David escucha
 tourEngine.events.on('tour:progress', ({ distanceMeters }) => { … });
 ```
 
@@ -106,7 +106,7 @@ El oyente de audio espacial es la cámara. `QualityProfile` decide cuántas fuen
 
 ```javascript
 // Alejandra expone
-qualityProfile.maxSpatialAudioSources;   // 4 escritorio, 2 móvil — [por medir en S4]
+qualityProfile.maxSpatialAudioSources;   // 4 escritorio, 2 móvil , [por medir en S4]
 ```
 
 **Regla:** `src/audio/` no configura el motor, y `src/engine/` no reproduce sonido.

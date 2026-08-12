@@ -1,4 +1,4 @@
-# Principios de trabajo — Sendero Vivo
+# Principios de trabajo: Sendero Vivo
 
 > Punto 1 de la actividad del curso (primera mitad).
 > Acordado en la reunión de inicio del **11 de agosto de 2026**.
@@ -10,19 +10,19 @@ Este documento es el contrato de trabajo del equipo. No describe cómo queremos 
 
 ## 1. Los cinco principios
 
-### P1 — Lo capturado manda sobre lo modelado
+### P1: Lo capturado manda sobre lo modelado
 El sendero es un lugar real dentro de una reserva protegida. La geometría del recorrido sale de la captura fotogramétrica, no del criterio artístico de nadie. Si la reconstrucción de una zona sale mal, se vuelve a capturar o se recorta el tramo: **no se modela a mano un pedazo de sendero para "arreglarlo"**. Lo que sí se modela es lo que la captura no puede resolver (aves, plantas de detalle, el puente, la señalización), y eso va siempre declarado como pieza modelada, no como parte del terreno.
 
-### P2 — El alcance está cerrado y no se negocia por entusiasmo
-La lista de "no lo hacemos" (README y `docs/02-vision-de-proyecto.md`) es tan vinculante como la de "sí". Una idea nueva no entra al sprint: entra al backlog, y solo se discute en la revisión de sprint. Nadie implementa nada que no esté trazado a un RF. Si una tarea no cita un RF o RNF, o sobra la tarea o falta el requerimiento — y entonces se agrega el requerimiento primero.
+### P2: El alcance está cerrado y no se negocia por entusiasmo
+La lista de "no lo hacemos" (README y `docs/02-vision-de-proyecto.md`) es tan vinculante como la de "sí". Una idea nueva no entra al sprint: entra al backlog, y solo se discute en la revisión de sprint. Nadie implementa nada que no esté trazado a un RF. Si una tarea no cita un RF o RNF, o sobra la tarea o falta el requerimiento, y entonces se agrega el requerimiento primero.
 
-### P3 — Nadie se bloquea más de un día en silencio
+### P3: Nadie se bloquea más de un día en silencio
 Somos primerizos en el stack. Atascarse es lo esperado, no la excepción. Lo inaceptable es atascarse callado. Regla dura: **24 horas hábiles de bloqueo sin avance ⇒ se escribe en el canal del equipo**, con qué se intentó y qué falló. Pedir ayuda a tiempo no es debilidad; es la única forma de que 14 semanas alcancen.
 
-### P4 — Espacios listos antes de que lleguen los demás
+### P4: Espacios listos antes de que lleguen los demás
 El integrador (Juan) deja preparados los contratos de datos, las carpetas y los puntos de extensión **antes** de que artistas y programadores necesiten usarlos. Un artista no debe esperar a que exista el motor para exportar un modelo, ni un programador debe inventarse el formato del JSON de POIs. Esto es lo que permite que E3 (modelado) corra en paralelo con E1 (procesamiento).
 
-### P5 — Cada entrega se prueba en un celular de verdad
+### P5: Cada entrega se prueba en un celular de verdad
 El objetivo es el navegador móvil. Una funcionalidad que solo se probó en el escritorio del desarrollador **no está terminada**. El rendimiento en gama media (RNF-001) es un requisito, no una aspiración de la última semana.
 
 ---
@@ -71,14 +71,14 @@ main                       ← solo versiones entregables (hitos y entrega final
 1. `main` y `develop` están protegidas: nadie hace push directo. Solo se entra por Pull Request.
 2. **Cada persona trabaja en su propia rama `dev/<nombre>`.** Es su espacio: puede subir a ella cuando quiera y todas las veces que quiera, sin pedir permiso ni romperle nada a nadie.
 3. Si alguien quiere separar una historia concreta, abre una rama hija de la suya:
-   `dev/alejandra-chambueta/HU-18-avance-retroceso`. Es opcional.
+`dev/alejandra-chambueta/HU-18-avance-retroceso`. Es opcional.
 4. **La rama de cada persona se fusiona a `develop` por Pull Request al menos una vez por semana**, coincidiendo con la entrega semanal del viernes. Una rama que lleva más de una semana sin fusionarse es un problema que se dice en la sincronización, no en la demo.
 5. `develop` → `main` solo en los hitos: fin de S4 (motor navegable), fin de S6 (experiencia completa) y entrega final.
 6. **Antes de empezar el día, `git pull` de `develop` a tu rama.** El reparto por carpetas (ver [`09-ambitos-de-los-tres-programadores.md`](09-ambitos-de-los-tres-programadores.md)) hace que los conflictos sean raros, pero raros no es ninguno.
 
-> **Por qué por persona y no por épica.** Las épicas se solapan —S2b corre en paralelo con S2, y S5 y S6 comparten módulos con S3 y S4—, así que una rama por épica acaba con dos personas dentro. Una rama por persona no tiene esa ambigüedad: si hay un conflicto, hay exactamente dos nombres que hablar.
+> **Por qué por persona y no por épica.** Las épicas se solapan, S2b corre en paralelo con S2, y S5 y S6 comparten módulos con S3 y S4, así que una rama por épica acaba con dos personas dentro. Una rama por persona no tiene esa ambigüedad: si hay un conflicto, hay exactamente dos nombres que hablar.
 
-**Mensajes de commit** — Conventional Commits, en español:
+**Mensajes de commit**, Conventional Commits, en español:
 
 ```
 feat(motor): avanzar y retroceder sobre el trazado guiado (RF-003)
@@ -104,7 +104,7 @@ El tipo va en inglés (`feat`, `fix`, `docs`, `chore`, `refactor`, `perf`, `test
   | Eybar / Alberto (`styles/`) | El otro de los dos, y **Juan** si cambian tokens |
   | Felipe (`assets/`) | **Juan** |
 
-  Juan no es revisor único de nada: si él integra y además revisa todo, deja de haber revisión.
+Juan no es revisor único de nada: si él integra y además revisa todo, deja de haber revisión.
 - **Tamaño máximo recomendado:** 400 líneas de diff. Una PR más grande se parte, salvo que sea generada (assets, datos).
 - **Plazo de respuesta:** 24 horas hábiles. Pasado ese plazo, quien abrió la PR la escala en el canal del equipo.
 - **Qué se revisa, en este orden:**
@@ -133,7 +133,7 @@ El tipo va en inglés (`feat`, `fix`, `docs`, `chore`, `refactor`, `perf`, `test
 **Sobre la entrega semanal.** El curso exige entregar todas las semanas y el enunciado exige sprints de dos semanas. Se resuelve así: **el sprint es la unidad de compromiso; la semana es la unidad de entrega.** Cada historia lleva su etiqueta de semana (`W01`…`W15`) en Jira y en GitHub, además de la de sprint, así que filtrando por semana sale exactamente lo que toca enseñar ese viernes. El calendario completo está en [`../plan/plan_de_trabajo.md`](../plan/plan_de_trabajo.md) §8 bis.
 
 **Reglas de las ceremonias:**
-- La entrega semanal se enseña **sobre `develop`**, no sobre la rama de nadie. Si una semana no hay nada enseñable, se dice ahí — no se maquilla ni se deja para la demo del sprint.
+- La entrega semanal se enseña **sobre `develop`**, no sobre la rama de nadie. Si una semana no hay nada enseñable, se dice ahí, no se maquilla ni se deja para la demo del sprint.
 - La sincronización corta es de 15 minutos reales. Lo que se pase, se saca a una reunión aparte.
 - La demo se hace sobre lo que está en `develop`, no sobre la rama de nadie.
 - La retro produce **un solo compromiso concreto** con dueño y fecha. Uno. Diez compromisos son cero compromisos.
@@ -163,19 +163,19 @@ El tipo va en inglés (`feat`, `fix`, `docs`, `chore`, `refactor`, `perf`, `test
 
 Escalado en tres niveles, con reloj:
 
-**Nivel 1 — Autonomía (primeras 24 h hábiles).**
+**Nivel 1, Autonomía (primeras 24 h hábiles).**
 Se intenta resolver solo: documentación oficial, foro de PlayCanvas, ejemplos del motor, preguntar a una IA. Se anota qué se probó.
 
-**Nivel 2 — El equipo (24–48 h).**
+**Nivel 2, El equipo (24–48 h).**
 Se escribe en el canal con el formato: *qué intento hacer · qué probé · qué error me da · qué necesito*. El dueño de la épica correspondiente responde primero. Si es transversal, responde Juan.
 
-**Nivel 3 — Decisión (más de 48 h).**
+**Nivel 3, Decisión (más de 48 h).**
 Se convoca la revisión técnica de riesgo (§5). De ahí sale **una** de estas cuatro salidas, y queda escrita:
 
-1. **Se resuelve** — alguien lo desatasca, se documenta la solución.
-2. **Se cambia el enfoque** — se busca otro camino técnico dentro del stack. Nunca fuera de él sin ADR.
-3. **Se reduce** — la historia se recorta a una versión más simple que sigue cumpliendo el RF, y se anota qué se recortó.
-4. **Se aplaza y se aísla** — sale del sprint, se marca `blocked` en GitHub, y se documenta qué la desbloquearía.
+1. **Se resuelve**, alguien lo desatasca, se documenta la solución.
+2. **Se cambia el enfoque**, se busca otro camino técnico dentro del stack. Nunca fuera de él sin ADR.
+3. **Se reduce**, la historia se recorta a una versión más simple que sigue cumpliendo el RF, y se anota qué se recortó.
+4. **Se aplaza y se aísla**, sale del sprint, se marca `blocked` en GitHub, y se documenta qué la desbloquearía.
 
 **Bloqueos técnicos ya anticipados** (con su plan de choque en `docs/03-avances-tecnologia.md`):
 - La reconstrucción de la vegetación densa sale con ruido o "flotantes".
@@ -194,7 +194,7 @@ Este equipo es de seis personas con carga académica simultánea. Que alguien no
 
 1. **Se replantea la historia, no la persona.** Primero se pregunta si la historia estaba mal estimada o mal cortada. Casi siempre lo estaba.
 2. **Se parte.** Se saca la mitad que sí se puede terminar, se cierra esa, y el resto vuelve al backlog con su estimación corregida.
-3. **Se empareja.** Otra persona con holgura entra a trabajar con quien está atascado — juntos, no reemplazándolo. El conocimiento se queda en dos cabezas en lugar de una.
+3. **Se empareja.** Otra persona con holgura entra a trabajar con quien está atascado, juntos, no reemplazándolo. El conocimiento se queda en dos cabezas en lugar de una.
 4. **Se reasigna.** Solo si la persona sigue sin disponibilidad el siguiente sprint. La historia cambia de dueño en Jira y en GitHub, sin discusión moral.
 5. **Se protege el camino crítico.** Si lo que no alcanzó está en el camino crítico (E1 en S1–S2, E2 en S3–S4), tiene prioridad sobre cualquier otra cosa del sprint y el equipo se reorganiza alrededor.
 

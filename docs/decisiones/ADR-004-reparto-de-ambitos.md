@@ -1,4 +1,4 @@
-# ADR-004 — Reparto de ámbitos entre los tres programadores
+# ADR-004: Reparto de ámbitos entre los tres programadores
 
 > Fecha: 11/08/2026 · Estado: **Aceptada** · Responsable: Juan Urrego
 
@@ -6,9 +6,9 @@
 
 ## Contexto
 
-El equipo tiene **tres programadores** —Juan Urrego, Alejandra Chambueta y David Beltrán— además del artista 3D y los dos diseñadores de UI/UX. Hasta ahora el reparto estaba definido por **épica** (E1 Juan, E2 Alejandra, E3/E4 David), no por **archivo**.
+El equipo tiene **tres programadores**, Juan Urrego, Alejandra Chambueta y David Beltrán, además del artista 3D y los dos diseñadores de UI/UX. Hasta ahora el reparto estaba definido por **épica** (E1 Juan, E2 Alejandra, E3/E4 David), no por **archivo**.
 
-Repartir por épica funciona mientras las épicas van en serie. Deja de funcionar en cuanto dos épicas se solapan —y aquí se solapan: S2b corre en paralelo con S2, y S5 y S6 comparten módulos con S3 y S4—. Además aparecen tres piezas nuevas sin dueño: `LodController` (RF-027), `src/audio/` (RF-028) y la implementación del HUD.
+Repartir por épica funciona mientras las épicas van en serie. Deja de funcionar en cuanto dos épicas se solapan, y aquí se solapan: S2b corre en paralelo con S2, y S5 y S6 comparten módulos con S3 y S4. Además aparecen tres piezas nuevas sin dueño: `LodController` (RF-027), `src/audio/` (RF-028) y la implementación del HUD.
 
 El síntoma que se quiere evitar es concreto: dos personas editando el mismo archivo la misma semana, y el conflicto apareciendo en el merge del viernes.
 

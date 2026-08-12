@@ -1,8 +1,8 @@
-# Plan de trabajo — Sendero Vivo
+# Plan de trabajo: Sendero Vivo
 
-> Versión 1,1 — 11/08/2026 · Responsable: Juan Urrego
+> Versión 1,1, 11/08/2026 · Responsable: Juan Urrego
 > Periodo: **11 de agosto – 28 de noviembre de 2026** (15 semanas)
-> **Dedicación: 12 horas semanales por persona** — es la exigencia del curso y es la base de todo el cálculo de este documento.
+> **Dedicación: 12 horas semanales por persona**, es la exigencia del curso y es la base de todo el cálculo de este documento.
 
 > **Este plan es una guía inicial, no el plan definitivo.** La visita de reconocimiento (V1) de la semana 2 va a cambiar el tramo exacto, los puntos de interés y probablemente algunas estimaciones. Está previsto que así sea.
 
@@ -20,7 +20,7 @@
 
 Se usa el **punto medio de cada banda**. Los RNF transversales suman como tareas propias, no se diluyen en los RF.
 
-**Margen del 50 %, no del 30 %.** El equipo es primerizo con **las tres tecnologías centrales al mismo tiempo** (Gaussian Splatting, SuperSplat/SOG y PlayCanvas). Además, buena parte del proyecto es producción de contenido físico —cuatro salidas de campo que dependen del clima— donde el reintento cuesta días, no horas. El 30 % habitual asume familiaridad con el stack; aquí no la hay.
+**Margen del 50 %, no del 30 %.** El equipo es primerizo con **las tres tecnologías centrales al mismo tiempo** (Gaussian Splatting, SuperSplat/SOG y PlayCanvas). Además, buena parte del proyecto es producción de contenido físico, cuatro salidas de campo que dependen del clima, donde el reintento cuesta días, no horas. El 30 % habitual asume familiaridad con el stack; aquí no la hay.
 
 Además de RF y RNF, el plan estima explícitamente el **trabajo de producción** (campo, procesamiento, modelado 3D, audio, diseño) y la **gestión**. Sin ellos la estimación estaría mintiendo: en este proyecto la mayor parte del esfuerzo **no es escribir código**.
 
@@ -176,7 +176,7 @@ Cuatro visitas de 5 h. El cálculo es en **horas-persona**: una visita de 5 h a 
 | **Demanda estimada** | **1.052 h** |
 | **Holgura** | **28 h (2,6 %)** |
 
-**Lectura honesta de esta cifra.** La utilización queda en el **97,4 %**, que es alto y hay que decirlo sin adornos. Pero el colchón real no son esas 28 horas: son las **351 horas de margen** ya incorporadas al total. Si todo saliera perfecto —que no va a pasar— el proyecto se cerraría en 701 h y sobrarían casi cinco semanas de capacidad del equipo.
+**Lectura honesta de esta cifra.** La utilización queda en el **97,4 %**, que es alto y hay que decirlo sin adornos. Pero el colchón real no son esas 28 horas: son las **351 horas de margen** ya incorporadas al total. Si todo saliera perfecto, que no va a pasar, el proyecto se cerraría en 701 h y sobrarían casi cinco semanas de capacidad del equipo.
 
 La cifra que hay que vigilar en cada retrospectiva no es la holgura: es **cuánto margen queda consumido**. Es el indicador temprano de si hay que recortar alcance, y hay que mirarlo antes de la semana 10, no después.
 
@@ -188,16 +188,16 @@ La cifra que hay que vigilar en cada retrospectiva no es la holgura: es **cuánt
 
 ## 7. Esfuerzo por persona
 
-Con 12 h semanales, el techo individual es de **180 h en las 15 semanas**. Ninguna asignación puede pasar de ahí — antes ese límite no existía en el plan y por eso aparecían personas con 218 h, que era imposible.
+Con 12 h semanales, el techo individual es de **180 h en las 15 semanas**. Ninguna asignación puede pasar de ahí, antes ese límite no existía en el plan y por eso aparecían personas con 218 h, que era imposible.
 
 | Persona | Horas estimadas | h/semana | % de su capacidad | Carga |
 |---|---|---|---|---|
-| **Juan Urrego** | 180 | 12,0 | **100 %** | 🔴 Al límite |
-| **Felipe Acevedo** | 180 | 12,0 | **100 %** | 🔴 Al límite |
-| **David Beltrán** | 180 | 12,0 | **100 %** | 🔴 Al límite |
-| **Alejandra Chambueta** | 176 | 11,7 | 98 % | 🟠 Alta |
-| **Alberto Alemán** | 170 | 11,3 | 94 % | 🟠 Alta |
-| **Eybar Viasus** | 166 | 11,1 | 92 % | 🟠 Alta |
+| **Juan Urrego** | 180 | 12,0 | **100 %** |  Al límite |
+| **Felipe Acevedo** | 180 | 12,0 | **100 %** |  Al límite |
+| **David Beltrán** | 180 | 12,0 | **100 %** |  Al límite |
+| **Alejandra Chambueta** | 176 | 11,7 | 98 % |  Alta |
+| **Alberto Alemán** | 170 | 11,3 | 94 % |  Alta |
+| **Eybar Viasus** | 166 | 11,1 | 92 % |  Alta |
 | **Total** | **1.052** | **11,7 promedio** | **97,4 %** | |
 
 ### 7.1 Qué dice de verdad esta tabla
@@ -230,7 +230,7 @@ Se resuelve igual que en la versión anterior, y sigue siendo válido: **S2b est
 
 ### 7.4 Nadie se queda sin trabajo en ninguna semana
 
-Se revisó el backlog persona por persona y sprint por sprint, y aparecieron **tres huecos reales**: Alejandra no tenía nada asignado en S6, y Felipe no tenía nada ni en S6 ni en S7 — **cuatro semanas seguidas**, del 20 de octubre al 16 de noviembre.
+Se revisó el backlog persona por persona y sprint por sprint, y aparecieron **tres huecos reales**: Alejandra no tenía nada asignado en S6, y Felipe no tenía nada ni en S6 ni en S7, **cuatro semanas seguidas**, del 20 de octubre al 16 de noviembre.
 
 Se corrigió añadiendo dos historias que **no son relleno**:
 
@@ -239,7 +239,7 @@ Se corrigió añadiendo dos historias que **no son relleno**:
 | **HU-51** · Segunda pasada de optimización de los assets 3D | S6 | Felipe + Alejandra | El presupuesto de triángulos se fijó en S2b **con una estimación**. En S4 se miden los fps reales y en S5 se integran los POIs: hasta S6 no hay números de verdad con los que revisarlo |
 | **HU-52** · Cierre visual del catálogo 3D con el sistema de diseño | S7 | Felipe + Eybar | Los modelos se hicieron **antes de que existiera la paleta definitiva**. Un ave verde sobre un fondo verde no se ve, y eso solo se descubre cuando ambos coinciden en la misma pantalla |
 
-**Esto no infla el total: redistribuye el pico de Felipe.** Tenía 103 puntos concentrados en S2b —dos semanas— y ahora parte del cierre de assets se hace cuando ya existen los datos que lo justifican. La comprobación se puede repetir en cualquier momento sobre `backlog-jira.csv`: no debe quedar ninguna casilla vacía en la matriz persona × sprint.
+**Esto no infla el total: redistribuye el pico de Felipe.** Tenía 103 puntos concentrados en S2b, dos semanas, y ahora parte del cierre de assets se hace cuando ya existen los datos que lo justifican. La comprobación se puede repetir en cualquier momento sobre `backlog-jira.csv`: no debe quedar ninguna casilla vacía en la matriz persona × sprint.
 
 > S2 y S2b son **las mismas semanas de calendario**, así que se cuentan juntas al hacer esta comprobación. Que alguien no tenga nada en S2b no significa nada si tiene trabajo en S2.
 
@@ -278,7 +278,7 @@ Ninguna semana supera las **72 h** de capacidad del equipo (6 × 12).
 
 El curso exige **entregar todas las semanas**, y el enunciado exige a la vez **8 sprints de dos semanas**. No son incompatibles, pero hay que decir cómo se resuelve:
 
-> **El sprint sigue siendo de dos semanas — es la unidad de planificación y de compromiso. La semana es la unidad de entrega.** Cada semana cierra con algo enseñable, y la segunda semana de cada sprint cierra además el sprint con su demo y su retrospectiva.
+> **El sprint sigue siendo de dos semanas, es la unidad de planificación y de compromiso. La semana es la unidad de entrega.** Cada semana cierra con algo enseñable, y la segunda semana de cada sprint cierra además el sprint con su demo y su retrospectiva.
 
 Para que esto no sea una declaración de intenciones, **cada historia lleva su etiqueta de semana** (`W01` … `W15`) en Jira y en GitHub, además de la de sprint. Filtrando por `W07` sale exactamente lo que hay que entregar esa semana.
 
@@ -302,7 +302,7 @@ Para que esto no sea una declaración de intenciones, **cada historia lleva su e
 
 **Regla de la entrega semanal:** lo que se enseña el viernes tiene que estar en `develop`, no en la rama de nadie. Si una semana no hay nada enseñable, eso **es** la información importante y se dice en la sincronización del viernes, no en la demo del sprint (principio de `01-principios-de-trabajo.md` §8: avisar a tiempo no tiene consecuencia; que se descubra tarde, sí).
 
-**Cómo verlo en Jira:** el backlog filtra por la etiqueta de semana. Las 15 semanas están cubiertas y **ninguna persona tiene una semana vacía** — comprobado en §7.4.
+**Cómo verlo en Jira:** el backlog filtra por la etiqueta de semana. Las 15 semanas están cubiertas y **ninguna persona tiene una semana vacía**, comprobado en §7.4.
 
 ---
 
@@ -325,11 +325,11 @@ Para que esto no sea una declaración de intenciones, **cada historia lleva su e
 ## 10. Camino crítico y holguras
 
 ```
-V1 ──► V2 ──► S2 ──► S3 ──► S4 ──► S6 ──► S7 ──► Cierre       ← camino crítico
+V1 ── V2 ── S2 ── S3 ── S4 ── S6 ── S7 ── Cierre       ← camino crítico
         │
-        ├──► V3 ·········► S5 (audio)                          ← holgura
-        ├──► V4 ·········► S4 (verificación)                   ← holgura
-        └──► S2b ·······································► S5   ← holgura de 4 semanas
+        ├── V3 ········· S5 (audio)                          ← holgura
+        ├── V4 ········· S4 (verificación)                   ← holgura
+        └── S2b ······································· S5   ← holgura de 4 semanas
 ```
 
 - **En el camino crítico:** V1, V2, S2, S3, S4, S6, S7 y el cierre.

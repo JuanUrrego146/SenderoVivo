@@ -1,6 +1,6 @@
-# Arquitectura — Sendero Vivo
+# Arquitectura: Sendero Vivo
 
-> Versión 1,0 — 11/08/2026 · Responsable: Juan Urrego
+> Versión 1,0, 11/08/2026 · Responsable: Juan Urrego
 > Todos los diagramas están en Mermaid: GitHub los renderiza de forma nativa y una IA de código los lee como texto.
 
 ---
@@ -15,26 +15,26 @@ Esa simplicidad es deliberada. El proyecto tiene el riesgo concentrado en la **p
 
 ```mermaid
 flowchart TB
-    subgraph campo["1. Campo — Quebrada La Vieja"]
+    subgraph campo["1. Campo , Quebrada La Vieja"]
         CAM["Celular iPhone 13<br/>Video 4K 60fps, manual"]
         GPS["Track GPS<br/>del recorrido"]
         AUD["Audio ambiente<br/>y cantos"]
     end
 
-    subgraph proc["2. Procesamiento — estación con GPU del equipo"]
+    subgraph proc["2. Procesamiento , estación con GPU del equipo"]
         FRM["Extraccion de cuadros"]
         SFM["SfM: poses de camara"]
         TRN["Entrenamiento 3DGS"]
         PLY["Escena .ply<br/>~1 GB"]
     end
 
-    subgraph edit["3. Edicion — navegador"]
+    subgraph edit["3. Edicion , navegador"]
         SS["SuperSplat<br/>limpieza, recorte, color"]
         ST["SplatTransform CLI<br/>compresion"]
         SOG["Escena .sog<br/>~15-20x mas liviana"]
     end
 
-    subgraph assets["4. Assets publicados — hosting estatico"]
+    subgraph assets["4. Assets publicados , hosting estatico"]
         S1["scene-01.sog"]
         S2["scene-02.sog"]
         S3["scene-03.sog"]
@@ -43,7 +43,7 @@ flowchart TB
         CFG["scenes.json<br/>pois.json<br/>track.json"]
     end
 
-    subgraph app["5. Aplicacion — PlayCanvas Engine 2.21"]
+    subgraph app["5. Aplicacion , PlayCanvas Engine 2.21"]
         ENG["Motor de recorrido"]
         POI["Sistema de POIs"]
         DATA["Capa de datos"]
@@ -75,7 +75,7 @@ flowchart TB
 | Edición | SuperSplat (MIT) | Navegador, local |
 | Compresión | SplatTransform CLI | Local |
 | Render y lógica | PlayCanvas Engine 2.21.3 (MIT) | Navegador del visitante |
-| Entrega | Hosting estático + HTTPS | — |
+| Entrega | Hosting estático + HTTPS | |
 
 ---
 
@@ -518,7 +518,7 @@ Los tres archivos que gobiernan el contenido. **Cambiarlos es cambiar el product
 {
   "version": 1,
   "trail": {
-    "name": "Quebrada La Vieja — sector Claro de Luna, tramo de entrada",
+    "name": "Quebrada La Vieja , sector Claro de Luna, tramo de entrada",
     "totalLengthMeters": 200,
     "startAltitudeMeters": 2712,
     "elevationGainMeters": null,
@@ -655,7 +655,7 @@ Invariantes. Una PR que rompa cualquiera de estas se rechaza sin discusión.
 8. **Todo texto visible está en español; todo identificador de código, en inglés.** Sin mezclas.
 9. **Los assets pesados nunca entran a Git.** `*.ply`, `*.sog`, `assets/raw/` y el video de captura están en `.gitignore`.
 10. **Nada de datos inventados.** Altitudes, distancias, nombres científicos y notas históricas se verifican o se marcan `[por medir en campo]` / `[por verificar]`.
-11. **Ninguna funcionalidad sin RF.** Si no traza a un requerimiento, o sobra la funcionalidad o falta el requerimiento — y entonces se agrega el requerimiento primero.
+11. **Ninguna funcionalidad sin RF.** Si no traza a un requerimiento, o sobra la funcionalidad o falta el requerimiento, y entonces se agrega el requerimiento primero.
 12. **`src/audio/` no toca la cámara y `src/engine/` no reproduce sonido.** El oyente del audio espacial es la cámara activa que ya mueve `TourEngine`.
 13. **Ningún módulo lee la cámara para saber dónde está el visitante.** Se escucha `tour:progress`, que publica `distanceMeters`.
 14. **Ningún archivo `.js` escribe un color literal.** Todo color sale de `styles/tokens.css`.
@@ -682,7 +682,7 @@ SenderoVivo/
 │   ├── 09-ambitos-de-los-tres-programadores.md
 │   ├── 10-guion-de-la-presentacion.md
 │   ├── arquitectura.md
-│   ├── F_Analisis_de_Requerimientos_V1,1_SenderoVivo.docx
+│   ├── F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx
 │   └── decisiones/
 │       ├── ADR-001-eleccion-de-sendero.md
 │       ├── ADR-002-lod-por-proximidad.md
@@ -693,24 +693,24 @@ SenderoVivo/
 │   └── backlog-jira.csv
 ├── scripts/
 │   └── sync-github.mjs         Sincroniza GitHub desde plan/backlog-jira.csv
-├── src/                        (código — desde el Sprint 3)
-│   ├── app/                    Juan      — main.js, cableado, onboarding, estados
-│   ├── engine/                 Alejandra — TourEngine, SceneLoader, TrailPath,
+├── src/                        (código , desde el Sprint 3)
+│   ├── app/                    Juan      : main.js, cableado, onboarding, estados
+│   ├── engine/                 Alejandra , TourEngine, SceneLoader, TrailPath,
 │   │                                       CameraRig, QualityProfile, LodController
-│   ├── poi/                    David     — PoiManager, PoiCard, ModelViewer
-│   ├── data/                   David     — TrailDataLayer, GpsTrack
-│   ├── audio/                  David     — AmbienceController, SpatialAudioSource,
+│   ├── poi/                    David     : PoiManager, PoiCard, ModelViewer
+│   ├── data/                   David     : TrailDataLayer, GpsTrack
+│   ├── audio/                  David     : AmbienceController, SpatialAudioSource,
 │   │                                       AudioPlayer
-│   └── ui/                     Juan      — HudView y shell (diseño de Eybar + Alberto)
-├── styles/                     Eybar + Alberto — tokens.css, componentes
+│   └── ui/                     Juan      : HudView y shell (diseño de Eybar + Alberto)
+├── styles/                     Eybar + Alberto , tokens.css, componentes
 ├── config/
 │   ├── scenes.json
 │   ├── pois.json
 │   ├── track.json
 │   └── soundscape.json
 └── assets/
-    ├── raw/                    (ignorado por Git — video y capturas brutas)
-    ├── scenes/                 (ignorado — .sog)
+    ├── raw/                    (ignorado por Git , video y capturas brutas)
+    ├── scenes/                 (ignorado , .sog)
     ├── models/                 (.glb optimizados, con animación idle)
     ├── audio/
     └── text/

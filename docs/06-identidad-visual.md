@@ -1,13 +1,13 @@
-# Identidad visual — Sendero Vivo
+# Identidad visual: Sendero Vivo
 
-> Versión 1,0 — 11/08/2026 · Responsable: Eybar Viasus, con Alberto Alemán
+> Versión 1,0, 11/08/2026 · Responsable: Eybar Viasus, con Alberto Alemán
 > **Paleta inicial**, no definitiva. Se contrasta contra el lugar en la visita de reconocimiento (V1) y se cierra en S7 con la auditoría de accesibilidad (RNF-006).
 
 ---
 
 ## 1. El encargo
 
-Paleta de **grises, negros y verdes**, resaltando **la quebrada y la fauna** del tramo. La interfaz aparece sobre todo en las interacciones de ver cada especie en su punto de interés — es decir, **la ficha es la pantalla que más importa**.
+Paleta de **grises, negros y verdes**, resaltando **la quebrada y la fauna** del tramo. La interfaz aparece sobre todo en las interacciones de ver cada especie en su punto de interés, es decir, **la ficha es la pantalla que más importa**.
 
 De ahí salen tres reglas de partida:
 
@@ -40,12 +40,12 @@ Calculado según WCAG 2.1 sobre `--sv-black-900` (`#0E1210`) y sobre `--sv-gray-
 
 | Combinación | Ratio | AA texto normal (4,5:1) | AA texto grande / UI (3:1) |
 |---|---|---|---|
-| `gray-050` sobre `black-900` | **≈ 16,6 : 1** | ✅ | ✅ |
-| `gray-200` sobre `black-900` | **≈ 10,2 : 1** | ✅ | ✅ |
-| `green-300` sobre `black-900` | **≈ 9,9 : 1** | ✅ | ✅ |
-| `water-400` sobre `black-900` | **≈ 6,5 : 1** | ✅ | ✅ |
-| `green-700` sobre `gray-050` | **≈ 6,9 : 1** | ✅ | ✅ |
-| `green-500` sobre `gray-050` | **≈ 3,7 : 1** | ❌ **No** | ✅ |
+| `gray-050` sobre `black-900` | **≈ 16,6 : 1** |  |  |
+| `gray-200` sobre `black-900` | **≈ 10,2 : 1** |  |  |
+| `green-300` sobre `black-900` | **≈ 9,9 : 1** |  |  |
+| `water-400` sobre `black-900` | **≈ 6,5 : 1** |  |  |
+| `green-700` sobre `gray-050` | **≈ 6,9 : 1** |  |  |
+| `green-500` sobre `gray-050` | **≈ 3,7 : 1** |  **No** |  |
 
 **Regla que sale de la tabla:** `--sv-green-500` es un color de **marcador y de componente de interfaz**, nunca de texto corrido sobre fondo claro. Para texto sobre claro se usa `--sv-green-700`.
 
@@ -53,9 +53,9 @@ Calculado según WCAG 2.1 sobre `--sv-black-900` (`#0E1210`) y sobre `--sv-gray-
 
 ### 2.2 Lo que la paleta prohíbe
 
-- ❌ Rojo, naranja o amarillo como color de interfaz. No hay nada de eso en el bosque y rompería la lectura de la escena. (Excepción única y obligatoria: los estados de error de RNF-007, que usan `--sv-gray-050` sobre `--sv-black-900` con un icono, **nunca solo color** — lo exige RNF-006.)
-- ❌ Degradados sobre la escena capturada.
-- ❌ Comunicar cualquier dato **solo** por color. Siempre hay texto o forma acompañando (RNF-006).
+- Rojo, naranja o amarillo como color de interfaz. No hay nada de eso en el bosque y rompería la lectura de la escena. (Excepción única y obligatoria: los estados de error de RNF-007, que usan `--sv-gray-050` sobre `--sv-black-900` con un icono, **nunca solo color**, lo exige RNF-006.)
+- Degradados sobre la escena capturada.
+- Comunicar cualquier dato **solo** por color. Siempre hay texto o forma acompañando (RNF-006).
 
 ---
 
@@ -79,15 +79,15 @@ Es la pantalla donde vive la interfaz. Jerarquía de arriba abajo:
 
 ```
 ┌──────────────────────────────────┐
-│  [ visor 3D — fondo black-900 ]  │  ← el modelo ocupa la mitad superior
+│  [ visor 3D , fondo black-900 ]  │  ← el modelo ocupa la mitad superior
 │      modelo girable + zoom       │     animación idle de aleteo activa
 ├──────────────────────────────────┤
 │  Colibrí chillón                 │  ← gray-050, 600, 22 px
 │  Colibri coruscans               │  ← green-300, cursiva, 15 px
 │                                  │
-│  ▸ Escuchar narración   0:48     │  ← control de audio, nunca automático
-│  ▸ Escuchar el canto             │  ← solo si type = "fauna"
-│  ▸ Ver transcripción             │  ← obligatorio si hay narración
+│   Escuchar narración   0:48     │  ← control de audio, nunca automático
+│   Escuchar el canto             │  ← solo si type = "fauna"
+│   Ver transcripción             │  ← obligatorio si hay narración
 │                                  │
 │  Vive entre 1.700 y 3.500 msnm   │  ← gray-200, 16 px
 │  Cómo identificarlo en campo…    │
@@ -137,7 +137,7 @@ Los tokens viven en `styles/tokens.css` como variables CSS y son la **única** f
 }
 ```
 
-**Invariante:** ningún archivo `.js` ni ningún componente escribe un color literal. Si hace falta un color que no está aquí, se añade aquí primero — y se le calcula el contraste antes de usarlo.
+**Invariante:** ningún archivo `.js` ni ningún componente escribe un color literal. Si hace falta un color que no está aquí, se añade aquí primero, y se le calcula el contraste antes de usarlo.
 
 **Dueños:** `styles/` es de **Eybar Viasus y Alberto Alemán**. Los tres programadores consumen los tokens; no los definen. Ver [`09-ambitos-de-los-tres-programadores.md`](09-ambitos-de-los-tres-programadores.md).
 

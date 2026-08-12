@@ -1,4 +1,4 @@
-# ADR-003 — Ambientación sonora binaural con audio espacial 3D
+# ADR-003: Ambientación sonora binaural con audio espacial 3D
 
 > Fecha: 11/08/2026 · Estado: **Aceptada** · Responsable: David Beltrán, con Juan Urrego
 > Requerimientos que crea: **RF-028**, **RNF-016**
@@ -9,7 +9,7 @@
 
 La experiencia se definió como no solo visual e interactiva, sino también **auditiva**: ambientación sonora durante todo el recorrido, **binaural, con audio espacial 3D**.
 
-Hasta ahora el proyecto solo contemplaba audio **dentro de la ficha** —narración y canto del ave (RF-011, RF-012)—, siempre disparado por el usuario y sujeto a RNF-008: *el audio no se reproduce automáticamente en ningún caso*.
+Hasta ahora el proyecto solo contemplaba audio **dentro de la ficha**, narración y canto del ave (RF-011, RF-012), siempre disparado por el usuario y sujeto a RNF-008: *el audio no se reproduce automáticamente en ningún caso*.
 
 Una ambientación continua entra en tensión directa con ese requerimiento. Y añade coste de CPU en un proyecto cuyo margen de rendimiento en móvil ya está comprometido (RNF-001, riesgo R2).
 
@@ -23,8 +23,8 @@ Una ambientación continua entra en tensión directa con ese requerimiento. Y a�
 
 | Capa | Espacializada | Coste |
 |---|---|---|
-| **Lecho ambiente** — fondo continuo del bosque | No. Estéreo fijo | Casi nulo |
-| **Fuentes puntuales** — cauce, cantos, ancladas a coordenadas reales | **Sí. HRTF** | Alto, y por eso acotado |
+| **Lecho ambiente**, fondo continuo del bosque | No. Estéreo fijo | Casi nulo |
+| **Fuentes puntuales**, cauce, cantos, ancladas a coordenadas reales | **Sí. HRTF** | Alto, y por eso acotado |
 
 Separarlas es lo que permite tener continuidad sonora barata y espacialidad solo donde aporta.
 
@@ -36,7 +36,7 @@ Se implementa con el `SoundComponent` de PlayCanvas sobre la Web Audio API, con 
 
 La ambientación arranca **con el gesto con el que el visitante inicia el recorrido**, nunca antes. Cinco reglas lo hacen verificable:
 
-1. Nada suena antes del primer gesto — ni en carga ni en onboarding.
+1. Nada suena antes del primer gesto, ni en carga ni en onboarding.
 2. El botón de inicio anuncia el sonido y ofrece «Iniciar en silencio».
 3. Control de silencio siempre visible en el HUD.
 4. La preferencia se recuerda entre visitas.
@@ -44,9 +44,9 @@ La ambientación arranca **con el gesto con el que el visitante inicia el recorr
 
 Sin las cinco, la decisión rompe RNF-008. Con ellas, lo respeta.
 
-### 4. Presupuesto acotado — RNF-016
+### 4. Presupuesto acotado: RNF-016
 
-**Máximo 4 fuentes HRTF simultáneas** en escritorio, **2 en móvil** `[valores por medir en S4]`. Las demás se apagan por distancia. Si el rendimiento no cierra, la primera palanca es reducir fuentes simultáneas — **nunca** desactivar el audio, porque es parte del producto.
+**Máximo 4 fuentes HRTF simultáneas** en escritorio, **2 en móvil** `[valores por medir en S4]`. Las demás se apagan por distancia. Si el rendimiento no cierra, la primera palanca es reducir fuentes simultáneas, **nunca** desactivar el audio, porque es parte del producto.
 
 ---
 
@@ -91,5 +91,5 @@ Sin las cinco, la decisión rompe RNF-008. Con ellas, lo respeta.
 - Crea **RF-028** (ambientación sonora espacial) y **RNF-016** (presupuesto de audio).
 - Refuerza **RNF-008** (nunca automático) y **RNF-006** (alternativa textual).
 - Tensiona **RNF-001** (30 fps): por eso RNF-016 existe.
-- Se implementa en `src/audio/` — ámbito de **David Beltrán**.
+- Se implementa en `src/audio/`, ámbito de **David Beltrán**.
 - Diseño completo: [`../08-ambientacion-sonora.md`](../08-ambientacion-sonora.md).

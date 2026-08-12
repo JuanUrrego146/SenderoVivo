@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * sync-github.mjs — Sendero Vivo
+ * sync-github.mjs, Sendero Vivo
  *
  * Crea en GitHub los labels, los milestones y una issue por historia de usuario,
  * leyendo `plan/backlog-jira.csv` como unica fuente de verdad.
@@ -202,7 +202,7 @@ function issueBody(story, subtasks) {
     lines.push('## Tareas', '');
     for (const sub of subtasks) {
       const title = sub.Summary.replace(/^HU-[\d.]+\s*/, '');
-      lines.push(`- [ ] ${title} — **${sub.Assignee}** _(${sub['Story Points']} pts)_`);
+      lines.push(`- [ ] ${title}, **${sub.Assignee}** _(${sub['Story Points']} pts)_`);
     }
     lines.push('');
   }

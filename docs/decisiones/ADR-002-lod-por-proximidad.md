@@ -1,4 +1,4 @@
-# ADR-002 — Nivel de detalle por proximidad al recorrido
+# ADR-002: Nivel de detalle por proximidad al recorrido
 
 > Fecha: 11/08/2026 · Estado: **Aceptada** · Responsable: Juan Urrego, con Alejandra Chambueta
 > Requerimiento que crea: **RF-027**
@@ -23,7 +23,7 @@ Además, el proyecto tiene un techo duro: ~1 millón de gaussianas en móvil, y 
 
 **Se interpreta como dos mecanismos distintos que se refuerzan, uno en captura y otro en render.** Ninguno de los dos cambia el stack ni el protocolo de captura de PlayCanvas.
 
-### 1. En captura — banda de alta densidad
+### 1. En captura: banda de alta densidad
 
 Se define una **banda de alta densidad** alrededor del eje del sendero:
 
@@ -32,13 +32,13 @@ Se define una **banda de alta densidad** alrededor del eje del sendero:
 | **Vertical** | Desde el suelo hasta **≈ 1 m por encima de la altura de los ojos** (≈ 2,6 m sobre el suelo) | Copas, cielo y ladera alta: cobertura de contexto |
 | **Lateral** | **≈ 1 m a cada lado** del eje del trazado | Se captura, con menos pasadas |
 
-Esto **no toca ningún parámetro del protocolo documentado** —4K a 60 fps, obturación 1/125 o más rápida, ISO bajo, exposición, foco y balance de blancos manuales y bloqueados siguen exactamente igual—. Lo único que define es **cuántas pasadas y a qué altura**, que es precisamente lo que el protocolo dejaba abierto al decir "varias pasadas a distintas alturas".
+Esto **no toca ningún parámetro del protocolo documentado**, 4K a 60 fps, obturación 1/125 o más rápida, ISO bajo, exposición, foco y balance de blancos manuales y bloqueados siguen exactamente igual. Lo único que define es **cuántas pasadas y a qué altura**, que es precisamente lo que el protocolo dejaba abierto al decir "varias pasadas a distintas alturas".
 
 En concreto: pasadas densas y cercanas dentro de la banda (a la altura de la rodilla, del pecho y por encima de la cabeza), y una única pasada de contexto por encima y hacia los lados.
 
 > **La cuestión de la focal (1× vs 2×) no se toca aquí.** Sigue abierta como validación V1 y se resuelve con la prueba comparativa de HU-02, tal como estaba.
 
-### 2. En render — LOD por distancia a la cámara
+### 2. En render: LOD por distancia a la cámara
 
 PlayCanvas ya expone LOD por distancia mediante `lodBaseDistance` y `lodMultiplier`, con progresión geométrica `lodBaseDistance * lodMultiplier^i`.
 
@@ -46,7 +46,7 @@ PlayCanvas ya expone LOD por distancia mediante `lodBaseDistance` y `lodMultipli
 
 ```javascript
 // src/engine/LodController.js
-app.scene.gsplat.lodBaseDistance = 2.0;  // m — primer nivel cubre la banda de alta densidad
+app.scene.gsplat.lodBaseDistance = 2.0;  // m , primer nivel cubre la banda de alta densidad
 app.scene.gsplat.lodMultiplier   = 2.0;  // 2 m → 4 m → 8 m → 16 m …
 ```
 
@@ -90,7 +90,7 @@ app.scene.gsplat.lodMultiplier   = 2.0;  // 2 m → 4 m → 8 m → 16 m …
 
 ## Trazabilidad
 
-- Crea **RF-027** — Nivel de detalle por proximidad al recorrido.
+- Crea **RF-027**, Nivel de detalle por proximidad al recorrido.
 - Refuerza **RNF-001** (30 fps) y **RF-022** (ajuste de calidad por dispositivo).
-- Se implementa en `src/engine/LodController.js` — ámbito de **Alejandra Chambueta**.
+- Se implementa en `src/engine/LodController.js`, ámbito de **Alejandra Chambueta**.
 - Historia asociada: **HU-22** (ajustar calidad según el dispositivo), ampliada.

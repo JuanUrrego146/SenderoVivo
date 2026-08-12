@@ -1,4 +1,4 @@
-# Actividades y roles — Sendero Vivo
+# Actividades y roles: Sendero Vivo
 
 > Punto 3 de la actividad del curso: 4 épicas, 8 sprints de 2 semanas, actividades y roles.
 > Inicio: **11 de agosto de 2026** · Cierre: **28 de noviembre de 2026**.
@@ -47,7 +47,7 @@ Detalle completo, incluido qué hacer cuando hay que tocar la carpeta de otro, e
 
 El enunciado pide **4 épicas × 2 sprints × 2 semanas = 16 semanas de esfuerzo**, pero el plazo es de **15 semanas**.
 
-**Resolución adoptada:** los 8 sprints se ejecutan **completos** —las 16 semanas de esfuerzo se hacen, no se recortan— pero el **Sprint 1 de la Épica 3 (S2b) corre en paralelo con el Sprint 2 de la Épica 1 (S2)**.
+**Resolución adoptada:** los 8 sprints se ejecutan **completos**, las 16 semanas de esfuerzo se hacen, no se recortan, pero el **Sprint 1 de la Épica 3 (S2b) corre en paralelo con el Sprint 2 de la Épica 1 (S2)**.
 
 **Por qué es legítimo y no un truco de calendario:** el modelado 3D de aves y plantas **no depende de la captura del tramo**. Felipe puede modelar un colibrí chillón mientras Juan procesa las escenas en la GPU. No hay dependencia técnica, no hay recurso compartido en conflicto (un artista 3D y una estación de entrenamiento no se estorban) y no hay solapamiento de personas.
 
@@ -55,7 +55,7 @@ El enunciado pide **4 épicas × 2 sprints × 2 semanas = 16 semanas de esfuerzo
 
 ```mermaid
 gantt
-    title Cronograma Sendero Vivo — 11 ago a 28 nov de 2026
+    title Cronograma Sendero Vivo , 11 ago a 28 nov de 2026
     dateFormat YYYY-MM-DD
     axisFormat sem %W
 
@@ -93,7 +93,7 @@ gantt
 | **S5** | E3 | 9–10 | 6 oct – 19 oct | Marcadores, fichas de fauna, flora y patrimonio, visor 3D y **ambientación sonora espacial** |
 | **S6** | E4 | 11–12 | 20 oct – 2 nov | Track GPS, HUD de altitud/distancia/desnivel/pendiente |
 | **S7** | E4 | 13–14 | 3 nov – 16 nov | UI/UX final, responsive, onboarding, accesibilidad |
-| **Cierre** | — | 15 | 17 nov – 28 nov | Integración, pruebas, despliegue y entrega |
+| **Cierre** | | 15 | 17 nov – 28 nov | Integración, pruebas, despliegue y entrega |
 
 **Camino crítico:** S1 → S2 → S3 → S4 → S6 → S7 → Cierre. S2b y S5 quedan fuera del camino crítico, lo que da holgura real a E3.
 
@@ -112,7 +112,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 ---
 
-### HU-01 — Cerrar la decisión de sendero
+### HU-01: Cerrar la decisión de sendero
 *Como equipo, necesitamos evaluar las tres opciones con criterios objetivos para poder capturar sabiendo por qué ahí.*
 **RF/RNF:** decisión de alcance · **Hito bloqueante**
 
@@ -123,14 +123,14 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] La decisión está cerrada **antes del viernes de la semana 1**.
 
 **Subtareas**
-- Juan Urrego — Redactar la matriz de criterios y ponderarla con el equipo.
-- Juan Urrego — Redactar `ADR-001-eleccion-de-sendero.md`.
-- Felipe Acevedo — Evaluar cada opción por valor de contenido (aves, plantas, elementos modelables).
-- Alejandra Chambueta — Evaluar cada opción por riesgo de reconstrucción (elementos duros vs. follaje).
+- Juan Urrego, Redactar la matriz de criterios y ponderarla con el equipo.
+- Juan Urrego, Redactar `ADR-001-eleccion-de-sendero.md`.
+- Felipe Acevedo, Evaluar cada opción por valor de contenido (aves, plantas, elementos modelables).
+- Alejandra Chambueta, Evaluar cada opción por riesgo de reconstrucción (elementos duros vs. follaje).
 
 ---
 
-### HU-02 — Definir y validar el protocolo de captura
+### HU-02: Definir y validar el protocolo de captura
 *Como equipo de captura, necesitamos un protocolo probado para no gastar la única mañana buena aprendiendo a usar el equipo.*
 **RF/RNF:** habilita RF-002
 
@@ -141,14 +141,14 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Definido el objeto de tamaño conocido que da escala a la escena.
 
 **Subtareas**
-- Juan Urrego — Redactar el protocolo a partir de la guía de captura de PlayCanvas.
-- Juan Urrego — Ensayo comparativo 1x vs 2x y registro del resultado en la issue.
-- Alejandra Chambueta — Verificar que el material del ensayo se puede procesar de extremo a extremo.
-- David Beltrán — Definir el procedimiento de grabación del track GPS y del audio.
+- Juan Urrego, Redactar el protocolo a partir de la guía de captura de PlayCanvas.
+- Juan Urrego, Ensayo comparativo 1x vs 2x y registro del resultado en la issue.
+- Alejandra Chambueta, Verificar que el material del ensayo se puede procesar de extremo a extremo.
+- David Beltrán, Definir el procedimiento de grabación del track GPS y del audio.
 
 ---
 
-### HU-03 — Preparar la logística de las cuatro visitas
+### HU-03: Preparar la logística de las cuatro visitas
 *Como equipo de campo, necesitamos las cuatro visitas reservadas y organizadas para que ninguna ventana de buen clima se desperdicie.*
 **RF/RNF:** habilita RF-002, RF-020
 
@@ -159,14 +159,14 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Protocolo de respaldo: dos copias del material el mismo día.
 
 **Subtareas**
-- Juan Urrego — Reservar ambas ventanas y confirmar condiciones de acceso.
-- Juan Urrego — Checklist de equipo y asignación de roles de campo.
-- David Beltrán — Preparar y probar los dispositivos de GPS y audio.
-- Alberto Alemán — Preparar el registro fotográfico por POI y su plantilla de metadatos.
+- Juan Urrego, Reservar ambas ventanas y confirmar condiciones de acceso.
+- Juan Urrego, Checklist de equipo y asignación de roles de campo.
+- David Beltrán, Preparar y probar los dispositivos de GPS y audio.
+- Alberto Alemán, Preparar el registro fotográfico por POI y su plantilla de metadatos.
 
 ---
 
-### HU-04 — Ejecutar la captura principal (V2)
+### HU-04: Ejecutar la captura principal (V2)
 *Como equipo de captura, necesitamos el material del tramo para que exista el proyecto.*
 **RF/RNF:** habilita RF-002, RF-020, RF-027
 **Cuándo:** semana 3 (25–31 ago), lo antes posible · **Duración:** 5 h · Requiere día nublado, sin viento y a primera hora
@@ -182,15 +182,15 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Anotadas las condiciones reales: hora, nubosidad, viento.
 
 **Subtareas**
-- Juan Urrego — Captura de video de las tres escenas del tramo.
-- David Beltrán — Grabación de track GPS y de audio ambiente/cantos.
-- Felipe Acevedo — Fotos de referencia de POIs, plantas y elementos a modelar.
-- Alberto Alemán — Registro de condiciones y bitácora de campo.
-- Alejandra Chambueta — Verificación en sitio de que el material es utilizable antes de bajar.
+- Juan Urrego, Captura de video de las tres escenas del tramo.
+- David Beltrán, Grabación de track GPS y de audio ambiente/cantos.
+- Felipe Acevedo, Fotos de referencia de POIs, plantas y elementos a modelar.
+- Alberto Alemán, Registro de condiciones y bitácora de campo.
+- Alejandra Chambueta, Verificación en sitio de que el material es utilizable antes de bajar.
 
 ---
 
-### HU-05 — Dejar el repositorio y los contratos de datos listos
+### HU-05: Dejar el repositorio y los contratos de datos listos
 *Como PM, necesito que los espacios estén preparados antes de que los demás lleguen, para que nadie se pise ni invente formatos.*
 **RF/RNF:** RNF-009, RNF-011
 
@@ -202,14 +202,14 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Estructura de carpetas y `.gitignore` en su sitio.
 
 **Subtareas**
-- Juan Urrego — Crear repositorio, ramas, labels, milestones e issues.
-- Juan Urrego — Especificar los contratos de datos y publicarlos.
-- Eybar Viasus — Validar que el contrato de `pois.json` cubre lo que la ficha necesita mostrar.
-- David Beltrán — Validar que el formato del track GPS cubre lo que la capa de datos necesita calcular.
+- Juan Urrego, Crear repositorio, ramas, labels, milestones e issues.
+- Juan Urrego, Especificar los contratos de datos y publicarlos.
+- Eybar Viasus, Validar que el contrato de `pois.json` cubre lo que la ficha necesita mostrar.
+- David Beltrán, Validar que el formato del track GPS cubre lo que la capa de datos necesita calcular.
 
 ---
 
-### HU-42 — Ejecutar la visita de reconocimiento (V1), sin grabar
+### HU-42: Ejecutar la visita de reconocimiento (V1), sin grabar
 *Como equipo, necesitamos ir al sendero **antes** de capturar para decidir con el sitio delante y no en una reunión.*
 **RF/RNF:** habilita RF-002, RF-006, RF-027, RF-028, RF-030 · **Hito bloqueante**
 **Cuándo:** semana 2 (18–24 ago) · **Quién:** todo el equipo · **Duración:** 5 h
@@ -227,12 +227,12 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Objeto de escala decidido y duración real del recorrido medida.
 
 **Subtareas**
-- Juan Urrego — Marcar tramo y etapas con GPS, medir desnivel y pendiente, decidir el objeto de escala.
-- Felipe Acevedo — Identificar especies y sus lugares de paso; confirmar o descartar zorro perro y curí; identificar el helecho arbóreo concreto.
-- Alejandra Chambueta — Evaluar riesgo de reconstrucción por zona: elementos duros, follaje, agua.
-- David Beltrán — Levantar el mapa sonoro y verificar la precisión del track GPS.
-- Eybar Viasus — Contrastar la paleta y la legibilidad del marcador a contraluz.
-- Alberto Alemán — Identificar los puntos de interés patrimoniales y llevar la bitácora.
+- Juan Urrego, Marcar tramo y etapas con GPS, medir desnivel y pendiente, decidir el objeto de escala.
+- Felipe Acevedo, Identificar especies y sus lugares de paso; confirmar o descartar zorro perro y curí; identificar el helecho arbóreo concreto.
+- Alejandra Chambueta, Evaluar riesgo de reconstrucción por zona: elementos duros, follaje, agua.
+- David Beltrán, Levantar el mapa sonoro y verificar la precisión del track GPS.
+- Eybar Viasus, Contrastar la paleta y la legibilidad del marcador a contraluz.
+- Alberto Alemán, Identificar los puntos de interés patrimoniales y llevar la bitácora.
 
 ---
 
@@ -243,7 +243,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 ---
 
-### HU-06 — Extraer cuadros y resolver poses de cámara
+### HU-06: Extraer cuadros y resolver poses de cámara
 **RF/RNF:** habilita RF-002
 
 **Criterios de aceptación**
@@ -253,13 +253,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Documentado el intervalo elegido y el número de cuadros por escena.
 
 **Subtareas**
-- Juan Urrego — Extracción de cuadros y descarte de borrosos.
-- Juan Urrego — Ejecución del SfM y verificación de la nube dispersa.
-- Alejandra Chambueta — Revisión cruzada de la cobertura de vistas por escena.
+- Juan Urrego, Extracción de cuadros y descarte de borrosos.
+- Juan Urrego, Ejecución del SfM y verificación de la nube dispersa.
+- Alejandra Chambueta, Revisión cruzada de la cobertura de vistas por escena.
 
 ---
 
-### HU-07 — Entrenar el 3DGS de las tres escenas
+### HU-07: Entrenar el 3DGS de las tres escenas
 **RF/RNF:** RF-002
 
 **Criterios de aceptación**
@@ -269,13 +269,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Evaluación visual: los elementos duros (escalones, barandas, cauce) se reconocen.
 
 **Subtareas**
-- Juan Urrego — Entrenamiento de las tres escenas en la estación con GPU.
-- Juan Urrego — Registro de parámetros, tiempos y conteo de gaussianas.
-- Felipe Acevedo — Evaluación visual de calidad contra las fotos de referencia.
+- Juan Urrego, Entrenamiento de las tres escenas en la estación con GPU.
+- Juan Urrego, Registro de parámetros, tiempos y conteo de gaussianas.
+- Felipe Acevedo, Evaluación visual de calidad contra las fotos de referencia.
 
 ---
 
-### HU-08 — Limpiar las escenas en SuperSplat
+### HU-08: Limpiar las escenas en SuperSplat
 **RF/RNF:** RF-002, RNF-003
 
 **Criterios de aceptación**
@@ -285,13 +285,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Proyecto `.ssproj` guardado por escena para poder retomar.
 
 **Subtareas**
-- Juan Urrego — Limpieza de flotantes y recorte.
-- Felipe Acevedo — Ajuste de color y coherencia visual entre escenas.
-- Alberto Alemán — Revisión de que los POIs candidatos quedaron dentro del recorte.
+- Juan Urrego, Limpieza de flotantes y recorte.
+- Felipe Acevedo, Ajuste de color y coherencia visual entre escenas.
+- Alberto Alemán, Revisión de que los POIs candidatos quedaron dentro del recorte.
 
 ---
 
-### HU-09 — Comprimir a SOG y validar peso y calidad
+### HU-09: Comprimir a SOG y validar peso y calidad
 **RF/RNF:** RNF-003, RNF-002
 
 **Criterios de aceptación**
@@ -301,13 +301,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Pérdida de calidad por compresión evaluada visualmente y aceptada.
 
 **Subtareas**
-- Juan Urrego — Conversión a SOG y medición de pesos.
-- Juan Urrego — Actualizar RNF-003 en el documento de requerimientos.
-- Alejandra Chambueta — Cargar un `.sog` en un proyecto PlayCanvas mínimo y confirmar que abre.
+- Juan Urrego, Conversión a SOG y medición de pesos.
+- Juan Urrego, Actualizar RNF-003 en el documento de requerimientos.
+- Alejandra Chambueta, Cargar un `.sog` en un proyecto PlayCanvas mínimo y confirmar que abre.
 
 ---
 
-### HU-10 — Publicar las escenas en `scenes.json`
+### HU-10: Publicar las escenas en `scenes.json`
 **RF/RNF:** RF-023, RF-017, RNF-011
 
 **Criterios de aceptación**
@@ -317,13 +317,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Cada escena versionada con fecha de captura.
 
 **Subtareas**
-- Juan Urrego — Publicar `scenes.json` y las rutas de assets.
-- David Beltrán — Primera alineación del track GPS con la geometría reconstruida.
-- Alejandra Chambueta — Validar que el motor puede leer `scenes.json` sin ambigüedades.
+- Juan Urrego, Publicar `scenes.json` y las rutas de assets.
+- David Beltrán, Primera alineación del track GPS con la geometría reconstruida.
+- Alejandra Chambueta, Validar que el motor puede leer `scenes.json` sin ambigüedades.
 
 ---
 
-### HU-43 — Ejecutar la visita complementaria (V3) y grabar el sonido
+### HU-43: Ejecutar la visita complementaria (V3) y grabar el sonido
 *Como equipo de contenido, necesitamos el material que V2 no puede dar: audio binaural, cantos a primera hora y detalle patrimonial.*
 **RF/RNF:** habilita RF-028, RF-030, RF-012
 **Cuándo:** semana 4 (1–7 sep) · **Duración:** 5 h
@@ -338,9 +338,9 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Registrado si se usó como contingencia o como complementaria.
 
 **Subtareas**
-- David Beltrán — Grabar el lecho ambiente y las fuentes puntuales según el mapa sonoro de V1.
-- Felipe Acevedo — Cantos a primera hora y referencias de detalle para modelado.
-- Alberto Alemán — Registro fotográfico del patrimonio y bitácora de condiciones.
+- David Beltrán, Grabar el lecho ambiente y las fuentes puntuales según el mapa sonoro de V1.
+- Felipe Acevedo, Cantos a primera hora y referencias de detalle para modelado.
+- Alberto Alemán, Registro fotográfico del patrimonio y bitácora de condiciones.
 
 ---
 
@@ -351,7 +351,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 ---
 
-### HU-11 — Modelar y texturizar las aves
+### HU-11: Modelar y texturizar las aves
 **RF/RNF:** habilita RF-009
 
 **Criterios de aceptación**
@@ -361,13 +361,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Rig básico donde la animación aporte a la identificación.
 
 **Subtareas**
-- Felipe Acevedo — Modelado, texturizado y rigging de las cuatro especies.
-- Felipe Acevedo — Verificación de nombres científicos y de rangos de altitud.
-- Eybar Viasus — Validar que los modelos se leen bien al tamaño del visor de ficha.
+- Felipe Acevedo, Modelado, texturizado y rigging de las cuatro especies.
+- Felipe Acevedo, Verificación de nombres científicos y de rangos de altitud.
+- Eybar Viasus, Validar que los modelos se leen bien al tamaño del visor de ficha.
 
 ---
 
-### HU-12 — Modelar plantas y helechos
+### HU-12: Modelar plantas y helechos
 **RF/RNF:** habilita RF-009
 
 **Criterios de aceptación**
@@ -377,13 +377,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Nombres verificados; lo no verificado queda marcado `[por verificar]`.
 
 **Subtareas**
-- Felipe Acevedo — Modelado y escaneo de plantas.
-- Felipe Acevedo — Limpieza de escaneos y reducción de geometría.
-- Alberto Alemán — Cotejo con las fotos de referencia de la salida de campo.
+- Felipe Acevedo, Modelado y escaneo de plantas.
+- Felipe Acevedo, Limpieza de escaneos y reducción de geometría.
+- Alberto Alemán, Cotejo con las fotos de referencia de la salida de campo.
 
 ---
 
-### HU-13 — Escanear detalle y modelar el puente y la señalización
+### HU-13: Escanear detalle y modelar el puente y la señalización
 **RF/RNF:** habilita RF-009
 
 **Criterios de aceptación**
@@ -392,13 +392,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] El puente de madera queda listo como POI confirmado.
 
 **Subtareas**
-- Felipe Acevedo — Escaneos de detalle y limpieza.
-- Felipe Acevedo — Modelado del puente y de la señalización.
-- Eybar Viasus — Revisar coherencia visual del conjunto de modelos.
+- Felipe Acevedo, Escaneos de detalle y limpieza.
+- Felipe Acevedo, Modelado del puente y de la señalización.
+- Eybar Viasus, Revisar coherencia visual del conjunto de modelos.
 
 ---
 
-### HU-14 — Optimizar y exportar dentro del presupuesto web
+### HU-14: Optimizar y exportar dentro del presupuesto web
 **RF/RNF:** RNF-012, RNF-001
 
 **Criterios de aceptación**
@@ -408,13 +408,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Probado que un `.glb` carga en el navegador sin errores de material.
 
 **Subtareas**
-- Felipe Acevedo — Reducción de polígonos y export a glTF/GLB.
-- Alejandra Chambueta — Fijar el presupuesto con base en el objetivo de rendimiento móvil.
-- David Beltrán — Prueba de carga de un `.glb` en un visor mínimo.
+- Felipe Acevedo, Reducción de polígonos y export a glTF/GLB.
+- Alejandra Chambueta, Fijar el presupuesto con base en el objetivo de rendimiento móvil.
+- David Beltrán, Prueba de carga de un `.glb` en un visor mínimo.
 
 ---
 
-### HU-15 — Narraciones, cantos y transcripciones
+### HU-15: Narraciones, cantos y transcripciones
 **RF/RNF:** RF-011, RF-012, RF-024, RNF-006
 
 **Criterios de aceptación**
@@ -424,14 +424,14 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Audio normalizado y en formato web.
 
 **Subtareas**
-- Felipe Acevedo — Selección y edición de los cantos capturados en campo.
-- Alberto Alemán — Redacción de las narraciones y sus transcripciones.
-- Eybar Viasus — Revisión de tono y longitud para que quepan en la ficha.
-- David Beltrán — Conversión y normalización del audio.
+- Felipe Acevedo, Selección y edición de los cantos capturados en campo.
+- Alberto Alemán, Redacción de las narraciones y sus transcripciones.
+- Eybar Viasus, Revisión de tono y longitud para que quepan en la ficha.
+- David Beltrán, Conversión y normalización del audio.
 
 ---
 
-### HU-47 — Animación idle de aleteo en las aves
+### HU-47: Animación idle de aleteo en las aves
 *Como visitante, quiero que el ave de la ficha se vea viva y no como una figura quieta.*
 **RF/RNF:** RF-029, RNF-012
 
@@ -443,9 +443,9 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] El coste de la animación no rompe el presupuesto de RNF-012 ni el objetivo de 30 fps.
 
 **Subtareas**
-- Felipe Acevedo — Animar el aleteo de las cuatro especies. El colibrí no aletea como una pava.
-- David Beltrán — Exportar y verificar que PlayCanvas reproduce el clip desde el `.glb`.
-- Eybar Viasus — Revisar el ritmo: la animación acompaña la identificación, no distrae de ella.
+- Felipe Acevedo, Animar el aleteo de las cuatro especies. El colibrí no aletea como una pava.
+- David Beltrán, Exportar y verificar que PlayCanvas reproduce el clip desde el `.glb`.
+- Eybar Viasus, Revisar el ritmo: la animación acompaña la identificación, no distrae de ella.
 
 ---
 
@@ -456,7 +456,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 ---
 
-### HU-16 — Cargar la primera escena sin instalación
+### HU-16: Cargar la primera escena sin instalación
 **RF/RNF:** RF-001, RF-002
 
 **Criterios de aceptación**
@@ -466,14 +466,14 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] **Dispositivo de referencia de gama media definido** (**resuelve V6**).
 
 **Subtareas**
-- Alejandra Chambueta — Proyecto base con el componente `gsplat` y carga del asset.
-- Alejandra Chambueta — Detección de WebGPU y repliegue a WebGL.
-- Juan Urrego — Publicar los `.sog` en una URL accesible.
-- David Beltrán — Prueba en dispositivos y elección del celular de referencia.
+- Alejandra Chambueta, Proyecto base con el componente `gsplat` y carga del asset.
+- Alejandra Chambueta, Detección de WebGPU y repliegue a WebGL.
+- Juan Urrego, Publicar los `.sog` en una URL accesible.
+- David Beltrán, Prueba en dispositivos y elección del celular de referencia.
 
 ---
 
-### HU-17 — Progreso de carga y fallo con reintento
+### HU-17: Progreso de carga y fallo con reintento
 **RF/RNF:** RF-025, RNF-007, RNF-002
 
 **Criterios de aceptación**
@@ -483,13 +483,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Probado forzando un fallo de red.
 
 **Subtareas**
-- Alejandra Chambueta — Estados de carga y de error en el motor.
-- Eybar Viasus — Diseño de los estados de carga, error y reintento.
-- Alberto Alemán — Redacción de los mensajes en español.
+- Alejandra Chambueta, Estados de carga y de error en el motor.
+- Eybar Viasus, Diseño de los estados de carga, error y reintento.
+- Alberto Alemán, Redacción de los mensajes en español.
 
 ---
 
-### HU-18 — Avanzar y retroceder por el trazado
+### HU-18: Avanzar y retroceder por el trazado
 **RF/RNF:** RF-003
 
 **Criterios de aceptación**
@@ -498,13 +498,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] El movimiento es continuo, sin saltos bruscos.
 
 **Subtareas**
-- Alejandra Chambueta — Motor de avance sobre el trazado.
-- Alberto Alemán — Definir los gestos táctiles y el control en escritorio.
-- David Beltrán — Pruebas de recorrido de extremo a extremo.
+- Alejandra Chambueta, Motor de avance sobre el trazado.
+- Alberto Alemán, Definir los gestos táctiles y el control en escritorio.
+- David Beltrán, Pruebas de recorrido de extremo a extremo.
 
 ---
 
-### HU-19 — Mirada libre 360°
+### HU-19: Mirada libre 360°
 **RF/RNF:** RF-005
 
 **Criterios de aceptación**
@@ -513,12 +513,12 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Arrastre en escritorio y en táctil.
 
 **Subtareas**
-- Alejandra Chambueta — Control de cámara con rotación libre.
-- Eybar Viasus — Definir límites verticales y sensibilidad.
+- Alejandra Chambueta, Control de cámara con rotación libre.
+- Eybar Viasus, Definir límites verticales y sensibilidad.
 
 ---
 
-### HU-20 — Restringir el desplazamiento al trazado autorizado
+### HU-20: Restringir el desplazamiento al trazado autorizado
 **RF/RNF:** RF-004, RNF-015
 
 **Criterios de aceptación**
@@ -527,12 +527,12 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] El diseño refuerza el camino autorizado, no lo sugiere como opcional.
 
 **Subtareas**
-- Alejandra Chambueta — Restricción de posición al trazado.
-- Alberto Alemán — Verificar que la interfaz no insinúa movimiento libre.
+- Alejandra Chambueta, Restricción de posición al trazado.
+- Alberto Alemán, Verificar que la interfaz no insinúa movimiento libre.
 
 ---
 
-### HU-50 — Identidad visual: paleta, tipografía y tokens
+### HU-50: Identidad visual: paleta, tipografía y tokens
 *Como equipo, necesitamos la identidad visual definida antes de construir pantallas, para no repintar después.*
 **RF/RNF:** RF-032, RNF-006
 
@@ -545,13 +545,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Resueltas D1 y D4 con la evidencia traída de V1.
 
 **Subtareas**
-- Eybar Viasus — Publicar los tokens y verificar el contraste de cada par.
-- Alberto Alemán — Elegir la familia tipográfica.
-- Juan Urrego — Aplicar los tokens en el shell y el HUD (`src/ui/`).
+- Eybar Viasus, Publicar los tokens y verificar el contraste de cada par.
+- Alberto Alemán, Elegir la familia tipográfica.
+- Juan Urrego, Aplicar los tokens en el shell y el HUD (`src/ui/`).
 
 ---
 
-### HU-44 — Verificar la reconstrucción en campo (V4)
+### HU-44: Verificar la reconstrucción en campo (V4)
 *Como equipo, necesitamos comprobar en el sitio que el lugar se reconoce, que es la promesa central del producto.*
 **RF/RNF:** verifica RF-002, RF-006, RF-020 · **cierra V9**
 **Cuándo:** semana 6 (15–21 sep) · **Duración:** 5 h · Se va **con la reconstrucción cargada en un celular**
@@ -563,9 +563,9 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Listadas las zonas mal reconstruidas y decidido si se recapturan ahí mismo.
 
 **Subtareas**
-- Juan Urrego — Comparar la reconstrucción contra el sitio punto por punto.
-- Alejandra Chambueta — Verificar escala, altitud y anclajes contra el GPS.
-- Felipe Acevedo — Recapturar las zonas deficientes aprovechando que ya se está allí.
+- Juan Urrego, Comparar la reconstrucción contra el sitio punto por punto.
+- Alejandra Chambueta, Verificar escala, altitud y anclajes contra el GPS.
+- Felipe Acevedo, Recapturar las zonas deficientes aprovechando que ya se está allí.
 
 ---
 
@@ -576,7 +576,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 ---
 
-### HU-21 — Encadenar las tres escenas
+### HU-21: Encadenar las tres escenas
 **RF/RNF:** RF-017, RF-002
 
 **Criterios de aceptación**
@@ -586,13 +586,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] El salto de color entre escenas no es perceptible.
 
 **Subtareas**
-- Alejandra Chambueta — Encadenado y precarga de escenas.
-- Juan Urrego — Ajustar los puntos de entrada/salida en `scenes.json`.
-- Felipe Acevedo — Corrección final de color si la transición se nota.
+- Alejandra Chambueta, Encadenado y precarga de escenas.
+- Juan Urrego, Ajustar los puntos de entrada/salida en `scenes.json`.
+- Felipe Acevedo, Corrección final de color si la transición se nota.
 
 ---
 
-### HU-22 — Ajustar calidad según el dispositivo
+### HU-22: Ajustar calidad según el dispositivo
 **RF/RNF:** RF-022, RF-019, RNF-001
 
 **Criterios de aceptación**
@@ -602,13 +602,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] El ajuste es automático, sin que el usuario tenga que elegir.
 
 **Subtareas**
-- Alejandra Chambueta — Detección de capacidades y perfiles de calidad.
-- Alejandra Chambueta — Configuración de LOD.
-- David Beltrán — Medición comparativa entre perfiles.
+- Alejandra Chambueta, Detección de capacidades y perfiles de calidad.
+- Alejandra Chambueta, Configuración de LOD.
+- David Beltrán, Medición comparativa entre perfiles.
 
 ---
 
-### HU-23 — Sostener 30 fps en gama media
+### HU-23: Sostener 30 fps en gama media
 **RF/RNF:** RNF-001
 
 **Criterios de aceptación**
@@ -618,14 +618,14 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] **`splatBudget` real que sostiene el objetivo, documentado** (**resuelve V8**).
 
 **Subtareas**
-- Alejandra Chambueta — Perfilado y optimización de render.
-- Alejandra Chambueta — Evaluar Streamed SOG si no se alcanza el objetivo.
-- Juan Urrego — Regenerar escenas con menos gaussianas si hace falta.
-- David Beltrán — Batería de medición en dispositivos.
+- Alejandra Chambueta, Perfilado y optimización de render.
+- Alejandra Chambueta, Evaluar Streamed SOG si no se alcanza el objetivo.
+- Juan Urrego, Regenerar escenas con menos gaussianas si hace falta.
+- David Beltrán, Batería de medición en dispositivos.
 
 ---
 
-### HU-24 — Ritmo del recorrido guiado
+### HU-24: Ritmo del recorrido guiado
 **RF/RNF:** RF-003, RF-016, RNF-005
 
 **Criterios de aceptación**
@@ -634,13 +634,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] El usuario mantiene el control: nunca hay una animación de la que no pueda salir.
 
 **Subtareas**
-- Alejandra Chambueta — Curvas de velocidad y suavizado.
-- Eybar Viasus — Definir el ritmo y los puntos de parada.
-- Alberto Alemán — Prueba de sensación de recorrido con personas ajenas al equipo.
+- Alejandra Chambueta, Curvas de velocidad y suavizado.
+- Eybar Viasus, Definir el ritmo y los puntos de parada.
+- Alberto Alemán, Prueba de sensación de recorrido con personas ajenas al equipo.
 
 ---
 
-### HU-45 — Nivel de detalle por proximidad al recorrido
+### HU-45: Nivel de detalle por proximidad al recorrido
 *Como sistema, debo gastar el detalle donde el visitante mira de cerca y ahorrarlo en el contexto.*
 **RF/RNF:** RF-027, RNF-001 · Definido en [ADR-002](decisiones/ADR-002-lod-por-proximidad.md)
 
@@ -652,8 +652,8 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Aprovecha que la cámara va siempre sobre el trazado: distancia a cámara ≡ distancia al recorrido.
 
 **Subtareas**
-- Alejandra Chambueta — Implementar `LodController` en `src/engine/`.
-- David Beltrán — Barrido de valores sobre el dispositivo de referencia hasta que no se vea el salto y se sostengan los 30 fps.
+- Alejandra Chambueta, Implementar `LodController` en `src/engine/`.
+- David Beltrán, Barrido de valores sobre el dispositivo de referencia hasta que no se vea el salto y se sostengan los 30 fps.
 
 ---
 
@@ -664,7 +664,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 ---
 
-### HU-25 — Marcadores anclados a coordenadas reales
+### HU-25: Marcadores anclados a coordenadas reales
 **RF/RNF:** RF-006
 
 **Criterios de aceptación**
@@ -674,13 +674,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] 5–6 marcadores colocados.
 
 **Subtareas**
-- David Beltrán — Sistema de anclaje de marcadores en espacio 3D.
-- Eybar Viasus — Diseño del marcador y sus estados.
-- Felipe Acevedo — Ubicación de los POIs sobre las escenas.
+- David Beltrán, Sistema de anclaje de marcadores en espacio 3D.
+- Eybar Viasus, Diseño del marcador y sus estados.
+- Felipe Acevedo, Ubicación de los POIs sobre las escenas.
 
 ---
 
-### HU-26 — Abrir la ficha de un punto de interés
+### HU-26: Abrir la ficha de un punto de interés
 **RF/RNF:** RF-007, RF-008, RF-010, RNF-010
 
 **Criterios de aceptación**
@@ -691,13 +691,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Colibrí chillón, puente de madera y helecho arbóreo funcionando como POIs reales.
 
 **Subtareas**
-- David Beltrán — Panel de ficha y su ciclo de apertura/cierre.
-- Eybar Viasus — Diseño del panel y jerarquía de la información.
-- Felipe Acevedo — Contenido verificado de cada ficha.
+- David Beltrán, Panel de ficha y su ciclo de apertura/cierre.
+- Eybar Viasus, Diseño del panel y jerarquía de la información.
+- Felipe Acevedo, Contenido verificado de cada ficha.
 
 ---
 
-### HU-27 — Visor 3D girable con acercamiento
+### HU-27: Visor 3D girable con acercamiento
 **RF/RNF:** RF-009, RNF-012
 
 **Criterios de aceptación**
@@ -707,13 +707,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Cargar el modelo no rompe el rendimiento de la escena de fondo.
 
 **Subtareas**
-- David Beltrán — Visor 3D dentro del panel de ficha.
-- Felipe Acevedo — Ajuste de modelos y materiales para el visor.
-- Eybar Viasus — Encuadre, iluminación y controles del visor.
+- David Beltrán, Visor 3D dentro del panel de ficha.
+- Felipe Acevedo, Ajuste de modelos y materiales para el visor.
+- Eybar Viasus, Encuadre, iluminación y controles del visor.
 
 ---
 
-### HU-28 — Narración, canto y transcripción
+### HU-28: Narración, canto y transcripción
 **RF/RNF:** RF-011, RF-012, RF-024, RNF-006, RNF-008
 
 **Criterios de aceptación**
@@ -723,13 +723,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Controles de reproducción claros.
 
 **Subtareas**
-- David Beltrán — Reproductor de audio y gestión de estados.
-- Alberto Alemán — Presentación de la transcripción.
-- Eybar Viasus — Diseño de los controles de audio.
+- David Beltrán, Reproductor de audio y gestión de estados.
+- Alberto Alemán, Presentación de la transcripción.
+- Eybar Viasus, Diseño de los controles de audio.
 
 ---
 
-### HU-29 — Añadir un POI editando solo `pois.json`
+### HU-29: Añadir un POI editando solo `pois.json`
 **RF/RNF:** RF-021, RNF-009
 
 **Criterios de aceptación**
@@ -739,13 +739,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Probado por alguien que no escribió el sistema de POIs.
 
 **Subtareas**
-- David Beltrán — Carga declarativa de POIs.
-- Juan Urrego — Documentar el contrato y validar el esquema.
-- Felipe Acevedo — Prueba real: añadir un POI nuevo sin ayuda.
+- David Beltrán, Carga declarativa de POIs.
+- Juan Urrego, Documentar el contrato y validar el esquema.
+- Felipe Acevedo, Prueba real: añadir un POI nuevo sin ayuda.
 
 ---
 
-### HU-30 — Volver a la posición al cerrar la ficha
+### HU-30: Volver a la posición al cerrar la ficha
 **RF/RNF:** RF-018
 
 **Criterios de aceptación**
@@ -754,12 +754,12 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] El audio se detiene al cerrar.
 
 **Subtareas**
-- David Beltrán — Guardar y restaurar el estado de cámara.
-- Alejandra Chambueta — Coordinar con el motor de recorrido.
+- David Beltrán, Guardar y restaurar el estado de cámara.
+- Alejandra Chambueta, Coordinar con el motor de recorrido.
 
 ---
 
-### HU-46 — Ambientación sonora binaural con audio espacial 3D
+### HU-46: Ambientación sonora binaural con audio espacial 3D
 *Como visitante, quiero oír el sendero mientras lo recorro, y oír la quebrada donde la quebrada está.*
 **RF/RNF:** RF-028, RNF-016, RNF-008 · Definido en [ADR-003](decisiones/ADR-003-audio-binaural-espacial.md)
 
@@ -774,14 +774,14 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Verificado que no rompe los 30 fps.
 
 **Subtareas**
-- David Beltrán — `AmbienceController`: lecho continuo, arranque por gesto, silencio y persistencia.
-- David Beltrán — `SpatialAudioSource` con HRTF, modelo de distancia y respeto del presupuesto.
-- Juan Urrego — Publicar `soundscape.json` y validar el esquema.
-- Eybar Viasus — Diseñar el control de silencio y el botón de inicio.
+- David Beltrán, `AmbienceController`: lecho continuo, arranque por gesto, silencio y persistencia.
+- David Beltrán, `SpatialAudioSource` con HRTF, modelo de distancia y respeto del presupuesto.
+- Juan Urrego, Publicar `soundscape.json` y validar el esquema.
+- Eybar Viasus, Diseñar el control de silencio y el botón de inicio.
 
 ---
 
-### HU-48 — Puntos de interés patrimoniales e históricos
+### HU-48: Puntos de interés patrimoniales e históricos
 *Como visitante, quiero ver en detalle las puertas derrumbadas, los muros, los monumentos y los tramos de camino con historia.*
 **RF/RNF:** RF-030, RNF-009, RNF-011
 
@@ -794,9 +794,9 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] El marcador usa el gris de patrimonio, no el verde de lo vivo.
 
 **Subtareas**
-- Alberto Alemán — Investigar y verificar la historia de cada elemento identificado en V1.
-- David Beltrán — Soportar el tipo `patrimonio` en el esquema y en la ficha.
-- Eybar Viasus — Diseñar la variante patrimonial de la ficha y su marcador.
+- Alberto Alemán, Investigar y verificar la historia de cada elemento identificado en V1.
+- David Beltrán, Soportar el tipo `patrimonio` en el esquema y en la ficha.
+- Eybar Viasus, Diseñar la variante patrimonial de la ficha y su marcador.
 
 ---
 
@@ -807,7 +807,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 ---
 
-### HU-31 — Consumir el track GPS
+### HU-31: Consumir el track GPS
 **RF/RNF:** RF-020
 
 **Criterios de aceptación**
@@ -817,13 +817,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Las cifras del tramo son las reales: 2.712 m de altitud, 340 m de recorrido, 62 m de desnivel, 9 % de pendiente.
 
 **Subtareas**
-- David Beltrán — Lectura y proyección del track sobre el trazado.
-- Juan Urrego — Alineación y escalado definitivos escena↔track.
-- Eybar Viasus — Definir qué precisión se muestra en pantalla.
+- David Beltrán, Lectura y proyección del track sobre el trazado.
+- Juan Urrego, Alineación y escalado definitivos escena↔track.
+- Eybar Viasus, Definir qué precisión se muestra en pantalla.
 
 ---
 
-### HU-32 — Altitud sobre el nivel del mar
+### HU-32: Altitud sobre el nivel del mar
 **RF/RNF:** RF-013
 
 **Criterios de aceptación**
@@ -832,12 +832,12 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Dato derivado del track, no fijo.
 
 **Subtareas**
-- David Beltrán — Cálculo y actualización de altitud.
-- Eybar Viasus — Presentación del dato en el HUD.
+- David Beltrán, Cálculo y actualización de altitud.
+- Eybar Viasus, Presentación del dato en el HUD.
 
 ---
 
-### HU-33 — Distancia recorrida y restante
+### HU-33: Distancia recorrida y restante
 **RF/RNF:** RF-014
 
 **Criterios de aceptación**
@@ -846,12 +846,12 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Unidades en metros.
 
 **Subtareas**
-- David Beltrán — Cálculo de distancias sobre el track.
-- Eybar Viasus — Presentación en el HUD.
+- David Beltrán, Cálculo de distancias sobre el track.
+- Eybar Viasus, Presentación en el HUD.
 
 ---
 
-### HU-34 — Desnivel acumulado y pendiente
+### HU-34: Desnivel acumulado y pendiente
 **RF/RNF:** RF-015
 
 **Criterios de aceptación**
@@ -860,12 +860,12 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Coherentes con las cifras reales del tramo.
 
 **Subtareas**
-- David Beltrán — Cálculo de desnivel y pendiente.
-- Alberto Alemán — Explicar el dato para que signifique algo a quien no es caminante.
+- David Beltrán, Cálculo de desnivel y pendiente.
+- Alberto Alemán, Explicar el dato para que signifique algo a quien no es caminante.
 
 ---
 
-### HU-35 — Tiempo estimado hasta el siguiente punto
+### HU-35: Tiempo estimado hasta el siguiente punto
 **RF/RNF:** RF-016
 
 **Criterios de aceptación**
@@ -874,9 +874,9 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] La estimación considera la pendiente, no solo la distancia.
 
 **Subtareas**
-- David Beltrán — Modelo de estimación de tiempo.
-- Eybar Viasus — Presentación del dato.
-- Alberto Alemán — Validar que la cifra se entiende sin explicación.
+- David Beltrán, Modelo de estimación de tiempo.
+- Eybar Viasus, Presentación del dato.
+- Alberto Alemán, Validar que la cifra se entiende sin explicación.
 
 ---
 
@@ -887,7 +887,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 ---
 
-### HU-36 — Onboarding la primera vez
+### HU-36: Onboarding la primera vez
 **RF/RNF:** RF-026, RNF-005
 
 **Criterios de aceptación**
@@ -897,14 +897,14 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] **4 de 5 personas sin experiencia previa inician el recorrido y abren una ficha sin instrucciones.**
 
 **Subtareas**
-- Alberto Alemán — Diseño y redacción del onboarding.
-- Eybar Viasus — Integración con el sistema de diseño.
-- David Beltrán — Implementación y persistencia de "ya visto".
-- Alberto Alemán — Prueba con 5 usuarios reales y registro de resultados.
+- Alberto Alemán, Diseño y redacción del onboarding.
+- Eybar Viasus, Integración con el sistema de diseño.
+- David Beltrán, Implementación y persistencia de "ya visto".
+- Alberto Alemán, Prueba con 5 usuarios reales y registro de resultados.
 
 ---
 
-### HU-37 — Responsive en celular
+### HU-37: Responsive en celular
 **RF/RNF:** RF-019, RNF-004
 
 **Criterios de aceptación**
@@ -914,14 +914,14 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Verificado en Chrome Android y Safari iOS vigentes.
 
 **Subtareas**
-- Alberto Alemán — Layouts responsive de todas las pantallas.
-- Eybar Viasus — Adaptación de componentes del sistema de diseño.
-- Alejandra Chambueta — Ajustes de motor para pantalla pequeña.
-- David Beltrán — Pruebas en dispositivos reales.
+- Alberto Alemán, Layouts responsive de todas las pantallas.
+- Eybar Viasus, Adaptación de componentes del sistema de diseño.
+- Alejandra Chambueta, Ajustes de motor para pantalla pequeña.
+- David Beltrán, Pruebas en dispositivos reales.
 
 ---
 
-### HU-38 — Accesibilidad
+### HU-38: Accesibilidad
 **RF/RNF:** RNF-006, RNF-010
 
 **Criterios de aceptación**
@@ -931,13 +931,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Ningún dato se comunica solo por color.
 
 **Subtareas**
-- Alberto Alemán — Auditoría de contraste y de tamaños.
-- Eybar Viasus — Corrección de la paleta donde no cumpla.
-- David Beltrán — Exponer las transcripciones en la interfaz.
+- Alberto Alemán, Auditoría de contraste y de tamaños.
+- Eybar Viasus, Corrección de la paleta donde no cumpla.
+- David Beltrán, Exponer las transcripciones en la interfaz.
 
 ---
 
-### HU-39 — Consolidar el sistema de diseño
+### HU-39: Consolidar el sistema de diseño
 **RF/RNF:** RNF-005, RNF-010
 
 **Criterios de aceptación**
@@ -946,9 +946,9 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Textos revisados: todos en español y coherentes en tono.
 
 **Subtareas**
-- Eybar Viasus — Consolidación del sistema de diseño.
-- Alberto Alemán — Revisión de textos y de coherencia de tono.
-- Alejandra Chambueta — Aplicación en los componentes del motor.
+- Eybar Viasus, Consolidación del sistema de diseño.
+- Alberto Alemán, Revisión de textos y de coherencia de tono.
+- Alejandra Chambueta, Aplicación en los componentes del motor.
 
 ---
 
@@ -957,7 +957,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 ---
 
-### HU-40 — Integración final y pruebas cruzadas
+### HU-40: Integración final y pruebas cruzadas
 **RF/RNF:** todos
 
 **Criterios de aceptación**
@@ -968,16 +968,16 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Ningún RF entregado sin su CUS y su historia.
 
 **Subtareas**
-- Juan Urrego — Integración y resolución de conflictos.
-- Alejandra Chambueta — Verificación de RNF de rendimiento y compatibilidad.
-- David Beltrán — Verificación funcional de POIs y capa de datos.
-- Alberto Alemán — Verificación de accesibilidad y responsive.
-- Eybar Viasus — Revisión visual final.
-- Felipe Acevedo — Revisión de contenido de todas las fichas.
+- Juan Urrego, Integración y resolución de conflictos.
+- Alejandra Chambueta, Verificación de RNF de rendimiento y compatibilidad.
+- David Beltrán, Verificación funcional de POIs y capa de datos.
+- Alberto Alemán, Verificación de accesibilidad y responsive.
+- Eybar Viasus, Revisión visual final.
+- Felipe Acevedo, Revisión de contenido de todas las fichas.
 
 ---
 
-### HU-41 — Despliegue y entrega documental
+### HU-41: Despliegue y entrega documental
 **RF/RNF:** RNF-014, RNF-004
 
 **Criterios de aceptación**
@@ -987,9 +987,9 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] `docs/03-avances-tecnologia.md` cerrado con los resultados reales de las validaciones V1–V14 (técnicas), A1–A5 (audio) y D1–D4 (diseño).
 
 **Subtareas**
-- Juan Urrego — Despliegue y configuración.
-- Juan Urrego — Actualización final de la documentación.
-- Todo el equipo — Revisión de la entrega.
+- Juan Urrego, Despliegue y configuración.
+- Juan Urrego, Actualización final de la documentación.
+- Todo el equipo, Revisión de la entrega.
 
 ---
 
@@ -1006,7 +1006,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 **Nota sobre distribución.** El trabajo no se reparte parejo por sprint, y es intencional: E1 concentra a Juan al principio, E2 concentra a Alejandra en el medio, E3 y E4 cargan a los demás en la segunda mitad. Cada persona participa en sprints fuera de su bloque principal (revisión, pruebas, validación) para que nadie quede fuera del proyecto durante cuatro semanas seguidas.
 
-**Lo que sí hay que mirar:** con 12 h semanales el techo individual son **180 h**, y tres personas están exactamente ahí. El reparto quedó plano, lo que significa que **no hay nadie con holgura** a quien pasarle trabajo cuando alguien se atasque. Es la consecuencia de contar las cuatro visitas de campo, el audio espacial, la animación idle, el patrimonio y la identidad visual — trabajo real que antes no estaba contado. El análisis completo y qué se hace al respecto están en [`../plan/plan_de_trabajo.md`](../plan/plan_de_trabajo.md) §7.
+**Lo que sí hay que mirar:** con 12 h semanales el techo individual son **180 h**, y tres personas están exactamente ahí. El reparto quedó plano, lo que significa que **no hay nadie con holgura** a quien pasarle trabajo cuando alguien se atasque. Es la consecuencia de contar las cuatro visitas de campo, el audio espacial, la animación idle, el patrimonio y la identidad visual, trabajo real que antes no estaba contado. El análisis completo y qué se hace al respecto están en [`../plan/plan_de_trabajo.md`](../plan/plan_de_trabajo.md) §7.
 
 **Correcciones ya aplicadas:** la limpieza en SuperSplat pasa de Juan a Felipe (descarga el camino crítico) y los escaneos de detalle pasan de Felipe a Alberto (que estaba muy por debajo del promedio).
 
