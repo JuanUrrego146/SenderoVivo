@@ -274,6 +274,38 @@ Ninguna semana supera las **72 h** de capacidad del equipo (6 × 12).
 
 ---
 
+## 8 bis. Entregas semanales
+
+El curso exige **entregar todas las semanas**, y el enunciado exige a la vez **8 sprints de dos semanas**. No son incompatibles, pero hay que decir cómo se resuelve:
+
+> **El sprint sigue siendo de dos semanas — es la unidad de planificación y de compromiso. La semana es la unidad de entrega.** Cada semana cierra con algo enseñable, y la segunda semana de cada sprint cierra además el sprint con su demo y su retrospectiva.
+
+Para que esto no sea una declaración de intenciones, **cada historia lleva su etiqueta de semana** (`W01` … `W15`) en Jira y en GitHub, además de la de sprint. Filtrando por `W07` sale exactamente lo que hay que entregar esa semana.
+
+| Semana | Fechas | Sprint | Qué se entrega |
+|---|---|---|---|
+| **W01** | 11–17 ago | S1 | **ADR-001 cerrado**, repositorio con ramas y contratos de datos, protocolo de captura escrito y las cuatro visitas reservadas |
+| **W02** | 18–24 ago | S1 | **V1 ejecutada**: tramo exacto y etapas marcados con GPS, POIs decididos con coordenada y foto, mapa sonoro, desnivel y pendiente medidos |
+| **W03** | 25–31 ago | S2 · S2b | **V2 ejecutada**: material bruto respaldado en dos ubicaciones, cuadros extraídos y poses resueltas · **Paralelo:** aves y plantas modeladas |
+| **W04** | 1–7 sep | S2 · S2b | **V3 ejecutada** · Tres escenas entrenadas, limpias y comprimidas a `.sog`, declaradas en `scenes.json`. **RNF-003 fijado con dato real** · Catálogo 3D base con animación idle |
+| **W05** | 8–14 sep | S3 | Primera escena cargando en PlayCanvas con repliegue a WebGL, estados de carga y error, **paleta y tokens publicados** |
+| **W06** | 15–21 sep | S3 | **V4 ejecutada** · Avance y retroceso, mirada libre 360° y restricción al trazado: una escena recorrible |
+| **W07** | 22–28 sep | S4 | Las tres escenas encadenadas sin corte, con el ritmo del recorrido definido |
+| **W08** | 29 sep – 5 oct | S4 | Perfiles de calidad, **LOD por proximidad** y **medición documentada de 30 fps** en el dispositivo de referencia |
+| **W09** | 6–12 oct | S5 | Marcadores anclados a coordenadas reales y panel de ficha abriendo y cerrando sin perder la posición |
+| **W10** | 13–19 oct | S5 | Visor 3D con animación idle, audio de ficha, **ambientación sonora espacial** y el primer POI patrimonial. 5–6 POIs completos |
+| **W11** | 20–26 oct | S6 | Track GPS alineado y escalado contra la geometría · Segunda pasada de optimización de assets |
+| **W12** | 27 oct – 2 nov | S6 | **HUD completo**: altitud, distancia, desnivel, pendiente y tiempo estimado, con datos reales |
+| **W13** | 3–9 nov | S7 | Onboarding y responsive verificado en Chrome Android y Safari iOS |
+| **W14** | 10–16 nov | S7 | Accesibilidad AA, sistema de diseño consolidado y cierre visual del catálogo 3D |
+| **W15** | 17–28 nov | Cierre | **Entrega final**: integración, pruebas cruzadas, despliegue y documentación cerrada |
+
+**Regla de la entrega semanal:** lo que se enseña el viernes tiene que estar en `develop`, no en la rama de nadie. Si una semana no hay nada enseñable, eso **es** la información importante y se dice en la sincronización del viernes, no en la demo del sprint (principio de `01-principios-de-trabajo.md` §8: avisar a tiempo no tiene consecuencia; que se descubra tarde, sí).
+
+**Cómo verlo en Jira:** el backlog filtra por la etiqueta de semana. Las 15 semanas están cubiertas y **ninguna persona tiene una semana vacía** — comprobado en §7.4.
+
+---
+
 ## 9. Milestones
 
 | Milestone | Fecha límite | Qué debe estar hecho | Criterio de aceptación |

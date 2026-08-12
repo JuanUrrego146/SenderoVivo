@@ -121,11 +121,15 @@ El tipo va en inglés (`feat`, `fix`, `docs`, `chore`, `refactor`, `perf`, `test
 |---|---|---|---|---|
 | **Planeación de sprint** | Lunes de semana impar del sprint | 60 min | Todo el equipo | Elegir historias, estimar, repartir subtareas |
 | **Sincronización corta** | Martes y viernes | 15 min | Todo el equipo | Qué hice / qué sigo / qué me bloquea |
+| **Entrega semanal** | **Viernes de cada semana** | 20 min | Todo el equipo | Enseñar lo que cierra esa semana, sobre lo que ya está en `develop` |
 | **Revisión de sprint (demo)** | Viernes de cierre de sprint | 45 min | Todo el equipo | Mostrar funcionando en un celular real |
 | **Retrospectiva** | Inmediatamente después de la demo | 30 min | Todo el equipo | Qué mantener, qué cambiar, un solo compromiso |
 | **Revisión técnica de riesgo** | A demanda, la convoca cualquiera | 30 min | Los implicados | Desatascar decisiones técnicas |
 
+**Sobre la entrega semanal.** El curso exige entregar todas las semanas y el enunciado exige sprints de dos semanas. Se resuelve así: **el sprint es la unidad de compromiso; la semana es la unidad de entrega.** Cada historia lleva su etiqueta de semana (`W01`…`W15`) en Jira y en GitHub, además de la de sprint, así que filtrando por semana sale exactamente lo que toca enseñar ese viernes. El calendario completo está en [`../plan/plan_de_trabajo.md`](../plan/plan_de_trabajo.md) §8 bis.
+
 **Reglas de las ceremonias:**
+- La entrega semanal se enseña **sobre `develop`**, no sobre la rama de nadie. Si una semana no hay nada enseñable, se dice ahí — no se maquilla ni se deja para la demo del sprint.
 - La sincronización corta es de 15 minutos reales. Lo que se pase, se saca a una reunión aparte.
 - La demo se hace sobre lo que está en `develop`, no sobre la rama de nadie.
 - La retro produce **un solo compromiso concreto** con dueño y fecha. Uno. Diez compromisos son cero compromisos.
