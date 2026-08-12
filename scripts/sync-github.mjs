@@ -120,7 +120,7 @@ const MILESTONES = [
   ['M5: Puntos de interes', '2026-10-19', 'S5 - E3. Cinco o seis POIs completos, al menos uno patrimonial, y ambientacion sonora espacial funcionando. CUS-004, CUS-005, CUS-006, CUS-012, CUS-013.'],
   ['M6: Capa de datos', '2026-11-02', 'S6 - E4. HUD con datos reales del track GPS. CUS-007, RF-013 a RF-016, RF-020.'],
   ['M7: Experiencia final', '2026-11-16', 'S7 - E4. UI final con la paleta aplicada, responsive, onboarding y accesibilidad. CUS-010, RF-019, RF-026, RF-032, RNF-005, RNF-006.'],
-  ['M8: Integracion y entrega', '2026-11-24', 'Semana 15. Integracion, pruebas cruzadas, despliegue y entrega.'],
+  ['M8: Integracion y entrega', '2026-11-28', 'Semana 15. Integracion, pruebas cruzadas, despliegue y entrega.'],
 ];
 
 const SPRINT_TO_MILESTONE = {
@@ -144,7 +144,7 @@ const SPRINT_DATES = {
   S5: '6 oct - 19 oct de 2026',
   S6: '20 oct - 2 nov de 2026',
   S7: '3 nov - 16 nov de 2026',
-  Cierre: '17 nov - 24 nov de 2026',
+  Cierre: '17 nov - 28 nov de 2026',
 };
 
 // ------------------------------------------------------------------ contenido

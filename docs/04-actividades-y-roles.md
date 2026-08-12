@@ -1,7 +1,7 @@
 # Actividades y roles — Sendero Vivo
 
 > Punto 3 de la actividad del curso: 4 épicas, 8 sprints de 2 semanas, actividades y roles.
-> Inicio: **11 de agosto de 2026** · Cierre: **24 de noviembre de 2026**.
+> Inicio: **11 de agosto de 2026** · Cierre: **28 de noviembre de 2026**.
 
 ---
 
@@ -55,7 +55,7 @@ El enunciado pide **4 épicas × 2 sprints × 2 semanas = 16 semanas de esfuerzo
 
 ```mermaid
 gantt
-    title Cronograma Sendero Vivo — 11 ago a 24 nov de 2026
+    title Cronograma Sendero Vivo — 11 ago a 28 nov de 2026
     dateFormat YYYY-MM-DD
     axisFormat sem %W
 
@@ -76,7 +76,7 @@ gantt
     S7 UI final responsive y accesibilidad     :e4s2, 2026-11-03, 14d
 
     section Cierre
-    Integracion pruebas y entrega              :milestone, cierre, 2026-11-17, 8d
+    Integracion pruebas y entrega              :milestone, cierre, 2026-11-17, 12d
 ```
 
 ---
@@ -93,7 +93,7 @@ gantt
 | **S5** | E3 | 9–10 | 6 oct – 19 oct | Marcadores, fichas de fauna, flora y patrimonio, visor 3D y **ambientación sonora espacial** |
 | **S6** | E4 | 11–12 | 20 oct – 2 nov | Track GPS, HUD de altitud/distancia/desnivel/pendiente |
 | **S7** | E4 | 13–14 | 3 nov – 16 nov | UI/UX final, responsive, onboarding, accesibilidad |
-| **Cierre** | — | 15 | 17 nov – 24 nov | Integración, pruebas, despliegue y entrega |
+| **Cierre** | — | 15 | 17 nov – 28 nov | Integración, pruebas, despliegue y entrega |
 
 **Camino crítico:** S1 → S2 → S3 → S4 → S6 → S7 → Cierre. S2b y S5 quedan fuera del camino crítico, lo que da holgura real a E3.
 
@@ -952,7 +952,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 ---
 
-## Cierre · Semana 15 · 17 nov – 24 nov
+## Cierre · Semana 15 · 17 nov – 28 nov
 ### Integración, pruebas, despliegue y entrega
 
 ---

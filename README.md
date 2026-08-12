@@ -57,7 +57,7 @@ MAIL="$(gh api user --jq '"\(.id)+\(.login)@users.noreply.github.com"')" && git 
 El proyecto **SV** todavía no existe. Lo tiene que crear alguien con permisos de administración. Después:
 
 1. Crear el proyecto `SV` (tipo Scrum).
-2. Importar [`plan/backlog-jira.csv`](plan/backlog-jira.csv) — 4 épicas, 49 historias y 157 subtareas, con responsable, sprint y puntos.
+2. Importar [`plan/backlog-jira.csv`](plan/backlog-jira.csv) — 4 épicas, 51 historias y 157 subtareas, con responsable, sprint y puntos.
 3. Crear los sprints `S1`, `S2`, `S2b`, `S3`…`S7` y `Cierre` con las fechas del [plan de trabajo](plan/plan_de_trabajo.md) §8.
 
 ---
@@ -244,7 +244,7 @@ Cada carpeta tiene un dueño. Tocar la carpeta de otro se avisa en la issue **an
 
 ## Cronograma
 
-**11 de agosto – 24 de noviembre de 2026** · 15 semanas.
+**11 de agosto – 28 de noviembre de 2026** · 15 semanas.
 
 | Sprint | Épica | Fechas | Objetivo |
 |---|---|---|---|
@@ -256,7 +256,7 @@ Cada carpeta tiene un dueño. Tocar la carpeta de otro se avisa en la issue **an
 | S5 | E3 | 6 oct – 19 oct | Marcadores, fichas, visor 3D, audio de ficha y **ambientación espacial** |
 | S6 | E4 | 20 oct – 2 nov | Track GPS, HUD de altitud/distancia/desnivel/pendiente |
 | S7 | E4 | 3 nov – 16 nov | UI/UX final, responsive, onboarding, accesibilidad |
-| Cierre | — | 17 nov – 24 nov | Integración, pruebas, despliegue y entrega |
+| Cierre | — | 17 nov – 28 nov | Integración, pruebas, despliegue y entrega |
 
 ### Las cuatro visitas de campo
 

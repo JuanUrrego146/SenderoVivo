@@ -9,7 +9,7 @@
 #   La version del 11/08/2026 traia las 41 issues escritas a mano dentro del propio
 #   script (1.500 lineas). El backlog cambia, y mantener el mismo contenido en dos
 #   sitios garantiza que se desincronicen. Ahora el CSV es la unica fuente de verdad
-#   y scripts/sync-github.mjs lo lee: 4 epicas, 49 historias y 157 subtareas.
+#   y scripts/sync-github.mjs lo lee: 4 epicas, 51 historias y 157 subtareas.
 #
 # USO:
 #   bash setup_repo.sh                  # sube ramas y sincroniza GitHub

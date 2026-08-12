@@ -1,7 +1,7 @@
 # Plan de trabajo — Sendero Vivo
 
 > Versión 1,1 — 11/08/2026 · Responsable: Juan Urrego
-> Periodo: **11 de agosto – 24 de noviembre de 2026** (15 semanas)
+> Periodo: **11 de agosto – 28 de noviembre de 2026** (15 semanas)
 > **Dedicación: 12 horas semanales por persona** — es la exigencia del curso y es la base de todo el cálculo de este documento.
 
 > **Este plan es una guía inicial, no el plan definitivo.** La visita de reconocimiento (V1) de la semana 2 va a cambiar el tramo exacto, los puntos de interés y probablemente algunas estimaciones. Está previsto que así sea.
@@ -228,6 +228,21 @@ Se resuelve igual que en la versión anterior, y sigue siendo válido: **S2b est
 
 **Regla de control:** al cerrar S2b (7 de septiembre) deben estar terminadas **las cuatro aves con su animación idle y el helecho arbóreo**, porque son los POIs confirmados. El resto del catálogo puede seguir hasta la semana 8.
 
+### 7.4 Nadie se queda sin trabajo en ninguna semana
+
+Se revisó el backlog persona por persona y sprint por sprint, y aparecieron **tres huecos reales**: Alejandra no tenía nada asignado en S6, y Felipe no tenía nada ni en S6 ni en S7 — **cuatro semanas seguidas**, del 20 de octubre al 16 de noviembre.
+
+Se corrigió añadiendo dos historias que **no son relleno**:
+
+| Historia | Sprint | Quién | Por qué es trabajo real |
+|---|---|---|---|
+| **HU-51** · Segunda pasada de optimización de los assets 3D | S6 | Felipe + Alejandra | El presupuesto de triángulos se fijó en S2b **con una estimación**. En S4 se miden los fps reales y en S5 se integran los POIs: hasta S6 no hay números de verdad con los que revisarlo |
+| **HU-52** · Cierre visual del catálogo 3D con el sistema de diseño | S7 | Felipe + Eybar | Los modelos se hicieron **antes de que existiera la paleta definitiva**. Un ave verde sobre un fondo verde no se ve, y eso solo se descubre cuando ambos coinciden en la misma pantalla |
+
+**Esto no infla el total: redistribuye el pico de Felipe.** Tenía 103 puntos concentrados en S2b —dos semanas— y ahora parte del cierre de assets se hace cuando ya existen los datos que lo justifican. La comprobación se puede repetir en cualquier momento sobre `backlog-jira.csv`: no debe quedar ninguna casilla vacía en la matriz persona × sprint.
+
+> S2 y S2b son **las mismas semanas de calendario**, así que se cuentan juntas al hacer esta comprobación. Que alguien no tenga nada en S2b no significa nada si tiene trabajo en S2.
+
 ---
 
 ## 8. Cronograma semana a semana
@@ -250,8 +265,10 @@ Ninguna semana supera las **72 h** de capacidad del equipo (6 × 12).
 | **12** | 27 oct – 2 nov | S6 | HUD: altitud, distancia, desnivel, pendiente, tiempo estimado | 70 |
 | **13** | 3–9 nov | S7 | Onboarding y responsive móvil | 68 |
 | **14** | 10–16 nov | S7 | Accesibilidad AA, sistema de diseño consolidado, revisión de textos | 66 |
-| **15** | 17–24 nov | Cierre | Integración, pruebas cruzadas, despliegue y **entrega** | 72 |
+| **15** | 17–28 nov | Cierre | Integración, pruebas cruzadas, despliegue y **entrega** | 72 |
 | | | | **Total** | **1.052** |
+
+> **Sobre la semana de cierre.** La entrega es el **28 de noviembre**, no el 24, así que el bloque de cierre son **12 días naturales** en lugar de 8. Eso da algo de aire justo en el tramo más tenso del calendario. **La estimación no se rebaja por ello**: las 72 h de esa fila siguen siendo las que se van a necesitar, y los cuatro días extra se tratan como colchón, no como capacidad ya comprometida.
 
 > Las semanas 2, 3 y 4 van al tope porque concentran las tres primeras salidas de campo, y la 3 y la 4 además corren dos sprints a la vez. Es el tramo más frágil del calendario.
 
@@ -269,7 +286,7 @@ Ninguna semana supera las **72 h** de capacidad del equipo (6 × 12).
 | **M5 · Puntos de interés** | 19/10/2026 | 5–6 POIs completos, incluido **al menos uno patrimonial**, y **ambientación sonora espacial funcionando** | Ficha con modelo 3D animado, audio y transcripción; POI añadible por JSON; la quebrada se oye donde está |
 | **M6 · Capa de datos** | 02/11/2026 | HUD con datos reales del track | Altitud, distancia, desnivel, pendiente y tiempo estimado |
 | **M7 · Experiencia final** | 16/11/2026 | UI final con la paleta aplicada, responsive, onboarding, accesibilidad | 4 de 5 usuarios inician y abren una ficha sin instrucciones; contraste AA verificado |
-| **M8 · Entrega** | 24/11/2026 | Desplegado y documentado | Recorrido completo en Chrome, Safari y Firefox, escritorio y móvil |
+| **M8 · Entrega** | 28/11/2026 | Desplegado y documentado | Recorrido completo en Chrome, Safari y Firefox, escritorio y móvil |
 
 ---
 

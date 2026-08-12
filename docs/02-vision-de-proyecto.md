@@ -2,7 +2,7 @@
 
 > Punto 1 de la actividad del curso (segunda mitad).
 > Versión 1,0 — 11 de agosto de 2026.
-> Horizonte: 15 semanas (11 ago – 24 nov de 2026).
+> Horizonte: 15 semanas (11 ago – 28 nov de 2026).
 
 ---
 

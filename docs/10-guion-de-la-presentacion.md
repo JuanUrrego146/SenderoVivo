@@ -122,19 +122,19 @@ Y la regla de la que estamos más orgullosos: **lo que no está verificado contr
 
 > **Esta es la diapositiva que responde el punto "Jira" de la actividad.**
 
-**Qué se ve** — El proyecto **SV** en Jira:
+**Qué se ve** — El proyecto **SCRUM** en Jira (unimilitar-team-ic64wte1.atlassian.net):
 
 - El tablero con las épicas E1–E4.
 - El backlog con las historias del Sprint 1 y del Sprint 2.
 - Una historia abierta, con sus subtareas y su responsable.
 
-**Qué se dice** — Cuatro épicas, ocho sprints de dos semanas, del 11 de agosto al 24 de noviembre. Cada historia tiene criterios de aceptación, subtareas repartidas por persona y su estimación en puntos. **Jira y GitHub están coordinados**: la misma numeración HU, las mismas etiquetas de sprint, los mismos responsables.
+**Qué se dice** — Cuatro épicas, ocho sprints de dos semanas, del 11 de agosto al 28 de noviembre. Cada historia tiene criterios de aceptación, subtareas repartidas por persona y su estimación en puntos. **Jira y GitHub están coordinados**: la misma numeración HU, las mismas etiquetas de sprint, los mismos responsables.
 
 Y el dato que exige el curso: **12 horas semanales por persona.** Seis personas, quince semanas: 1.080 horas de capacidad contra una demanda estimada de 1.052, con el margen del 50 % ya incluido.
 
 **Material** — Jira · `plan/backlog-jira.csv` · `plan/plan_de_trabajo.md` §6.
 
-> ⚠️ **Bloqueante:** el proyecto **SV** todavía no existe en Jira. Lo tiene que crear Juan — el CSV está listo para importar. Ver §"Antes de presentar".
+> ✅ **Listo:** el proyecto **SCRUM** existe, con las 4 épicas y las 51 historias cargadas bajo ellas, cada una con responsable, sprint y puntos de historia.
 
 ---
 
@@ -166,14 +166,15 @@ Y lo que este plan es de verdad: **una guía inicial, no el plan definitivo**. L
 
 | # | Qué | Responsable | Estado |
 |---|---|---|---|
-| 1 | **Crear el proyecto `SV` en Jira** e importar `plan/backlog-jira.csv` | **Juan Urrego** | 🔴 **Bloqueante** — el proyecto no existe |
-| 2 | **Desbloquear el push del repositorio** (ver README, sección "Estado del repositorio") | **Juan Urrego** | 🔴 **Bloqueante** |
-| 3 | Mockup de la ficha con la paleta aplicada (D4) | Eybar Viasus | 🟠 Pendiente |
+| 1 | ~~Crear el proyecto en Jira e importar el backlog~~ | Juan Urrego | ✅ Hecho — proyecto `SCRUM`, 4 épicas y 51 historias |
+| 2 | ~~Desbloquear el push del repositorio~~ | Juan Urrego | ✅ Hecho — 6 ramas en remoto, `develop` por defecto |
+| 3 | **Capturar los 3 pantallazos** (GitHub, Jira, documento) y soltarlos en las páginas 6, 7 y 9 de Canva | **Juan Urrego** | 🔴 **Bloqueante** |
+| 3b | Mockup de la ficha con la paleta aplicada (D4) | Eybar Viasus | 🟠 Pendiente |
 | 4 | Capturas de Jira y de GitHub por si falla la red | Juan Urrego | 🟠 Pendiente |
 | 5 | Confirmar la reserva de V1 en la app del Acueducto para las seis personas | Juan Urrego | 🟠 Pendiente |
 | 6 | Ensayo cronometrado | Todo el equipo | 🟠 Pendiente |
 
-**Los puntos 1 y 2 son bloqueantes de verdad**: sin ellos, dos de las cuatro cosas que pide la actividad —Jira y el repositorio— no se pueden mostrar.
+**El punto 3 es el único bloqueante que queda.** Las diapositivas están montadas en Canva (SenderoVivoVisionYRoles) con el texto y las notas del orador; faltan las tres capturas, que no se pueden subir desde aquí porque el repositorio y Jira son privados y el conector de Canva solo acepta URLs públicas.
 
 ---
 

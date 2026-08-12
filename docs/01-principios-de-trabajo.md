@@ -2,7 +2,7 @@
 
 > Punto 1 de la actividad del curso (primera mitad).
 > Acordado en la reunión de inicio del **11 de agosto de 2026**.
-> Vigente durante las 15 semanas del proyecto (11 ago – 24 nov de 2026).
+> Vigente durante las 15 semanas del proyecto (11 ago – 28 nov de 2026).
 
 Este documento es el contrato de trabajo del equipo. No describe cómo queremos trabajar en abstracto: describe qué se considera aceptable y qué no, para un equipo de seis personas que además es primerizo en las tres tecnologías centrales del proyecto (Gaussian Splatting, SuperSplat/SOG y PlayCanvas) al mismo tiempo.
 
@@ -140,7 +140,7 @@ El tipo va en inglés (`feat`, `fix`, `docs`, `chore`, `refactor`, `perf`, `test
 | **Canal de chat del equipo** | Coordinación diaria, bloqueos, preguntas rápidas | Mismo día hábil |
 | **Issues de GitHub** | Todo lo que sea trabajo: alcance, criterios, discusión técnica de una historia | 24 h hábiles |
 | **Pull Requests** | Discusión sobre código concreto | 24 h hábiles |
-| **Jira (proyecto SV)** | Estado del sprint, tablero, puntos, seguimiento del cronograma | Actualización diaria por cada quien |
+| **Jira (proyecto SCRUM)** | Estado del sprint, tablero, puntos, seguimiento del cronograma | Actualización diaria por cada quien |
 | **Reuniones (ver §5)** | Decisiones que requieren acuerdo del grupo | En el momento |
 | **`docs/decisiones/ADR-*.md`** | Decisiones de arquitectura o de alcance que hay que poder justificar meses después | Permanente |
 
