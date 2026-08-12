@@ -23,44 +23,6 @@ Y una cuarta dimensión que no es visual: **ambientación sonora binaural con au
 **Ubicación:** Quebrada La Vieja, sector **Claro de Luna**, tramo de entrada. Calle 71 con Avenida Circunvalar, Chapinero. TransMilenio a 700 m.
 **Tramo comprometido:** **200 m** en 3 escenas · Altitud de inicio 2.712 msnm `[por confirmar en campo]` · Desnivel y pendiente `[por medir en campo]`
 
----
-
-## Estado del repositorio
-
-| | |
-|---|---|
-| Repositorio remoto | ✅ Creado — [`JuanUrrego146/SenderoVivo`](https://github.com/JuanUrrego146/SenderoVivo) (privado) |
-| Labels | ✅ 27 creados (épicas, tipos, sprints y responsables) |
-| Milestones | ✅ 9 creados, con fecha real |
-| Issues | ✅ 49, una por historia de usuario, con etiqueta de responsable |
-| **Push del código y de las ramas** | 🔴 **Pendiente** — ver abajo |
-| Proyecto en Jira | 🔴 **Pendiente de crear** — ver abajo |
-
-### 🔴 El push está bloqueado y hay que desbloquearlo
-
-GitHub rechaza el push con `push declined due to email privacy restrictions`: la cuenta tiene activada la opción *«Block command line pushes that expose my email»* y los dos commits existentes llevan un correo personal.
-
-**Opción A — la rápida, sin tocar la historia (recomendada):** desactivar *«Block command line pushes that expose my email»* en [github.com/settings/emails](https://github.com/settings/emails) y repetir el push:
-
-```bash
-bash setup_repo.sh
-```
-
-**Opción B — usar el correo `noreply` de GitHub.** Reescribe los dos commits ya creados. Es seguro porque nadie ha clonado el repositorio todavía:
-
-```bash
-MAIL="$(gh api user --jq '"\(.id)+\(.login)@users.noreply.github.com"')" && git config user.email "$MAIL" && git rebase --root --exec "git commit --amend --no-edit --author=\"JuanUrrego146 <$MAIL>\"" && for BR in develop epic/captura-reconstruccion epic/motor-recorrido epic/pois-fichas epic/datos-experiencia; do git branch -f "$BR" main; done && bash setup_repo.sh
-```
-
-### 🔴 El proyecto de Jira hay que crearlo
-
-El proyecto **SV** todavía no existe. Lo tiene que crear alguien con permisos de administración. Después:
-
-1. Crear el proyecto `SV` (tipo Scrum).
-2. Importar [`plan/backlog-jira.csv`](plan/backlog-jira.csv) — 4 épicas, 51 historias y 157 subtareas, con responsable, sprint y puntos.
-3. Crear los sprints `S1`, `S2`, `S2b`, `S3`…`S7` y `Cierre` con las fechas del [plan de trabajo](plan/plan_de_trabajo.md) §8.
-
----
 
 ## Stack técnico
 
