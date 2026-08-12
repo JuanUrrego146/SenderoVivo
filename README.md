@@ -25,19 +25,7 @@ Y una cuarta dimensión que no es visual: **ambientación sonora binaural con au
 
 ---
 
-## Estado del repositorio
-
-| | |
-|---|---|
-| Repositorio remoto | ✅ [`JuanUrrego146/SenderoVivo`](https://github.com/JuanUrrego146/SenderoVivo) (privado), rama por defecto `develop` |
-| Ramas | ✅ `main`, `develop` y **una por persona** |
-| Labels | ✅ 42 — épicas, tipos, sprints, semanas de entrega y responsables |
-| Milestones | ✅ 9, con fecha real |
-| Issues | ✅ 51, una por historia, con etiqueta de responsable y de semana |
-| Jira | ✅ Proyecto **SCRUM**: 4 épicas + 51 historias, con padre, etiquetas y puntos |
-| Sprint 1 en Jira | ⚠️ Cargado con sus 5 historias, **sin iniciar** — lo arranca Juan |
-
-### Empezar a trabajar
+## Empezar a trabajar
 
 Cada quien clona y se pone en **su** rama:
 
