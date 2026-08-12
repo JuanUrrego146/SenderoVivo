@@ -29,36 +29,31 @@ Y una cuarta dimensión que no es visual: **ambientación sonora binaural con au
 
 | | |
 |---|---|
-| Repositorio remoto | ✅ Creado — [`JuanUrrego146/SenderoVivo`](https://github.com/JuanUrrego146/SenderoVivo) (privado) |
-| Labels | ✅ 27 creados (épicas, tipos, sprints y responsables) |
-| Milestones | ✅ 9 creados, con fecha real |
-| Issues | ✅ 49, una por historia de usuario, con etiqueta de responsable |
-| **Push del código y de las ramas** | 🔴 **Pendiente** — ver abajo |
-| Proyecto en Jira | 🔴 **Pendiente de crear** — ver abajo |
+| Repositorio remoto | ✅ [`JuanUrrego146/SenderoVivo`](https://github.com/JuanUrrego146/SenderoVivo) (privado), rama por defecto `develop` |
+| Ramas | ✅ `main`, `develop` y **una por persona** |
+| Labels | ✅ 42 — épicas, tipos, sprints, semanas de entrega y responsables |
+| Milestones | ✅ 9, con fecha real |
+| Issues | ✅ 51, una por historia, con etiqueta de responsable y de semana |
+| Jira | ✅ Proyecto **SCRUM**: 4 épicas + 51 historias, con padre, etiquetas y puntos |
+| Sprint 1 en Jira | ⚠️ Cargado con sus 5 historias, **sin iniciar** — lo arranca Juan |
 
-### 🔴 El push está bloqueado y hay que desbloquearlo
+### Empezar a trabajar
 
-GitHub rechaza el push con `push declined due to email privacy restrictions`: la cuenta tiene activada la opción *«Block command line pushes that expose my email»* y los dos commits existentes llevan un correo personal.
-
-**Opción A — la rápida, sin tocar la historia (recomendada):** desactivar *«Block command line pushes that expose my email»* en [github.com/settings/emails](https://github.com/settings/emails) y repetir el push:
-
-```bash
-bash setup_repo.sh
-```
-
-**Opción B — usar el correo `noreply` de GitHub.** Reescribe los dos commits ya creados. Es seguro porque nadie ha clonado el repositorio todavía:
+Cada quien clona y se pone en **su** rama:
 
 ```bash
-MAIL="$(gh api user --jq '"\(.id)+\(.login)@users.noreply.github.com"')" && git config user.email "$MAIL" && git rebase --root --exec "git commit --amend --no-edit --author=\"JuanUrrego146 <$MAIL>\"" && for BR in develop epic/captura-reconstruccion epic/motor-recorrido epic/pois-fichas epic/datos-experiencia; do git branch -f "$BR" main; done && bash setup_repo.sh
+git clone https://github.com/JuanUrrego146/SenderoVivo.git
+cd SenderoVivo
+git checkout dev/tu-nombre
 ```
 
-### 🔴 El proyecto de Jira hay que crearlo
+Y antes de empezar el día, trae lo que haya en `develop`:
 
-El proyecto **SV** todavía no existe. Lo tiene que crear alguien con permisos de administración. Después:
+```bash
+git pull origin develop
+```
 
-1. Crear el proyecto `SV` (tipo Scrum).
-2. Importar [`plan/backlog-jira.csv`](plan/backlog-jira.csv) — 4 épicas, 51 historias y 157 subtareas, con responsable, sprint y puntos.
-3. Crear los sprints `S1`, `S2`, `S2b`, `S3`…`S7` y `Cierre` con las fechas del [plan de trabajo](plan/plan_de_trabajo.md) §8.
+> **Falta un archivo que no está aquí a propósito:** `context-for-vibe-coding.md`, el contexto para asistentes de código. No se versiona; pídeselo a Juan y déjalo en la raíz del proyecto.
 
 ---
 
@@ -140,7 +135,7 @@ El resto del paquete:
 - [Análisis y especificación de requerimientos](docs/F_Analisis_de_Requerimientos_V1,1_SenderoVivo.docx) — **incluye la visión del proyecto**, 15 CUS, 32 RF, 16 RNF y matriz de trazabilidad
 - [Plan de trabajo](plan/plan_de_trabajo.md) — estimación por RF y cronograma semana a semana
 - [Backlog importable a Jira](plan/backlog-jira.csv)
-- [Contexto para vibe coding](context-for-vibe-coding.md) — **léelo antes de escribir código**
+- **Contexto para vibe coding** — `context-for-vibe-coding.md`. **No está en el repositorio a propósito**: vive en la máquina de cada quien. Pídeselo a Juan y déjalo en la raíz del proyecto
 
 **Decisiones de arquitectura:**
 
@@ -187,7 +182,7 @@ node scripts/sync-github.mjs --dry-run
 | Documentos, UI y contenidos | Español |
 | Código, variables, funciones, ramas | Inglés |
 | Commits | Conventional Commits, tipo en inglés y descripción en español, citando el RF: `feat(motor): avanzar sobre el trazado (RF-003)` |
-| Ramas | `epic/<épica>/HU-<nn>-<descripción-kebab-case>` |
+| Ramas | Una por persona: `dev/<nombre-kebab-case>`. Opcional por historia: `dev/<nombre>/HU-<nn>-<descripción>` |
 | Identificadores | `RF-0NN`, `RNF-0NN`, `CUS-0NN`, `HU-NN`, `ADR-0NN` |
 | Fechas | `DD/MM/AAAA` |
 | Unidades | Métricas. Altitud en msnm, distancia en m, pendiente en % |
@@ -196,14 +191,20 @@ node scripts/sync-github.mjs --dry-run
 
 **Flujo de ramas:**
 
+**Una rama por persona.** Cada quien trabaja en la suya y la fusiona a `develop` por Pull Request, al menos una vez por semana.
+
 ```
-main                 ← solo entregables. Protegida
-└── develop          ← integración. Todo pasa por aquí
-    ├── epic/captura-reconstruccion      (E1)
-    ├── epic/motor-recorrido             (E2)
-    ├── epic/pois-fichas                 (E3)
-    └── epic/datos-experiencia           (E4)
+main                       ← solo entregables. Protegida
+└── develop                ← integración. Todo pasa por aquí
+    ├── dev/juan-urrego
+    ├── dev/alejandra-chambueta
+    ├── dev/david-beltran
+    ├── dev/felipe-acevedo
+    ├── dev/eybar-viasus
+    └── dev/alberto-aleman
 ```
+
+Si alguien quiere separar una historia concreta, abre una rama hija de la suya: `dev/<persona>/HU-<nn>-<descripción>`. Es opcional.
 
 ---
 

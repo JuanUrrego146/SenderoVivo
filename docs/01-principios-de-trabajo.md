@@ -53,26 +53,30 @@ Una historia está **hecha** cuando cumple **todos** estos puntos. No hay "hecho
 
 ## 3. Flujo de ramas
 
-Modelo **Git Flow simplificado**, ajustado a que hay cuatro épicas con dueños distintos.
+Modelo **Git Flow simplificado**, con **una rama por persona**: cada quien trabaja en la suya y nadie se pisa.
 
 ```
-main                 ← solo versiones entregables (hitos y entrega final). Protegida.
-└── develop          ← integración continua del equipo. Todo pasa por aquí.
-    ├── epic/captura-reconstruccion      (E1 — Juan Urrego)
-    ├── epic/motor-recorrido             (E2 — Alejandra Chambueta)
-    ├── epic/pois-fichas                 (E3 — Felipe Acevedo + David Beltrán)
-    └── epic/datos-experiencia           (E4 — Eybar Viasus + Alberto Alemán)
+main                       ← solo versiones entregables (hitos y entrega final). Protegida.
+└── develop                ← integración continua del equipo. Todo pasa por aquí.
+    ├── dev/juan-urrego
+    ├── dev/alejandra-chambueta
+    ├── dev/david-beltran
+    ├── dev/felipe-acevedo
+    ├── dev/eybar-viasus
+    └── dev/alberto-aleman
 ```
 
 **Reglas:**
 
 1. `main` y `develop` están protegidas: nadie hace push directo. Solo se entra por Pull Request.
-2. El trabajo diario ocurre en ramas hijas de la rama de épica:
-   `epic/motor-recorrido/HU-18-avance-retroceso`
-3. Nombre de rama: `epic/<épica>/HU-<nn>-<descripción-corta-en-kebab-case>`.
-4. La rama de épica se fusiona a `develop` **al cerrar cada sprint**, no al final de la épica.
+2. **Cada persona trabaja en su propia rama `dev/<nombre>`.** Es su espacio: puede subir a ella cuando quiera y todas las veces que quiera, sin pedir permiso ni romperle nada a nadie.
+3. Si alguien quiere separar una historia concreta, abre una rama hija de la suya:
+   `dev/alejandra-chambueta/HU-18-avance-retroceso`. Es opcional.
+4. **La rama de cada persona se fusiona a `develop` por Pull Request al menos una vez por semana**, coincidiendo con la entrega semanal del viernes. Una rama que lleva más de una semana sin fusionarse es un problema que se dice en la sincronización, no en la demo.
 5. `develop` → `main` solo en los hitos: fin de S4 (motor navegable), fin de S6 (experiencia completa) y entrega final.
-6. Una rama que lleva más de un sprint sin fusionarse es un problema que se escala en la retro.
+6. **Antes de empezar el día, `git pull` de `develop` a tu rama.** El reparto por carpetas (ver [`09-ambitos-de-los-tres-programadores.md`](09-ambitos-de-los-tres-programadores.md)) hace que los conflictos sean raros, pero raros no es ninguno.
+
+> **Por qué por persona y no por épica.** Las épicas se solapan —S2b corre en paralelo con S2, y S5 y S6 comparten módulos con S3 y S4—, así que una rama por épica acaba con dos personas dentro. Una rama por persona no tiene esa ambigüedad: si hay un conflicto, hay exactamente dos nombres que hablar.
 
 **Mensajes de commit** — Conventional Commits, en español:
 

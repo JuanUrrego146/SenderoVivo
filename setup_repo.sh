@@ -21,7 +21,7 @@
 set -uo pipefail
 
 REPO_NAME="SenderoVivo"
-BRANCHES=(develop epic/captura-reconstruccion epic/motor-recorrido epic/pois-fichas epic/datos-experiencia)
+BRANCHES=(develop dev/juan-urrego dev/alejandra-chambueta dev/david-beltran dev/felipe-acevedo dev/eybar-viasus dev/alberto-aleman)
 
 echo "==> 0. Comprobaciones previas"
 command -v gh   >/dev/null || { echo 'ERROR: falta GitHub CLI (gh).'; exit 1; }
@@ -55,8 +55,9 @@ echo "==> 2. Subir las ramas"
 #        MAIL="$(gh api user --jq '"\(.id)+\(.login)@users.noreply.github.com"')"
 #        git config user.email "$MAIL"
 #        git rebase --root --exec "git commit --amend --no-edit --author=\"$OWNER <$MAIL>\""
-#        for BR in develop epic/captura-reconstruccion epic/motor-recorrido \
-#                  epic/pois-fichas epic/datos-experiencia; do
+#        for BR in develop dev/juan-urrego dev/alejandra-chambueta \
+#                  dev/david-beltran dev/felipe-acevedo dev/eybar-viasus \
+#                  dev/alberto-aleman; do
 #          git branch -f "$BR" main
 #        done
 #      Es seguro mientras nadie haya clonado todavia el repositorio.

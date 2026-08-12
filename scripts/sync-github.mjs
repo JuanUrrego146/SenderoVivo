@@ -226,7 +226,7 @@ function issueBody(story, subtasks) {
   lines.push(`- **Sprint:** ${story.Sprint} (${SPRINT_DATES[story.Sprint] ?? 'fechas por confirmar'})`);
   lines.push(`- **Epica:** ${story['Epic Link']}`);
   lines.push(`- **Estimacion:** ${story['Story Points']} puntos de historia`);
-  if (storyId) lines.push(`- **Rama sugerida:** \`epic/<epica>/${storyId}-<descripcion-kebab-case>\``);
+  if (storyId) lines.push(`- **Rama sugerida:** \`dev/<tu-nombre>/${storyId}-<descripcion-kebab-case>\``);
   lines.push('- Detalle en `docs/04-actividades-y-roles.md` y `plan/plan_de_trabajo.md`');
   lines.push('');
   lines.push('> Este backlog es una **guia inicial**. La visita de reconocimiento V1 de la semana 2 puede cambiar el alcance de esta historia.');
