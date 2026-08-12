@@ -34,6 +34,40 @@ De ahí salen cuatro problemas concretos y observables:
 
 **Usuario primario del MVP:** el visitante que quiere reconocer el sendero antes de ir. Es el que valida las tres promesas de golpe.
 
+### 2.1 Interesados
+
+Más allá de los usuarios finales, hay seis grupos con algo que aportar o que recibir:
+
+| Interesado | Relación con el proyecto | Qué necesita el proyecto de él |
+|---|---|---|
+| **Docentes evaluadores** | Evaluación académica | Métricas de calificación y criterios claros |
+| **Estudiantes** | Beta testers y usuarios potenciales | Retroalimentación de experiencia de usuario |
+| **Equipo desarrollador** | Construcción del producto | PM, tres programadores, artista 3D y dos de UI/UX |
+| **Turistas y deportistas** | Usuarios finales | Métricas de impacto; son el público objetivo y sus promotores |
+| **Instituciones educativas** | Uso como recurso pedagógico | Convenio de uso o de investigación |
+| **Acueducto de Bogotá** | Administra el acceso a los senderos | Permisos de reserva y, eventualmente, alianza |
+
+### 2.2 Lo que hay que averiguar de los usuarios
+
+Preguntas abiertas que orientan la investigación con usuarios, pendiente de programar:
+
+- ¿Cuál es su estado físico y con qué frecuencia hace actividad física?
+- ¿Cuál es su motivación para hacer este tipo de actividades?
+- ¿Qué razones lo harían **no** ir el día que lo tenía programado?
+- ¿Qué sabe de las especies endémicas de los Cerros y qué le gustaría conocer?
+- ¿Con qué frecuencia explora lugares turísticos de la ciudad?
+
+Hay dos percepciones que el proyecto tiene que atacar directamente: la **incertidumbre** sobre qué tan exigente o largo es el sendero —el producto entero es un preámbulo a eso— y la **percepción de inseguridad**, que se combate con información, no con silencio.
+
+### 2.3 Qué hay ya en el mundo
+
+| Referencia | Qué resuelve | Qué no resuelve |
+|---|---|---|
+| **Wikiloc**, **Strava**, **Happylife** | Trazado, perfil de elevación y estadísticas del recorrido | No dejan *ver* el camino. Y buena parte de la información está en millas y pies |
+| **Calico Tanks, Red Rock Canyon** (galería de PlayCanvas) | Demuestra que un sendero de montaña se puede escanear y recorrer en el navegador | Es una demostración técnica, sin capa de contenido ni de datos |
+
+La conclusión que da origen al proyecto: **la técnica ya funciona sobre senderos reales; lo que no existe es alguien que la combine con contenido biológico verificado y con datos de esfuerzo, en español y para un sendero de Bogotá.**
+
 ---
 
 ## 3. Propuesta de valor
@@ -51,6 +85,9 @@ Marcadores flotantes anclados a lugares reales del tramo. Al tocarlos se abre la
 ### Medir
 Mientras se avanza, en pantalla: altitud sobre el nivel del mar, distancia recorrida y restante, desnivel acumulado, pendiente actual, y tiempo estimado hasta el siguiente punto. Datos reales tomados con GPS el mismo día de la captura.
 
+### Y oír
+La experiencia no es solo visual e interactiva. El recorrido lleva **ambientación sonora binaural con audio espacial 3D**: la quebrada suena a la izquierda cuando la quebrada está a la izquierda, y queda atrás al avanzar. No es una pista de fondo, es un espacio. Es la diferencia entre mirar un sendero y estar en él.
+
 ### Por qué "capturado, no modelado"
 Esta es la decisión que define el proyecto. Un modelo 3D hecho a mano es la interpretación de un artista sobre cómo se ve un bosque. Un Gaussian Splat es **el bosque**, con su desorden, su luz de esa mañana y su geometría imposible de dibujar. Para una app cuyo propósito es que reconozcas el lugar cuando llegues, esa diferencia es todo el producto.
 
@@ -60,12 +97,18 @@ Esta es la decisión que define el proyecto. Un modelo 3D hecho a mano es la int
 
 ### 4.1 Lo que SÍ está en el alcance
 
-- Un tramo real de **120 a 200 metros**, dividido en **3 escenas** encadenadas.
-- **5 a 6 puntos de interés** completos, con todo su contenido.
-- **Fichas 3D de aves y plantas**: modelo girable con zoom, nombre común y científico, narración, canto, altura de distribución e identificación en campo.
+- **200 metros desde el inicio del sendero** —compromiso firme—, divididos en **3 escenas** encadenadas por etapas: 0–70, 70–140 y 140–200 m.
+- **5 a 6 puntos de interés** completos, de tres clases: **fauna**, **flora** y **patrimonio**.
+- **Fichas 3D de aves y plantas**: modelo girable con zoom, **animación idle de aleteo**, nombre común y científico, narración, canto, altura de distribución, identificación en campo y **consejos de avistamiento**.
+- **Puntos de interés no vivos**: puertas derrumbadas, muros, monumentos y tramos de camino, con su historia y su fuente citable.
 - **Recorrido guiado** sobre el trazado, con **mirada libre 360°** en cualquier punto.
+- **Nivel de detalle por proximidad al recorrido**: máximo detalle en la banda que el visitante mira de cerca, menos detalle en el contexto.
+- **Ambientación sonora binaural con audio espacial 3D** durante todo el recorrido.
 - **Datos del recorrido en pantalla**: altitud, distancia recorrida y restante, desnivel acumulado, pendiente, tiempo estimado al siguiente punto.
+- **Identidad visual propia**: paleta de grises, negros y verdes que resalta la quebrada y la fauna.
 - **Web para escritorio y celular**, sin instalación.
+
+> **Ampliar el tramo más allá de los 200 m no está comprometido.** Si al cerrar el Sprint 2 hay holgura de peso, rendimiento y horas, se añade una cuarta etapa (200–260 m). Se decide entonces, con datos reales, y no antes.
 
 ### 4.2 Lo que NO está en el alcance
 
@@ -83,13 +126,33 @@ Esta lista es vinculante. No es una lista de "fase 2": es una lista de lo que es
 
 ### 4.3 Ubicación
 
-**Quebrada La Vieja, tramo de entrada.** Calle 71 con Avenida Circunvalar, Chapinero. TransMilenio a 700 m.
+**Quebrada La Vieja, sector Claro de Luna, tramo de entrada.** Calle 71 con Avenida Circunvalar, Chapinero. TransMilenio a 700 m.
 
 El tramo tiene escalones de piedra, barandas de madera y cauce rocoso: superficies duras, con textura y aristas definidas, que es justo lo que la reconstrucción por Gaussian Splatting resuelve bien. Es un criterio técnico, no estético.
 
-**Cifras del tramo a capturar** — Altitud: **2.712 m** · Recorrido: **340 m** · Desnivel: **62 m** · Pendiente media: **9 %**.
+**Cifras del tramo comprometido (200 m)**
+
+| Dato | Valor | Estado |
+|---|---|---|
+| Longitud | **200 m** | Compromiso firme |
+| Altitud de inicio | **2.712 msnm** | Registro GPS público · `[por confirmar en V1]` |
+| Desnivel acumulado | — | **`[por medir en campo]`**, se cierra en V1 |
+| Pendiente media | — | **`[por medir en campo]`**, se cierra en V1 |
+
+> Las cifras de 340 m de recorrido, 62 m de desnivel y 9 % de pendiente que aparecen en versiones anteriores de estos documentos corresponden al **tramo de referencia evaluado en ADR-001**, no al tramo comprometido de 200 m. No se reutilizan como si fueran las del tramo: se miden.
 
 > La decisión final de sendero se cierra en la primera semana y es **hito bloqueante del Sprint 1**. Las tres opciones evaluadas y los criterios están en [ADR-001](decisiones/ADR-001-eleccion-de-sendero.md).
+
+### 4.4 Cómo se llega al tramo: cuatro visitas de campo
+
+| Visita | Cuándo | Quién | Qué resuelve |
+|---|---|---|---|
+| **V1 · Reconocimiento** | Semana 2 (18–24 ago) | **Todo el equipo** | **Sin grabar.** Tramo exacto, etapas, POIs, mapa sonoro y decisiones creativas |
+| **V2 · Captura principal** | Semana 3 (25–31 ago) | 4 personas | El material del tramo, con el protocolo completo |
+| **V3 · Complementaria** | Semana 4 (1–7 sep) | 4 personas | Audio binaural, cantos y patrimonio. **O contingencia si V2 falló** |
+| **V4 · Verificación** | Semana 6 (15–21 sep) | 3 personas | Comprobar en el sitio que el lugar se reconoce |
+
+**La primera visita es la más determinante y la más barata.** Se va a decidir, no a grabar: gastar una mañana nublada sin viento antes de saber qué se quiere capturar es como se pierde la ventana. Detalle en [`07-plan-de-visitas-de-campo.md`](07-plan-de-visitas-de-campo.md).
 
 ---
 
@@ -101,8 +164,8 @@ Medibles, verificables y con fecha. Si no se pueden comprobar, no son criterios.
 
 | # | Criterio | Meta | Cómo se mide | Cuándo |
 |---|---|---|---|---|
-| E1 | El tramo está reconstruido y es navegable | 3 escenas encadenadas, 120–200 m | Recorrido completo de extremo a extremo sin cortes | Fin S4 |
-| E2 | Los puntos de interés están completos | ≥ 5 POIs con los 5 elementos de ficha | Revisión de contenido POI por POI | Fin S5 |
+| E1 | El tramo está reconstruido y es navegable | 3 escenas encadenadas, **200 m** | Recorrido completo de extremo a extremo sin cortes | Fin S4 |
+| E2 | Los puntos de interés están completos | ≥ 5 POIs completos, **al menos 1 de patrimonio** | Revisión de contenido POI por POI | Fin S5 |
 | E3 | Los datos del recorrido son reales y correctos | Altitud, distancia, desnivel y pendiente derivados del track GPS capturado | Contraste contra el track grabado en campo | Fin S6 |
 | E4 | Funciona en celular sin instalar nada | Carga y recorrido completo en Chrome Android y Safari iOS | Prueba en dispositivo físico | Fin S7 |
 
@@ -115,6 +178,8 @@ Medibles, verificables y con fecha. Si no se pueden comprobar, no son criterios.
 | E7 | Peso por escena SOG | ≤ `[por definir tras la primera captura]` MB | RNF-003 |
 | E8 | Accesibilidad de textos | Contraste AA + transcripción de narraciones | RNF-006 |
 | E9 | Ninguna pantalla en negro | Todo fallo de carga informa y ofrece reintentar | RNF-007 |
+| E15 | La ambientación sonora es espacial y no rompe el rendimiento | Fuentes HRTF activas y ≥ 30 fps sostenidos con el audio encendido | RNF-016, RNF-001 |
+| E16 | Ningún dato biológico o histórico publicado sin fuente | 100 % de las fichas con fuente citable o marca de pendiente | RNF-011 |
 
 ### 5.3 De usabilidad
 
@@ -128,8 +193,9 @@ Medibles, verificables y con fecha. Si no se pueden comprobar, no son criterios.
 | # | Criterio | Meta |
 |---|---|---|
 | E12 | Los 8 sprints cierran con demo funcionando | 8/8 |
-| E13 | Margen de esfuerzo restante al final de S6 | > 15 % de las 262 h reservadas |
 | E14 | Todo RF entregado está trazado a un CUS y a una historia | 100 % |
+
+> El seguimiento del margen de esfuerzo del equipo (criterio E13) es indicador de gestión interna; su detalle vive en `plan/plan_de_trabajo.md`.
 
 ---
 
@@ -178,7 +244,7 @@ La captura exige día nublado, sin viento y a primera hora. En Bogotá esa venta
 Gaussian Splatting, SuperSplat/SOG y PlayCanvas, simultáneamente, sin experiencia previa.
 
 **Mitigación:**
-- Margen de estimación del **50 %** (no 30 %), explícito en el plan de trabajo.
+- Margen de tiempo amplio y explícito reservado en el plan de trabajo (`plan/plan_de_trabajo.md`) para absorber la curva de aprendizaje.
 - S1 incluye tiempo de aprendizaje y prueba de herramientas como trabajo real, no como algo que se hace "aparte".
 - Toda la investigación queda en `docs/03-avances-tecnologia.md`, no en la cabeza de quien la hizo.
 - Revisión cruzada obligatoria: el conocimiento no se queda en una sola persona.
@@ -213,6 +279,29 @@ Las fichas afirman nombres científicos y rangos de altitud. Un error se propaga
 - Lo no verificado se marca `[por medir en campo]` o `[por verificar]`; nunca se rellena.
 - Felipe revisa toda ficha de fauna y flora antes de la demo.
 
+### R9 — El audio espacial no cabe en el presupuesto de rendimiento
+**Probabilidad: media · Impacto: medio**
+
+El paneo HRTF cuesta CPU, y el proyecto ya tiene el rendimiento móvil ajustado (R2). Además, **Safari en iOS podría no aplicar HRTF real** y caer a paneo de igual potencia, con lo que la promesa binaural se perdería justo en la mitad de los dispositivos.
+
+**Mitigación:**
+- **RNF-016** acota el número de fuentes espaciales simultáneas: 4 en escritorio, 2 en móvil.
+- El lecho ambiente **no** es posicional: el coste está solo en las fuentes puntuales.
+- La medición de 30 fps (HU-23) se hace **con el audio encendido**, no sin él.
+- La prueba de HRTF en Safari se adelanta a **S3** (validación A3), no se deja para S5.
+- **Plan de choque:** bajar a 2 fuentes simultáneas, y en iOS degradar a paneo estéreo por distancia. **El audio no se desactiva**: es parte del producto.
+
+### R10 — La visita de reconocimiento no se hace, o se hace grabando
+**Probabilidad: media · Impacto: alto**
+
+V1 es la visita que decide el tramo, las etapas, los POIs y el mapa sonoro. Si no se hace —o si se convierte en una captura improvisada porque el día salió bueno— todo lo demás se decide a ciegas y la captura de V2 se hace sin criterio.
+
+**Mitigación:**
+- V1 tiene **historia propia, bloqueante y con criterios de aceptación verificables** (HU-42).
+- Cada persona va con un **encargo escrito**, no a acompañar.
+- La regla «no se graba video de captura en V1» está escrita en el plan de campo y en la issue.
+- Si el día de V1 sale excepcionalmente bueno, **no se adelanta la captura**: se toma nota y se reserva V2 lo antes posible.
+
 ### R8 — Pérdida del material de captura
 **Probabilidad: baja · Impacto: muy alto**
 
@@ -228,7 +317,7 @@ El video bruto de la salida es irrepetible sin volver a tener las mismas condici
 
 Tres condiciones concretas, no optimismo:
 
-1. **El alcance está deliberadamente pequeño.** 120–200 metros, 3 escenas, 5–6 POIs. Es un recorte defendible técnicamente, no una versión recortada por falta de tiempo.
+1. **El alcance está deliberadamente pequeño.** 200 metros, 3 escenas, 5–6 POIs. Es un recorte defendible técnicamente, no una versión recortada por falta de tiempo.
 2. **El camino crítico está identificado y protegido.** E1 (S1–S2) → E2 (S3–S4) → E4 (S6–S7). E3 sale del camino crítico corriendo en paralelo, que es exactamente lo que permite meter 16 semanas de esfuerzo en 14 de calendario.
 3. **El stack está cerrado y es gratuito.** PlayCanvas Engine (MIT), SuperSplat (MIT), formato SOG (especificación abierta), captura con un celular que el equipo ya tiene, estación con GPU que el equipo ya tiene. Ninguna dependencia de presupuesto.
 
@@ -239,5 +328,9 @@ Tres condiciones concretas, no optimismo:
 - Alcance, roles y cronograma detallado: [`04-actividades-y-roles.md`](04-actividades-y-roles.md)
 - Investigación técnica y riesgos técnicos: [`03-avances-tecnologia.md`](03-avances-tecnologia.md)
 - Decisión de sendero: [`decisiones/ADR-001-eleccion-de-sendero.md`](decisiones/ADR-001-eleccion-de-sendero.md)
-- Requerimientos completos: `F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx`
+- Requerimientos completos, **con esta visión incorporada en la sección 3.2**: `F_Analisis_de_Requerimientos_V1,1_SenderoVivo.docx`
+- Catálogo de fauna y flora con fuentes: [`05-catalogo-fauna-y-flora.md`](05-catalogo-fauna-y-flora.md)
+- Identidad visual: [`06-identidad-visual.md`](06-identidad-visual.md)
+- Plan de visitas de campo: [`07-plan-de-visitas-de-campo.md`](07-plan-de-visitas-de-campo.md)
+- Ambientación sonora: [`08-ambientacion-sonora.md`](08-ambientacion-sonora.md)
 - Estimación y cronograma: [`../plan/plan_de_trabajo.md`](../plan/plan_de_trabajo.md)

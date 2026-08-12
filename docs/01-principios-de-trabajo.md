@@ -90,7 +90,17 @@ El tipo va en inglés (`feat`, `fix`, `docs`, `chore`, `refactor`, `perf`, `test
 ## 4. Revisión de código
 
 - **Una aprobación obligatoria** por PR. Nunca se aprueba el propio trabajo.
-- **Revisor cruzado por defecto:** Alejandra ↔ David (programación), Eybar ↔ Alberto (UI/UX), Juan revisa integración y contratos de datos, Felipe revisa cualquier PR que toque assets 3D.
+- **Revisa el dueño de la carpeta.** Cada carpeta tiene uno (ver [`09-ambitos-de-los-tres-programadores.md`](09-ambitos-de-los-tres-programadores.md)), y eso da el revisor sin discutirlo:
+
+  | Autor | Revisor por defecto |
+  |---|---|
+  | Alejandra (`src/engine/`) | **David** |
+  | David (`src/poi/`, `src/data/`, `src/audio/`) | **Alejandra** |
+  | Juan (`src/app/`, `src/ui/`, `config/`) | **Alejandra** o **David**, alternando |
+  | Eybar / Alberto (`styles/`) | El otro de los dos, y **Juan** si cambian tokens |
+  | Felipe (`assets/`) | **Juan** |
+
+  Juan no es revisor único de nada: si él integra y además revisa todo, deja de haber revisión.
 - **Tamaño máximo recomendado:** 400 líneas de diff. Una PR más grande se parte, salvo que sea generada (assets, datos).
 - **Plazo de respuesta:** 24 horas hábiles. Pasado ese plazo, quien abrió la PR la escala en el canal del equipo.
 - **Qué se revisa, en este orden:**
@@ -182,7 +192,7 @@ Este equipo es de seis personas con carga académica simultánea. Que alguien no
 
 **Ausencias previstas** (parciales, viajes, exámenes): se anuncian en la planeación del sprint y se descuentan de la capacidad **antes** de comprometer historias. Un sprint con menos capacidad lleva menos historias, no las mismas historias con más presión.
 
-**Sobre el margen del 50 %:** el plan de trabajo (`plan/plan_de_trabajo.md`) ya reserva 262 horas de margen precisamente para esto. Consumirlo no es fracasar: es usar el plan como fue diseñado. Lo que sí se vigila en cada retro es **cuánto margen queda**, para saber a tiempo si hay que recortar alcance.
+**Sobre el margen de estimación:** el plan de trabajo (`plan/plan_de_trabajo.md`) ya reserva un margen amplio precisamente para esto. Consumirlo no es fracasar: es usar el plan como fue diseñado. Lo que sí se vigila en cada retro es **cuánto margen queda**, para saber a tiempo si hay que recortar alcance.
 
 ---
 

@@ -1,7 +1,10 @@
 # Plan de trabajo — Sendero Vivo
 
-> Versión 1,0 — 11/08/2026 · Responsable: Juan Urrego
+> Versión 1,1 — 11/08/2026 · Responsable: Juan Urrego
 > Periodo: **11 de agosto – 24 de noviembre de 2026** (15 semanas)
+> **Dedicación: 12 horas semanales por persona** — es la exigencia del curso y es la base de todo el cálculo de este documento.
+
+> **Este plan es una guía inicial, no el plan definitivo.** La visita de reconocimiento (V1) de la semana 2 va a cambiar el tramo exacto, los puntos de interés y probablemente algunas estimaciones. Está previsto que así sea.
 
 ---
 
@@ -15,11 +18,11 @@
 | **M** | 4–8 h | 6 h |
 | **L** | 8–16 h | 12 h |
 
-Se usa el **punto medio de cada banda** para el cálculo base. Los RNF transversales suman como tareas propias, no se diluyen en los RF.
+Se usa el **punto medio de cada banda**. Los RNF transversales suman como tareas propias, no se diluyen en los RF.
 
-**Margen del 50 %, no del 30 %.** El equipo es primerizo con **las tres tecnologías centrales al mismo tiempo** (Gaussian Splatting, SuperSplat/SOG y PlayCanvas). Además, buena parte del proyecto es producción de contenido físico —una salida de campo que depende del clima— donde el reintento cuesta días, no horas. El 30 % habitual asume familiaridad con el stack; aquí no la hay.
+**Margen del 50 %, no del 30 %.** El equipo es primerizo con **las tres tecnologías centrales al mismo tiempo** (Gaussian Splatting, SuperSplat/SOG y PlayCanvas). Además, buena parte del proyecto es producción de contenido físico —cuatro salidas de campo que dependen del clima— donde el reintento cuesta días, no horas. El 30 % habitual asume familiaridad con el stack; aquí no la hay.
 
-Además de RF y RNF, el plan estima explícitamente el **trabajo de producción** (captura, procesamiento, modelado 3D, audio, diseño) y la **gestión**. Sin ellos la estimación estaría mintiendo: en este proyecto la mayor parte del esfuerzo **no es escribir código**.
+Además de RF y RNF, el plan estima explícitamente el **trabajo de producción** (campo, procesamiento, modelado 3D, audio, diseño) y la **gestión**. Sin ellos la estimación estaría mintiendo: en este proyecto la mayor parte del esfuerzo **no es escribir código**.
 
 ---
 
@@ -43,7 +46,7 @@ Además de RF y RNF, el plan estima explícitamente el **trabajo de producción*
 | RF-014 | Mostrar distancia recorrida y restante | M | 6 | S6 |
 | RF-015 | Mostrar desnivel acumulado y pendiente | M | 6 | S6 |
 | RF-016 | Tiempo estimado hasta el siguiente POI | M | 6 | S6 |
-| RF-017 | Encadenar las tres escenas de forma continua | L | 12 | S4 |
+| RF-017 | Encadenar las escenas de forma continua | L | 12 | S4 |
 | RF-018 | Volver a la posición al cerrar la ficha | S | 3 | S5 |
 | RF-019 | Adaptar la interfaz a escritorio y celular | L | 12 | S7 |
 | RF-020 | Consumir el track GPS del sendero | M | 6 | S6 |
@@ -53,9 +56,17 @@ Además de RF y RNF, el plan estima explícitamente el **trabajo de producción*
 | RF-024 | Mostrar la transcripción de la narración | S | 3 | S5 |
 | RF-025 | Mostrar el progreso de carga de la escena | S | 3 | S3 |
 | RF-026 | Onboarding la primera vez | M | 6 | S7 |
-| | **Subtotal RF (26)** | | **156 h** | |
+| **RF-027** | **Nivel de detalle por proximidad al recorrido** | **L** | **12** | **S4** |
+| **RF-028** | **Ambientación sonora binaural con audio espacial 3D** | **L** | **12** | **S5** |
+| **RF-029** | **Animación idle en el modelo 3D de fauna** | **M** | **6** | **S5** |
+| **RF-030** | **Ficha de punto de interés patrimonial o histórico** | **M** | **6** | **S5** |
+| **RF-031** | **Consejos de avistamiento en la ficha de fauna** | **S** | **3** | **S5** |
+| **RF-032** | **Identidad visual aplicada: paleta y tipografía** | **M** | **6** | **S3** |
+| | **Subtotal RF (32)** | | **201 h** | |
 
-**Reparto:** 9 requerimientos S (27 h) · 11 M (66 h) · 6 L (72 h).
+**Reparto:** 11 requerimientos S (33 h) · 14 M (84 h) · 7 L (84 h).
+
+Los seis RF nuevos salen de la lluvia de ideas del equipo y están justificados en [`../docs/decisiones/ADR-002-lod-por-proximidad.md`](../docs/decisiones/ADR-002-lod-por-proximidad.md) y [`../docs/decisiones/ADR-003-audio-binaural-espacial.md`](../docs/decisiones/ADR-003-audio-binaural-espacial.md).
 
 ---
 
@@ -78,32 +89,53 @@ Además de RF y RNF, el plan estima explícitamente el **trabajo de producción*
 | RNF-013 | Privacidad: sin datos personales | S | 3 | Cierre |
 | RNF-014 | Despliegue estático sobre HTTPS | M | 6 | Cierre |
 | RNF-015 | Responsabilidad ambiental y normativa | S | 3 | Cierre |
-| | **Subtotal RNF (15)** | | **78 h** | |
+| **RNF-016** | **Presupuesto de fuentes de audio espacial** | **S** | **3** | **S4** |
+| | **Subtotal RNF (16)** | | **81 h** | |
 
 ---
 
 ## 4. Estimación de producción de contenido
 
-Este bloque es **el 42 % del esfuerzo base** y no aparece en ningún RF. Omitirlo sería el error clásico de este tipo de proyectos.
+Este bloque es el **47,8 % del esfuerzo base** y casi nada de él aparece en un RF. Omitirlo sería el error clásico de este tipo de proyectos.
+
+### 4.1 Campo
+
+Cuatro visitas de 5 h. El cálculo es en **horas-persona**: una visita de 5 h a la que van seis personas cuesta 30 h de capacidad del equipo. Detalle en [`../docs/07-plan-de-visitas-de-campo.md`](../docs/07-plan-de-visitas-de-campo.md).
+
+| Visita | Cuándo | Personas | h-persona |
+|---|---|---|---|
+| **V1 · Reconocimiento, sin grabar** | Semana 2 | **6 (todo el equipo)** | **30** |
+| **V2 · Captura principal** | Semana 3 | 4 | 20 |
+| **V3 · Captura complementaria y contingencia** | Semana 4 | 4 | 20 |
+| **V4 · Verificación en campo** | Semana 6 | 3 | 15 |
+| | | **Subtotal campo** | **85 h** |
+
+### 4.2 Resto de producción
 
 | Tarea | Horas | Sprint | Responsable |
 |---|---|---|---|
 | Visita de reconocimiento a las tres opciones y ADR-001 | 16 | S1 | Juan Urrego |
 | Protocolo de captura, ensayo y prueba 1x vs 2x | 10 | S1 | Juan Urrego |
-| Salida de campo: captura, GPS, audio, fotos por POI | 12 | S1 | Todo el equipo |
-| **Salida de contingencia** (reserva ante mal clima) | 8 | S1 | Todo el equipo |
 | Extracción de cuadros, SfM y entrenamiento 3DGS ×3 | 24 | S2 | Juan Urrego |
-| Limpieza en SuperSplat ×3 escenas | 18 | S2 | Juan Urrego / Felipe |
+| Limpieza en SuperSplat ×3 escenas | 18 | S2 | Felipe Acevedo |
 | Compresión a SOG y validación de peso y calidad | 8 | S2 | Juan Urrego |
 | Modelado de aves (colibrí, mirla, copetón, pava andina) | 32 | S2b | Felipe Acevedo |
+| **Rigging y animación idle de aleteo ×4 aves** | **12** | **S2b** | **Felipe Acevedo** |
 | Modelado y escaneo de plantas, helechos y musgos | 20 | S2b | Felipe Acevedo |
-| Escaneos de detalle (insectos, minerales, piezas) | 12 | S2b | Felipe Acevedo |
+| Escaneos de detalle (insectos, minerales, piezas) | 12 | S2b | Alberto Alemán |
 | Modelado del puente de madera y la señalización | 10 | S2b | Felipe Acevedo |
+| **Modelado o escaneo de elementos patrimoniales** | **8** | **S2b** | **Felipe Acevedo** |
 | Optimización de polígonos y export a glTF | 12 | S2b | Felipe Acevedo |
-| Narraciones, cantos y transcripciones | 10 | S2b | Alberto / Felipe / David |
+| Narraciones, cantos y transcripciones | 10 | S2b | Alberto Alemán |
+| **Edición del lecho ambiente y de las fuentes espaciales** | **10** | **S2b** | **David Beltrán** |
+| **Investigación y verificación de fauna, flora e historia** | **10** | **S2b** | **Felipe / Alberto** |
 | Wireframes y prototipo de ficha, HUD y onboarding | 16 | S3 | Eybar Viasus |
+| **Identidad visual: paleta, tipografía y tokens** | **8** | **S3** | **Eybar Viasus** |
 | Sistema de diseño consolidado | 14 | S7 | Eybar Viasus |
-| | **Subtotal producción** | **222 h** | |
+| | **Subtotal resto** | **250 h** | |
+
+| | **Subtotal producción (85 + 250)** | **335 h** |
+|---|---|---|
 
 ---
 
@@ -113,9 +145,11 @@ Este bloque es **el 42 % del esfuerzo base** y no aparece en ningún RF. Omitirl
 |---|---|---|
 | Ceremonias: planeación, sincronizaciones, demo y retro (2 h/semana × 14) | 28 | S1–S7 |
 | Repositorio, contratos de datos y documentación inicial | 12 | S1 |
+| **Administración de Jira y mantenimiento del backlog** | **8** | S1–Cierre |
+| **Preparación de presentaciones y entregas del curso** | **8** | S1–Cierre |
 | Integración final, pruebas cruzadas en dispositivos y despliegue | 24 | Cierre |
 | Actualización final de documentación y cierre de validaciones | 4 | Cierre |
-| | **Subtotal gestión** | **68 h** |
+| | **Subtotal gestión** | **84 h** |
 
 ---
 
@@ -123,87 +157,103 @@ Este bloque es **el 42 % del esfuerzo base** y no aparece en ningún RF. Omitirl
 
 | Bloque | Horas base | % |
 |---|---|---|
-| Requerimientos funcionales (26) | 156 | 30 % |
-| Requerimientos no funcionales (15) | 78 | 15 % |
-| Producción de contenido | 222 | 42 % |
-| Gestión, integración y entrega | 68 | 13 % |
-| **Base** | **524 h** | 100 % |
-| **Margen (50 %)** | **262 h** | |
-| **TOTAL** | **786 h** | |
+| Requerimientos funcionales (32) | 201 | 28,7 % |
+| Requerimientos no funcionales (16) | 81 | 11,6 % |
+| Producción de contenido | 335 | 47,8 % |
+| Gestión, integración y entrega | 84 | 12,0 % |
+| **Base** | **701 h** | 100 % |
+| **Margen (50 %)** | **351 h** | |
+| **TOTAL** | **1.052 h** | |
 
-### Contraste con la capacidad del equipo
+### 6.1 Contraste con la capacidad del equipo
 
 | | |
 |---|---|
 | Personas | 6 |
 | Semanas | 15 |
-| Dedicación asumida | **9 h/persona/semana** |
-| **Capacidad total** | **810 h** |
-| **Demanda estimada** | **786 h** |
-| **Holgura** | **24 h (3 %)** |
+| **Dedicación exigida por el curso** | **12 h/persona/semana** |
+| **Capacidad total** | **1.080 h** |
+| **Demanda estimada** | **1.052 h** |
+| **Holgura** | **28 h (2,6 %)** |
 
-**Lectura honesta de esta cifra:** la utilización queda en el **97 %**, que es alto. Pero el colchón real no son esas 24 horas: son las **262 horas de margen** ya incorporadas al total. Si todo saliera perfecto —que no va a pasar— el proyecto se cerraría en 524 h y sobraría más de un mes de capacidad. La cifra que hay que vigilar en cada retrospectiva es **cuánto margen queda consumido**, porque es el indicador temprano de si hay que recortar alcance.
+**Lectura honesta de esta cifra.** La utilización queda en el **97,4 %**, que es alto y hay que decirlo sin adornos. Pero el colchón real no son esas 28 horas: son las **351 horas de margen** ya incorporadas al total. Si todo saliera perfecto —que no va a pasar— el proyecto se cerraría en 701 h y sobrarían casi cinco semanas de capacidad del equipo.
 
-**Criterio de éxito E13:** al final de S6 debe quedar **más del 15 %** de las 262 h de margen sin consumir.
+La cifra que hay que vigilar en cada retrospectiva no es la holgura: es **cuánto margen queda consumido**. Es el indicador temprano de si hay que recortar alcance, y hay que mirarlo antes de la semana 10, no después.
+
+**Criterio de éxito E13:** al final de S6 debe quedar **más del 15 %** de las 351 h de margen sin consumir.
+
+**Y una consecuencia directa:** por esto la **Etapa 4** (metros 200–260) **no está comprometida**. Con el 97,4 % de la capacidad ya asignada, ampliar el tramo hoy sería comprometer horas que no existen. Se decide al cerrar S2, con datos reales.
 
 ---
 
 ## 7. Esfuerzo por persona
 
-| Persona | Horas estimadas | h/semana | Carga |
-|---|---|---|---|
-| **Juan Urrego** | 218 | 14,5 | 🔴 Alta |
-| **Felipe Acevedo** | 150 | 10,0 | 🟠 Media-alta |
-| **Alejandra Chambueta** | 138 | 9,2 | 🟢 Ajustada |
-| **David Beltrán** | 122 | 8,1 | 🟢 Ajustada |
-| **Eybar Viasus** | 96 | 6,4 | 🟢 Holgada |
-| **Alberto Alemán** | 62 | 4,1 | 🔵 Baja |
-| **Total** | **786** | **8,7 promedio** | |
+Con 12 h semanales, el techo individual es de **180 h en las 15 semanas**. Ninguna asignación puede pasar de ahí — antes ese límite no existía en el plan y por eso aparecían personas con 218 h, que era imposible.
 
-### Dos desequilibrios que hay que corregir en la planeación de S1
+| Persona | Horas estimadas | h/semana | % de su capacidad | Carga |
+|---|---|---|---|---|
+| **Juan Urrego** | 180 | 12,0 | **100 %** | 🔴 Al límite |
+| **Felipe Acevedo** | 180 | 12,0 | **100 %** | 🔴 Al límite |
+| **David Beltrán** | 180 | 12,0 | **100 %** | 🔴 Al límite |
+| **Alejandra Chambueta** | 176 | 11,7 | 98 % | 🟠 Alta |
+| **Alberto Alemán** | 170 | 11,3 | 94 % | 🟠 Alta |
+| **Eybar Viasus** | 166 | 11,1 | 92 % | 🟠 Alta |
+| **Total** | **1.052** | **11,7 promedio** | **97,4 %** | |
 
-Esto no es un resultado deseado del plan: es lo que sale al sumar las responsabilidades tal como están asignadas hoy, y conviene decirlo antes de empezar y no en la semana 10.
+### 7.1 Qué dice de verdad esta tabla
 
-**1. Juan concentra 218 h (28 % del proyecto).** Acumula toda E1 —la parte con más riesgo y más carga física—, más la gestión, más la integración final. Es el cuello de botella del camino crítico: si se atrasa, se atrasa todo.
-> **Propuesta:** trasladar la limpieza en SuperSplat (18 h) a Felipe y parte de las pruebas de integración (8 h) a David y Alejandra. Bajaría a ~192 h.
+El reparto quedó **plano, y eso no es una buena noticia**: significa que no hay nadie con holgura a quien pasarle trabajo cuando alguien se atasque. Tres personas están exactamente en su techo.
 
-**2. Alberto queda en 62 h (4,1 h/semana), muy por debajo del promedio.** Su trabajo se concentra en S7, casi al final.
-> **Propuesta:** asignarle los escaneos de detalle de S2b (12 h, hoy en Felipe) y adelantar el trabajo de onboarding y accesibilidad a S5–S6 en lugar de esperar a S7. Subiría a ~90 h y descargaría a Felipe.
+Es la consecuencia aritmética de sumar al plan original las cuatro visitas de campo (85 h-persona), el audio espacial, la animación idle, los POIs patrimoniales y la identidad visual. **Todo eso es trabajo real que antes no estaba contado**, y contarlo es mejor que descubrirlo en octubre.
 
-Con ambos ajustes el reparto quedaría entre 90 y 192 h por persona, que sigue sin ser plano —Juan es PM además de programador— pero es defendible.
+**Lo que se hace con esto, en orden:**
 
-### Sobre el pico de S2b
+1. **Se vigila el margen en cada retro**, no el avance. El margen es el que avisa.
+2. **Si en S3 el margen consumido supera el 40 %, se recorta alcance** según §11, sin discutirlo entonces.
+3. **La Etapa 4 no se compromete.** Ya está dicho arriba.
+4. **Las ausencias se descuentan antes de comprometer historias**, no después (principio de `01-principios-de-trabajo.md` §8).
 
-**S2b concentra 153 h con margen, y ~120 de esas son de una sola persona** (Felipe: modelado, escaneo y optimización). En dos semanas eso serían 60 h semanales para él: **inviable**.
+### 7.2 Correcciones ya aplicadas respecto de la versión 1,0
 
-**Cómo se resuelve, y por qué el paralelismo es lo que lo hace posible:** S2b está **fuera del camino crítico**. Su entrega no se necesita hasta el inicio de **S5 (6 de octubre, semana 9)**. Formalmente ocupa las semanas 3–4 según la estructura de sprints del curso, pero el trabajo de modelado **se reparte realmente entre las semanas 3 y 8**, con Felipe a ~20 h/semana. Eso es exactamente lo que compra correr E3 en paralelo con E1: no comprime el trabajo del artista, **le da seis semanas en lugar de dos**.
+- La **limpieza en SuperSplat** (18 h) pasa de Juan a **Felipe**. Descarga el camino crítico.
+- Los **escaneos de detalle** (12 h) pasan de Felipe a **Alberto**, que estaba muy por debajo del promedio.
+- **Alberto sube de 62 h a 170 h** al asumir escaneos, narraciones, patrimonio y accesibilidad adelantada a S5–S6 en lugar de esperar a S7.
+- El **audio** deja de ser una tarea suelta y pasa a ser un bloque con dueño: **David**.
 
-**Regla de control:** al cerrar S2b (7 de septiembre) deben estar terminadas **las cuatro aves y el helecho arbóreo**, porque son los POIs confirmados. El resto del catálogo puede seguir hasta la semana 8.
+### 7.3 Sobre el pico de S2b
+
+**S2b concentra 114 h de producción 3D, y ~94 son de Felipe.** En dos semanas serían 47 h semanales: **inviable**.
+
+Se resuelve igual que en la versión anterior, y sigue siendo válido: **S2b está fuera del camino crítico**. Su entrega no se necesita hasta el inicio de **S5 (6 de octubre, semana 9)**. Formalmente ocupa las semanas 3–4 según la estructura de sprints del curso, pero el trabajo de modelado **se reparte realmente entre las semanas 3 y 8**, con Felipe a ~12 h/semana. Eso es exactamente lo que compra correr E3 en paralelo con E1: no comprime el trabajo del artista, **le da seis semanas en lugar de dos**.
+
+**Regla de control:** al cerrar S2b (7 de septiembre) deben estar terminadas **las cuatro aves con su animación idle y el helecho arbóreo**, porque son los POIs confirmados. El resto del catálogo puede seguir hasta la semana 8.
 
 ---
 
 ## 8. Cronograma semana a semana
 
-| Sem | Fechas | Sprint | Foco | h estimadas |
-|---|---|---|---|---|
-| **1** | 11–17 ago | S1 | Visita de reconocimiento a las tres opciones. **ADR-001 cerrado el viernes.** Repositorio y contratos de datos | 46 |
-| **2** | 18–24 ago | S1 | Protocolo de captura y ensayo. **Salida de campo.** Respaldo del material en dos ubicaciones | 47 |
-| **3** | 25–31 ago | S2 + S2b | Extracción de cuadros, SfM, inicio de entrenamiento · **Paralelo:** modelado de aves | 76 |
-| **4** | 1–7 sep | S2 + S2b | Limpieza en SuperSplat, compresión a SOG, `scenes.json`. **RNF-003 fijado con dato real** · **Paralelo:** aves y helecho arbóreo terminados | 76 |
-| **5** | 8–14 sep | S3 | Carga de `.sog` en PlayCanvas. WebGPU con repliegue. Dispositivo de referencia definido | 47 |
-| **6** | 15–21 sep | S3 | Avance y retroceso, mirada libre 360°, restricción al trazado, estados de carga y error | 46 |
-| **7** | 22–28 sep | S4 | Encadenado de las tres escenas y precarga | 35 |
-| **8** | 29 sep – 5 oct | S4 | Perfiles de calidad, LOD, optimización hasta 30 fps. **Decisión sobre Streamed SOG** | 34 |
-| **9** | 6–12 oct | S5 | Marcadores anclados y panel de ficha | 48 |
-| **10** | 13–19 oct | S5 | Visor 3D, audio con transcripción, POIs declarativos | 48 |
-| **11** | 20–26 oct | S6 | Consumo del track GPS. **Alineación y escalado definitivos** | 24 |
-| **12** | 27 oct – 2 nov | S6 | HUD: altitud, distancia, desnivel, pendiente, tiempo estimado | 23 |
-| **13** | 3–9 nov | S7 | Onboarding y responsive móvil | 39 |
-| **14** | 10–16 nov | S7 | Accesibilidad AA, sistema de diseño consolidado, revisión de textos | 38 |
-| **15** | 17–24 nov | Cierre | Integración, pruebas cruzadas, despliegue y **entrega** | 60 |
-| | | | **Total** | **786** |
+Ninguna semana supera las **72 h** de capacidad del equipo (6 × 12).
 
-> Las semanas 3 y 4 son las más cargadas (76 h) porque corren dos sprints a la vez. Las semanas 11–12 son las más ligeras: es holgura deliberada antes del tramo final de UI/UX y del cierre.
+| Sem | Fechas | Sprint | Foco | h |
+|---|---|---|---|---|
+| **1** | 11–17 ago | S1 | ADR-001, repositorio, contratos de datos, protocolo de captura, paleta inicial | 66 |
+| **2** | 18–24 ago | S1 | **V1 · Visita de reconocimiento con todo el equipo (sin grabar).** Tramo exacto, POIs, etapas, mapa sonoro, decisiones creativas | 72 |
+| **3** | 25–31 ago | S2 + S2b | **V2 · Captura principal.** Extracción de cuadros, SfM · **Paralelo:** modelado de aves | 72 |
+| **4** | 1–7 sep | S2 + S2b | **V3 · Captura complementaria y audio.** Entrenamiento, SuperSplat, SOG, `scenes.json`. **RNF-003 fijado con dato real** · **Paralelo:** aves con animación idle y helecho terminados | 72 |
+| **5** | 8–14 sep | S3 | Carga de `.sog` en PlayCanvas, WebGPU con repliegue, dispositivo de referencia. **Prueba de HRTF en Safari iOS (A3)**. Identidad visual aplicada | 70 |
+| **6** | 15–21 sep | S3 | **V4 · Verificación en campo.** Avance y retroceso, mirada libre 360°, restricción al trazado, estados de carga y error | 72 |
+| **7** | 22–28 sep | S4 | Encadenado de las tres escenas y precarga | 68 |
+| **8** | 29 sep – 5 oct | S4 | Perfiles de calidad, **LOD por proximidad**, optimización hasta 30 fps. **Decisión sobre Streamed SOG** | 70 |
+| **9** | 6–12 oct | S5 | Marcadores anclados y panel de ficha | 72 |
+| **10** | 13–19 oct | S5 | Visor 3D con **animación idle**, audio de ficha, **ambientación espacial**, **POIs patrimoniales**, POIs declarativos | 72 |
+| **11** | 20–26 oct | S6 | Consumo del track GPS. **Alineación y escalado definitivos** | 70 |
+| **12** | 27 oct – 2 nov | S6 | HUD: altitud, distancia, desnivel, pendiente, tiempo estimado | 70 |
+| **13** | 3–9 nov | S7 | Onboarding y responsive móvil | 68 |
+| **14** | 10–16 nov | S7 | Accesibilidad AA, sistema de diseño consolidado, revisión de textos | 66 |
+| **15** | 17–24 nov | Cierre | Integración, pruebas cruzadas, despliegue y **entrega** | 72 |
+| | | | **Total** | **1.052** |
+
+> Las semanas 2, 3 y 4 van al tope porque concentran las tres primeras salidas de campo, y la 3 y la 4 además corren dos sprints a la vez. Es el tramo más frágil del calendario.
 
 ---
 
@@ -211,14 +261,14 @@ Con ambos ajustes el reparto quedaría entre 90 y 192 h por persona, que sigue s
 
 | Milestone | Fecha límite | Qué debe estar hecho | Criterio de aceptación |
 |---|---|---|---|
-| **M1 · Decisión y captura** | 24/08/2026 | ADR-001 cerrado y material bruto en disco | Video 4K60, track GPS, audio y fotos por POI, respaldados en dos ubicaciones |
-| **M2 · Tramo reconstruido** | 07/09/2026 | 3 escenas en `.sog`, limpias y publicadas | Cargan en un visor; RNF-003 fijado con medición real |
-| **M2b · Catálogo 3D base** | 07/09/2026 | Aves y helecho arbóreo modelados y optimizados | `.glb` dentro de presupuesto, cargando sin errores |
-| **M3 · Tramo navegable** | 21/09/2026 | Escena cargando, cámara y navegación básica | Recorrido de una escena en Chrome y en celular real |
-| **M4 · Recorrido completo** | 05/10/2026 | 3 escenas encadenadas a ≥ 30 fps en gama media | Extremo a extremo sin cortes, medición documentada |
-| **M5 · Puntos de interés** | 19/10/2026 | 5–6 POIs completos y consultables | Ficha con modelo 3D, audio y transcripción; POI añadible por JSON |
+| **M1 · Decisión y reconocimiento** | 24/08/2026 | ADR-001 cerrado y **V1 ejecutada** | Tramo exacto y etapas marcados con GPS, POIs decididos con coordenada y foto, mapa sonoro levantado, desnivel y pendiente de los 200 m medidos |
+| **M2 · Tramo capturado y reconstruido** | 07/09/2026 | **V2 y V3 ejecutadas**, 3 escenas en `.sog` limpias y publicadas | Cargan en un visor; RNF-003 fijado con medición real; material respaldado en dos ubicaciones |
+| **M2b · Catálogo 3D base** | 07/09/2026 | Aves con **animación idle** y helecho arbóreo modelados y optimizados | `.glb` dentro de presupuesto, animación en bucle sin salto, cargando sin errores |
+| **M3 · Tramo navegable** | 21/09/2026 | Escena cargando, cámara y navegación básica. **V4 ejecutada** | Recorrido de una escena en Chrome y en celular real; el lugar se reconoce al compararlo en campo |
+| **M4 · Recorrido completo** | 05/10/2026 | 3 escenas encadenadas a ≥ 30 fps con **LOD por proximidad activo** | Extremo a extremo sin cortes, medición documentada, sin salto visible de nivel de detalle |
+| **M5 · Puntos de interés** | 19/10/2026 | 5–6 POIs completos, incluido **al menos uno patrimonial**, y **ambientación sonora espacial funcionando** | Ficha con modelo 3D animado, audio y transcripción; POI añadible por JSON; la quebrada se oye donde está |
 | **M6 · Capa de datos** | 02/11/2026 | HUD con datos reales del track | Altitud, distancia, desnivel, pendiente y tiempo estimado |
-| **M7 · Experiencia final** | 16/11/2026 | UI final, responsive, onboarding, accesibilidad | 4 de 5 usuarios inician y abren una ficha sin instrucciones |
+| **M7 · Experiencia final** | 16/11/2026 | UI final con la paleta aplicada, responsive, onboarding, accesibilidad | 4 de 5 usuarios inician y abren una ficha sin instrucciones; contraste AA verificado |
 | **M8 · Entrega** | 24/11/2026 | Desplegado y documentado | Recorrido completo en Chrome, Safari y Firefox, escritorio y móvil |
 
 ---
@@ -226,18 +276,22 @@ Con ambos ajustes el reparto quedaría entre 90 y 192 h por persona, que sigue s
 ## 10. Camino crítico y holguras
 
 ```
-S1 ──► S2 ──► S3 ──► S4 ──► S6 ──► S7 ──► Cierre        ← camino crítico
+V1 ──► V2 ──► S2 ──► S3 ──► S4 ──► S6 ──► S7 ──► Cierre       ← camino crítico
         │
-        └──► S2b ····························► S5       ← holgura de 4 semanas
+        ├──► V3 ·········► S5 (audio)                          ← holgura
+        ├──► V4 ·········► S4 (verificación)                   ← holgura
+        └──► S2b ·······································► S5   ← holgura de 4 semanas
 ```
 
-- **En el camino crítico:** S1, S2, S3, S4, S6, S7 y el cierre. Cualquier retraso aquí desplaza la entrega.
-- **Fuera del camino crítico:** S2b, con **4 semanas de holgura** (termina en la semana 4, se necesita en la semana 9). Esa holgura es lo que hace realista el pico de carga de Felipe.
-- **S5** depende de S4 (necesita el motor) y de S2b (necesita los modelos). Es el punto donde convergen las dos ramas: si alguna llega tarde, S5 se atasca.
+- **En el camino crítico:** V1, V2, S2, S3, S4, S6, S7 y el cierre.
+- **Fuera del camino crítico:** V3, V4 y S2b. S2b tiene **4 semanas de holgura**, que es lo que hace realista el pico de carga de Felipe.
+- **S5** depende de S4 (motor), de S2b (modelos) y de V3 (audio). Es donde convergen tres ramas: si alguna llega tarde, S5 se atasca.
 
-**Los dos puntos de mayor riesgo de calendario:**
-1. **Fin de S1 (24 ago).** Si la salida de campo falla por clima y se agota también la ventana de contingencia, todo el camino crítico se desplaza. Es el único riesgo del proyecto que no se puede resolver trabajando más horas.
-2. **Fin de S4 (5 oct).** Si no se alcanzan los 30 fps, hay que volver a S2 a regenerar escenas con menos gaussianas, lo que reabre trabajo ya dado por cerrado.
+**Los tres puntos de mayor riesgo de calendario:**
+
+1. **V1 (semana 2).** Si no se hace, todo lo demás se decide a ciegas. Es la visita más barata y la más determinante.
+2. **V2 (semana 3).** Si falla por clima y V3 tampoco alcanza, todo el camino crítico se desplaza. Es el único riesgo del proyecto que no se resuelve trabajando más horas.
+3. **Fin de S4 (5 oct).** Si no se alcanzan los 30 fps, hay que volver a S2 a regenerar escenas con menos gaussianas, lo que reabre trabajo dado por cerrado.
 
 ---
 
@@ -245,29 +299,35 @@ S1 ──► S2 ──► S3 ──► S4 ──► S6 ──► S7 ──► Ci
 
 Orden de sacrificio acordado por adelantado, para no discutirlo bajo presión en la semana 13:
 
-1. **Número de POIs:** de 6 a 5. Es el recorte más barato y el menos visible.
-2. **Longitud del tramo:** de 200 m a 120 m. Dos escenas en lugar de tres. Ya está previsto como respuesta a los riesgos R1 y R2.
-3. **Catálogo de modelos:** las cuatro aves y el helecho arbóreo son intocables (son POIs confirmados); los escaneos de detalle de insectos y minerales sí se pueden aplazar.
-4. **Pulido de UI:** el sistema de diseño se consolida menos, pero **la accesibilidad (RNF-006) no se recorta**.
+1. **La Etapa 4** (metros 200–260). No está comprometida: es lo primero que no se hace.
+2. **Número de POIs:** de 6 a 5. El recorte más barato y el menos visible.
+3. **Fuentes de audio espacial:** de 4 simultáneas a 2, y menos fuentes puntuales declaradas. La ambientación se mantiene; se simplifica.
+4. **Longitud del tramo:** de 200 m a 140 m. Dos escenas en lugar de tres. Previsto como respuesta a los riesgos R1 y R2.
+5. **Catálogo de modelos:** las cuatro aves y el helecho arbóreo son intocables (POIs confirmados); los escaneos de detalle de insectos y minerales sí se aplazan.
+6. **Pulido de UI:** el sistema de diseño se consolida menos, pero **la accesibilidad (RNF-006) no se recorta**.
 
-**Lo que no se recorta bajo ninguna circunstancia:** el rendimiento en móvil (RNF-001), la restricción al trazado autorizado (RF-004), la veracidad de los datos biológicos y de recorrido, y la accesibilidad.
+**Lo que no se recorta bajo ninguna circunstancia:** el rendimiento en móvil (RNF-001), la restricción al trazado autorizado (RF-004), la veracidad de los datos biológicos, históricos y de recorrido, y la accesibilidad.
 
 ---
 
 ## 12. Supuestos de este plan
 
-1. Dedicación de **9 h/persona/semana**. Si baja, el plan no cierra: hay que recortar según §11.
-2. La estación con GPU del equipo está disponible durante las semanas 3–4. `[especificaciones por documentar]`
-3. La reserva por la app del Acueducto se obtiene para las dos ventanas de salida previstas.
-4. Las cifras del tramo (2.712 m, 340 m, 62 m, 9 %) se confirman en campo. Si difieren, se actualizan aquí y en `scenes.json`.
-5. RNF-003 (peso por escena) **está sin número** y se fija en S2 con una medición real. Cualquier estimación de S3 y S4 que dependa de él puede moverse.
-6. Las horas de producción 3D asumen un solo artista. Si entra apoyo (§7), S2b se descomprime.
+1. Dedicación de **12 h/persona/semana**, exigida por el curso. Si baja, el plan no cierra: hay que recortar según §11.
+2. **Las cuatro visitas se reservan por la app del Acueducto** con antelación, para todas las personas que asisten.
+3. La estación con GPU del equipo está disponible durante las semanas 3–4. `[especificaciones por documentar]`
+4. Las cifras de desnivel y pendiente del tramo de 200 m están **`[por medir en campo]`** y se cierran en V1. La altitud de inicio de 2.712 msnm procede del registro GPS público y se confirma en V1.
+5. RNF-003 (peso por escena) **está sin número** y se fija en S2 con una medición real.
+6. RNF-016 (fuentes de audio simultáneas) **está sin número** y se fija en S4.
+7. Las horas de producción 3D asumen un solo artista. Si entra apoyo, S2b se descomprime.
+8. **La planificación posterior a V1 se revisa.** Este documento es una guía inicial.
 
 ---
 
 ## 13. Referencias
 
 - Épicas, sprints, historias y criterios de aceptación: [`../docs/04-actividades-y-roles.md`](../docs/04-actividades-y-roles.md)
+- Plan de visitas de campo: [`../docs/07-plan-de-visitas-de-campo.md`](../docs/07-plan-de-visitas-de-campo.md)
+- Ámbitos de los tres programadores: [`../docs/09-ambitos-de-los-tres-programadores.md`](../docs/09-ambitos-de-los-tres-programadores.md)
 - Riesgos y su mitigación: [`../docs/02-vision-de-proyecto.md`](../docs/02-vision-de-proyecto.md)
 - Riesgos técnicos y validaciones pendientes: [`../docs/03-avances-tecnologia.md`](../docs/03-avances-tecnologia.md)
 - Backlog importable a Jira: [`backlog-jira.csv`](backlog-jira.csv)

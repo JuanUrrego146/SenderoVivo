@@ -125,8 +125,22 @@ Si la visita de reconocimiento contradice esta propuesta, **este ADR se actualiz
 
 ---
 
+## Actualización — 11/08/2026
+
+Dos precisiones posteriores a la redacción de este ADR. **No cambian la decisión de sendero**, solo la concretan:
+
+1. **El sector es Claro de Luna**, dentro de la Quebrada La Vieja.
+2. **El tramo queda fijado en 200 m**, no en el rango de 120–200 m. Se divide en tres etapas: 0–70, 70–140 y 140–200 metros, con los cortes por ajustar a puntos naturales del sendero durante la visita de reconocimiento.
+
+Las cifras de **340 m de recorrido, 62 m de desnivel y 9 % de pendiente** que aparecen arriba corresponden al **tramo de referencia evaluado en esta comparación**, no al tramo comprometido de 200 m. El desnivel y la pendiente de los 200 m están `[por medir en campo]` y se cierran en la visita de reconocimiento (V1).
+
+La visita de reconocimiento pasa a tener historia propia y criterios de aceptación verificables: **HU-42**. Ver [`../07-plan-de-visitas-de-campo.md`](../07-plan-de-visitas-de-campo.md).
+
+---
+
 ## Referencias
 
 - Alcance y riesgos: [`../02-vision-de-proyecto.md`](../02-vision-de-proyecto.md)
 - Limitaciones técnicas en vegetación densa (riesgo RT-3): [`../03-avances-tecnologia.md`](../03-avances-tecnologia.md)
 - Historia que ejecuta esta decisión: HU-01, Sprint 1 — [`../04-actividades-y-roles.md`](../04-actividades-y-roles.md)
+- Plan de las cuatro visitas de campo: [`../07-plan-de-visitas-de-campo.md`](../07-plan-de-visitas-de-campo.md)

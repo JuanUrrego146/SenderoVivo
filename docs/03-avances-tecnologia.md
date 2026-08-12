@@ -233,6 +233,50 @@ Si el peso o el rendimiento no cierran, existe **Streamed SOG**: se pregeneran v
 
 **No es parte del plan base.** Está identificado, entendido y reservado como respuesta al riesgo R2.
 
+### 6.6 LOD por proximidad al recorrido
+
+El equipo definió que el detalle debe concentrarse alrededor de lo que el visitante mira de cerca. La traducción técnica está en [`decisiones/ADR-002-lod-por-proximidad.md`](decisiones/ADR-002-lod-por-proximidad.md) y son dos mecanismos:
+
+1. **En captura:** una **banda de alta densidad** que va del suelo hasta ~1 m por encima de la altura de los ojos, y ~1 m a cada lado del eje del trazado. Se consigue con más pasadas y más cercanas dentro de la banda. **No cambia ningún parámetro del protocolo de captura** (4K60, 1/125, ISO bajo, todo manual y bloqueado siguen igual): solo define cuántas pasadas y a qué altura, que es justo lo que el protocolo dejaba abierto.
+2. **En render:** el LOD por distancia que el motor ya trae. Como la cámara va siempre sobre el trazado (RF-004), **distancia a cámara ≡ distancia al recorrido**, y no hace falta inventar nada.
+
+`lodBaseDistance ≈ 2 m` para que el primer nivel cubra la banda. Los valores reales se miden en S4 (validación V13).
+
+> La cuestión de la focal (1× frente a 2×) **no cambia** con esto. Sigue abierta como V1 y se resuelve con la prueba comparativa de HU-02, tal como estaba.
+
+---
+
+## 6 bis. Audio espacial en el navegador
+
+Es la tecnología que entra nueva al proyecto con la ambientación sonora. Decisión completa en [`decisiones/ADR-003-audio-binaural-espacial.md`](decisiones/ADR-003-audio-binaural-espacial.md).
+
+### Qué se va a usar
+
+PlayCanvas expone un **`SoundComponent`** construido sobre la **Web Audio API**. La espacialización binaural sale del `PannerNode` con **`panningModel: 'HRTF'`** — filtrado por función de transferencia relacionada con la cabeza, que es literalmente la definición de audio binaural.
+
+```javascript
+source.addComponent('sound', {
+  positional: true,
+  distanceModel: 'linear',
+  refDistance: 2,
+  maxDistance: 25,
+  rollOffFactor: 1
+});
+```
+
+**El oyente es la cámara activa.** PlayCanvas usa su `AudioListener`, así que la espacialización se actualiza sola conforme `TourEngine` mueve y gira la cámara. Ningún módulo de audio toca la cámara.
+
+### Qué condiciona el diseño
+
+- **HRTF cuesta más que el paneo de igual potencia.** De ahí RNF-016: máximo 4 fuentes simultáneas en escritorio, 2 en móvil `[por medir en S4]`.
+- **El lecho ambiente no es posicional.** Es una pista estéreo de coste casi nulo; el gasto está solo en las fuentes puntuales.
+- **Las políticas de autoplay del navegador exigen un gesto del usuario** para arrancar cualquier audio. Coincide exactamente con RNF-008, así que no hay conflicto: la ambientación arranca con el botón de iniciar el recorrido.
+- **Las fuentes que se espacializan se graban en mono.** Una grabación estéreo ya trae su propia imagen espacial y, pasada por HRTF, suena mal.
+
+### Qué no se ha probado todavía
+
+Nada de esto se ha ejecutado sobre material propio. La incógnita concreta y con fecha es **A3**: si Safari en iOS aplica HRTF real o cae a *equalpower*. Se prueba en S3.
+
 ---
 
 ## 7. Riesgos técnicos reales
@@ -310,6 +354,29 @@ Lista abierta. Cada punto tiene dueño y sprint. Ninguno está resuelto hoy.
 | V10 | ¿Cuál es el presupuesto de triángulos y de peso por modelo de ficha? | Felipe Acevedo | S2b |
 | V11 | ¿Hace falta Streamed SOG o basta con SOG plano? | Alejandra Chambueta | S4 |
 | V12 | ¿Se nota el salto de color entre escenas al encadenarlas? | Felipe Acevedo | S4 |
+| **V13** | **¿Qué `lodBaseDistance` y `lodMultiplier` sostienen 30 fps sin salto visible?** | Alejandra Chambueta | S4 |
+| **V14** | **¿La banda de alta densidad de 1 m lateral basta donde el sendero se ensancha?** | Juan Urrego | V1 |
+
+### 8.1 Validaciones de audio
+
+| # | Pregunta abierta | Dueño | Se resuelve en |
+|---|---|---|---|
+| **A1** | ¿Cuántas fuentes HRTF simultáneas aguanta el dispositivo de referencia a 30 fps? | David Beltrán | S4 |
+| **A2** | ¿`distanceModel` lineal o exponencial? ¿Con qué `refDistance` real? | David Beltrán | S5 |
+| **A3** | **¿Safari iOS respeta `panningModel: 'HRTF'` o cae a *equalpower*?** | David Beltrán | **S3** |
+| **A4** | ¿El bucle del lecho ambiente se nota? ¿Cuánta duración hace falta? | Felipe Acevedo | V3 |
+| **A5** | ¿Se cuela el ruido de la Circunvalar en las grabaciones? | David Beltrán | V1 |
+
+**A3 es el que puede cambiar el diseño**, y por eso se prueba en S3 y no en S5: si Safari no da HRTF real, la ambientación se degrada a paneo estéreo por distancia en iOS, y eso hay que saberlo con tiempo.
+
+### 8.2 Validaciones de diseño
+
+| # | Pregunta abierta | Dueño | Se resuelve en |
+|---|---|---|---|
+| **D1** | ¿El verde de la paleta se pierde contra el follaje real? | Eybar Viasus | V1 |
+| **D2** | ¿Qué familia tipográfica concreta? | Eybar Viasus | S7 |
+| **D3** | ¿Hace falta modo claro? | Alberto Alemán | S7 |
+| **D4** | ¿El marcador se lee a contraluz, con el cielo detrás? | Eybar Viasus | V1 |
 
 ---
 
@@ -331,7 +398,7 @@ Lista abierta. Cada punto tiene dueño y sprint. Ninguno está resuelto hoy.
 
 El stack está **cerrado, es gratuito y es open source de punta a punta** (MIT en motor y editor, especificación abierta en el formato). No hay dependencia de presupuesto ni de licencias, y el hardware necesario ya lo tiene el equipo.
 
-El riesgo del proyecto **no está en el software**: la API para cargar un SOG en PlayCanvas son seis líneas. Está en la física de la captura —una mañana nublada y sin viento, con exposición bloqueada, en un bosque de estructuras finas— y en lo que la técnica sabe hacer mal. Por eso el Sprint 1 se dedica entero a decidir el sendero y a preparar y ejecutar la salida, y por eso el margen de estimación es del 50 % y no del 30 %.
+El riesgo del proyecto **no está en el software**: la API para cargar un SOG en PlayCanvas son seis líneas. Está en la física de la captura —una mañana nublada y sin viento, con exposición bloqueada, en un bosque de estructuras finas— y en lo que la técnica sabe hacer mal. Por eso el Sprint 1 se dedica entero a decidir el sendero y a preparar y ejecutar la salida, y por eso el plan de trabajo (`plan/plan_de_trabajo.md`) reserva un margen de estimación más amplio de lo habitual.
 
 ---
 
