@@ -26,8 +26,8 @@
 |---|---|---|---|---|---|
 | HU-53 | Documento de diseño y dirección de arte | [#53](https://github.com/JuanUrrego146/SenderoVivo/issues/53) | SCRUM-56 | Eybar (lidera), Alberto, Felipe | **Jue 20/08** |
 | HU-54 | Prototipo: escena escaneada con desplazamiento rápido | [#54](https://github.com/JuanUrrego146/SenderoVivo/issues/54) | SCRUM-57 | Juan | Semana 18–24/08 |
-| HU-55 | Prototipo: ruidos de fondo en el visor | [#55](https://github.com/JuanUrrego146/SenderoVivo/issues/55) | SCRUM-58 | Alejandra (revisa David) | Semana 18–24/08 |
-| HU-56 | Prototipo: punto de interés con ficha y modelo básico | [#56](https://github.com/JuanUrrego146/SenderoVivo/issues/56) | SCRUM-59 | David | Semana 18–24/08 |
+| HU-55 | Prototipo: ruidos de fondo en el visor | [#55](https://github.com/JuanUrrego146/SenderoVivo/issues/55) | SCRUM-58 | David (su ámbito) | Semana 18–24/08 |
+| HU-56 | Prototipo: punto de interés con ficha y modelo básico | [#56](https://github.com/JuanUrrego146/SenderoVivo/issues/56) | SCRUM-59 | Alejandra (revisa David) | Semana 18–24/08 |
 | HU-57 | Prototipo: modelo básico del colibrí | [#57](https://github.com/JuanUrrego146/SenderoVivo/issues/57) | SCRUM-60 | Felipe + Alberto (texturas y UV) | Semana 18–24/08 |
 | HU-58 | Aves más frecuentes y sus puntos del sendero | [#58](https://github.com/JuanUrrego146/SenderoVivo/issues/58) | SCRUM-61 | Felipe | Esta semana + V1 |
 | HU-59 | Revisión de las fotos de la V1 por todo el equipo | [#59](https://github.com/JuanUrrego146/SenderoVivo/issues/59) | SCRUM-62 | Todo el equipo | 2 días tras la V1 |
@@ -53,8 +53,8 @@ Nota: los números de GitHub #60 y #61 quedaron cruzados respecto a los códigos
 | Persona | Tareas |
 |---|---|
 | **Juan** | HU-54 (escanear y montar desplazamiento rápido), HU-60 (correo EAAB hoy + seguimiento diario), HU-61 (fotos V1), HU-42 (V1) |
-| **Alejandra** | HU-55 (ruidos de fondo, revisa David), acompañar fotos V1 si no hay Insta 360, HU-59 (revisar fotos: riesgo de reconstrucción) |
-| **David** | HU-56 (POI con ficha y modelo básico), HU-59 (fotos: mapa sonoro) |
+| **Alejandra** | HU-56 (POI: click y ficha desplegable, revisa David), acompañar fotos V1 si no hay Insta 360, HU-59 (revisar fotos: riesgo de reconstrucción) |
+| **David** | HU-55 (ruidos de fondo, su ámbito), HU-59 (fotos: mapa sonoro) |
 | **Felipe** | HU-57 (modelo básico colibrí), HU-58 (aves frecuentes y puntos), HU-53 (criterios 3D del doc de diseño), HU-59 (fotos: especies) |
 | **Eybar** | HU-53 (lidera documento de diseño, entrega jue 20/08), HU-61 si hay Insta 360, HU-59 (fotos: paleta contra el lugar) |
 | **Alberto** | HU-53 (documento de diseño), HU-57 (texturas y UV del colibrí), HU-59 (fotos: candidatos patrimoniales) |
