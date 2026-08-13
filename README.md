@@ -104,21 +104,15 @@ Esto **no** se hace, y tampoco se propone como fase 2:
 
 ## Documentación
 
-Los cuatro primeros documentos son la entrega de la actividad del curso:
-
 - [**1 · Principios de trabajo**](docs/01-principios-de-trabajo.md): definición de "hecho", ramas, revisión de código, ceremonias, canales, bloqueos
 - [**2 · Visión de proyecto**](docs/02-vision-de-proyecto.md): problema, para quién, propuesta de valor, alcance, criterios de éxito, riesgos
 - [**3 · Avances a nivel de tecnología**](docs/03-avances-tecnologia.md): investigación de 3DGS, SuperSplat, SOG y PlayCanvas; riesgos técnicos; qué queda por validar
 - [**4 · Actividades y roles**](docs/04-actividades-y-roles.md): 4 épicas, 8 sprints, historias, criterios de aceptación y subtareas por persona
-
-El resto del paquete:
-
 - [**5 · Catálogo de fauna y flora**](docs/05-catalogo-fauna-y-flora.md): qué hay realmente en el sendero, con fuentes y nivel de verificación
 - [**6 · Identidad visual**](docs/06-identidad-visual.md): paleta de grises, negros y verdes, tipografía, tokens y contrastes calculados
 - [**7 · Plan de visitas de campo**](docs/07-plan-de-visitas-de-campo.md): las cuatro visitas, qué decide cada una y quién mira qué
 - [**8 · Ambientación sonora**](docs/08-ambientacion-sonora.md): audio binaural espacial: diseño, contrato de datos y presupuesto
 - [**9 · Ámbitos de los tres programadores**](docs/09-ambitos-de-los-tres-programadores.md): quién toca qué carpeta y las tres fronteras
-- [**10 · Guion de la presentación**](docs/10-guion-de-la-presentacion.md): las diez diapositivas, qué se dice en cada una y qué capturas hay que tomar
 - [**11 · Guía de captura en campo**](docs/11-guia-de-captura-en-campo.md): el instructivo de escaneo, configuración de cámara, pasadas y procesamiento paso a paso
 - [Arquitectura y diagramas](docs/arquitectura.md), casos de uso, módulos, secuencias, estados, contratos de datos e invariantes
 - [Análisis y especificación de requerimientos](docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.md), **incluye la visión del proyecto**, 15 CUS, 32 RF, 16 RNF y matriz de trazabilidad (fuente en Word: [`.docx`](docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx))
@@ -135,27 +129,14 @@ El resto del paquete:
 
 ## Estado del proyecto
 
-Fecha de corte: **11 de agosto de 2026**, cierre de la primera semana. La planeación está terminada y cargada en las dos herramientas. El código arranca en el Sprint 3.
-
-### Lo que pedía la actividad y dónde está
-
-| Punto de la actividad | Entregado en |
-|---|---|
-| Principios de trabajo del equipo | [`docs/01-principios-de-trabajo.md`](docs/01-principios-de-trabajo.md) |
-| Visión de proyecto | [`docs/02-vision-de-proyecto.md`](docs/02-vision-de-proyecto.md) y §3.2 del documento de requerimientos |
-| Avances a nivel de tecnología | [`docs/03-avances-tecnologia.md`](docs/03-avances-tecnologia.md) |
-| Actividades y roles, con responsable | [`docs/04-actividades-y-roles.md`](docs/04-actividades-y-roles.md), y una persona asignada en cada issue |
-| Análisis y especificación de requerimientos | [`docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx`](docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx) |
-| Plan de trabajo con estimación | [`plan/plan_de_trabajo.md`](plan/plan_de_trabajo.md) |
-| Tablero de gestión | Jira, proyecto **SCRUM** |
-| Repositorio con control de versiones | este repositorio |
+Fecha de corte: **13 de agosto de 2026**. La planeación está terminada; el prototipo del visor ya funciona en la rama `dev/juan-urrego` y las issues de la semana de prototipo están asignadas en GitHub y Jira.
 
 ### GitHub
 
 | Elemento | Estado |
 |---|---|
 | Ramas | 8: `main`, `develop` y **una por persona** (`dev/<nombre>`) |
-| Issues | **51**, una por historia de usuario, con etiqueta `resp-<persona>` |
+| Issues | **60**, una por historia de usuario (HU-01 a HU-61), con etiqueta `resp-<persona>`, responsable asignado y sección de ámbito para implementar |
 | Etiquetas | **42**: épica, sprint, responsable, tipo y semana (`W01`–`W15`) |
 | Milestones | **9**: S1, S2, S2b, S3, S4, S5, S6, S7 y Cierre |
 
