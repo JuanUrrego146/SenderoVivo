@@ -4,6 +4,8 @@
 
 Repositorio: [`JuanUrrego146/SenderoVivo`](https://github.com/JuanUrrego146/SenderoVivo)
 
+> **Acceso rápido:** [**Guía de captura en campo**](docs/11-guia-de-captura-en-campo.md), el instructivo de escaneo paso a paso: configuración de cámara, pasadas por el sendero y procesamiento hasta el `.sog`.
+
 ---
 
 ## ¿De qué trata?
@@ -40,8 +42,6 @@ Y antes de empezar el día, trae lo que haya en `develop`:
 ```bash
 git pull origin develop
 ```
-
-> **Falta un archivo que no está aquí a propósito:** `context-for-vibe-coding.md`, el contexto para asistentes de código. No se versiona; pídeselo a Juan y déjalo en la raíz del proyecto.
 
 ---
 
@@ -119,11 +119,10 @@ El resto del paquete:
 - [**8 · Ambientación sonora**](docs/08-ambientacion-sonora.md): audio binaural espacial: diseño, contrato de datos y presupuesto
 - [**9 · Ámbitos de los tres programadores**](docs/09-ambitos-de-los-tres-programadores.md): quién toca qué carpeta y las tres fronteras
 - [**10 · Guion de la presentación**](docs/10-guion-de-la-presentacion.md): las diez diapositivas, qué se dice en cada una y qué capturas hay que tomar
+- [**11 · Guía de captura en campo**](docs/11-guia-de-captura-en-campo.md): el instructivo de escaneo, configuración de cámara, pasadas y procesamiento paso a paso
 - [Arquitectura y diagramas](docs/arquitectura.md), casos de uso, módulos, secuencias, estados, contratos de datos e invariantes
-- [Análisis y especificación de requerimientos](docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx), **incluye la visión del proyecto**, 15 CUS, 32 RF, 16 RNF y matriz de trazabilidad
+- [Análisis y especificación de requerimientos](docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.md), **incluye la visión del proyecto**, 15 CUS, 32 RF, 16 RNF y matriz de trazabilidad (fuente en Word: [`.docx`](docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx))
 - [Plan de trabajo](plan/plan_de_trabajo.md), estimación por RF y cronograma semana a semana
-- [Backlog importable a Jira](plan/backlog-jira.csv)
-- **Contexto para vibe coding**: `context-for-vibe-coding.md`. **No está en el repositorio a propósito**: vive en la máquina de cada quien. Pídeselo a Juan y déjalo en la raíz del proyecto
 
 **Decisiones de arquitectura:**
 
@@ -159,24 +158,6 @@ Fecha de corte: **11 de agosto de 2026**, cierre de la primera semana. La planea
 | Issues | **51**, una por historia de usuario, con etiqueta `resp-<persona>` |
 | Etiquetas | **42**: épica, sprint, responsable, tipo y semana (`W01`–`W15`) |
 | Milestones | **9**: S1, S2, S2b, S3, S4, S5, S6, S7 y Cierre |
-| Fuente de verdad del backlog | [`plan/backlog-jira.csv`](plan/backlog-jira.csv) |
-| Sincronización | `node scripts/sync-github.mjs` lee el CSV y crea o actualiza todo. Es idempotente |
-
-El backlog no está escrito a mano en dos sitios: el CSV manda y el script reconstruye GitHub a partir de él.
-
-### Jira
-
-Proyecto **SCRUM**, mismo contenido que el CSV y que las issues de GitHub.
-
-| Elemento | Cantidad |
-|---|---|
-| Épicas | 4 |
-| Historias | 51 |
-| Subtareas | 163 |
-| Puntos de historia | 397 |
-| Sprints | 8 de dos semanas |
-
-**Dos ritmos a la vez, y no se contradicen.** El **sprint** es la unidad de compromiso: lo que el equipo se compromete a terminar. La **semana** es la unidad de entrega: el curso exige entregar algo cada viernes. Por eso cada historia lleva además una etiqueta de semana (`W01` a `W15`), y ninguna persona tiene una semana vacía en las 15. La revisión de ese reparto está en [`plan/plan_de_trabajo.md`](plan/plan_de_trabajo.md) §7.4 y §8 bis.
 
 ### Trabajo con ramas
 
@@ -213,12 +194,6 @@ npm install -g @playcanvas/splat-transform
 ```
 
 Las escenas `.sog` y el material bruto **no están en el repositorio** (ver `.gitignore`): se distribuyen aparte por su peso.
-
-Para sincronizar GitHub con el backlog después de cambiar el CSV:
-
-```bash
-node scripts/sync-github.mjs --dry-run
-```
 
 ---
 
