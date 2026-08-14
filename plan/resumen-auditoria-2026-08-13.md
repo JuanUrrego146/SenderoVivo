@@ -38,7 +38,18 @@ Nota: los números de GitHub #60 y #61 quedaron cruzados respecto a los códigos
 
 ## 3. Issues existentes modificadas
 
-- **Las 51 historias** quedaron **asignadas a las cuentas de GitHub** de sus responsables: `JuanUrrego146` (Juan), `Sviasus` (Eybar), `Davideuni774` (David), `DGerman1203` (Alberto). **Felipe y Alejandra no aparecen aún como colaboradores del repo**: sus issues quedaron solo con etiqueta `resp-*` hasta que acepten la invitación.
+- **Las 60 issues quedaron asignadas, ninguna sin responsable.** Cuentas de GitHub del equipo: `JuanUrrego146` (Juan), `UmngH` (Alejandra), `Davideuni774` (David), `Frat713` (Felipe), `Sviasus` (Eybar), `DGerman1203` (Alberto).
+
+  | Persona | Issues asignadas |
+  |---|---|
+  | Juan Urrego | 17 |
+  | David Beltrán | 15 |
+  | Alejandra Chambueta | 13 |
+  | Alberto Alemán | 13 |
+  | Felipe Acevedo | 12 |
+  | Eybar Viasus | 5 |
+
+  Eybar tiene menos porque el plan solo lo pone como responsable de HU-50 y HU-39, más las nuevas HU-53, HU-59 y HU-61; participa en muchas otras como subtarea. Está anotado en §6 como desbalance a revisar.
 - **34 issues de trabajo** recibieron la sección **"Ámbito para implementar"**: carpetas y archivos que tocar, contratos de datos, referencias de documentación, invariantes y entorno de trabajo, pensada para quien programa con otra IA o solo.
 - **HU-11, HU-12, HU-13, HU-14, HU-47** (modelado): nota de que **Alberto Alemán apoya en texturas y aperturas de UV** en las primeras semanas + etiqueta y asignación. Replicado en Jira como comentario.
 - **HU-50, HU-39, HU-52** (identidad visual): nota de que **el estilo visual no está decidido**; docs/06 queda como propuesta y la decisión sale del documento de diseño (HU-53). Replicado en Jira.
