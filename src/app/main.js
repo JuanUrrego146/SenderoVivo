@@ -111,6 +111,8 @@ async function startViewer(sceneUrl) {
     app.setCanvasFillMode(FILLMODE_FILL_WINDOW);
     app.setCanvasResolution(RESOLUTION_AUTO);
     app.start();
+    // Expuesta para inspeccion y capturas desde la consola del navegador.
+    window.senderoApp = app;
     window.addEventListener('resize', () => app.resizeCanvas());
 
     const assets = [
