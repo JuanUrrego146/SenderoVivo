@@ -653,7 +653,7 @@ Invariantes. Una PR que rompa cualquiera de estas se rechaza sin discusión.
 6. **El audio nunca arranca solo.** Toda reproducción nace de un gesto del usuario (RNF-008).
 7. **Ningún estado de carga o de error deja la pantalla en negro.** Siempre hay progreso, mensaje o reintento (RNF-007).
 8. **Todo texto visible está en español; todo identificador de código, en inglés.** Sin mezclas.
-9. **Los assets pesados nunca entran a Git.** `*.ply`, `*.sog`, `assets/raw/` y el video de captura están en `.gitignore`.
+9. **Los intermedios pesados y el material bruto nunca entran a Git.** `*.ply`, `assets/raw/` y el video de captura están en `.gitignore`. **Excepción desde el 14/08/2026: las escenas `.sog` sí se versionan**, para que el despliegue por rama sirva una web funcional sin almacenamiento externo. Límite duro de GitHub: 100 MB por archivo.
 10. **Nada de datos inventados.** Altitudes, distancias, nombres científicos y notas históricas se verifican o se marcan `[por medir en campo]` / `[por verificar]`.
 11. **Ninguna funcionalidad sin RF.** Si no traza a un requerimiento, o sobra la funcionalidad o falta el requerimiento, y entonces se agrega el requerimiento primero.
 12. **`src/audio/` no toca la cámara y `src/engine/` no reproduce sonido.** El oyente del audio espacial es la cámara activa que ya mueve `TourEngine`.

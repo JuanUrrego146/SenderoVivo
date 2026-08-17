@@ -174,7 +174,7 @@ Para trabajar con las escenas capturadas:
 npm install -g @playcanvas/splat-transform
 ```
 
-Las escenas `.sog` y el material bruto **no están en el repositorio** (ver `.gitignore`): se distribuyen aparte por su peso.
+Las escenas `.sog` **sí se versionan** desde el 14/08/2026, para que cada rama despliegue una web funcional. El material bruto de captura y los `.ply` siguen fuera del repositorio (ver `.gitignore`). Límite de GitHub: 100 MB por archivo.
 
 ---
 

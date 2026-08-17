@@ -91,7 +91,7 @@ index.html            Página del visor (tokens de color de docs/06 inline, temp
 src/app/main.js       Carga de config, escena SOG, cámara orbital, estados de error
 config/scenes.json    Contrato de escenas (3 escenas del tramo)
 config/pois.json      Contrato de POIs con ejemplos válidos
-assets/scenes/        Aquí van los .sog (ignorados por Git, regla dura del proyecto)
+assets/scenes/        Aquí van los .sog (versionados desde el 14/08/2026)
 assets/models/        Modelos .glb de las fichas
 assets/audio/         Narraciones y cantos
 assets/text/          Transcripciones

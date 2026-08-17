@@ -1,6 +1,8 @@
 # ─────────────────────────────────────────────────────────────
 # Sendero Vivo — .gitignore
-# Regla dura: los assets pesados NUNCA entran a Git.
+# Los intermedios pesados y el material bruto NO entran a Git.
+# EXCEPCION (14/08/2026): las escenas .sog SI se versionan, para que
+# el despliegue por rama sirva la escena sin almacenamiento externo.
 # El material bruto de captura se guarda en dos ubicaciones
 # externas y se documenta dónde. Ver docs/arquitectura.md §8.
 # ─────────────────────────────────────────────────────────────
@@ -36,7 +38,10 @@ build/
 
 # El SOG comprimido sigue pesando decenas de MB por escena.
 # Se publica en el hosting estático, no en el repositorio.
-*.sog
+# (antes: *.sog) Las escenas SI se versionan desde el 14/08/2026.
+# Limite duro de GitHub: 100 MB por archivo; una escena mayor debe
+# reducirse antes de subirla. Y cada version nueva queda para siempre
+# en el historial, asi que se reemplaza solo cuando el resultado es bueno.
 *.lod-meta.json
 
 # SOG sin empaquetar (meta.json + imágenes WebP)
