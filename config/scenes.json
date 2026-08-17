@@ -14,7 +14,14 @@
       "sogUrl": "assets/scenes/scene-01/meta.json",
       "entryDistanceMeters": 0,
       "exitDistanceMeters": 70,
-      "captureDate": "[por definir tras la captura V2]"
+      "captureDate": "[por definir tras la captura V2]",
+      "rotationNote": "Nivelacion calculada desde las 987 poses de camara de COLMAP: lleva el 'arriba' real de la escena al eje Y del motor. Se recalcula por escena.",
+      "sceneUp": {
+        "x": -0.204,
+        "y": -0.879,
+        "z": -0.431
+      },
+      "sceneUpNote": "Vector 'arriba' real de la escena, promediado de las 987 poses de camara de COLMAP. El visor calcula con el la rotacion que nivela el horizonte. Se recalcula por escena tras cada reconstruccion."
     },
     {
       "id": "scene-02",

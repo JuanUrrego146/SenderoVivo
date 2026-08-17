@@ -15,6 +15,7 @@ import {
     Entity,
     FILLMODE_FILL_WINDOW,
     RESOLUTION_AUTO,
+    Quat,
     Vec2,
     Vec3
 } from 'playcanvas';
@@ -98,7 +99,7 @@ async function resolveSceneUrl() {
     if (!scenes.length || !scenes[0].sogUrl) {
         throw new Error(`<code>${SCENES_CONFIG_URL}</code> no define ninguna escena con <code>sogUrl</code>.`);
     }
-    return { url: scenes[0].sogUrl, isOverride: false };
+    return { url: scenes[0].sogUrl, isOverride: false, sceneUp: scenes[0].sceneUp };
 }
 
 async function localFileExists(url) {
@@ -110,7 +111,7 @@ async function localFileExists(url) {
     }
 }
 
-async function startViewer(sceneUrl) {
+async function startViewer(sceneUrl, sceneUp) {
     const canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
 
@@ -150,8 +151,17 @@ async function startViewer(sceneUrl) {
     app.root.addChild(camera);
 
     const splat = new Entity('scene');
-    // Los PLY/SOG de entrenamiento traen el eje Y hacia abajo; la documentación aplica este mismo giro.
-    splat.setEulerAngles(0, 0, 180);
+    // Nivelación: la reconstrucción sale en orientación arbitraria porque COLMAP no
+    // sabe dónde está el suelo. sceneUp (config/scenes.json) es el "arriba" real medido
+    // en las poses de cámara; con él se calcula la rotación que deja el horizonte
+    // horizontal. Sin esto la escena se ve torcida.
+    if (sceneUp) {
+        const up = new Vec3(sceneUp.x, sceneUp.y, sceneUp.z).normalize();
+        const levelling = new Quat().setFromDirections(up, Vec3.UP);
+        splat.setRotation(levelling);
+    } else {
+        splat.setEulerAngles(0, 0, 180);   // convención del ejemplo oficial, sin nivelar
+    }
     splat.addComponent('gsplat', { asset: sceneAsset });
     app.root.addChild(splat);
 
@@ -232,7 +242,7 @@ async function setUpNavigation(app, camera) {
 
 async function main() {
     try {
-        const { url, isOverride } = await resolveSceneUrl();
+        const { url, isOverride, sceneUp } = await resolveSceneUrl();
         if (!isRemoteUrl(url) && !(await localFileExists(url))) {
             if (isOverride) {
                 showError(`No existe el archivo <code>${url}</code> en el servidor.`);
@@ -242,7 +252,7 @@ async function main() {
             return;
         }
         showLoading(url);
-        await startViewer(url);
+        await startViewer(url, sceneUp);
     } catch (error) {
         console.error(error);
         showError(error.message);
