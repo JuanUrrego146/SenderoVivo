@@ -98,9 +98,17 @@
                 left: 16px;
                 bottom: 16px;
                 z-index: 10;
+                max-width: calc(100% - 32px);
+                margin: 0;
+                padding: 10px 14px;
+                background: rgba(14, 18, 16, 0.72);
+                border: 1px solid var(--sv-gray-600);
+                border-radius: 8px;
                 font-size: 14px;
+                line-height: 1.5;
                 color: var(--sv-gray-200);
             }
+            #hint strong { color: var(--sv-green-300); }
             #hint[hidden] { display: none; }
         </style>
         <script type="importmap">
@@ -118,7 +126,10 @@
                 <h1>Preparando el visor…</h1>
             </div>
         </div>
-        <p id="hint" hidden>Arrastra para orbitar · rueda o pellizco para acercar · clic derecho o dos dedos para desplazar</p>
+        <p id="hint" hidden>
+            <strong>W A S D</strong> caminar · <strong>Q E</strong> bajar y subir · <strong>Shift</strong> más rápido ·
+            arrastrar para mirar · rueda para acercar
+        </p>
         <script type="module" src="src/app/main.js"></script>
     </body>
 </html>

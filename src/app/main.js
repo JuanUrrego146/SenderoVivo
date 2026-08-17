@@ -14,7 +14,9 @@ import {
     Color,
     Entity,
     FILLMODE_FILL_WINDOW,
-    RESOLUTION_AUTO
+    RESOLUTION_AUTO,
+    Vec2,
+    Vec3
 } from 'playcanvas';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
@@ -136,7 +138,19 @@ async function startViewer(sceneUrl) {
         clearColor: colorFromToken('--sv-black-900')
     });
     camera.addComponent('script');
-    camera.script.create('cameraControls');
+    // Orbitar para inspeccionar + vuelo con WASD para recorrer la escena.
+    // El recorrido definitivo lo restringe TourEngine al trazado (RF-004); esto es libre a propósito.
+    const controls = camera.script.create('cameraControls');
+    if (controls) {
+        controls.enableFly = true;
+        controls.enableOrbit = true;
+        controls.enablePan = true;
+        controls.moveSpeed = 2;
+        controls.moveFastSpeed = 6;
+        controls.moveSlowSpeed = 0.5;
+        controls.focusPoint = new Vec3(0, 0, 0);
+        controls.pitchRange = new Vec2(-90, 90);
+    }
     app.root.addChild(camera);
 
     const splat = new Entity('scene');
