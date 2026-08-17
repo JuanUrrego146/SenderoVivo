@@ -18,9 +18,13 @@ import {
     Vec2,
     Vec3
 } from 'playcanvas';
+import { TrailPath } from '../engine/TrailPath.js';
+import { TourEngine } from '../engine/TourEngine.js';
+import { TrailRecorder } from '../engine/TrailRecorder.js';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
 const SCENES_CONFIG_URL = 'config/scenes.json';
+const TRACK_CONFIG_URL = 'config/track.json';
 // Escena de muestra de la documentación oficial de PlayCanvas, para probar el visor sin captura propia.
 const SAMPLE_SOG_URL = 'https://developer.playcanvas.com/assets/toy-cat.sog';
 
@@ -52,6 +56,12 @@ function showPlaceholder(expectedUrl) {
            <a href="?sog=${SAMPLE_SOG_URL}">Abrir la escena de muestra de PlayCanvas</a>
            (requiere internet).</p>
     `);
+}
+
+/** Ayuda en pantalla, abajo a la izquierda. */
+function showHint(html) {
+    hint.innerHTML = html;
+    hint.hidden = false;
 }
 
 function showError(message) {
@@ -137,9 +147,21 @@ async function startViewer(sceneUrl) {
     camera.addComponent('camera', {
         clearColor: colorFromToken('--sv-black-900')
     });
+    app.root.addChild(camera);
+
+    const splat = new Entity('scene');
+    // Los PLY/SOG de entrenamiento traen el eje Y hacia abajo; la documentación aplica este mismo giro.
+    splat.setEulerAngles(0, 0, 180);
+    splat.addComponent('gsplat', { asset: sceneAsset });
+    app.root.addChild(splat);
+
+    overlay.hidden = true;
+    await setUpNavigation(app, camera);
+}
+
+/** Vuelo libre: solo para marcar el trazado o mientras no exista uno. */
+function enableFreeFlight(camera) {
     camera.addComponent('script');
-    // Orbitar para inspeccionar + vuelo con WASD para recorrer la escena.
-    // El recorrido definitivo lo restringe TourEngine al trazado (RF-004); esto es libre a propósito.
     const controls = camera.script.create('cameraControls');
     if (controls) {
         controls.enableFly = true;
@@ -151,16 +173,61 @@ async function startViewer(sceneUrl) {
         controls.focusPoint = new Vec3(0, 0, 0);
         controls.pitchRange = new Vec2(-90, 90);
     }
-    app.root.addChild(camera);
+    return controls;
+}
 
-    const splat = new Entity('scene');
-    // Los PLY/SOG de entrenamiento traen el eje Y hacia abajo; la documentación aplica este mismo giro.
-    splat.setEulerAngles(0, 0, 180);
-    splat.addComponent('gsplat', { asset: sceneAsset });
-    app.root.addChild(splat);
+async function loadTrail() {
+    try {
+        const response = await fetch(TRACK_CONFIG_URL);
+        if (!response.ok) return new TrailPath([]);
+        const cfg = await response.json();
+        return new TrailPath(cfg.sceneWaypoints || []);
+    } catch {
+        return new TrailPath([]);
+    }
+}
 
-    overlay.hidden = true;
-    hint.hidden = false;
+async function setUpNavigation(app, camera) {
+    const isEditor = new URLSearchParams(window.location.search).has('editor');
+    const trail = await loadTrail();
+
+    if (isEditor) {
+        enableFreeFlight(camera);
+        const pintar = (n) => showHint(
+            '<strong>EDITOR DEL TRAZADO</strong> · ' + n + ' punto(s) marcados<br>' +
+            '<strong>M</strong> marcar aquí · <strong>Z</strong> deshacer · <strong>X</strong> descargar track.json<br>' +
+            'Vuela con <strong>W A S D</strong> por el camino y ve marcando, de principio a fin.'
+        );
+        window.senderoRecorder = new TrailRecorder(app, camera, points => pintar(points.length));
+        pintar(0);
+        return;
+    }
+
+    if (!trail.isUsable) {
+        enableFreeFlight(camera);
+        showHint(
+            '<strong>Sin trazado definido:</strong> vuelo libre. ' +
+            '<strong>W A S D</strong> moverse · <strong>Q E</strong> bajar y subir · arrastrar para mirar.<br>' +
+            'Para marcar el camino del sendero abre ' +
+            '<a href="?editor=1" style="color:var(--sv-green-300)">el editor del trazado</a>.'
+        );
+        return;
+    }
+
+    // Recorrido guiado: la cámara solo va por el trazado (RF-004).
+    const tour = new TourEngine(app, camera, trail, { speed: 1.2 });
+    tour.start();
+    window.senderoTour = tour;
+
+    showHint(
+        '<strong>W</strong> avanzar · <strong>S</strong> retroceder · <strong>Shift</strong> más rápido · ' +
+        'arrastrar para mirar en 360°<br><span id="hud-progress">0 % del recorrido</span>'
+    );
+
+    app.on('tour:progress', ({ distance, total }) => {
+        const hud = document.getElementById('hud-progress');
+        if (hud && total > 0) hud.textContent = Math.round(100 * distance / total) + ' % del recorrido';
+    });
 }
 
 async function main() {

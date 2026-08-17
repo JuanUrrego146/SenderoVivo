@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "capturedOn": "[por definir: fecha real de la salida de campo]",
+  "note": "sceneWaypoints son las coordenadas del trazado EN UNIDADES DEL MOTOR, marcadas sobre la escena con el editor (?editor=1). points guardará el track GPS real (lat, lon, altitud, distancia acumulada) cuando exista la salida de campo.",
+  "sceneWaypoints": [],
+  "points": []
+}

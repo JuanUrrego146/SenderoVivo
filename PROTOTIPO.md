@@ -34,11 +34,31 @@ Eso es todo. No hay build, no hay dependencias que instalar.
 
    | Gesto | Acción |
    |---|---|
-   | Arrastrar (un dedo / clic izquierdo) | Orbitar |
-   | Rueda del ratón / pellizco | Acercar y alejar |
-   | Clic derecho / dos dedos | Desplazar |
+   | **W** / **S** | Avanzar y retroceder **por el trazado del sendero** |
+   | **Shift** | Ir más rápido |
+   | Arrastrar (un dedo / clic izquierdo) | Mirar libremente en 360° |
+   | Dos dedos (móvil) | Avanzar |
+
+   La cámara **nunca se sale del camino**: es RF-004, el sendero está dentro de
+   una reserva protegida y el producto no puede insinuar salirse del trazado.
 
 Si todavía no hay archivo, la página lo dice en pantalla y explica dónde ponerlo: no se rompe.
+
+### Marcar por dónde va el camino
+
+La primera vez no hay trazado y el visor cae a vuelo libre, avisándolo en pantalla.
+Para definir el camino sobre tu escena:
+
+1. Abre `http://localhost:3000/?editor=1`
+2. Vuela con **W A S D** hasta el inicio del sendero.
+3. Pulsa **M** para marcar ese punto. Avanza un poco y vuelve a marcar. Repite
+   hasta el final del tramo: entre 10 y 30 puntos suelen bastar.
+   **Z** deshace el último punto.
+4. Pulsa **X**: se descarga un `track.json`.
+5. Reemplaza `config/track.json` con ese archivo y recarga.
+
+Ahora el recorrido va guiado por esos puntos. Cambiar el camino es cambiar ese
+JSON: no toca código.
 
 ### ¿No tienes un `.sog` todavía?
 
