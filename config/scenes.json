@@ -11,7 +11,7 @@
     {
       "id": "scene-01",
       "order": 1,
-      "sogUrl": "assets/scenes/scene-01.sog",
+      "sogUrl": "assets/scenes/scene-01/meta.json",
       "entryDistanceMeters": 0,
       "exitDistanceMeters": 70,
       "captureDate": "[por definir tras la captura V2]"
@@ -19,7 +19,7 @@
     {
       "id": "scene-02",
       "order": 2,
-      "sogUrl": "assets/scenes/scene-02.sog",
+      "sogUrl": "assets/scenes/scene-02/meta.json",
       "entryDistanceMeters": 70,
       "exitDistanceMeters": 140,
       "captureDate": "[por definir tras la captura V2]"
@@ -27,7 +27,7 @@
     {
       "id": "scene-03",
       "order": 3,
-      "sogUrl": "assets/scenes/scene-03.sog",
+      "sogUrl": "assets/scenes/scene-03/meta.json",
       "entryDistanceMeters": 140,
       "exitDistanceMeters": 200,
       "captureDate": "[por definir tras la captura V2]"

@@ -35,18 +35,21 @@ build/
 *.ply
 *.splat
 *.ksplat
-
-# El SOG comprimido sigue pesando decenas de MB por escena.
-# Se publica en el hosting estático, no en el repositorio.
-# (antes: *.sog) Las escenas SI se versionan desde el 14/08/2026.
-# Limite duro de GitHub: 100 MB por archivo; una escena mayor debe
-# reducirse antes de subirla. Y cada version nueva queda para siempre
-# en el historial, asi que se reemplaza solo cuando el resultado es bueno.
+# ── Escenas SOG: se versionan DESEMPAQUETADAS ────────────────
+# Decision del 14/08/2026: las escenas viven en el repositorio para que
+# cada rama despliegue una web funcional, sin almacenamiento externo.
+#
+# PERO se versiona la carpeta desempaquetada (meta.json + .webp), NO el
+# .sog empaquetado: Cloudflare Pages rechaza archivos de mas de 25 MiB y
+# un .sog de ~70 MB hace fallar el despliegue COMPLETO. Desempaquetada,
+# la escena mas pesada tiene 15,5 MiB por archivo y pasa sin problema.
+# El motor de PlayCanvas carga meta.json igual que el .sog (verificado).
+#
+# Generar la carpeta:  splat-transform escena.ply assets/scenes/scene-01/meta.json
+*.sog
 *.lod-meta.json
 
-# SOG sin empaquetar (meta.json + imágenes WebP)
-assets/scenes/**/meta.json
-assets/scenes/**/*.webp
+# Los meta.json y .webp de assets/scenes/ SI se versionan (antes se ignoraban).
 
 # Proyectos de SuperSplat
 *.ssproj
