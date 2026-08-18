@@ -9,6 +9,7 @@
  */
 import {
     Application,
+    BoundingBox,
     Asset,
     AssetListLoader,
     Color,
@@ -164,6 +165,9 @@ async function startViewer(sceneUrl, sceneUp) {
         splat.setEulerAngles(0, 0, 180);   // convención del ejemplo oficial, sin nivelar
     }
     splat.addComponent('gsplat', { asset: sceneAsset });
+    // El recorte por volumen descarta trozos de la escena cuando la cámara va
+    // por dentro: se le da un volumen amplio para que no desaparezca nada.
+    splat.gsplat.customAabb = new BoundingBox(new Vec3(0, 0, 0), new Vec3(60, 60, 60));
     app.root.addChild(splat);
 
     overlay.hidden = true;

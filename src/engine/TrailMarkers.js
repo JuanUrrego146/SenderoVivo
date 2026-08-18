@@ -5,6 +5,11 @@
  * del visitante, y al tocarla se avanza hasta ella. No es un mando sobrepuesto:
  * son objetos del mundo, anclados al trazado, que se mueven con el recorrido.
  *
+ * El avance es GRADUAL: al tocar una flecha se camina hasta ella en una
+ * transición suave, y manteniéndola pulsada se sigue caminando. Nunca hay
+ * saltos: además de verse mal, el splat necesita tiempo para reordenarse por
+ * profundidad y un salto brusco hace parpadear la escena.
+ *
  * Solo indican direcciones permitidas: mientras la flecha exista, se puede ir.
  * Al llegar al final del tramo, la flecha de avance desaparece sola.
  */
@@ -63,7 +68,11 @@ export class TrailMarkers {
         this.tour = tour;
         this.trail = tour.trailPath;
 
-        this.stepDistance = options.stepDistance ?? 2.5;   // cuánto avanza cada toque
+        this.stepDistance = options.stepDistance ?? 2.5;   // hasta dónde lleva un toque
+        this.walkSpeed = options.walkSpeed ?? 1.6;         // unidades por segundo al caminar
+        this.holdDelay = options.holdDelay ?? 260;         // ms para pasar de toque a caminar sostenido
+        this.targetDistance = null;                        // destino de la transición suave
+        this.heldIndex = -1;                               // flecha mantenida pulsada
         this.size = options.size ?? 0.9;                   // tamaño de la flecha
         this.groundOffset = options.groundOffset ?? -1.4;  // altura respecto a la cámara
         this.hoverIndex = -1;
@@ -112,10 +121,13 @@ export class TrailMarkers {
             if (hit === null) return;
             e.preventDefault();
             e.stopPropagation();
-            this._advance(hit);
+            this._startWalk(hit);
         };
+        this._pointerUp = () => this._stopWalk();
         // Se registra en captura para adelantarse al "mirar" de TourEngine.
         canvas.addEventListener('pointerdown', this._pointerDown, true);
+        window.addEventListener('pointerup', this._pointerUp);
+        window.addEventListener('pointercancel', this._pointerUp);
 
         this._pointerMove = (e) => {
             this.hoverIndex = this._pick(e.clientX, e.clientY) ?? -1;
@@ -152,17 +164,57 @@ export class TrailMarkers {
         return best;
     }
 
-    _advance(index) {
+    /** Un toque camina hasta la flecha; mantener pulsado sigue caminando. */
+    _startWalk(index) {
         const marker = this.markers[index];
-        const step = this.stepDistance * marker.direction;
-        this.tour.distance = Math.max(0, Math.min(
-            this.tour.distance + step,
+        this.heldIndex = index;
+        this.targetDistance = Math.max(0, Math.min(
+            this.tour.distance + this.stepDistance * marker.direction,
             this.trail.totalLength()
         ));
+        // Si se mantiene pulsado, se deja de perseguir un destino fijo y se camina sin parar.
+        this._holdTimer = setTimeout(() => {
+            if (this.heldIndex === index) this.targetDistance = null;
+        }, this.holdDelay);
+    }
+
+    _stopWalk() {
+        clearTimeout(this._holdTimer);
+        this.heldIndex = -1;
+    }
+
+    /** Avance continuo: nunca de golpe, siempre a paso constante. */
+    _walk(dt) {
+        const total = this.trail.totalLength();
+        let objetivo = null;
+        let sentido = 0;
+
+        if (this.targetDistance !== null) {
+            objetivo = this.targetDistance;
+            sentido = Math.sign(objetivo - this.tour.distance);
+            if (Math.abs(objetivo - this.tour.distance) < 0.02) {
+                this.tour.distance = objetivo;
+                this.targetDistance = null;
+                this.tour._emitProgress();
+                return;
+            }
+        } else if (this.heldIndex >= 0) {
+            sentido = this.markers[this.heldIndex].direction;
+        } else {
+            return;
+        }
+
+        const paso = this.walkSpeed * dt * sentido;
+        let nueva = this.tour.distance + paso;
+        if (objetivo !== null) {
+            nueva = sentido > 0 ? Math.min(nueva, objetivo) : Math.max(nueva, objetivo);
+        }
+        this.tour.distance = Math.max(0, Math.min(nueva, total));
         this.tour._emitProgress();
     }
 
-    _update() {
+    _update(dt) {
+        this._walk(dt || 0.016);
         const total = this.trail.totalLength();
         const d = this.tour.distance;
         const dir = new Vec3();
@@ -199,6 +251,8 @@ export class TrailMarkers {
         this.app.off('update', this._onUpdate);
         const canvas = this.app.graphicsDevice.canvas;
         canvas.removeEventListener('pointerdown', this._pointerDown, true);
+        window.removeEventListener('pointerup', this._pointerUp);
+        window.removeEventListener('pointercancel', this._pointerUp);
         canvas.removeEventListener('pointermove', this._pointerMove);
         this.markers.forEach(m => m.destroy());
     }
