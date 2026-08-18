@@ -390,15 +390,24 @@ calidad", que resultó ser peor negocio (§13).
 ### 12.4 Limpieza, en dos pasadas separadas
 
 ```bash
-# 1) Acotar: quita gigantes, lejanas y casi invisibles
-splat-transform entrada.ply --filter-nan --filter-value scale_0,lt,0.5 --filter-value scale_1,lt,0.5 --filter-value scale_2,lt,0.5 --filter-box -15,-15,-15,15,15,15 --filter-value opacity,gt,0.05 acotado.ply
+# 1) Acotar: quita gigantes, lejanas y casi invisibles. Caja AMPLIA (±30): ver la advertencia
+splat-transform entrada.ply --filter-nan --filter-value scale_0,lt,0.5 --filter-value scale_1,lt,0.5 --filter-value scale_2,lt,0.5 --filter-box -30,-30,-30,30,30,30 --filter-value opacity,gt,0.05 acotado.ply
 
 # 2) Ahora sí, flotantes (la escena ya tiene un volumen sano)
 splat-transform acotado.ply --filter-floaters limpio.ply
 
-# 3) Comprimir a SOG desempaquetado (carpeta con meta.json + varios .webp)
-splat-transform limpio.ply assets/scenes/scene-01/meta.json
+# 3) Neblina fuera y compresión a SOG desempaquetado (meta.json + varios .webp)
+splat-transform limpio.ply --filter-value opacity,gt,0.15 assets/scenes/scene-01/meta.json
 ```
+
+> **La caja de recorte corta en diagonal (lección del 18/08).** `--filter-box` se aplica en
+> el marco de coordenadas de COLMAP, que sale con orientación arbitraria (el nuestro estaba
+> 151,5° torcido): una caja alineada a esos ejes rebana el mundo en diagonal. Con ±15 —y
+> peor, con una segunda caja vertical para "recortar cielo"— desaparecieron las rejas del
+> costado izquierdo de la escena. **Regla: caja única y generosa (±30) solo para descartar
+> lo lejano; la neblina y el cielo se controlan con `opacity`, nunca con un recorte
+> espacial; y antes de dar una limpieza por buena se verifican los BORDES de la escena en
+> el visor, no solo el centro.**
 
 ### 12.5 Nivelación y publicación
 
