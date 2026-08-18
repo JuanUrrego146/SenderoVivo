@@ -242,7 +242,7 @@ async function setUpNavigation(app, camera) {
     tour.start();
     window.senderoTour = tour;
     // Flechas dentro de la escena, sobre el camino: se tocan para avanzar.
-    window.senderoMarkers = new TrailMarkers(app, camera, tour, { stepDistance: 3.2, groundOffset: -0.15 });
+    window.senderoMarkers = new TrailMarkers(app, camera, tour, { stepDistance: 3.2, groundOffset: -0.6 });
 
     showHint(
         'Toca las <strong>flechas del camino</strong> para avanzar · también <strong>W A S D</strong><br>' +
