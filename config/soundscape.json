@@ -1,7 +1,0 @@
-{
-  "version": 1,
-  "note": "Contrato de la ambientación sonora (docs/06-contenido-de-la-experiencia.md §C.8). El lecho y las fuentes se graban en V3; añadir una fuente no toca código (RNF-009). Las fuentes espacializables se graban EN MONO.",
-  "ambienceUrl": null,
-  "ambienceNote": "[por grabar en V3] Lecho ambiente estéreo del bosque, bucle limpio de 2-3 min sin eventos reconocibles.",
-  "sources": []
-}

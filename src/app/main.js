@@ -1,36 +1,125 @@
 /*
- * Punto de entrada del visor — Sendero Vivo.
+ * Visor prototipo de escenas SOG — Sendero Vivo.
  *
- * Orquesta y nada más: resuelve qué escena cargar, levanta la aplicación,
- * delega la carga en SceneLoader, el recorrido en TourEngine y la interfaz
- * en src/ui/. La regla de reparto vive en docs/03-arquitectura.md.
- *
- * Basado en "Your First Splat App" (Engine API) de la documentación oficial:
+ * Sigue "Your First Splat App" (Engine API) de la documentación oficial:
  * https://developer.playcanvas.com/user-manual/gaussian-splatting/building/your-first-app/engine/
+ *
+ * Alcance: cargar una escena SOG y poder inspeccionarla con cámara orbital.
+ * TourEngine, POIs, audio y HUD llegan en el Sprint 3 sobre esta misma base.
  */
 import {
     Application,
+    BoundingBox,
+    Asset,
+    AssetListLoader,
+    Color,
     Entity,
     FILLMODE_FILL_WINDOW,
     RESOLUTION_AUTO,
+    Quat,
     Vec2,
     Vec3
 } from 'playcanvas';
-import { SceneLoader } from '../engine/SceneLoader.js';
 import { TrailPath } from '../engine/TrailPath.js';
 import { TourEngine } from '../engine/TourEngine.js';
 import { TrailRecorder } from '../engine/TrailRecorder.js';
 import { TrailMarkers } from '../engine/TrailMarkers.js';
-import { colorFromToken, cssFromToken } from '../ui/tokens.js';
-import {
-    showLoading, setLoadingProgress, showPlaceholder, showError, showHint, hideOverlay
-} from '../ui/overlay.js';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
 const SCENES_CONFIG_URL = 'config/scenes.json';
 const TRACK_CONFIG_URL = 'config/track.json';
-// Escena de muestra de la documentación oficial, para probar el visor sin captura propia.
+// Escena de muestra de la documentación oficial de PlayCanvas, para probar el visor sin captura propia.
 const SAMPLE_SOG_URL = 'https://developer.playcanvas.com/assets/toy-cat.sog';
+
+const overlay = document.getElementById('overlay');
+const overlayContent = document.getElementById('overlay-content');
+const hint = document.getElementById('hint');
+
+function showOverlay(html) {
+    overlay.hidden = false;
+    overlayContent.innerHTML = html;
+}
+
+function showLoading() {
+    showOverlay(`
+        <div class="spinner"></div>
+        <h1>Preparando el recorrido…</h1>
+        <p id="carga-detalle">Descargando la escena</p>
+        <div class="barra"><div class="barra-fill" id="carga-barra"></div></div>
+        <p class="nota">La escena pesa 56 MB. La primera visita tarda; después queda en caché.</p>
+    `);
+}
+
+/** Actualiza la barra de progreso de la descarga. */
+function setLoadingProgress(porcentaje, texto) {
+    const barra = document.getElementById('carga-barra');
+    const detalle = document.getElementById('carga-detalle');
+    if (barra) barra.style.width = Math.max(2, Math.min(100, porcentaje)) + '%';
+    if (detalle && texto) detalle.textContent = texto;
+}
+
+/**
+ * Espera a que el splat esté realmente presentable.
+ * Al cargar, el motor ordena millones de gaussianas por profundidad durante los
+ * primeros cuadros: si se muestra antes, se ve borroso. Se esperan varios cuadros
+ * renderizados y recién ahí se revela la escena.
+ */
+function waitForStableRender(app, { frames = 200, minMs = 2800 } = {}) {
+    return new Promise((resolve) => {
+        const inicio = Date.now();
+        let contados = 0;
+        const listo = () => {
+            app.off('frameend', contar);
+            resolve();
+        };
+        const contar = () => {
+            contados++;
+            const porCuadros = contados / frames;
+            const porTiempo = (Date.now() - inicio) / minMs;
+            setLoadingProgress(90 + 10 * Math.min(porCuadros, porTiempo), 'Afinando la escena');
+            // Hacen falta las dos condiciones: suficientes cuadros Y suficiente tiempo.
+            // El ordenamiento por profundidad de millones de gaussianas corre en segundo
+            // plano; revelar antes muestra la escena emborronada.
+            if (contados >= frames && Date.now() - inicio >= minMs) listo();
+        };
+        app.on('frameend', contar);
+        setTimeout(listo, 12000);   // salvavidas
+    });
+}
+
+function showPlaceholder(expectedUrl) {
+    showOverlay(`
+        <h1>Aún no hay ninguna escena capturada</h1>
+        <p>Copia tu archivo SOG como <code>${expectedUrl}</code> y recarga esta página.</p>
+        <p>El archivo sale del pipeline de captura:
+           <code>splat-transform escena.ply scene-01.sog</code></p>
+        <p>¿Quieres probar el visor mientras tanto?
+           <a href="?sog=${SAMPLE_SOG_URL}">Abrir la escena de muestra de PlayCanvas</a>
+           (requiere internet).</p>
+    `);
+}
+
+/** Ayuda en pantalla, abajo a la izquierda. */
+function showHint(html) {
+    hint.innerHTML = html;
+    hint.hidden = false;
+}
+
+function showError(message) {
+    showOverlay(`
+        <h1>⚠ No se pudo cargar la escena</h1>
+        <p>${message}</p>
+        <p><button id="retry">Reintentar</button></p>
+    `);
+    document.getElementById('retry').addEventListener('click', () => window.location.reload());
+}
+
+function colorFromToken(tokenName) {
+    // Invariante del proyecto: ningún color literal en JS; se leen los tokens CSS.
+    const hex = getComputedStyle(document.documentElement).getPropertyValue(tokenName).trim();
+    const value = parseInt(hex.slice(1), 16);
+    return new Color(((value >> 16) & 255) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255);
+}
 
 function isRemoteUrl(url) {
     return /^https?:\/\//i.test(url);
@@ -62,7 +151,7 @@ async function localFileExists(url) {
     }
 }
 
-function createApp() {
+async function startViewer(sceneUrl, sceneUp) {
     const canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
 
@@ -75,51 +164,69 @@ function createApp() {
     app.setCanvasFillMode(FILLMODE_FILL_WINDOW);
     app.setCanvasResolution(RESOLUTION_AUTO);
     app.start();
-    window.addEventListener('resize', () => app.resizeCanvas());
-    // Expuesta para inspección y capturas desde la consola del navegador.
+    // Expuesta para inspeccion y capturas desde la consola del navegador.
     window.senderoApp = app;
-    return app;
-}
+    window.addEventListener('resize', () => app.resizeCanvas());
 
-function createCamera(app) {
+    const assets = [
+        new Asset('camera-controls', 'script', { url: CAMERA_CONTROLS_URL }),
+        new Asset('scene', 'gsplat', { url: sceneUrl })
+    ];
+    // Progreso real de la descarga del splat.
+    assets[1].on('progress', (recibido, total) => {
+        if (total > 0) {
+            const mb = (recibido / 1048576).toFixed(0);
+            const totalMb = (total / 1048576).toFixed(0);
+            setLoadingProgress((recibido / total) * 85, `Descargando la escena · ${mb} de ${totalMb} MB`);
+        }
+    });
+
+    const loader = new AssetListLoader(assets, app.assets);
+    await new Promise(resolve => loader.load(resolve));
+
+    const [controlsAsset, sceneAsset] = assets;
+    if (!controlsAsset.loaded) {
+        throw new Error('No se pudo descargar el control de cámara desde el CDN. Revisa la conexión a internet.');
+    }
+    if (!sceneAsset.loaded) {
+        throw new Error(`El archivo <code>${sceneUrl}</code> existe pero no se pudo cargar. Revisa que sea un SOG válido.`);
+    }
+
     const camera = new Entity('camera');
     camera.setPosition(0, 0, 2.5);
     camera.addComponent('camera', {
         clearColor: colorFromToken('--sv-black-900')
     });
-    // El oyente del audio espacial es la cámara activa. Con este componente,
-    // cualquier fuente posicional que cree src/audio/ se espacializa sola conforme
-    // TourEngine mueve y gira la cámara: el módulo de audio no la toca (invariante 12).
+    // El oyente del audio espacial es la cámara activa. Con este componente, cualquier
+    // fuente posicional que cree src/audio/ se espacializa sola conforme TourEngine
+    // mueve y gira la cámara: el módulo de audio no necesita tocarla (invariante 12).
     camera.addComponent('audiolistener');
     app.root.addChild(camera);
-    return camera;
-}
 
-async function startViewer(sceneUrl, sceneUp) {
-    const app = createApp();
-    const camera = createCamera(app);
-    const loader = new SceneLoader(app);
-
-    await loader.load({
-        url: sceneUrl,
-        sceneUp,
-        controlsUrl: CAMERA_CONTROLS_URL,
-        onProgress: (recibido, total) => {
-            if (total > 0) {
-                const mb = (recibido / 1048576).toFixed(0);
-                const totalMb = (total / 1048576).toFixed(0);
-                setLoadingProgress((recibido / total) * 85, `Descargando la escena · ${mb} de ${totalMb} MB`);
-            }
-        }
-    });
+    const splat = new Entity('scene');
+    // Nivelación: la reconstrucción sale en orientación arbitraria porque COLMAP no
+    // sabe dónde está el suelo. sceneUp (config/scenes.json) es el "arriba" real medido
+    // en las poses de cámara; con él se calcula la rotación que deja el horizonte
+    // horizontal. Sin esto la escena se ve torcida.
+    if (sceneUp) {
+        const up = new Vec3(sceneUp.x, sceneUp.y, sceneUp.z).normalize();
+        const levelling = new Quat().setFromDirections(up, Vec3.UP);
+        splat.setRotation(levelling);
+    } else {
+        splat.setEulerAngles(0, 0, 180);   // convención del ejemplo oficial, sin nivelar
+    }
+    splat.addComponent('gsplat', { asset: sceneAsset });
+    // El recorte por volumen descarta trozos de la escena cuando la cámara va
+    // por dentro: se le da un volumen amplio para que no desaparezca nada.
+    splat.gsplat.customAabb = new BoundingBox(new Vec3(0, 0, 0), new Vec3(60, 60, 60));
+    app.root.addChild(splat);
 
     // La escena solo se revela cuando ya se ve bien: nada de mostrarla borrosa.
-    await loader.waitForStableRender({
-        onProgress: (avance) => setLoadingProgress(90 + 10 * avance, 'Afinando la escena')
-    });
+    await waitForStableRender(app);
     await setUpNavigation(app, camera);
     setLoadingProgress(100, 'Listo');
-    hideOverlay();
+    overlay.classList.add('desvanecer');
+    setTimeout(() => { overlay.hidden = true; overlay.classList.remove('desvanecer'); }, 420);
 }
 
 /** Vuelo libre: solo para marcar el trazado o mientras no exista uno. */
@@ -190,11 +297,7 @@ async function setUpNavigation(app, camera) {
     tour.start();
     window.senderoTour = tour;
     // Flechas dentro de la escena, sobre el camino: se tocan para avanzar.
-    window.senderoMarkers = new TrailMarkers(app, camera, tour, {
-        stepDistance: 3.2,
-        groundOffset: -0.6,
-        color: cssFromToken('--sv-green-300', '#6FCF97')
-    });
+    window.senderoMarkers = new TrailMarkers(app, camera, tour, { stepDistance: 3.2, groundOffset: -0.6 });
 
     showHint(
         'Toca las <strong>flechas del camino</strong> para avanzar · también <strong>W A S D</strong><br>' +
@@ -220,7 +323,7 @@ async function main() {
             if (isOverride) {
                 showError(`No existe el archivo <code>${url}</code> en el servidor.`);
             } else {
-                showPlaceholder(url, SAMPLE_SOG_URL);
+                showPlaceholder(url);
             }
             return;
         }
