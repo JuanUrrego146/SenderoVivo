@@ -134,6 +134,39 @@ app.on('tour:progress', ({ distance, total, position, yaw, pitch }) => {
 });
 ```
 
+### Cargar un modelo 3D en la escena
+
+Los `.glb` se cargan como asset de tipo `container`:
+
+```javascript
+const asset = new pc.Asset('colibri', 'container', {
+    url: poi.modelUrl              // sale de config/pois.json
+});
+app.assets.add(asset);
+app.assets.load(asset);
+
+asset.once('load', () => {
+    const modelo = asset.resource.instantiateRenderEntity();
+    modelo.setLocalScale(1, 1, 1);
+    app.root.addChild(modelo);
+
+    // Animación idle, si el .glb la trae (RF-029)
+    if (asset.resource.animations?.length) {
+        modelo.addComponent('anim');
+        modelo.anim.assignAnimation('idle', asset.resource.animations[0].resource);
+    }
+});
+```
+
+**Para que el modelo se vea por encima del splat** hay que ponerlo en la capa que se
+dibuja al final; si no, las gaussianas lo tapan aunque esté delante. Mira cómo lo resuelve
+`src/engine/TrailMarkers.js`: usa la capa `UI` y desactiva la prueba de profundidad.
+
+Mientras llega el modelo definitivo hay uno provisional para no bloquearse:
+`assets/models/marcador-provisional.glb` (un ave esquemática, 1 KB). **No es el modelo
+del proyecto**: sirve para montar la ficha y comprobar que carga, y se reemplaza por el
+de Felipe cuando esté.
+
 ### Audio espacial: lo que ya está resuelto
 
 **La cámara ya tiene el oyente** (`audiolistener`). Eso significa que cualquier fuente
