@@ -32,6 +32,7 @@ const SAMPLE_SOG_URL = 'https://developer.playcanvas.com/assets/toy-cat.sog';
 const overlay = document.getElementById('overlay');
 const overlayContent = document.getElementById('overlay-content');
 const hint = document.getElementById('hint');
+const pad = document.getElementById('pad');
 
 function showOverlay(html) {
     overlay.hidden = false;
@@ -197,6 +198,35 @@ async function loadTrail() {
     }
 }
 
+/** Conecta las flechas en pantalla con el motor del recorrido. */
+function wireNavPad(tour) {
+    if (!pad) return;
+    pad.hidden = false;
+
+    pad.querySelectorAll('button').forEach((boton) => {
+        const accion = boton.dataset.accion;
+        const pulsar = (e) => {
+            e.preventDefault();
+            boton.classList.add('activo');
+            tour.press(accion);
+        };
+        const soltar = () => {
+            boton.classList.remove('activo');
+            tour.release(accion);
+        };
+        boton.addEventListener('pointerdown', pulsar);
+        boton.addEventListener('pointerup', soltar);
+        boton.addEventListener('pointerleave', soltar);
+        boton.addEventListener('pointercancel', soltar);
+        // Un toque suelto avanza un poco, para quien solo da golpecitos.
+        boton.addEventListener('click', (e) => {
+            e.preventDefault();
+            tour.press(accion);
+            setTimeout(() => tour.release(accion), 260);
+        });
+    });
+}
+
 async function setUpNavigation(app, camera) {
     const isEditor = new URLSearchParams(window.location.search).has('editor');
     const trail = await loadTrail();
@@ -224,14 +254,16 @@ async function setUpNavigation(app, camera) {
         return;
     }
 
-    // Recorrido guiado: la cámara solo va por el trazado (RF-004).
+    // Recorrido guiado: la cámara se mueve dentro del corredor del trazado (RF-004).
     const tour = new TourEngine(app, camera, trail, { speed: 1.2 });
     tour.start();
     window.senderoTour = tour;
+    wireNavPad(tour);
 
     showHint(
-        '<strong>W</strong> avanzar · <strong>S</strong> retroceder · <strong>Shift</strong> más rápido · ' +
-        'arrastrar para mirar en 360°<br><span id="hud-progress">0 % del recorrido</span>'
+        'Avanza con las <strong>flechas</strong> de la pantalla o con <strong>W A S D</strong> · ' +
+        '<strong>Shift</strong> más rápido · arrastra para mirar en 360°<br>' +
+        '<span id="hud-progress">0 % del recorrido</span>'
     );
 
     app.on('tour:progress', ({ distance, total }) => {

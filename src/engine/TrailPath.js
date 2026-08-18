@@ -1,9 +1,14 @@
 /*
  * TrailPath — el trazado autorizado del sendero.
  *
- * Guarda los puntos del camino y responde dos preguntas:
+ * Guarda los puntos del camino y responde:
  *   ¿qué posición corresponde a la distancia D del recorrido?  -> positionAt()
  *   ¿cuál es el punto del camino más cercano a esta posición?  -> clampToTrail()
+ *   ¿esta posición está dentro del corredor permitido?         -> clampToCorridor()
+ *
+ * El recorrido NO es una línea rígida: hay un corredor de anchura configurable
+ * alrededor del trazado, para poder acercarse a mirar algo sin salirse del
+ * camino autorizado. Fuera de ese corredor, la posición se devuelve al borde.
  *
  * Invariante 2 del proyecto (RF-004): ninguna posición llega a la cámara sin
  * pasar por clampToTrail(). El sendero está dentro de una reserva protegida:
@@ -15,8 +20,10 @@ import { Vec3 } from 'playcanvas';
 
 export class TrailPath {
     /** @param {{x:number,y:number,z:number}[]} waypoints puntos en el orden del recorrido */
-    constructor(waypoints = []) {
+    constructor(waypoints = [], corridorRadius = 1.5) {
         this.waypoints = waypoints.map(p => new Vec3(p.x, p.y, p.z));
+        /** Anchura del margen lateral permitido, en unidades de la escena. */
+        this.corridorRadius = corridorRadius;
         this.segmentLengths = [];
         this.cumulative = [0];
         this._rebuild();
@@ -96,5 +103,21 @@ export class TrailPath {
             }
         }
         return best.distance;
+    }
+
+    /**
+     * Devuelve la posición al corredor: si está a más de corridorRadius del
+     * trazado, la empuja al borde. Dentro del margen la deja tal cual.
+     * Es RF-004 sin camisa de fuerza: hay libertad, pero acotada.
+     */
+    clampToCorridor(position, out = new Vec3()) {
+        if (!this.isUsable) return out.copy(position);
+
+        const onTrail = this.positionAt(this.clampToTrail(position));
+        const offset = new Vec3().sub2(position, onTrail);
+        const dist = offset.length();
+
+        if (dist <= this.corridorRadius) return out.copy(position);
+        return out.copy(onTrail).addScaled(offset.mulScalar(1 / dist), this.corridorRadius);
     }
 }

@@ -34,13 +34,17 @@ Eso es todo. No hay build, no hay dependencias que instalar.
 
    | Gesto | Acción |
    |---|---|
-   | **W** / **S** | Avanzar y retroceder **por el trazado del sendero** |
+   | **Flechas en pantalla** | Avanzar, retroceder y moverse a los lados (como en un mapa) |
+   | **W** / **S** | Avanzar y retroceder por el sendero |
+   | **A** / **D** | Desplazarse a los lados, dentro del margen permitido |
    | **Shift** | Ir más rápido |
    | Arrastrar (un dedo / clic izquierdo) | Mirar libremente en 360° |
-   | Dos dedos (móvil) | Avanzar |
 
-   La cámara **nunca se sale del camino**: es RF-004, el sendero está dentro de
-   una reserva protegida y el producto no puede insinuar salirse del trazado.
+   El recorrido va por el sendero, pero **no es una camisa de fuerza**: hay un
+   corredor de 1,5 unidades a cada lado del trazado para acercarse a mirar algo.
+   Fuera de ese margen la cámara vuelve sola al borde. Es RF-004: el sendero está
+   dentro de una reserva protegida y el producto no puede insinuar salirse.
+   La anchura del corredor se ajusta en `TrailPath` (`corridorRadius`).
 
 Si todavía no hay archivo, la página lo dice en pantalla y explica dónde ponerlo: no se rompe.
 

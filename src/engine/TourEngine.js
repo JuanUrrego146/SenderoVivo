@@ -1,8 +1,10 @@
 /*
  * TourEngine — el motor del recorrido guiado.
  *
- * Mueve la cámara SOLO sobre el trazado (RF-004) y deja la mirada libre en
- * 360° (RF-005). El visitante avanza y retrocede; no puede salirse del camino.
+ * Mueve la cámara dentro del CORREDOR del trazado (RF-004) y deja la mirada
+ * libre en 360° (RF-005). El visitante avanza, retrocede y puede desplazarse
+ * un poco a los lados para acercarse a mirar algo, pero nunca sale del camino
+ * autorizado: el corredor es un margen, no una vía rígida.
  *
  * Invariante 1 del proyecto: la cámara la mueve únicamente este módulo.
  * Invariante 13: publica el evento 'tour:progress' con distanceMeters; los
@@ -35,7 +37,10 @@ export class TourEngine {
         this.yaw = 0;
         this.pitch = 0;
 
-        this._input = { forward: 0, fast: false };
+        this._input = { forward: 0, strafe: 0, fast: false };
+        /** Desplazamiento lateral actual dentro del corredor. */
+        this.lateral = 0;
+        this.strafeSpeed = options.strafeSpeed ?? 0.8;
         this._looking = false;
         this._targetPos = new Vec3();
         this._currentPos = new Vec3();
@@ -89,11 +94,14 @@ export class TourEngine {
             const k = e.key.toLowerCase();
             if (k === 'w' || k === 'arrowup') this._input.forward = 1;
             if (k === 's' || k === 'arrowdown') this._input.forward = -1;
+            if (k === 'a' || k === 'arrowleft') this._input.strafe = -1;
+            if (k === 'd' || k === 'arrowright') this._input.strafe = 1;
             if (e.shiftKey) this._input.fast = true;
         };
         this._keyUp = (e) => {
             const k = e.key.toLowerCase();
             if (k === 'w' || k === 'arrowup' || k === 's' || k === 'arrowdown') this._input.forward = 0;
+            if (k === 'a' || k === 'arrowleft' || k === 'd' || k === 'arrowright') this._input.strafe = 0;
             if (!e.shiftKey) this._input.fast = false;
         };
         this._pointerDown = () => { this._looking = true; };
@@ -151,15 +159,39 @@ export class TourEngine {
             this.distance = Math.max(0, Math.min(this.distance, this.trailPath.totalLength()));
             this._emitProgress();
         }
+        if (this._input.strafe !== 0) {
+            const r = this.trailPath.corridorRadius;
+            this.lateral += this._input.strafe * this.strafeSpeed * dt;
+            this.lateral = Math.max(-r, Math.min(r, this.lateral));   // el margen del corredor
+        }
 
-        // La posición SIEMPRE sale del trazado: es la garantía de RF-004.
+        // La posición SIEMPRE sale del trazado más el margen lateral permitido: es RF-004.
         this.trailPath.positionAt(this.distance, this._targetPos);
+        if (this.lateral !== 0) {
+            this.trailPath.directionAt(this.distance, this._dir);
+            // Perpendicular horizontal al avance.
+            this._targetPos.x += -this._dir.z * this.lateral;
+            this._targetPos.z += this._dir.x * this.lateral;
+        }
         this._targetPos.y += this.eyeHeight;
 
         const t = Math.min(1, this.smoothing * dt);
         this._currentPos.lerp(this._currentPos, this._targetPos, t);
         this.camera.setPosition(this._currentPos);
         this.camera.setEulerAngles(this.pitch, this.yaw, 0);
+    }
+
+    /** Control desde los botones en pantalla: 'forward'|'back'|'left'|'right'. */
+    press(action) {
+        if (action === 'forward') this._input.forward = 1;
+        if (action === 'back') this._input.forward = -1;
+        if (action === 'left') this._input.strafe = -1;
+        if (action === 'right') this._input.strafe = 1;
+    }
+
+    release(action) {
+        if (action === 'forward' || action === 'back') this._input.forward = 0;
+        if (action === 'left' || action === 'right') this._input.strafe = 0;
     }
 
     _emitProgress() {
