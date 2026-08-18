@@ -44,6 +44,15 @@ El motor PlayCanvas se carga desde un CDN con un *import map* en `index.html`.
 
 ---
 
+## 2 bis. El prototipo está publicado
+
+**https://senderovivo.juandavidurregofonseca677.workers.dev**
+
+Esa web tiene lo mismo que ves en local: la escena, el recorrido y las flechas. Se
+actualiza desde la rama `develop`. Úsala para mostrar el avance sin montar nada.
+
+---
+
 ## 3. Qué hay hecho y funcionando
 
 | Pieza | Estado | Archivo |
@@ -193,6 +202,39 @@ senderoTour.distance = senderoTour.trailPath.totalLength() * 0.5;
 
 ---
 
+## 8 bis. Dónde están los archivos del escaneo
+
+En el repositorio está la escena **lista para usar** (`assets/scenes/scene-01/`, formato
+SOG desempaquetado, 56 MB). Es lo único que la web necesita.
+
+**Los archivos intermedios NO están en Git y no pueden estarlo:** el PLY entrenado pesa
+**1.125 MB** y GitHub rechaza archivos de más de 100 MB. Viven en la máquina de Juan, en
+`F:\EscaneoPrototipo\`:
+
+| Archivo | Qué es |
+|---|---|
+| `final/final_60000.ply` | El entrenamiento completo, 5 M de gaussianas |
+| `final/limpio.ply` | Ya filtrado, listo para abrir en SuperSplat |
+| `colmap/sparse/0/` | Poses de cámara y nube de puntos |
+| `frames/` | Los 1.110 cuadros extraídos del video |
+| `SenderoVivo_union.mp4` | Los 8 clips de video unidos |
+
+Si necesitas alguno, pídeselo a Juan: se pasa por disco o por enlace, no por Git.
+
+**El SOG que sí está versionado se genera así:**
+
+```bash
+splat-transform limpio.ply assets/scenes/scene-01/meta.json
+```
+
+Se versiona la **carpeta desempaquetada** (`meta.json` + `.webp`), no el `.sog`
+empaquetado, porque el hosting rechaza archivos de más de 25 MB.
+
+Los parámetros de entrenamiento medidos y la receta recomendada están en
+[`docs/12-parametros-de-entrenamiento.md`](docs/12-parametros-de-entrenamiento.md).
+
+---
+
 ## 9. Cosas que ya nos costaron tiempo (no las repitas)
 
 - **La escena se ve torcida:** falta `sceneUp` en `scenes.json`. Se calcula de las poses
@@ -205,6 +247,10 @@ senderoTour.distance = senderoTour.trailPath.totalLength() * 0.5;
   hubo cámara, o desde un panel embebido. Baja al camino, a la altura de los ojos.
 - **Los archivos `.sog` empaquetados no se suben:** se versiona la carpeta desempaquetada
   (`meta.json` + `.webp`), porque el hosting rechaza archivos de más de 25 MB.
+- **La escena se ve emborronada al abrir:** el motor ordena millones de gaussianas por
+  profundidad durante los primeros segundos. Por eso el visor espera 200 cuadros y 2,8 s
+  antes de revelarla, detrás de la pantalla de carga. Si tocas esa pantalla, no quites
+  la espera: sin ella el prototipo se ve mal justo cuando alguien lo abre.
 
 ---
 
