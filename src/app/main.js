@@ -40,13 +40,51 @@ function showOverlay(html) {
     overlayContent.innerHTML = html;
 }
 
-function showLoading(sceneUrl) {
+function showLoading() {
     showOverlay(`
         <div class="spinner"></div>
-        <h1>Cargando escena…</h1>
-        <p><code>${sceneUrl}</code></p>
-        <p>La primera carga puede tardar unos segundos.</p>
+        <h1>Preparando el recorrido…</h1>
+        <p id="carga-detalle">Descargando la escena</p>
+        <div class="barra"><div class="barra-fill" id="carga-barra"></div></div>
+        <p class="nota">La escena pesa 56 MB. La primera visita tarda; después queda en caché.</p>
     `);
+}
+
+/** Actualiza la barra de progreso de la descarga. */
+function setLoadingProgress(porcentaje, texto) {
+    const barra = document.getElementById('carga-barra');
+    const detalle = document.getElementById('carga-detalle');
+    if (barra) barra.style.width = Math.max(2, Math.min(100, porcentaje)) + '%';
+    if (detalle && texto) detalle.textContent = texto;
+}
+
+/**
+ * Espera a que el splat esté realmente presentable.
+ * Al cargar, el motor ordena millones de gaussianas por profundidad durante los
+ * primeros cuadros: si se muestra antes, se ve borroso. Se esperan varios cuadros
+ * renderizados y recién ahí se revela la escena.
+ */
+function waitForStableRender(app, { frames = 200, minMs = 2800 } = {}) {
+    return new Promise((resolve) => {
+        const inicio = Date.now();
+        let contados = 0;
+        const listo = () => {
+            app.off('frameend', contar);
+            resolve();
+        };
+        const contar = () => {
+            contados++;
+            const porCuadros = contados / frames;
+            const porTiempo = (Date.now() - inicio) / minMs;
+            setLoadingProgress(90 + 10 * Math.min(porCuadros, porTiempo), 'Afinando la escena');
+            // Hacen falta las dos condiciones: suficientes cuadros Y suficiente tiempo.
+            // El ordenamiento por profundidad de millones de gaussianas corre en segundo
+            // plano; revelar antes muestra la escena emborronada.
+            if (contados >= frames && Date.now() - inicio >= minMs) listo();
+        };
+        app.on('frameend', contar);
+        setTimeout(listo, 12000);   // salvavidas
+    });
 }
 
 function showPlaceholder(expectedUrl) {
@@ -134,6 +172,15 @@ async function startViewer(sceneUrl, sceneUp) {
         new Asset('camera-controls', 'script', { url: CAMERA_CONTROLS_URL }),
         new Asset('scene', 'gsplat', { url: sceneUrl })
     ];
+    // Progreso real de la descarga del splat.
+    assets[1].on('progress', (recibido, total) => {
+        if (total > 0) {
+            const mb = (recibido / 1048576).toFixed(0);
+            const totalMb = (total / 1048576).toFixed(0);
+            setLoadingProgress((recibido / total) * 85, `Descargando la escena · ${mb} de ${totalMb} MB`);
+        }
+    });
+
     const loader = new AssetListLoader(assets, app.assets);
     await new Promise(resolve => loader.load(resolve));
 
@@ -170,8 +217,12 @@ async function startViewer(sceneUrl, sceneUp) {
     splat.gsplat.customAabb = new BoundingBox(new Vec3(0, 0, 0), new Vec3(60, 60, 60));
     app.root.addChild(splat);
 
-    overlay.hidden = true;
+    // La escena solo se revela cuando ya se ve bien: nada de mostrarla borrosa.
+    await waitForStableRender(app);
     await setUpNavigation(app, camera);
+    setLoadingProgress(100, 'Listo');
+    overlay.classList.add('desvanecer');
+    setTimeout(() => { overlay.hidden = true; overlay.classList.remove('desvanecer'); }, 420);
 }
 
 /** Vuelo libre: solo para marcar el trazado o mientras no exista uno. */
@@ -272,7 +323,7 @@ async function main() {
             }
             return;
         }
-        showLoading(url);
+        showLoading();
         await startViewer(url, sceneUp);
     } catch (error) {
         console.error(error);

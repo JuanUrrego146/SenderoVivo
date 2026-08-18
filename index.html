@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Sendero Vivo — Prototipo del visor SOG</title>
+        <title>Sendero Vivo — Prototipo</title>
         <style>
             /*
              * Tokens de color de docs/06-identidad-visual.md §6.
@@ -110,6 +110,54 @@
             }
             #hint strong { color: var(--sv-green-300); }
 
+            /* Barra de progreso de la carga */
+            .barra {
+                height: 6px;
+                margin: 14px 0 10px;
+                background: var(--sv-black-900);
+                border-radius: 3px;
+                overflow: hidden;
+            }
+            .barra-fill {
+                height: 100%;
+                width: 2%;
+                background: linear-gradient(90deg, var(--sv-green-700), var(--sv-green-300));
+                border-radius: 3px;
+                transition: width 0.35s ease;
+            }
+            #overlay-content .nota {
+                font-size: 13px;
+                color: var(--sv-gray-400);
+            }
+            #overlay.desvanecer {
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                pointer-events: none;
+            }
+
+            /* Distintivo de prototipo, siempre visible */
+            #prototipo {
+                position: fixed;
+                top: 14px;
+                left: 16px;
+                z-index: 12;
+                padding: 6px 12px;
+                background: rgba(31, 93, 58, 0.9);
+                border: 1px solid var(--sv-green-300);
+                border-radius: 999px;
+                color: var(--sv-gray-050);
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+            #prototipo span {
+                font-weight: 400;
+                letter-spacing: 0;
+                text-transform: none;
+                color: var(--sv-gray-200);
+            }
+
 
             @media (max-width: 480px) {
                 #hint { font-size: 13px; padding: 8px 10px; }
@@ -131,6 +179,7 @@
                 <h1>Preparando el visor…</h1>
             </div>
         </div>
+        <div id="prototipo">Prototipo <span>· escaneo de prueba, no es el sendero</span></div>
         <p id="hint" hidden>
             <strong>W A S D</strong> caminar · <strong>Q E</strong> bajar y subir · <strong>Shift</strong> más rápido ·
             arrastrar para mirar · rueda para acercar
