@@ -110,48 +110,8 @@
             }
             #hint strong { color: var(--sv-green-300); }
 
-            /* Mando de navegación en pantalla, estilo mapa: siempre visible,
-               táctil en móvil y clicable en escritorio. */
-            #pad {
-                position: fixed;
-                right: 20px;
-                bottom: 20px;
-                z-index: 11;
-                display: grid;
-                grid-template-columns: repeat(3, 56px);
-                grid-template-rows: repeat(2, 56px);
-                gap: 8px;
-                touch-action: none;
-                user-select: none;
-            }
-            #pad[hidden] { display: none; }
-            #pad button {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: rgba(27, 33, 30, 0.82);
-                border: 1px solid var(--sv-gray-600);
-                border-radius: 12px;
-                color: var(--sv-gray-050);
-                font-size: 22px;
-                line-height: 1;
-                cursor: pointer;
-                -webkit-tap-highlight-color: transparent;
-                transition: background 0.12s, border-color 0.12s, transform 0.12s;
-            }
-            #pad button:hover { border-color: var(--sv-green-500); }
-            #pad button.activo {
-                background: var(--sv-green-700);
-                border-color: var(--sv-green-300);
-                transform: scale(0.94);
-            }
-            #pad .adelante { grid-column: 2; grid-row: 1; }
-            #pad .izquierda { grid-column: 1; grid-row: 2; }
-            #pad .atras { grid-column: 2; grid-row: 2; }
-            #pad .derecha { grid-column: 3; grid-row: 2; }
 
             @media (max-width: 480px) {
-                #pad { grid-template-columns: repeat(3, 62px); grid-template-rows: repeat(2, 62px); }
                 #hint { font-size: 13px; padding: 8px 10px; }
             }
             #hint[hidden] { display: none; }
@@ -175,12 +135,6 @@
             <strong>W A S D</strong> caminar · <strong>Q E</strong> bajar y subir · <strong>Shift</strong> más rápido ·
             arrastrar para mirar · rueda para acercar
         </p>
-        <div id="pad" hidden>
-            <button class="adelante" data-accion="forward" aria-label="Avanzar por el sendero">▲</button>
-            <button class="izquierda" data-accion="left" aria-label="Desplazarse a la izquierda">◀</button>
-            <button class="atras" data-accion="back" aria-label="Retroceder">▼</button>
-            <button class="derecha" data-accion="right" aria-label="Desplazarse a la derecha">▶</button>
-        </div>
         <script type="module" src="src/app/main.js"></script>
     </body>
 </html>

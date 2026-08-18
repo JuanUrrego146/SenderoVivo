@@ -11,7 +11,7 @@
     {
       "id": "scene-01",
       "order": 1,
-      "sogUrl": "assets/scenes/scene-01/meta.json",
+      "sogUrl": "assets/scenes/scene-01-limpia/meta.json",
       "entryDistanceMeters": 0,
       "exitDistanceMeters": 70,
       "captureDate": "[por definir tras la captura V2]",

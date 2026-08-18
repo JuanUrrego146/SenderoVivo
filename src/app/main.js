@@ -22,6 +22,7 @@ import {
 import { TrailPath } from '../engine/TrailPath.js';
 import { TourEngine } from '../engine/TourEngine.js';
 import { TrailRecorder } from '../engine/TrailRecorder.js';
+import { TrailMarkers } from '../engine/TrailMarkers.js';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
 const SCENES_CONFIG_URL = 'config/scenes.json';
@@ -32,7 +33,6 @@ const SAMPLE_SOG_URL = 'https://developer.playcanvas.com/assets/toy-cat.sog';
 const overlay = document.getElementById('overlay');
 const overlayContent = document.getElementById('overlay-content');
 const hint = document.getElementById('hint');
-const pad = document.getElementById('pad');
 
 function showOverlay(html) {
     overlay.hidden = false;
@@ -198,35 +198,6 @@ async function loadTrail() {
     }
 }
 
-/** Conecta las flechas en pantalla con el motor del recorrido. */
-function wireNavPad(tour) {
-    if (!pad) return;
-    pad.hidden = false;
-
-    pad.querySelectorAll('button').forEach((boton) => {
-        const accion = boton.dataset.accion;
-        const pulsar = (e) => {
-            e.preventDefault();
-            boton.classList.add('activo');
-            tour.press(accion);
-        };
-        const soltar = () => {
-            boton.classList.remove('activo');
-            tour.release(accion);
-        };
-        boton.addEventListener('pointerdown', pulsar);
-        boton.addEventListener('pointerup', soltar);
-        boton.addEventListener('pointerleave', soltar);
-        boton.addEventListener('pointercancel', soltar);
-        // Un toque suelto avanza un poco, para quien solo da golpecitos.
-        boton.addEventListener('click', (e) => {
-            e.preventDefault();
-            tour.press(accion);
-            setTimeout(() => tour.release(accion), 260);
-        });
-    });
-}
-
 async function setUpNavigation(app, camera) {
     const isEditor = new URLSearchParams(window.location.search).has('editor');
     const trail = await loadTrail();
@@ -258,10 +229,11 @@ async function setUpNavigation(app, camera) {
     const tour = new TourEngine(app, camera, trail, { speed: 1.2 });
     tour.start();
     window.senderoTour = tour;
-    wireNavPad(tour);
+    // Flechas dentro de la escena, sobre el camino: se tocan para avanzar.
+    window.senderoMarkers = new TrailMarkers(app, camera, tour, { stepDistance: 2.5 });
 
     showHint(
-        'Avanza con las <strong>flechas</strong> de la pantalla o con <strong>W A S D</strong> · ' +
+        'Toca las <strong>flechas del camino</strong> para avanzar · también <strong>W A S D</strong> · ' +
         '<strong>Shift</strong> más rápido · arrastra para mirar en 360°<br>' +
         '<span id="hud-progress">0 % del recorrido</span>'
     );

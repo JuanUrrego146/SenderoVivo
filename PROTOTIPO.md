@@ -34,7 +34,7 @@ Eso es todo. No hay build, no hay dependencias que instalar.
 
    | Gesto | Acción |
    |---|---|
-   | **Flechas en pantalla** | Avanzar, retroceder y moverse a los lados (como en un mapa) |
+   | **Flechas del camino** | Tocarlas avanza o retrocede, como en un visor de calles |
    | **W** / **S** | Avanzar y retroceder por el sendero |
    | **A** / **D** | Desplazarse a los lados, dentro del margen permitido |
    | **Shift** | Ir más rápido |
