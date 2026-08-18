@@ -197,6 +197,10 @@ async function startViewer(sceneUrl, sceneUp) {
     camera.addComponent('camera', {
         clearColor: colorFromToken('--sv-black-900')
     });
+    // El oyente del audio espacial es la cámara activa. Con este componente, cualquier
+    // fuente posicional que cree src/audio/ se espacializa sola conforme TourEngine
+    // mueve y gira la cámara: el módulo de audio no necesita tocarla (invariante 12).
+    camera.addComponent('audiolistener');
     app.root.addChild(camera);
 
     const splat = new Entity('scene');

@@ -205,11 +205,18 @@ export class TourEngine {
     }
 
     _emitProgress() {
+        const pos = this.camera.getPosition();
         this.app.fire('tour:progress', {
             distance: this.distance,
             total: this.trailPath.totalLength(),
             // distanceMeters lo completará TrailDataLayer cuando exista la escala real.
-            distanceMeters: null
+            distanceMeters: null,
+            // Posición y orientación para quien las necesite: audio espacial, POIs por
+            // cercanía, HUD. Se publican aquí para que ningún otro módulo tenga que leer
+            // la cámara, que es lo que prohíbe el invariante 13.
+            position: { x: pos.x, y: pos.y, z: pos.z },
+            yaw: this.yaw,
+            pitch: this.pitch
         });
     }
 }

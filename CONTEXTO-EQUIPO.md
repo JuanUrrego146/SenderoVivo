@@ -124,6 +124,41 @@ app.on('tour:progress', ({ distance, total, distanceMeters }) => {
 
 - Para abrir una ficha sin perder la posición: `tour.saveState()` y `tour.restoreState(estado)`.
 
+El evento trae todo lo que necesitas saber del visitante:
+
+```javascript
+app.on('tour:progress', ({ distance, total, position, yaw, pitch }) => {
+    // distance / total : avance sobre el trazado, en unidades del motor
+    // position         : {x, y, z} dónde está exactamente
+    // yaw / pitch      : hacia dónde mira, en grados
+});
+```
+
+### Audio espacial: lo que ya está resuelto
+
+**La cámara ya tiene el oyente** (`audiolistener`). Eso significa que cualquier fuente
+posicional que crees se espacializa **sola** conforme el visitante avanza y gira: no
+tienes que calcular nada ni leer la cámara.
+
+```javascript
+const fuente = new pc.Entity('cauce');
+fuente.addComponent('sound', {
+    positional: true,          // esto activa la espacialización
+    distanceModel: 'linear',
+    refDistance: 2,
+    maxDistance: 25
+});
+fuente.setPosition(x, y, z);   // la posición sale de config/soundscape.json (anchor)
+fuente.sound.addSlot('agua', { asset: assetAudio, loop: true, autoPlay: false });
+app.root.addChild(fuente);
+```
+
+Lo binaural de verdad lo da `panningModel: 'HRTF'` en el nodo de la Web Audio API. Cuesta
+CPU, y por eso RNF-016 limita cuántas fuentes suenan a la vez (4 en escritorio, 2 en móvil).
+Usa `tour:progress` para activar y desactivar fuentes según la distancia.
+
+**`autoPlay: false` siempre**: nada suena sin un gesto del usuario (RNF-008).
+
 ---
 
 ## 5. Los archivos de configuración mandan
