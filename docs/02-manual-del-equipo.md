@@ -1,7 +1,7 @@
-# Principios de trabajo: Sendero Vivo
+# Manual del equipo: Sendero Vivo
 
-> Punto 1 de la actividad del curso (primera mitad).
-> Acordado en la reunión de inicio del **11 de agosto de 2026**.
+> Versión 1,1, 17 de agosto de 2026 (antes «principios de trabajo», 01).
+> Acordado en la reunión de inicio del **11 de agosto de 2026**; el acta está al final.
 > Vigente durante las 15 semanas del proyecto (11 ago – 28 nov de 2026).
 
 Este documento es el contrato de trabajo del equipo. No describe cómo queremos trabajar en abstracto: describe qué se considera aceptable y qué no, para un equipo de seis personas que además es primerizo en las tres tecnologías centrales del proyecto (Gaussian Splatting, SuperSplat/SOG y PlayCanvas) al mismo tiempo.
@@ -11,13 +11,13 @@ Este documento es el contrato de trabajo del equipo. No describe cómo queremos 
 ## 1. Los cinco principios
 
 ### P1: Lo capturado manda sobre lo modelado
-El sendero es un lugar real dentro de una reserva protegida. La geometría del recorrido sale de la captura fotogramétrica, no del criterio artístico de nadie. Si la reconstrucción de una zona sale mal, se vuelve a capturar o se recorta el tramo: **no se modela a mano un pedazo de sendero para "arreglarlo"**. Lo que sí se modela es lo que la captura no puede resolver (aves, plantas de detalle, el puente, la señalización), y eso va siempre declarado como pieza modelada, no como parte del terreno.
+El sendero es un lugar real dentro de una reserva protegida. La geometría del recorrido sale de la captura fotogramétrica, no del criterio artístico de nadie. Si la reconstrucción de una zona sale mal, se vuelve a capturar o se recorta el tramo: **no se modela a mano un pedazo de sendero para "arreglarlo"**. Lo que sí se modela es lo que la captura no puede resolver (aves, plantas de detalle, el puente `[por confirmar en V1 que existe en el tramo]`, la señalización), y eso va siempre declarado como pieza modelada, no como parte del terreno.
 
 ### P2: El alcance está cerrado y no se negocia por entusiasmo
-La lista de "no lo hacemos" (README y `docs/02-vision-de-proyecto.md`) es tan vinculante como la de "sí". Una idea nueva no entra al sprint: entra al backlog, y solo se discute en la revisión de sprint. Nadie implementa nada que no esté trazado a un RF. Si una tarea no cita un RF o RNF, o sobra la tarea o falta el requerimiento, y entonces se agrega el requerimiento primero.
+La lista de "no lo hacemos" ([`01-vision-y-alcance.md`](01-vision-y-alcance.md) §4.2) es tan vinculante como la de "sí". Una idea nueva no entra al sprint: entra al backlog, y solo se discute en la revisión de sprint. Nadie implementa nada que no esté trazado a un RF. Si una tarea no cita un RF o RNF, o sobra la tarea o falta el requerimiento, y entonces se agrega el requerimiento primero.
 
 ### P3: Nadie se bloquea más de un día en silencio
-Somos primerizos en el stack. Atascarse es lo esperado, no la excepción. Lo inaceptable es atascarse callado. Regla dura: **24 horas hábiles de bloqueo sin avance ⇒ se escribe en el canal del equipo**, con qué se intentó y qué falló. Pedir ayuda a tiempo no es debilidad; es la única forma de que 14 semanas alcancen.
+Somos primerizos en el stack. Atascarse es lo esperado, no la excepción. Lo inaceptable es atascarse callado. Regla dura: **24 horas hábiles de bloqueo sin avance ⇒ se escribe en el canal del equipo**, con qué se intentó y qué falló. Pedir ayuda a tiempo no es debilidad; es la única forma de que quepan **16 semanas de esfuerzo en 14 de calendario dejando la semana 15 entera para el cierre**.
 
 ### P4: Espacios listos antes de que lleguen los demás
 El integrador (Juan) deja preparados los contratos de datos, las carpetas y los puntos de extensión **antes** de que artistas y programadores necesiten usarlos. Un artista no debe esperar a que exista el motor para exportar un modelo, ni un programador debe inventarse el formato del JSON de POIs. Esto es lo que permite que E3 (modelado) corra en paralelo con E1 (procesamiento).
@@ -33,18 +33,18 @@ Una historia está **hecha** cuando cumple **todos** estos puntos. No hay "hecho
 
 | # | Criterio | Cómo se verifica |
 |---|---|---|
-| 1 | Cumple todos sus criterios de aceptación | Quien revisa los recorre uno por uno en la PR |
-| 2 | Cita el/los RF o RNF que implementa | Enlace en la descripción de la issue/PR |
-| 3 | Funciona en Chrome escritorio **y** en un celular real | Captura o video corto adjunto a la PR |
+| 1 | Cumple todos sus criterios de aceptación | Quien revisa los recorre uno por uno contra la issue |
+| 2 | Cita el/los RF o RNF que implementa | Enlace en la descripción de la issue |
+| 3 | Funciona en Chrome escritorio **y** en un celular real | Se abre la **URL de la rama** (`https://dev-<nombre>.senderovivo.pages.dev`) desde el celular; ya no hace falta adjuntar video |
 | 4 | No baja de 30 fps en el celular de referencia | Medición con el profiler de PlayCanvas o contador en pantalla |
-| 5 | Revisada y aprobada por otra persona | 1 aprobación obligatoria en la PR |
-| 6 | Fusionada a `develop` sin conflictos pendientes | CI/checks en verde |
-| 7 | Documentada si cambia un contrato de datos | Actualización de `context-for-vibe-coding.md` en la misma PR |
+| 5 | Revisada y aprobada por otra persona | El revisor de la carpeta (§4) revisa los commits o la URL de la rama y deja su visto bueno en la issue |
+| 6 | Integrada a `develop` sin conflictos pendientes | Verificación manual (CONTEXTO-EQUIPO §8) + el despliegue de Cloudflare Pages en verde |
+| 7 | Documentada si cambia un contrato de datos | Actualización de `CONTEXTO-EQUIPO.md` y de `docs/03-arquitectura.md` §6 en el mismo cambio |
 | 8 | Los textos visibles están en español | Revisión visual |
 
 ### "Hecho" para piezas que no son código
 
-- **Escena capturada:** procesada, limpia en SuperSplat, comprimida a SOG, dentro del presupuesto de peso, cargando en el visor y declarada en `scenes.json`.
+- **Escena capturada:** procesada, limpia en SuperSplat, **exportada como carpeta SOG desempaquetada** (`assets/scenes/<id>/` con `meta.json` + `.webp` — nunca el `.sog` empaquetado, que supera el límite de 25 MiB por archivo de Cloudflare), dentro del presupuesto de peso, **con su `sceneUp` medido y anotado**, cargando derecha en el visor y declarada en `scenes.json`.
 - **Modelo 3D:** dentro del presupuesto de triángulos y de peso, exportado a `.glb`, con nombre común y científico verificados, cargando en el visor de ficha sin errores de material.
 - **Pantalla de UI:** con estados de carga, error y vacío resueltos; contraste AA verificado; probada en 375 px de ancho.
 - **Documento:** revisado por una segunda persona y con la fecha de la versión actualizada.
@@ -66,15 +66,25 @@ main                       ← solo versiones entregables (hitos y entrega final
     └── dev/alberto-aleman
 ```
 
-**Reglas:**
+**Reglas (modelo vigente desde el 13/08: sin Pull Requests, con push directo):**
 
-1. `main` y `develop` están protegidas: nadie hace push directo. Solo se entra por Pull Request.
-2. **Cada persona trabaja en su propia rama `dev/<nombre>`.** Es su espacio: puede subir a ella cuando quiera y todas las veces que quiera, sin pedir permiso ni romperle nada a nadie.
-3. Si alguien quiere separar una historia concreta, abre una rama hija de la suya:
-`dev/alejandra-chambueta/HU-18-avance-retroceso`. Es opcional.
-4. **La rama de cada persona se fusiona a `develop` por Pull Request al menos una vez por semana**, coincidiendo con la entrega semanal del viernes. Una rama que lleva más de una semana sin fusionarse es un problema que se dice en la sincronización, no en la demo.
-5. `develop` → `main` solo en los hitos: fin de S4 (motor navegable), fin de S6 (experiencia completa) y entrega final.
-6. **Antes de empezar el día, `git pull` de `develop` a tu rama.** El reparto por carpetas (ver [`09-ambitos-de-los-tres-programadores.md`](09-ambitos-de-los-tres-programadores.md)) hace que los conflictos sean raros, pero raros no es ninguno.
+1. **Cada persona trabaja en su propia rama `dev/<nombre>` y hace push directo a ella.** Es su espacio: sube cuando quiera y todas las veces que quiera, sin pedir permiso ni romperle nada a nadie. Cada push despliega solo su URL de rama.
+2. Si alguien quiere separar una historia concreta, abre una rama hija de la suya: `dev/alejandra-chambueta/HU-18-avance-retroceso`. Es opcional.
+3. **La rama de cada persona se integra a `develop` al menos una vez por semana**, coincidiendo con la entrega semanal del viernes. La integración la hace **Juan (integrador)** mediante merge directo, después de la revisión de §4. Una rama que lleva más de una semana sin integrarse es un problema que se dice en la sincronización, no en la demo.
+4. `develop` → `main` solo en los hitos: fin de S4 (motor navegable), fin de S6 (experiencia completa) y entrega final.
+5. **Antes de empezar el día, `git pull` de `develop` a tu rama.** El reparto por carpetas ([`03-arquitectura.md`](03-arquitectura.md)) hace que los conflictos sean raros, pero raros no es ninguno.
+
+### 3.1 Despliegue continuo por rama
+
+Cada push a cualquier rama publica automáticamente en Cloudflare Pages:
+
+| Rama | URL |
+|---|---|
+| `develop` (producción) | <https://senderovivo.pages.dev> |
+| `dev/<nombre>` | `https://dev-<nombre>.senderovivo.pages.dev` (ej.: `dev-david-beltran.senderovivo.pages.dev`) |
+
+La URL de rama es el medio de prueba en celular (DoD fila 3) y el medio de revisión (§4). El
+despliegue tarda 1–2 minutos tras el push.
 
 > **Por qué por persona y no por épica.** Las épicas se solapan, S2b corre en paralelo con S2, y S5 y S6 comparten módulos con S3 y S4, así que una rama por épica acaba con dos personas dentro. Una rama por persona no tiene esa ambigüedad: si hay un conflicto, hay exactamente dos nombres que hablar.
 
@@ -93,8 +103,12 @@ El tipo va en inglés (`feat`, `fix`, `docs`, `chore`, `refactor`, `perf`, `test
 
 ## 4. Revisión de código
 
-- **Una aprobación obligatoria** por PR. Nunca se aprueba el propio trabajo.
-- **Revisa el dueño de la carpeta.** Cada carpeta tiene uno (ver [`09-ambitos-de-los-tres-programadores.md`](09-ambitos-de-los-tres-programadores.md)), y eso da el revisor sin discutirlo:
+Sin PRs, la revisión no desaparece: cambia de lugar. **Se revisa sobre los commits de la rama
+y sobre su URL desplegada**, y el visto bueno queda escrito en la issue de la historia antes
+de que Juan integre a `develop`.
+
+- **Una aprobación obligatoria** por historia. Nunca se aprueba el propio trabajo.
+- **Revisa el dueño de la carpeta.** Cada carpeta tiene uno (ver [`03-arquitectura.md`](03-arquitectura.md)), y eso da el revisor sin discutirlo. **Esta tabla es la única copia de la regla de revisores:**
 
   | Autor | Revisor por defecto |
   |---|---|
@@ -105,17 +119,17 @@ El tipo va en inglés (`feat`, `fix`, `docs`, `chore`, `refactor`, `perf`, `test
   | Felipe (`assets/`) | **Juan** |
 
 Juan no es revisor único de nada: si él integra y además revisa todo, deja de haber revisión.
-- **Tamaño máximo recomendado:** 400 líneas de diff. Una PR más grande se parte, salvo que sea generada (assets, datos).
-- **Plazo de respuesta:** 24 horas hábiles. Pasado ese plazo, quien abrió la PR la escala en el canal del equipo.
+- **Tamaño máximo recomendado:** 400 líneas de diff por revisión. Un cambio más grande se parte, salvo que sea generado (assets, datos).
+- **Plazo de respuesta:** 24 horas hábiles. Pasado ese plazo, quien pidió la revisión la escala en el canal del equipo.
 - **Qué se revisa, en este orden:**
   1. ¿Hace exactamente lo que dice el RF citado? ¿Ni más ni menos?
   2. ¿Rompe algún RNF vigente (fps, peso, contraste, español)?
-  3. ¿Respeta los invariantes de arquitectura de `docs/arquitectura.md`?
-  4. ¿Introduce dependencias nuevas? Si sí, ¿está justificado en la PR?
+  3. ¿Respeta los invariantes de arquitectura de `docs/03-arquitectura.md`?
+  4. ¿Introduce dependencias nuevas? Si sí, ¿está justificado en la issue?
   5. Legibilidad y nombres (código y variables en inglés).
-- **Tono:** se comenta el código, no a la persona. Una objeción sin propuesta alternativa no bloquea la PR.
+- **Tono:** se comenta el código, no a la persona. Una objeción sin propuesta alternativa no bloquea la integración.
 
-**PRs que NO requieren revisión de código:** solo documentación (`docs/**.md`) y subida de assets brutos. Todo lo demás sí.
+**Cambios que NO requieren revisión de código:** solo documentación (`docs/**.md`) y subida de assets brutos. Todo lo demás sí.
 
 ---
 
@@ -148,7 +162,7 @@ Juan no es revisor único de nada: si él integra y además revisa todo, deja de
 | **Canal de chat del equipo** | Coordinación diaria, bloqueos, preguntas rápidas | Mismo día hábil |
 | **Issues de GitHub** | Todo lo que sea trabajo: alcance, criterios, discusión técnica de una historia | 24 h hábiles |
 | **Pull Requests** | Discusión sobre código concreto | 24 h hábiles |
-| **Jira (proyecto SCRUM)** | Estado del sprint, tablero, puntos, seguimiento del cronograma | Actualización diaria por cada quien |
+| **Jira (proyecto SCRUM)** | Estado del sprint, tablero, puntos, seguimiento del cronograma | Actualización diaria por cada quien. **GitHub lleva el detalle de cada historia; Jira es su espejo con resumen y enlace** (acordado el 13/08). `plan/backlog-jira.csv` y `scripts/sync-github.mjs` quedaron **deprecados**: el backlog se edita directo en GitHub y en Jira |
 | **Reuniones (ver §5)** | Decisiones que requieren acuerdo del grupo | En el momento |
 | **`docs/decisiones/ADR-*.md`** | Decisiones de arquitectura o de alcance que hay que poder justificar meses después | Permanente |
 
@@ -177,9 +191,10 @@ Se convoca la revisión técnica de riesgo (§5). De ahí sale **una** de estas 
 3. **Se reduce**, la historia se recorta a una versión más simple que sigue cumpliendo el RF, y se anota qué se recortó.
 4. **Se aplaza y se aísla**, sale del sprint, se marca `blocked` en GitHub, y se documenta qué la desbloquearía.
 
-**Bloqueos técnicos ya anticipados** (con su plan de choque en `docs/03-avances-tecnologia.md`):
-- La reconstrucción de la vegetación densa sale con ruido o "flotantes".
-- La escena SOG pesa más de lo que aguanta un celular de gama media.
+**Bloqueos técnicos ya anticipados** (detalle y planes de choque en
+[`01-vision-y-alcance.md`](01-vision-y-alcance.md) §6, R1–R3):
+- La reconstrucción de la vegetación densa sale con ruido o "flotantes". *(Ya pasó con la escena de prueba: la receta de limpieza que funciona está en [`05-produccion-de-escenas.md`](05-produccion-de-escenas.md) §12.4 y §17.)*
+- La escena SOG pesa más de lo que aguanta un celular de gama media. *(Ya no es un riesgo anticipado: está **medido** — 70 MB, 58,7 s a 10 Mbps. La respuesta es el techo de 1,5 M de gaussianas de [`05-produccion-de-escenas.md`](05-produccion-de-escenas.md) §14.)*
 - El clima impide la salida de campo en la ventana prevista.
 
 ---
@@ -208,7 +223,7 @@ Este equipo es de seis personas con carga académica simultánea. Que alguien no
 
 Estas no son negociables porque el proyecto se hace dentro de una reserva natural protegida y sobre información biológica que la gente va a creerse.
 
-1. **Nada de datos inventados.** Altitudes, distancias, desniveles, alturas de distribución de una especie: o están medidos/verificados, o van marcados como `[por medir en campo]`. Un dato inventado en una ficha de fauna es un error del proyecto, no un detalle.
+1. **Nada de datos inventados.** Altitudes, distancias, desniveles, alturas de distribución de una especie: o están medidos/verificados, o van marcados con la marca de pendiente que corresponda. **La lista de marcas es cerrada** — `[por medir en campo]` (dato físico que exige ir al sitio), `[por verificar]` (dato que exige fuente citable), `[por completar]` (contenido editorial pendiente), `[por definir …]` y `[por confirmar …]` (decisiones pendientes) — y ningún agente ni persona normaliza una a otra: significan cosas distintas. Un dato inventado en una ficha de fauna es un error del proyecto, no un detalle.
 2. **Nombre científico verificado** contra una fuente ornitológica o botánica citable antes de publicar cualquier ficha.
 3. **En campo se respeta el trazado autorizado.** La captura no sale del sendero. Ni por un mejor ángulo.
 4. **Reserva previa obligatoria** por la app del Acueducto para cada salida, como cualquier visitante.
@@ -224,9 +239,11 @@ Estas no son negociables porque el proyecto se hace dentro de una reserva natura
 | Idioma de código, variables, funciones, ramas | **Inglés** |
 | Formato de fechas en documentos | `DD/MM/AAAA` |
 | Identificadores | `RF-0NN`, `RNF-0NN`, `CUS-0NN`, `HU-NN`, `ADR-0NN` |
-| Etiquetas de sprint | `S1`, `S2`, `S2b`, `S3` … `S7` |
+| Etiquetas de sprint | `S1`, `S2`, `S2b`, `S3` … `S7`, `Cierre` |
+| Etiquetas de semana | `W01` … `W15` |
+| Nombres en código | `camelCase` funciones y variables · `PascalCase` clases · `kebab-case` archivos de assets |
 | Unidades | Sistema métrico. Altitud en msnm, distancia en m, pendiente en % |
-| Assets pesados | Nunca en Git. Ver `.gitignore` |
+| Assets pesados | El material **bruto** nunca en Git (`assets/raw/`, `*.ply`, `*.sog`, video). **Excepción del 14/08:** las escenas procesadas en SOG **desempaquetado** (`assets/scenes/<id>/`, `meta.json` + `.webp`) sí se versionan. Ver `.gitignore` |
 
 ---
 

@@ -1,6 +1,7 @@
 # ADR-002: Nivel de detalle por proximidad al recorrido
 
 > Fecha: 11/08/2026 · Estado: **Aceptada** · Responsable: Juan Urrego, con Alejandra Chambueta
+> **Estado hoy (18/08/2026):** la mitad de CAPTURA (banda de alta densidad, ocho pasadas, alturas) quedó operativa en [`../05-produccion-de-escenas.md`](../05-produccion-de-escenas.md) §9, que es la copia normativa; aquí queda el porqué. La mitad de RENDER (lodBaseDistance/lodMultiplier) sigue pendiente de implementar en `LodController` (S4, validación V13).
 > Requerimiento que crea: **RF-027**
 
 ---

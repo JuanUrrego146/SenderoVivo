@@ -1,7 +1,7 @@
-# Avances a nivel de tecnología: Sendero Vivo
+# Tecnología: el stack y el registro de validaciones
 
-> Punto 2 de la actividad del curso.
-> Investigación realizada entre el 4 y el 11 de agosto de 2026.
+> Versión 1,1, 17/08/2026 (antes «avances a nivel de tecnología», 03).
+> Investigación original del 4 al 11 de agosto de 2026; validaciones actualizadas al 17/08.
 > Responsable: Juan Urrego, con aportes de Alejandra Chambueta (motor) y Felipe Acevedo (assets).
 
 Este documento registra qué se investigó, qué se descargó y probó, qué se aprendió y, sobre todo, **qué quedó sin validar**. Las tres tecnologías centrales son nuevas para todo el equipo, así que la parte más útil de este documento es la última: la lista de lo que todavía no sabemos.
@@ -72,34 +72,12 @@ El Gaussian Splatting es el único de los tres que produce **el lugar capturado*
 
 ---
 
-## 3. Captura: qué recomienda la documentación
+## 3. Captura
 
-La guía de captura de PlayCanvas es la fuente que estamos siguiendo. Contrastada con nuestro protocolo:
-
-| Parámetro | Recomendación documentada | Nuestro protocolo | Estado |
-|---|---|---|---|
-| Dispositivo | iPhone 13 Pro+, Pixel 7+, Galaxy S22+ | iPhone 13 o equivalente |  Alineado |
-| Resolución de video | **4K mínimo** (1080p no da suficiente detalle) | 4K |  |
-| Cuadros por segundo | **60 fps o más** | 60 fps |  |
-| Obturación | **mínimo 1/125 s** a pulso | 1/125 o más rápida |  |
-| ISO | 100–400 (200–400 en día nublado) | Manual, lo más bajo posible |  |
-| Exposición | **Bloqueada en manual**, evita parpadeo entre cuadros | Todo manual |  Crítico |
-| Foco | **Manual, muy preferible** | Manual |  |
-| Balance de blancos | Fijo | Manual |  |
-| Iluminación | Día nublado: luz suave y uniforme | Día nublado, sin viento, primera hora |  |
-| Solapamiento | 70–80 % entre vistas contiguas | Varias pasadas caminando despacio |  Por validar en campo |
-| Extracción de cuadros | Cada 2.º–5.º cuadro según velocidad | Por definir tras la primera prueba |  |
-| Qué evitar | Superficies reflectantes, objetos en movimiento, cambios de exposición | |  El agua del cauce y el follaje al viento son exactamente esto |
-
-### 3.1 Un hallazgo que hay que resolver antes de la salida
-
-La documentación recomienda una focal equivalente de **35–85 mm** y desaconseja explícitamente los **ultra gran angular (< 24 mm)**. Nuestro protocolo dice "lente fija en 1x". En un iPhone 13, el 1x (lente principal) equivale a **~26 mm**, es decir, justo por debajo del rango recomendado.
-
-**No cambiamos el stack ni el dispositivo.** Pero esto entra como tarea explícita de la preparación del Sprint 1: hacer una prueba corta comparando 1x contra 2x (teleobjetivo/recorte) en el sendero y decidir con evidencia. El 1x da más contexto por cuadro y menos pasadas; el 2x se acerca al rango recomendado pero exige muchas más pasadas para cubrir el mismo tramo. La decisión queda registrada en la issue de la historia HU-02.
-
-### 3.2 Qué más se registra en campo
-
-Además del video: **track GPS** del recorrido, **audio ambiente y cantos**, **una foto por POI**, y **un objeto de tamaño conocido** dentro de la escena para dar escala. Lo último es lo que permite que la capa de datos (altitud, distancia, desnivel) se corresponda con la geometría reconstruida y no con unidades arbitrarias del entrenamiento.
+La comparación entre lo que recomienda la documentación de PlayCanvas y nuestro protocolo,
+el hallazgo de la focal (1x ≈ 26 mm, validación V1) y qué más se registra en campo viven
+ahora en [`05-produccion-de-escenas.md`](05-produccion-de-escenas.md) §8, junto al protocolo
+completo de captura. Aquí no se repiten.
 
 ---
 
@@ -336,14 +314,14 @@ El entrenamiento produce una escena en unidades arbitrarias y con orientación a
 
 ---
 
-## 8. Qué queda por validar
+## 8. Registro único de validaciones
 
-Lista abierta. Cada punto tiene dueño y sprint. Ninguno está resuelto hoy.
+Lista abierta; cada punto tiene dueño y sprint. **Es el único registro de validaciones del proyecto**: los demás documentos enlazan aquí. Las validaciones marcadas RESUELTA tienen su evidencia en el documento citado.
 
 | # | Pregunta abierta | Dueño | Se resuelve en |
 |---|---|---|---|
 | V1 | ¿1x o 2x en la captura, dado que 1x (~26 mm) queda bajo el rango recomendado? | Juan Urrego | S1 |
-| V2 | ~~¿Cada cuántos cuadros se extraen imágenes del video 4K60?~~ **RESUELTA:** 1 de cada 30 registra el 89 %; usar 1 de cada 20. Ver [doc 12](12-parametros-de-entrenamiento.md) | Juan Urrego | ✅ 17/08 |
+| V2 | ~~¿Cada cuántos cuadros se extraen imágenes del video 4K60?~~ **RESUELTA:** 1 de cada 30 registra el 89 %; usar 1 de cada 20. Ver [05-produccion-de-escenas.md](05-produccion-de-escenas.md) | Juan Urrego | ✅ 17/08 |
 | V3 | ~~¿Cuántas gaussianas necesita el tramo?~~ **RESUELTA:** 1,5 M por escena; más no mejora y rompe el presupuesto móvil | Juan Urrego | ✅ 17/08 |
 | V4 | ¿Cuánto pesa realmente una escena nuestra en SOG? → fija RNF-003 | Juan Urrego | S2 |
 | V5 | ~~¿Cuánto tarda el entrenamiento?~~ **RESUELTA:** ~5 h por escena (3,5 h COLMAP + 1,5 h Brush) en la RTX 3060 Ti | Juan Urrego | ✅ 17/08 |

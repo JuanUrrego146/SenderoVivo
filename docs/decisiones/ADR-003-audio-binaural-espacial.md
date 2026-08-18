@@ -1,6 +1,7 @@
 # ADR-003: Ambientación sonora binaural con audio espacial 3D
 
 > Fecha: 11/08/2026 · Estado: **Aceptada** · Responsable: David Beltrán, con Juan Urrego
+> **Estado hoy (18/08/2026):** la especificación vigente vive en [`../06-contenido-de-la-experiencia.md`](../06-contenido-de-la-experiencia.md) §C (si discrepan, manda esa). El oyente (`audiolistener`) ya está en la cámara del visor y `tour:progress` publica posición y orientación; `config/soundscape.json` existe como esqueleto. El enunciado que sobrevive de RNF-016 es el de este ADR: **4 fuentes en escritorio, 2 en móvil** [por medir en S4]. A3 (HRTF en Safari iOS) ya se puede probar contra la URL publicada.
 > Requerimientos que crea: **RF-028**, **RNF-016**
 
 ---
@@ -92,4 +93,4 @@ Sin las cinco, la decisión rompe RNF-008. Con ellas, lo respeta.
 - Refuerza **RNF-008** (nunca automático) y **RNF-006** (alternativa textual).
 - Tensiona **RNF-001** (30 fps): por eso RNF-016 existe.
 - Se implementa en `src/audio/`, ámbito de **David Beltrán**.
-- Diseño completo: [`../08-ambientacion-sonora.md`](../08-ambientacion-sonora.md).
+- Diseño completo: [`../06-contenido-de-la-experiencia.md`](../06-contenido-de-la-experiencia.md).

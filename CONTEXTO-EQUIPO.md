@@ -88,18 +88,22 @@ que no cabe es el PLY de la escena, y para programar encima no hace falta (§8 b
 
 | Pieza | Estado | Archivo |
 |---|---|---|
-| Carga de escenas Gaussian Splatting | ✅ funciona | `src/app/main.js` |
-| Recorrido guiado sobre el trazado (RF-004) | ✅ funciona | `src/engine/TourEngine.js` |
+| Carga de escenas Gaussian Splatting (nivelación `sceneUp`, AABB, espera de render estable) | ✅ funciona | `src/engine/SceneLoader.js` |
+| Orquestación de la aplicación | ✅ funciona | `src/app/main.js` (solo cablea; la lógica vive en los módulos) |
+| Recorrido guiado sobre el trazado (RF-004) | ✅ funciona | `src/engine/TourEngine.js` (API pública: `moveTo`, `advance`, `saveState`, `restoreState`) |
 | Trazado con corredor lateral | ✅ funciona | `src/engine/TrailPath.js` |
 | Flechas de avance en el mundo 3D | ✅ funciona | `src/engine/TrailMarkers.js` |
 | Editor para marcar el trazado | ✅ funciona | `src/engine/TrailRecorder.js` |
 | Mirada libre 360° (RF-005) | ✅ funciona | `TourEngine` |
-| Estados de carga y error sin pantalla negra | ✅ funciona | `src/app/main.js` |
+| Estados de carga y error sin pantalla negra (RNF-007) | ✅ funciona | `src/ui/overlay.js` |
+| Tokens de color como hoja de estilos | ✅ funciona | `styles/tokens.css` (única fuente de color) + `styles/app.css` + `src/ui/tokens.js` |
 | Escena de prueba (parque) | ✅ 3,89 M gaussianas | `assets/scenes/scene-01/` |
+| Contrato de audio | ✅ esqueleto | `config/soundscape.json` (con `sources` vacío, listo para V3) |
+| Modelo de Felipe (fuente Maya + texturas) | ✅ en el repo, sin integrar | `assets/models/golondrina-plomiza-fuente/` |
 | **Puntos de interés** | ❌ por hacer | `src/poi/` |
 | **Audio** | ❌ por hacer | `src/audio/` |
 | **Capa de datos GPS** | ❌ por hacer | `src/data/` |
-| **Sistema de diseño / tokens** | ❌ por hacer | `styles/` |
+| **Componentes de diseño** (ficha, HUD definitivo) | ❌ por hacer | `styles/` + `src/ui/` |
 
 ---
 
@@ -324,7 +328,7 @@ empaquetado: el hosting rechaza archivos de más de 25 MB y un `.sog` entero los
 
 Después hay dos datos que van a `config/scenes.json`: la ruta al `meta.json` y el
 **`sceneUp`** de esa escena (sin él sale torcida). Cómo se calcula está en
-[`docs/12-parametros-de-entrenamiento.md`](docs/12-parametros-de-entrenamiento.md), junto
+[`docs/05-produccion-de-escenas.md`](docs/05-produccion-de-escenas.md), junto
 con los parámetros de entrenamiento medidos y la receta recomendada.
 
 ### Probar otra escena sin tocar la configuración
@@ -361,11 +365,11 @@ en cada punto, **Z** deshace y **X** descarga el `track.json`. Lo reemplazas en 
 
 ## 10. Documentación de referencia
 
-- **Arquitectura, diagramas y contratos:** `docs/arquitectura.md`
+- **Arquitectura, diagramas y contratos:** `docs/03-arquitectura.md`
 - **Requerimientos (32 RF, 16 RNF, 15 CUS):** `docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.md`
-- **Guía de captura en campo:** `docs/11-guia-de-captura-en-campo.md`
-- **Catálogo de fauna verificado:** `docs/05-catalogo-fauna-y-flora.md`
-- **Ámbitos y fronteras entre módulos:** `docs/09-ambitos-de-los-tres-programadores.md`
+- **Guía de captura en campo:** `docs/05-produccion-de-escenas.md`
+- **Catálogo de fauna verificado:** `docs/06-contenido-de-la-experiencia.md`
+- **Ámbitos y fronteras entre módulos:** `docs/03-arquitectura.md`
 - **Documentación oficial de PlayCanvas:** https://developer.playcanvas.com/user-manual/gaussian-splatting/
 
 ---
@@ -386,6 +390,6 @@ en cada punto, **Z** deshace y **X** descarga el `track.json`. Lo reemplazas en 
 ## 12. Si algo no está aquí
 
 Antes de preguntar, mira en este orden: este documento →
-`docs/arquitectura.md` → la issue que estás resolviendo (tiene una sección de ámbito con
+`docs/03-arquitectura.md` → la issue que estás resolviendo (tiene una sección de ámbito con
 los archivos exactos que tocas). Si después de eso sigue sin estar claro, escribe en la
 issue: así queda registrado para el resto.

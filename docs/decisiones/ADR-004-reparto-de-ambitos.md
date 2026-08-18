@@ -1,6 +1,7 @@
 # ADR-004: Reparto de ámbitos entre los tres programadores
 
 > Fecha: 11/08/2026 · Estado: **Aceptada** · Responsable: Juan Urrego
+> **Estado hoy (18/08/2026):** la tabla normativa de dueños y las tres fronteras CON LAS FIRMAS REALES viven en [`../03-arquitectura.md`](../03-arquitectura.md) §10; los nombres de método citados abajo quedaron superados por el código (`saveState()`/`restoreState(state)`, evento vía `app.fire/app.on`). Este ADR conserva el porqué y las alternativas descartadas.
 
 ---
 
@@ -32,7 +33,7 @@ Se definen **exactamente tres fronteras** entre ámbitos, cada una con su contra
 2. **POIs → Motor**: `PoiCard` llama a `saveCameraState()` / `restoreCameraState()`. No toca la cámara.
 3. **Motor → Audio**: `QualityProfile` expone `maxSpatialAudioSources`. El audio no configura el motor.
 
-Detalle completo en [`../09-ambitos-de-los-tres-programadores.md`](../09-ambitos-de-los-tres-programadores.md).
+Detalle completo en [`../03-arquitectura.md`](../03-arquitectura.md).
 
 ---
 
@@ -59,13 +60,13 @@ Detalle completo en [`../09-ambitos-de-los-tres-programadores.md`](../09-ambitos
 **Negativas y riesgos**
 
 - **Riesgo de silo.** Se mitiga con la revisión cruzada obligatoria y con el principio P3 (nadie se bloquea más de un día en silencio).
-- **Riesgo de cuello de botella si alguien falta.** Se mitiga con el procedimiento de `01-principios-de-trabajo.md` §8: se empareja antes de reasignar.
+- **Riesgo de cuello de botella si alguien falta.** Se mitiga con el procedimiento de `02-manual-del-equipo.md` §8: se empareja antes de reasignar.
 - **Juan concentra integración y `config/`.** Es el mismo desequilibrio ya identificado en el plan de trabajo §7; por eso no es además revisor único de nada.
 
 ---
 
 ## Trazabilidad
 
-- Modifica la tabla de revisores de [`../01-principios-de-trabajo.md`](../01-principios-de-trabajo.md) §4.
-- Modifica la estructura de carpetas de [`../arquitectura.md`](../arquitectura.md) §9.
+- Modifica la tabla de revisores de [`../02-manual-del-equipo.md`](../02-manual-del-equipo.md) §4.
+- Modifica la estructura de carpetas de [`../arquitectura.md`](../03-arquitectura.md) §9.
 - Habilita la implementación de **RF-027** (LOD) y **RF-028** (audio espacial), que hasta ahora no tenían dueño.

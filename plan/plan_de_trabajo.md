@@ -100,7 +100,7 @@ Este bloque es el **47,8 % del esfuerzo base** y casi nada de él aparece en un 
 
 ### 4.1 Campo
 
-Cuatro visitas de 5 h. El cálculo es en **horas-persona**: una visita de 5 h a la que van seis personas cuesta 30 h de capacidad del equipo. Detalle en [`../docs/07-plan-de-visitas-de-campo.md`](../docs/07-plan-de-visitas-de-campo.md).
+Cuatro visitas de 5 h. El cálculo es en **horas-persona**: una visita de 5 h a la que van seis personas cuesta 30 h de capacidad del equipo. Detalle en [`../docs/05-produccion-de-escenas.md`](../docs/05-produccion-de-escenas.md).
 
 | Visita | Cuándo | Personas | h-persona |
 |---|---|---|---|
@@ -211,7 +211,7 @@ Es la consecuencia aritmética de sumar al plan original las cuatro visitas de c
 1. **Se vigila el margen en cada retro**, no el avance. El margen es el que avisa.
 2. **Si en S3 el margen consumido supera el 40 %, se recorta alcance** según §11, sin discutirlo entonces.
 3. **La Etapa 4 no se compromete.** Ya está dicho arriba.
-4. **Las ausencias se descuentan antes de comprometer historias**, no después (principio de `01-principios-de-trabajo.md` §8).
+4. **Las ausencias se descuentan antes de comprometer historias**, no después (principio de `02-manual-del-equipo.md` §8).
 
 ### 7.2 Correcciones ya aplicadas respecto de la versión 1,0
 
@@ -300,7 +300,7 @@ Para que esto no sea una declaración de intenciones, **cada historia lleva su e
 | **W14** | 10–16 nov | S7 | Accesibilidad AA, sistema de diseño consolidado y cierre visual del catálogo 3D |
 | **W15** | 17–28 nov | Cierre | **Entrega final**: integración, pruebas cruzadas, despliegue y documentación cerrada |
 
-**Regla de la entrega semanal:** lo que se enseña el viernes tiene que estar en `develop`, no en la rama de nadie. Si una semana no hay nada enseñable, eso **es** la información importante y se dice en la sincronización del viernes, no en la demo del sprint (principio de `01-principios-de-trabajo.md` §8: avisar a tiempo no tiene consecuencia; que se descubra tarde, sí).
+**Regla de la entrega semanal:** lo que se enseña el viernes tiene que estar en `develop`, no en la rama de nadie. Si una semana no hay nada enseñable, eso **es** la información importante y se dice en la sincronización del viernes, no en la demo del sprint (principio de `02-manual-del-equipo.md` §8: avisar a tiempo no tiene consecuencia; que se descubra tarde, sí).
 
 **Cómo verlo en Jira:** el backlog filtra por la etiqueta de semana. Las 15 semanas están cubiertas y **ninguna persona tiene una semana vacía**, comprobado en §7.4.
 
@@ -374,9 +374,9 @@ Orden de sacrificio acordado por adelantado, para no discutirlo bajo presión en
 
 ## 13. Referencias
 
-- Épicas, sprints, historias y criterios de aceptación: [`../docs/04-actividades-y-roles.md`](../docs/04-actividades-y-roles.md)
-- Plan de visitas de campo: [`../docs/07-plan-de-visitas-de-campo.md`](../docs/07-plan-de-visitas-de-campo.md)
-- Ámbitos de los tres programadores: [`../docs/09-ambitos-de-los-tres-programadores.md`](../docs/09-ambitos-de-los-tres-programadores.md)
-- Riesgos y su mitigación: [`../docs/02-vision-de-proyecto.md`](../docs/02-vision-de-proyecto.md)
-- Riesgos técnicos y validaciones pendientes: [`../docs/03-avances-tecnologia.md`](../docs/03-avances-tecnologia.md)
+- Épicas, sprints, historias y criterios de aceptación: [`../docs/04-backlog.md`](../docs/04-backlog.md)
+- Plan de visitas de campo: [`../docs/05-produccion-de-escenas.md`](../docs/05-produccion-de-escenas.md)
+- Ámbitos de los tres programadores: [`../docs/03-arquitectura.md`](../docs/03-arquitectura.md)
+- Riesgos y su mitigación: [`../docs/01-vision-y-alcance.md`](../docs/01-vision-y-alcance.md)
+- Riesgos técnicos y validaciones pendientes: [`../docs/07-tecnologia.md`](../docs/07-tecnologia.md)
 - Backlog importable a Jira: [`backlog-jira.csv`](backlog-jira.csv)

@@ -1,8 +1,10 @@
-# Visión de proyecto: Sendero Vivo
+# Visión y alcance: Sendero Vivo
 
-> Punto 1 de la actividad del curso (segunda mitad).
-> Versión 1,0, 11 de agosto de 2026.
+> Versión 1,1, 17 de agosto de 2026 (antes «visión de proyecto», 02).
 > Horizonte: 15 semanas (11 ago – 28 nov de 2026).
+> **Documento raíz del proyecto.** Es la única fuente del alcance SÍ/NO vinculante,
+> de las cifras del tramo, de los criterios de éxito E1–E16 y de los riesgos R1–R10.
+> El README resume y enlaza aquí; no repite.
 
 ---
 
@@ -115,7 +117,7 @@ Esta es la decisión que define el proyecto. Un modelo 3D hecho a mano es la int
 Esta lista es vinculante. No es una lista de "fase 2": es una lista de lo que este proyecto **no va a hacer**, y no se propone de nuevo.
 
 - El sendero completo de 7,3 km.
-- Caminar libre tipo videojuego (WASD, movimiento fuera del trazado).
+- Movimiento libre **fuera del trazado**. Las teclas WASD sí existen en el visor, pero avanzan, retroceden y se desplazan lateralmente **dentro del corredor del camino** (RF-004); lo vetado es salirse del trazado, no la tecla. El vuelo libre solo existe en el modo editor (`?editor=1`).
 - App nativa iOS o Android.
 - Realidad virtual.
 - Multijugador o cualquier función social.
@@ -152,7 +154,7 @@ El tramo tiene escalones de piedra, barandas de madera y cauce rocoso: superfici
 | **V3 · Complementaria** | Semana 4 (1–7 sep) | 4 personas | Audio binaural, cantos y patrimonio. **O contingencia si V2 falló** |
 | **V4 · Verificación** | Semana 6 (15–21 sep) | 3 personas | Comprobar en el sitio que el lugar se reconoce |
 
-**La primera visita es la más determinante y la más barata.** Se va a decidir, no a grabar: gastar una mañana nublada sin viento antes de saber qué se quiere capturar es como se pierde la ventana. Detalle en [`07-plan-de-visitas-de-campo.md`](07-plan-de-visitas-de-campo.md).
+**La primera visita es la más determinante y la más barata.** Se va a decidir, no a grabar: gastar una mañana nublada sin viento antes de saber qué se quiere capturar es como se pierde la ventana. Detalle en [`05-produccion-de-escenas.md`](05-produccion-de-escenas.md).
 
 ---
 
@@ -174,8 +176,15 @@ Medibles, verificables y con fecha. Si no se pueden comprobar, no son criterios.
 | # | Criterio | Meta | RNF |
 |---|---|---|---|
 | E5 | Rendimiento en gama media | ≥ 30 fps sostenidos | RNF-001 |
-| E6 | Tiempo hasta primera escena navegable | < 10 s con 10 Mbps | RNF-002 |
-| E7 | Peso por escena SOG | ≤ `[por definir tras la primera captura]` MB | RNF-003 |
+| E6 | Tiempo hasta primera escena navegable | < 10 s con 10 Mbps **[en revisión]** | RNF-002 |
+| E7 | Peso por escena SOG | **≤ 25 MB** (objetivo práctico: 1,5 M de gaussianas ≈ 21 MB, medido el 17/08) | RNF-003 |
+
+> **Nota sobre E6 y E7 (17/08/2026):** la medición del prototipo
+> ([`05-produccion-de-escenas.md`](05-produccion-de-escenas.md) §14) cerró E7: 1,5 M de
+> gaussianas por escena ≈ 21 MB. Pero 21 MB a 10 Mbps son **17 s**, no 10: E6 y RNF-002 quedan
+> **en revisión** — o se renegocia la meta, o se añade precarga/streaming al alcance. La escena
+> de prueba versionada hoy tiene 3,89 M de gaussianas (~56 MB): excede el objetivo y se corrige
+> al reprocesar. Decisión pendiente, dueño: Juan Urrego, se cierra en S2.
 | E8 | Accesibilidad de textos | Contraste AA + transcripción de narraciones | RNF-006 |
 | E9 | Ninguna pantalla en negro | Todo fallo de carga informa y ofrece reintentar | RNF-007 |
 | E15 | La ambientación sonora es espacial y no rompe el rendimiento | Fuentes HRTF activas y ≥ 30 fps sostenidos con el audio encendido | RNF-016, RNF-001 |
@@ -220,12 +229,19 @@ El Gaussian Splatting resuelve muy bien superficies duras y muy mal estructuras 
 
 La guía de rendimiento de PlayCanvas sugiere un presupuesto de **~1 millón de gaussianas en móvil** frente a 3+ millones en escritorio, y advierte que el cuello de botella real es el *fill rate* (sobredibujo con mezcla alfa), no solo la memoria.
 
+**Las tres cifras de gaussianas que circulan, conciliadas (17/08):** ~1 M es el presupuesto de
+PlayCanvas para móvil; **1,5 M es el objetivo del proyecto por escena** (medido: más no mejora
+la calidad y rompe peso y render móvil, [`05-produccion-de-escenas.md`](05-produccion-de-escenas.md) §14);
+3,89 M es lo que tiene la escena de prueba actual, que está por encima y se corrige al reprocesar.
+**Estado: parcialmente materializado y medido, no ya solo anticipado** — el SOG de prueba pesó
+70 MB y tardaría 58,7 s a 10 Mbps.
+
 **Mitigación:**
 - SOG comprime ~15–20× frente a PLY; el caso de referencia de PlayCanvas baja 1 GB a 42 MB.
 - Tres escenas separadas en lugar de una sola: se carga solo lo necesario.
 - Reducción de gaussianas por escena hasta cumplir RNF-001, aceptando pérdida de detalle en zonas sin POI.
 - Desactivar antialiasing y limitar el *device pixel ratio* en móvil.
-- **Plan de choque:** Streamed SOG con LOD (`.lod-meta.json`), que carga niveles de detalle según distancia de cámara.
+- **Plan de choque:** Streamed SOG con LOD (`.lod-meta.json`), que carga niveles de detalle según distancia de cámara. *(Ojo: el patrón `*.lod-meta.json` está hoy en `.gitignore`; si este plan se activa hay que sacarlo de ahí o los metadatos nunca llegarían al despliegue.)*
 
 ### R3: El clima impide la salida de campo
 **Probabilidad: media · Impacto: alto**
@@ -246,7 +262,7 @@ Gaussian Splatting, SuperSplat/SOG y PlayCanvas, simultáneamente, sin experienc
 **Mitigación:**
 - Margen de tiempo amplio y explícito reservado en el plan de trabajo (`plan/plan_de_trabajo.md`) para absorber la curva de aprendizaje.
 - S1 incluye tiempo de aprendizaje y prueba de herramientas como trabajo real, no como algo que se hace "aparte".
-- Toda la investigación queda en `docs/03-avances-tecnologia.md`, no en la cabeza de quien la hizo.
+- Toda la investigación queda en `docs/07-tecnologia.md`, no en la cabeza de quien la hizo.
 - Revisión cruzada obligatoria: el conocimiento no se queda en una sola persona.
 
 ### R5: El alcance se expande
@@ -255,7 +271,7 @@ Gaussian Splatting, SuperSplat/SOG y PlayCanvas, simultáneamente, sin experienc
 Es un proyecto vistoso. Van a aparecer ideas: más senderos, VR, caminar libre.
 
 **Mitigación:**
-- Lista de "no lo hacemos" explícita y vinculante (§4.2), repetida en README y en `context-for-vibe-coding.md`.
+- Lista de "no lo hacemos" explícita y vinculante (§4.2), resumida en el README y en `CONTEXTO-EQUIPO.md`.
 - Ninguna tarea entra al sprint sin trazar a un RF (principio P2).
 - Las ideas nuevas van al backlog y solo se discuten en revisión de sprint.
 
@@ -266,8 +282,8 @@ Cuatro épicas, seis personas, dos disciplinas distintas (producción de assets 
 
 **Mitigación:**
 - Contratos de datos (`pois.json`, `scenes.json`, track GPS) definidos y publicados en S1, **antes** de que nadie los necesite (principio P4).
-- Un solo integrador responsable (Juan) y ramas por épica con dueño claro.
-- Fusión a `develop` al cierre de cada sprint, no al final de la épica.
+- Un solo integrador responsable (Juan) y **una rama por persona** (`dev/<nombre>`) con dueño claro — una rama por épica acabaría con dos personas dentro.
+- Integración a `develop` al cierre de cada sprint, no al final de la épica.
 
 ### R7: Un dato biológico publicado resulta incorrecto
 **Probabilidad: baja · Impacto: medio-alto**
@@ -309,7 +325,7 @@ El video bruto de la salida es irrepetible sin volver a tener las mismas condici
 
 **Mitigación:**
 - Copia del material bruto en **dos ubicaciones distintas el mismo día de la captura**, antes de tocar nada.
-- El material bruto no entra a Git (`assets/raw/` está en `.gitignore`); se almacena aparte y se documenta dónde.
+- El material bruto no entra a Git (`assets/raw/`, `*.ply`, `*.sog` y video están en `.gitignore`); se almacena aparte y se documenta dónde. **Excepción del 14/08:** las escenas ya procesadas en formato SOG **desempaquetado** (`assets/scenes/<id>/` con `meta.json` + `.webp`) sí se versionan — son el producto, no el material bruto.
 
 ---
 
@@ -320,17 +336,18 @@ Tres condiciones concretas, no optimismo:
 1. **El alcance está deliberadamente pequeño.** 200 metros, 3 escenas, 5–6 POIs. Es un recorte defendible técnicamente, no una versión recortada por falta de tiempo.
 2. **El camino crítico está identificado y protegido.** E1 (S1–S2) → E2 (S3–S4) → E4 (S6–S7). E3 sale del camino crítico corriendo en paralelo, que es exactamente lo que permite meter 16 semanas de esfuerzo en 14 de calendario.
 3. **El stack está cerrado y es gratuito.** PlayCanvas Engine (MIT), SuperSplat (MIT), formato SOG (especificación abierta), captura con un celular que el equipo ya tiene, estación con GPU que el equipo ya tiene. Ninguna dependencia de presupuesto.
+4. **La viabilidad ya está demostrada, no prometida (17/08).** Hay un prototipo publicado en <https://senderovivo.pages.dev> con una escena real capturada por el equipo, recorrido guiado dentro del corredor, flechas de avance en el mundo 3D y pantalla de carga. El pipeline completo (captura → COLMAP → Brush → SOG → visor) se ejecutó de punta a punta y está medido.
 
 ---
 
 ## 8. Referencias
 
-- Alcance, roles y cronograma detallado: [`04-actividades-y-roles.md`](04-actividades-y-roles.md)
-- Investigación técnica y riesgos técnicos: [`03-avances-tecnologia.md`](03-avances-tecnologia.md)
+- Backlog: [`04-backlog.md`](04-backlog.md)
+- Manual del equipo (proceso): [`02-manual-del-equipo.md`](02-manual-del-equipo.md)
+- Arquitectura y ámbitos: [`03-arquitectura.md`](03-arquitectura.md)
+- Producción de escenas (campo + captura + procesamiento): [`05-produccion-de-escenas.md`](05-produccion-de-escenas.md)
+- Contenido de la experiencia (catálogo, identidad visual, audio): [`06-contenido-de-la-experiencia.md`](06-contenido-de-la-experiencia.md)
+- Tecnología y validaciones: [`07-tecnologia.md`](07-tecnologia.md)
 - Decisión de sendero: [`decisiones/ADR-001-eleccion-de-sendero.md`](decisiones/ADR-001-eleccion-de-sendero.md)
-- Requerimientos completos, **con esta visión incorporada en la sección 3.2**: `F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx`
-- Catálogo de fauna y flora con fuentes: [`05-catalogo-fauna-y-flora.md`](05-catalogo-fauna-y-flora.md)
-- Identidad visual: [`06-identidad-visual.md`](06-identidad-visual.md)
-- Plan de visitas de campo: [`07-plan-de-visitas-de-campo.md`](07-plan-de-visitas-de-campo.md)
-- Ambientación sonora: [`08-ambientacion-sonora.md`](08-ambientacion-sonora.md)
+- Requerimientos completos, **con esta visión incorporada en la sección 3.2**: [`F_Analisis_de_Requerimientos_V1,0_SenderoVivo.md`](F_Analisis_de_Requerimientos_V1,0_SenderoVivo.md)
 - Estimación y cronograma: [`../plan/plan_de_trabajo.md`](../plan/plan_de_trabajo.md)

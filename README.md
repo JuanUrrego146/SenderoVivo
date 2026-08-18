@@ -8,7 +8,7 @@ Repositorio: [`JuanUrrego146/SenderoVivo`](https://github.com/JuanUrrego146/Send
 
 > **Empiezas a programar?** Lee primero [**CONTEXTO-EQUIPO.md**](CONTEXTO-EQUIPO.md): estado real del proyecto, cómo levantarlo, qué archivo tocas y las reglas que no se rompen.
 >
-> **Acceso rápido:** [**Guía de captura en campo**](docs/11-guia-de-captura-en-campo.md), el instructivo de escaneo paso a paso: configuración de cámara, pasadas por el sendero y procesamiento hasta el `.sog`.
+> **Acceso rápido:** [**Producción de escenas**](docs/05-produccion-de-escenas.md), el instructivo completo: visitas de campo, configuración de cámara, ocho pasadas y procesamiento hasta la carpeta SOG desempaquetada.
 
 ---
 
@@ -108,18 +108,15 @@ Esto **no** se hace, y tampoco se propone como fase 2:
 
 ## Documentación
 
-- [**1 · Principios de trabajo**](docs/01-principios-de-trabajo.md): definición de "hecho", ramas, revisión de código, ceremonias, canales, bloqueos
-- [**2 · Visión de proyecto**](docs/02-vision-de-proyecto.md): problema, para quién, propuesta de valor, alcance, criterios de éxito, riesgos
-- [**3 · Avances a nivel de tecnología**](docs/03-avances-tecnologia.md): investigación de 3DGS, SuperSplat, SOG y PlayCanvas; riesgos técnicos; qué queda por validar
-- [**4 · Actividades y roles**](docs/04-actividades-y-roles.md): 4 épicas, 8 sprints, historias, criterios de aceptación y subtareas por persona
-- [**5 · Catálogo de fauna y flora**](docs/05-catalogo-fauna-y-flora.md): qué hay realmente en el sendero, con fuentes y nivel de verificación
-- [**6 · Identidad visual**](docs/06-identidad-visual.md): paleta de grises, negros y verdes, tipografía, tokens y contrastes calculados
-- [**7 · Plan de visitas de campo**](docs/07-plan-de-visitas-de-campo.md): las cuatro visitas, qué decide cada una y quién mira qué
-- [**8 · Ambientación sonora**](docs/08-ambientacion-sonora.md): audio binaural espacial: diseño, contrato de datos y presupuesto
-- [**9 · Ámbitos de los tres programadores**](docs/09-ambitos-de-los-tres-programadores.md): quién toca qué carpeta y las tres fronteras
-- [**11 · Guía de captura en campo**](docs/11-guia-de-captura-en-campo.md): el instructivo de escaneo, configuración de cámara, pasadas y procesamiento paso a paso
-- [**12 · Parámetros de entrenamiento 3DGS**](docs/12-parametros-de-entrenamiento.md): tiempos y valores medidos en nuestra máquina, y el error que costó 14 horas
-- [Arquitectura y diagramas](docs/arquitectura.md), casos de uso, módulos, secuencias, estados, contratos de datos e invariantes
+Siete documentos numerados (unificados el 18/08/2026; cada dato vive en un solo sitio y el resto enlaza):
+
+- [**1 · Visión y alcance**](docs/01-vision-y-alcance.md): problema, para quién, propuesta de valor, alcance SÍ/NO vinculante, criterios de éxito, riesgos. **Documento raíz**
+- [**2 · Manual del equipo**](docs/02-manual-del-equipo.md): principios, definición de "hecho", ramas y despliegue por rama, revisión, ceremonias, canales, bloqueos, convenciones
+- [**3 · Arquitectura y ámbitos**](docs/03-arquitectura.md): módulos (con su estado real), flujos, contratos de datos canónicos, invariantes, quién toca qué carpeta y las tres fronteras
+- [**4 · Backlog**](docs/04-backlog.md): 4 épicas, 8 sprints, 49 historias con criterios y subtareas. El estado vivo manda en las issues de GitHub
+- [**5 · Producción de escenas**](docs/05-produccion-de-escenas.md): las cuatro visitas de campo, el protocolo de captura (cámara y ocho pasadas) y el procesamiento completo con valores medidos — incluido el error que costó 14 horas
+- [**6 · Contenido de la experiencia**](docs/06-contenido-de-la-experiencia.md): catálogo de fauna y flora con fuentes, identidad visual (paleta, tokens, contrastes) y ambientación sonora espacial
+- [**7 · Tecnología**](docs/07-tecnologia.md): el stack (3DGS, SuperSplat, SOG, PlayCanvas), por qué, y el **registro único de validaciones** abiertas y resueltas
 - [Análisis y especificación de requerimientos](docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.md), **incluye la visión del proyecto**, 15 CUS, 32 RF, 16 RNF y matriz de trazabilidad (fuente en Word: [`.docx`](docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx))
 - [Plan de trabajo](plan/plan_de_trabajo.md), estimación por RF y cronograma semana a semana
 
@@ -218,7 +215,7 @@ Si alguien quiere separar una historia concreta, abre una rama hija de la suya: 
 
 ## Quién toca qué carpeta
 
-Cada carpeta tiene un dueño. Tocar la carpeta de otro se avisa en la issue **antes** de empezar y lo revisa el dueño. Detalle y fronteras en [`docs/09-ambitos-de-los-tres-programadores.md`](docs/09-ambitos-de-los-tres-programadores.md).
+Cada carpeta tiene un dueño. Tocar la carpeta de otro se avisa en la issue **antes** de empezar y lo revisa el dueño. Detalle y fronteras en [`docs/03-arquitectura.md`](docs/03-arquitectura.md).
 
 | Carpeta | Dueño | Contenido |
 |---|---|---|
@@ -276,7 +273,7 @@ Cada carpeta tiene un dueño. Tocar la carpeta de otro se avisa en la issue **an
 | **V3 · Complementaria** | Semana 4 (1–7 sep) | 4 personas | Audio binaural, cantos, patrimonio. **O contingencia si V2 falló** |
 | **V4 · Verificación** | Semana 6 (15–21 sep) | 3 personas | Comparar la reconstrucción contra el sitio |
 
-**Solo V1 y V2 están en el camino crítico.** Detalle en [`docs/07-plan-de-visitas-de-campo.md`](docs/07-plan-de-visitas-de-campo.md).
+**Solo V1 y V2 están en el camino crítico.** Detalle en [`docs/05-produccion-de-escenas.md`](docs/05-produccion-de-escenas.md).
 
 ---
 

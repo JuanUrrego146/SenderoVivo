@@ -1,7 +1,13 @@
-# Arquitectura: Sendero Vivo
+# Arquitectura y ámbitos: Sendero Vivo
 
-> Versión 1,0, 11/08/2026 · Responsable: Juan Urrego
+> Versión 2,0, 18/08/2026 · Responsable: Juan Urrego (antes «arquitectura»; absorbe
+> «ámbitos de los tres programadores», 09).
 > Todos los diagramas están en Mermaid: GitHub los renderiza de forma nativa y una IA de código los lee como texto.
+>
+> **Cómo leer este documento:** describe el sistema completo, pero solo una parte existe hoy.
+> Cada módulo del §3 está marcado como **[existe]** o **[previsto]** en la tabla de estado.
+> Un agente que importe un módulo `[previsto]` va a fallar: primero se crea, respetando la
+> firma de aquí. Las firmas de los módulos `[existe]` están verificadas contra el código real.
 
 ---
 
@@ -155,25 +161,59 @@ flowchart LR
 
 Nombres en **inglés**, según la convención del proyecto.
 
+### 3.0 Estado real de los módulos (18/08/2026)
+
+| Módulo | Estado | Dónde / nota |
+|---|---|---|
+| `TourEngine` | **[existe]** | `src/engine/TourEngine.js`. Firma real abajo. Hoy absorbe lo que se había previsto como `CameraRig` (yaw, pitch, límites, save/restore) |
+| `TrailPath` | **[existe]** | `src/engine/TrailPath.js`. Con corredor lateral (`corridorRadius`) |
+| `TrailMarkers` | **[existe]** | `src/engine/TrailMarkers.js`. Flechas 3D en el mundo, avance gradual. No estaba en el diseño original: nació en el prototipo |
+| `TrailRecorder` | **[existe]** | `src/engine/TrailRecorder.js`. Editor del trazado (`?editor=1`), exporta `track.json` |
+| `SceneLoader` | **[existe]** | `src/engine/SceneLoader.js`. Carga del SOG, nivelación con `sceneUp`, `customAabb`, espera de render estable. Sin caché multi-escena todavía |
+| Overlay de carga/error | **[existe]** | `src/ui/overlay.js` (RNF-007) + `src/ui/tokens.js` (lectura de tokens) |
+| `CameraRig` | **disuelto** | Sus responsabilidades viven dentro de `TourEngine`. Si S4 exige separarlo, se extrae entonces |
+| `PoiManager`, `PoiCard`, `ModelViewer` | [previsto] | `src/poi/` — David. El contrato de abajo es el vigente |
+| `TrailDataLayer`, `GpsTrack` | [previsto] | `src/data/` — David |
+| `AmbienceController`, `SpatialAudioSource`, `AudioPlayer` | [previsto] | `src/audio/` — David. Prerrequisitos ya puestos: la cámara lleva `audiolistener` y `tour:progress` publica posición y orientación |
+| `QualityProfile`, `LodController` | [previsto] | `src/engine/` — Alejandra |
+| `HudView` | [previsto] | `src/ui/` — Juan pinta, Eybar/Alberto diseñan. El prototipo tiene un HUD provisional dentro del hint |
+
 ```mermaid
 classDiagram
     class TourEngine {
-        -SceneLoader sceneLoader
         -TrailPath trailPath
-        -CameraRig cameraRig
-        -TourState state
-        +start() void
-        +moveForward(delta) void
-        +moveBackward(delta) void
-        +getProgress() number
+        -number distance
+        -number yaw
+        -number pitch
+        -number eyeHeight
+        +start() bool
+        +stop() void
+        +moveTo(distance) void
+        +advance(delta) void
+        +press(action) void
+        +release(action) void
+        +setEyeHeight(value) void
+        +saveState() TourState
+        +restoreState(state) void
+    }
+
+    class TrailMarkers {
+        -TourEngine tour
+        -number stepDistance
+        -number walkSpeed
+        +destroy() void
+    }
+
+    class TrailRecorder {
+        -Vec3[] points
+        +mark() void
+        +undo() void
+        +exportJson() void
     }
 
     class SceneLoader {
-        -Map~string, GSplatAsset~ cache
-        -QualityProfile profile
-        +loadScene(sceneId) Promise
-        +preloadNext(sceneId) void
-        +unload(sceneId) void
+        +load(options) Promise~Entity~
+        +waitForStableRender(options) Promise
     }
 
     class SceneDescriptor {
@@ -186,18 +226,15 @@ classDiagram
     }
 
     class TrailPath {
-        -Waypoint[] waypoints
-        +positionAt(distance) Vector3
-        +clampToTrail(position) Vector3
+        -Vec3[] waypoints
+        -number corridorRadius
+        -number eyeHeight
+        +positionAt(distance, out) Vec3
+        +directionAt(distance, out) Vec3
+        +clampToTrail(position) number
+        +clampToCorridor(position, out) Vec3
         +totalLength() number
-    }
-
-    class CameraRig {
-        -number yaw
-        -number pitch
-        +look(deltaYaw, deltaPitch) void
-        +saveState() CameraState
-        +restoreState(state) void
+        +isUsable bool
     }
 
     class PoiManager {
@@ -310,9 +347,8 @@ classDiagram
         +render(data) void
     }
 
-    TourEngine --> SceneLoader : usa
     TourEngine --> TrailPath : restringe con
-    TourEngine --> CameraRig : controla
+    TrailMarkers --> TourEngine : avanza via moveTo y advance
     TourEngine --> TrailDataLayer : consulta
     SceneLoader --> SceneDescriptor : lee
     SceneLoader --> QualityProfile : aplica
@@ -333,7 +369,8 @@ classDiagram
 
 ### Notas de diseño
 
-- **`TourEngine` es el único que mueve la cámara.** `PoiManager` no la toca: pide a `TourEngine` que guarde y restaure el estado (RF-018).
+- **`TourEngine` es el único que mueve la cámara.** `PoiManager` no la toca: pide a `TourEngine` que guarde y restaure el estado (RF-018). Y es el único que escribe `distance`: los controles externos (flechas, botones) pasan por `moveTo()` / `advance()`.
+- **`tour:progress` es el evento central.** Se publica con `app.fire('tour:progress', { distance, total, distanceMeters, position, yaw, pitch })` y se escucha con `app.on(...)`. `distanceMeters` va en `null` hasta que `TrailDataLayer` aporte la escala real.
 - **`TrailPath.clampToTrail()` es el guardián de RF-004.** Ninguna posición llega a la cámara sin pasar por ahí. Es lo que impide el movimiento libre dentro de una reserva protegida.
 - **`TrailDataLayer` no sabe nada de render.** Recibe una distancia recorrida y devuelve números. `HudView` los pinta. Esto permite probar la capa de datos sin motor.
 - **`PoiDescriptor` se construye únicamente desde `pois.json`** (RF-021, RNF-009): añadir un POI no toca código. Lo mismo vale para `SoundSourceDescriptor` y `soundscape.json`.
@@ -510,7 +547,11 @@ stateDiagram-v2
 
 ## 6. Contratos de datos
 
-Los tres archivos que gobiernan el contenido. **Cambiarlos es cambiar el producto; cambiar el motor no debería ser necesario para añadir contenido.**
+Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el producto; cambiar el motor no debería ser necesario para añadir contenido.** Esta sección es la **única copia canónica** de los contratos; los demás documentos enlazan aquí. Sincronizada con los archivos reales de `config/` el 18/08/2026.
+
+> **Advertencia de unidades:** las coordenadas de `sceneWaypoints`, `anchor` y `sceneUp` están
+> en **unidades del motor**, no en metros. La equivalencia unidades↔metros por escena se mide
+> con el objeto de escala (validación V9) y todavía no existe.
 
 ### `scenes.json`
 
@@ -528,17 +569,26 @@ Los tres archivos que gobiernan el contenido. **Cambiarlos es cambiar el product
     {
       "id": "scene-01",
       "order": 1,
-      "sogUrl": "assets/scenes/scene-01.sog",
+      "sogUrl": "assets/scenes/scene-01/meta.json",
       "entryDistanceMeters": 0,
       "exitDistanceMeters": 70,
-      "captureDate": "[por definir tras la captura V2]"
+      "captureDate": "2026-08-17 (prototipo: parque de prueba, no el sendero)",
+      "sceneUp": { "x": -0.204, "y": -0.879, "z": -0.431 },
+      "sceneUpNote": "Vector 'arriba' real de la escena, promediado de las poses de cámara de COLMAP. El visor calcula con él la rotación que nivela el horizonte. Se recalcula por escena tras cada reconstrucción."
     }
   ]
 }
 ```
 
-> **200 m es el compromiso firme**, en tres etapas: 0–70, 70–140 y 140–200 m. Los cortes son provisionales y se ajustan en V1 a puntos naturales del sendero, porque una transición se disimula mejor donde el visitante ya está girando la cabeza.
-> `elevationGainMeters` y `averageSlopePercent` van en `null` a propósito: están **`[por medir en campo]`** y se cierran en V1. Las cifras de 340 m / 62 m / 9 % de versiones anteriores corresponden al tramo de referencia evaluado en ADR-001, no al tramo comprometido.
+> **`sogUrl` apunta al `meta.json` de la carpeta SOG desempaquetada** (`assets/scenes/<id>/`,
+> `meta.json` + `.webp`), no a un `.sog` empaquetado: el `.sog` de una escena real (~70 MB)
+> supera el límite de **25 MiB por archivo** de Cloudflare Pages. El visor también acepta un
+> `.sog` en local y por `?sog=` para pruebas.
+> **`sceneUp` es obligatorio en la práctica**: sin él la escena sale con la orientación
+> arbitraria de COLMAP (la nuestra salía 151,5° torcida). Cómo medirlo:
+> [`05-produccion-de-escenas.md`](05-produccion-de-escenas.md) §16.
+> **200 m es el compromiso firme**, en tres etapas: 0–70, 70–140 y 140–200 m. Los cortes son provisionales y se ajustan en V1. `elevationGainMeters` y `averageSlopePercent` van en `null` a propósito: están **`[por medir en campo]`**. Las cifras de 340 m / 62 m / 9 % de versiones anteriores corresponden al tramo de referencia evaluado en ADR-001, no al tramo comprometido.
+> **Ojo:** hoy `scene-01` es la **escena de práctica del parque**. Cuando llegue el material del sendero hay que renombrar o reservar identificadores.
 
 ### `pois.json`
 
@@ -604,21 +654,33 @@ Los tres archivos que gobiernan el contenido. **Cambiarlos es cambiar el product
 }
 ```
 
-> `ambienceUrl` es el lecho continuo: estéreo, **no posicional**. Cada entrada de `sources` es una fuente puntual espacializada con HRTF, grabada **en mono**. Las posiciones salen del mapa sonoro levantado en V1. Diseño completo en [`08-ambientacion-sonora.md`](08-ambientacion-sonora.md).
+> `ambienceUrl` es el lecho continuo: estéreo, **no posicional**. Cada entrada de `sources` es una fuente puntual espacializada con HRTF, grabada **en mono**. Las posiciones salen del mapa sonoro levantado en V1. `config/soundscape.json` **ya existe** como esqueleto con `sources` vacío. Diseño completo en [`06-contenido-de-la-experiencia.md`](06-contenido-de-la-experiencia.md) §C.
 
-### `track.json` (track GPS)
+### `track.json` (trazado del recorrido + track GPS)
+
+Forma real vigente (el prototipo ya lo consume):
 
 ```json
 {
   "version": 1,
-  "capturedOn": "[fecha real de la salida]",
-  "points": [
-    { "lat": 0.0, "lon": 0.0, "altitudeMeters": 2712, "distanceMeters": 0 }
-  ]
+  "capturedOn": "[pendiente: fecha real de la salida de campo]",
+  "note": "Trazado marcado sobre la escena con el editor del prototipo. Las coordenadas están en unidades del motor, no en metros.",
+  "sceneWaypoints": [
+    { "x": 2.942, "y": -0.488, "z": -2.205 },
+    { "x": -8.766, "y": 0.942, "z": 5.889 }
+  ],
+  "points": [],
+  "eyeHeight": 0,
+  "corridorRadius": 1.5
 }
 ```
 
-> El track se graba el mismo día de la captura. Los valores reales entran tras la salida de campo del Sprint 1.
+> **`sceneWaypoints`** es el trazado en coordenadas de la escena: lo consume `TrailPath` y se
+> marca visualmente con el editor (`?editor=1`, teclas M/Z/X). **`points`** queda reservado
+> para el track GPS real (`{ lat, lon, altitudeMeters, distanceMeters }`), que se graba el
+> día de la captura y alimenta a `TrailDataLayer`. **`eyeHeight`** levanta la cámara sobre los
+> puntos marcados; **`corridorRadius`** es el margen lateral permitido (RF-004 sin camisa de
+> fuerza). Se calibran en vivo con R/F y se anotan aquí.
 
 ---
 
@@ -653,8 +715,8 @@ Invariantes. Una PR que rompa cualquiera de estas se rechaza sin discusión.
 6. **El audio nunca arranca solo.** Toda reproducción nace de un gesto del usuario (RNF-008).
 7. **Ningún estado de carga o de error deja la pantalla en negro.** Siempre hay progreso, mensaje o reintento (RNF-007).
 8. **Todo texto visible está en español; todo identificador de código, en inglés.** Sin mezclas.
-9. **Los intermedios pesados y el material bruto nunca entran a Git.** `*.ply`, `assets/raw/` y el video de captura están en `.gitignore`. **Excepción desde el 14/08/2026: las escenas `.sog` sí se versionan**, para que el despliegue por rama sirva una web funcional sin almacenamiento externo. Límite duro de GitHub: 100 MB por archivo.
-10. **Nada de datos inventados.** Altitudes, distancias, nombres científicos y notas históricas se verifican o se marcan `[por medir en campo]` / `[por verificar]`.
+9. **Los intermedios pesados y el material bruto nunca entran a Git.** `*.ply`, `*.sog`, `assets/raw/` y el video de captura están en `.gitignore`. **Excepción desde el 14/08/2026: las escenas en formato SOG _desempaquetado_ (`assets/scenes/<id>/`, `meta.json` + `.webp`) sí se versionan**, para que el despliegue por rama sirva una web funcional sin almacenamiento externo. Límites duros: **25 MiB por archivo en Cloudflare Pages** (por eso el desempaquetado, que reparte el peso) y 100 MB por archivo en GitHub.
+10. **Nada de datos inventados.** Altitudes, distancias, nombres científicos y notas históricas se verifican o se marcan con la marca que corresponda: `[por medir en campo]`, `[por verificar]`, `[por completar]`, `[por definir …]` o `[por confirmar …]`. La lista es cerrada y las marcas **no se normalizan entre sí**: significan cosas distintas ([`02-manual-del-equipo.md`](02-manual-del-equipo.md) §9).
 11. **Ninguna funcionalidad sin RF.** Si no traza a un requerimiento, o sobra la funcionalidad o falta el requerimiento, y entonces se agrega el requerimiento primero.
 12. **`src/audio/` no toca la cámara y `src/engine/` no reproduce sonido.** El oyente del audio espacial es la cámara activa que ya mueve `TourEngine`.
 13. **Ningún módulo lee la cámara para saber dónde está el visitante.** Se escucha `tour:progress`, que publica `distanceMeters`.
@@ -663,26 +725,24 @@ Invariantes. Una PR que rompa cualquiera de estas se rechaza sin discusión.
 
 ---
 
-## 9. Estructura de carpetas prevista
+## 9. Estructura de carpetas (real al 18/08/2026)
 
 ```
 SenderoVivo/
 ├── README.md
-├── context-for-vibe-coding.md
+├── CONTEXTO-EQUIPO.md          ← puerta de entrada operativa del equipo y de los agentes
+├── index.html                  La aplicación (shell del visor). Juan
+├── _headers                    Cabeceras de caché para Cloudflare Pages
 ├── .gitignore
 ├── docs/
-│   ├── 01-principios-de-trabajo.md
-│   ├── 02-vision-de-proyecto.md
-│   ├── 03-avances-tecnologia.md
-│   ├── 04-actividades-y-roles.md
-│   ├── 05-catalogo-fauna-y-flora.md
-│   ├── 06-identidad-visual.md
-│   ├── 07-plan-de-visitas-de-campo.md
-│   ├── 08-ambientacion-sonora.md
-│   ├── 09-ambitos-de-los-tres-programadores.md
-│   ├── 10-guion-de-la-presentacion.md
-│   ├── arquitectura.md
-│   ├── F_Analisis_de_Requerimientos_V1,0_SenderoVivo.docx
+│   ├── 01-vision-y-alcance.md
+│   ├── 02-manual-del-equipo.md
+│   ├── 03-arquitectura.md      ← este documento
+│   ├── 04-backlog.md
+│   ├── 05-produccion-de-escenas.md
+│   ├── 06-contenido-de-la-experiencia.md
+│   ├── 07-tecnologia.md
+│   ├── F_Analisis_de_Requerimientos_V1,0_SenderoVivo.md  (+ .docx)
 │   └── decisiones/
 │       ├── ADR-001-eleccion-de-sendero.md
 │       ├── ADR-002-lod-por-proximidad.md
@@ -690,30 +750,88 @@ SenderoVivo/
 │       └── ADR-004-reparto-de-ambitos.md
 ├── plan/
 │   ├── plan_de_trabajo.md
-│   └── backlog-jira.csv
+│   ├── resumen-auditoria-2026-08-13.md
+│   └── backlog-jira.csv        DEPRECADO (13/08): el backlog se edita en GitHub/Jira
 ├── scripts/
-│   └── sync-github.mjs         Sincroniza GitHub desde plan/backlog-jira.csv
-├── src/                        (código, desde el Sprint 3)
-│   ├── app/                    Juan:      main.js, cableado, onboarding, estados
-│   ├── engine/                 Alejandra: TourEngine, SceneLoader, TrailPath,
-│   │                                      CameraRig, QualityProfile, LodController
-│   ├── poi/                    David:     PoiManager, PoiCard, ModelViewer
-│   ├── data/                   David:     TrailDataLayer, GpsTrack
+│   └── sync-github.mjs         DEPRECADO (13/08)
+├── src/
+│   ├── app/                    Juan:      main.js (orquestación)
+│   ├── engine/                 Alejandra: TourEngine, TrailPath, TrailMarkers,
+│   │                                      TrailRecorder, SceneLoader [existen]
+│   │                                      QualityProfile, LodController [previstos]
+│   ├── poi/                    David:     PoiManager, PoiCard, ModelViewer [previstos]
+│   ├── data/                   David:     TrailDataLayer, GpsTrack [previstos]
 │   ├── audio/                  David:     AmbienceController, SpatialAudioSource,
-│   │                                      AudioPlayer
-│   └── ui/                     Juan:      HudView y shell (diseño de Eybar + Alberto)
-├── styles/                     Eybar + Alberto: tokens.css, componentes
+│   │                                      AudioPlayer [previstos]
+│   └── ui/                     Juan:      overlay.js, tokens.js [existen] · HudView [previsto]
+│                                          (diseño de Eybar + Alberto)
+├── styles/                     Eybar + Alberto: tokens.css (única fuente de color), app.css
 ├── config/
 │   ├── scenes.json
 │   ├── pois.json
 │   ├── track.json
-│   └── soundscape.json
+│   └── soundscape.json         (esqueleto: sources vacío hasta V3)
 └── assets/
-    ├── raw/                    (ignorado por Git, video y capturas brutas)
-    ├── scenes/                 (ignorado, .sog)
-    ├── models/                 (.glb optimizados, con animación idle)
+    ├── raw/                    (ignorado por Git: video y capturas brutas)
+    ├── scenes/                 scene-01/ y scene-01-luma/ VERSIONADAS (SOG desempaquetado);
+    │                           los .sog y .ply sueltos siguen ignorados
+    ├── models/                 marcador-provisional.glb · golondrina-plomiza-fuente/ (Maya
+    │                           + texturas de Felipe, sin integrar) · los .glb finales
     ├── audio/
     └── text/
 ```
 
-**Quién toca qué:** cada carpeta tiene un dueño y hay exactamente **tres fronteras** entre ámbitos, cada una con su contrato. Está detallado en [`09-ambitos-de-los-tres-programadores.md`](09-ambitos-de-los-tres-programadores.md). Esto es lo que evita que seis personas se pisen en catorce semanas.
+> **Nota de deuda conocida:** el código de `src/app/` y `src/engine/` lo escribió Juan durante
+> la semana del prototipo, incluida la parte que cae en carpeta de Alejandra. El dueño de la
+> carpeta lo asume desde aquí; la excepción está fechada y no sienta precedente.
+
+---
+
+## 10. Ámbitos: quién toca qué
+
+*(Absorbe el antiguo `03-arquitectura.md`. Esta tabla es la **única
+copia** de la propiedad de carpetas; README, CONTEXTO-EQUIPO y el backlog enlazan aquí.)*
+
+**Dueño de la carpeta ≠ responsable de la historia.** El dueño de carpeta es permanente
+(ADR-004) y da el revisor por defecto; el responsable de una historia es semanal y puede
+trabajar en carpeta ajena — entonces **revisa el dueño**. Excepción fechada de la semana de
+prototipo (W02): Alejandra sobre `src/poi/` (HU-56, revisa David) y David en integración de
+interfaz (revisa Juan).
+
+| Carpeta | Dueño | Qué vive ahí |
+|---|---|---|
+| `src/app/` · `src/ui/` · `config/` · `index.html` | **Juan Urrego** | Orquestación, shell, overlay, HUD, contratos de datos |
+| `src/engine/` | **Alejandra Chambueta** | Motor de recorrido, carga de escenas, cámara, LOD, rendimiento |
+| `src/poi/` · `src/data/` · `src/audio/` | **David Beltrán** | POIs y fichas, capa de datos GPS, audio espacial |
+| `styles/` | **Eybar Viasus y Alberto Alemán** | tokens.css (única fuente de color), componentes |
+| `assets/models/` · `assets/audio/` | **Felipe Acevedo** | Modelos `.glb`, material de audio (`marcador-provisional.glb` lo subió Juan como puente declarado) |
+| `assets/text/` | **Alberto Alemán** | Textos y transcripciones |
+| `docs/` · `plan/` | **Juan Urrego** (cada doc con su responsable en cabecera) | Documentación |
+
+**Las tres fronteras entre ámbitos, con las firmas reales del código:**
+
+1. **Motor → Datos, POIs y Audio.** `TourEngine` publica
+   `app.fire('tour:progress', { distance, total, distanceMeters, position, yaw, pitch })`.
+   Los demás módulos escuchan con `app.on('tour:progress', …)`; **nadie lee la cámara** (invariante 13).
+2. **POIs → Motor.** `PoiCard` llama a `tour.saveState()` al abrirse y `tour.restoreState(state)`
+   al cerrarse (RF-018); no toca la cámara.
+3. **Motor → Audio.** `QualityProfile` expondrá `maxSpatialAudioSources`; el audio lo respeta
+   y no configura el motor. El oyente (`audiolistener`) ya está en la cámara.
+
+**Cada dueño prueba en su URL de rama** (`https://dev-<nombre>.senderovivo.pages.dev`): el
+despliegue por rama forma parte del ámbito — "toco mi carpeta" se demuestra con "se ve en mi URL".
+
+---
+
+## 11. Despliegue
+
+| Qué | Cómo |
+|---|---|
+| Plataforma | **Cloudflare Pages**, proyecto `senderovivo`, conectado al repositorio de GitHub |
+| Producción | Rama `develop` → <https://senderovivo.pages.dev> |
+| Vista previa por rama | Cada push a `dev/<nombre>` → `https://dev-<nombre>.senderovivo.pages.dev` (1–2 min) |
+| Build | Ninguno: sitio estático, se sirve el repositorio tal cual |
+| Límite | **25 MiB por archivo** — por eso las escenas van en SOG desempaquetado |
+| Caché | `_headers` fija un año de caché inmutable para `assets/scenes/*` |
+
+Esto es lo que evita que seis personas se pisen en quince semanas: carpeta propia, rama propia, URL propia.

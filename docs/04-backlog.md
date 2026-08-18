@@ -1,7 +1,10 @@
-# Actividades y roles: Sendero Vivo
+# Backlog: Sendero Vivo
 
-> Punto 3 de la actividad del curso: 4 épicas, 8 sprints de 2 semanas, actividades y roles.
+> Versión 1,1, 17/08/2026 (antes «actividades y roles», 04): 4 épicas, 8 sprints de 2 semanas, 49 historias.
 > Inicio: **11 de agosto de 2026** · Cierre: **28 de noviembre de 2026**.
+>
+> **El estado vivo de cada historia manda en su issue de GitHub** (espejo en Jira): este
+> documento narra y enlaza, la issue tiene el detalle y la sección de ámbito. Regla del 13/08.
 
 ---
 
@@ -25,10 +28,10 @@ Seis personas, seis roles. **Tres de ellas programan**, y cada una tiene una car
 El reparto es **por carpeta, no por tema**, y hay exactamente **tres fronteras** entre ámbitos:
 
 1. **Motor → Datos y POIs.** `TourEngine` publica el evento `tour:progress`; nadie lee la cámara.
-2. **POIs → Motor.** `PoiCard` llama a `saveCameraState()` y `restoreCameraState()`; no toca la cámara.
+2. **POIs → Motor.** `PoiCard` llama a `tour.saveState()` y `tour.restoreState(state)` (los nombres reales en src/engine/TourEngine.js); no toca la cámara.
 3. **Motor → Audio.** `QualityProfile` expone `maxSpatialAudioSources`; el audio no configura el motor.
 
-Detalle completo, incluido qué hacer cuando hay que tocar la carpeta de otro, en [`09-ambitos-de-los-tres-programadores.md`](09-ambitos-de-los-tres-programadores.md) y en [`decisiones/ADR-004-reparto-de-ambitos.md`](decisiones/ADR-004-reparto-de-ambitos.md).
+Detalle completo, incluido qué hacer cuando hay que tocar la carpeta de otro, en [`03-arquitectura.md`](03-arquitectura.md) y en [`decisiones/ADR-004-reparto-de-ambitos.md`](decisiones/ADR-004-reparto-de-ambitos.md).
 
 ---
 
@@ -195,7 +198,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 **RF/RNF:** RNF-009, RNF-011
 
 **Criterios de aceptación**
-- [ ] Repositorio con ramas `main`, `develop` y una por épica.
+- [x] Repositorio con ramas `main`, `develop` y **una por persona** (`dev/<nombre>`; el modelo por épica se descartó, ver 02-manual-del-equipo.md §3).
 - [ ] `pois.json` y `scenes.json` especificados con ejemplo válido.
 - [ ] Formato del track GPS definido.
 - [ ] `context-for-vibe-coding.md` publicado.
@@ -247,7 +250,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 **RF/RNF:** habilita RF-002
 
 **Criterios de aceptación**
-- [ ] Cuadros extraídos del video con el intervalo decidido (**resuelve V2**).
+- [x] Cuadros extraídos del video con el intervalo decidido (**V2 RESUELTA el 17/08**: 1 de cada 20; ver 05-produccion-de-escenas.md §12.1).
 - [ ] Cuadros con movimiento borroso descartados antes de procesar.
 - [ ] Poses de cámara resueltas por SfM para las tres escenas.
 - [ ] Documentado el intervalo elegido y el número de cuadros por escena.
@@ -264,8 +267,8 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 **Criterios de aceptación**
 - [ ] Las tres escenas entrenadas y exportadas a `.ply`.
-- [ ] Documentado el tiempo de entrenamiento por escena (**resuelve V5**).
-- [ ] Documentado el número de gaussianas por escena (**resuelve V3**).
+- [x] Documentado el tiempo de entrenamiento por escena (**V5 RESUELTA el 17/08**: ~5 h por escena en la RTX 3060 Ti).
+- [x] Documentado el número de gaussianas por escena (**V3 RESUELTA el 17/08**: techo útil de 1,5 M por escena). Ver 05-produccion-de-escenas.md §14-§15.
 - [ ] Evaluación visual: los elementos duros (escalones, barandas, cauce) se reconocen.
 
 **Subtareas**
@@ -294,16 +297,20 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 ### HU-09: Comprimir a SOG y validar peso y calidad
 **RF/RNF:** RNF-003, RNF-002
 
-**Criterios de aceptación**
-- [ ] Las tres escenas convertidas a `.sog` con SplatTransform.
+**Criterios de aceptación** *(actualizados el 17/08: el formato vigente es la **carpeta SOG
+desempaquetada** — `meta.json` + `.webp` — nunca el `.sog` empaquetado, que supera el límite
+de 25 MiB por archivo de Cloudflare Pages; y cada escena lleva su `sceneUp` medido o sale
+torcida. Receta completa: [`05-produccion-de-escenas.md`](05-produccion-de-escenas.md) §12.)*
+- [ ] Las tres escenas convertidas a carpeta SOG desempaquetada con SplatTransform.
 - [ ] **RNF-003 queda fijado con un número real** a partir de la medición (**resuelve V4**).
 - [ ] Comparación documentada: peso PLY vs peso SOG por escena.
 - [ ] Pérdida de calidad por compresión evaluada visualmente y aceptada.
+- [ ] `sceneUp` medido y anotado en `config/scenes.json` por escena.
 
 **Subtareas**
-- Juan Urrego, Conversión a SOG y medición de pesos.
+- Juan Urrego, Conversión a SOG desempaquetado y medición de pesos.
 - Juan Urrego, Actualizar RNF-003 en el documento de requerimientos.
-- Alejandra Chambueta, Cargar un `.sog` en un proyecto PlayCanvas mínimo y confirmar que abre.
+- Alejandra Chambueta, Cargar una escena SOG en un proyecto PlayCanvas mínimo y confirmar que abre.
 
 ---
 
@@ -311,7 +318,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 **RF/RNF:** RF-023, RF-017, RNF-011
 
 **Criterios de aceptación**
-- [ ] Las tres escenas declaradas con su orden, ruta al `.sog` y puntos de entrada/salida.
+- [ ] Las tres escenas declaradas con su orden, ruta a su `meta.json` y puntos de entrada/salida.
 - [ ] Track GPS asociado a la secuencia de escenas.
 - [ ] Primera aproximación de alineación y escala contra el objeto de referencia (**arranca V9**).
 - [ ] Cada escena versionada con fecha de captura.
@@ -459,16 +466,20 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 ### HU-16: Cargar la primera escena sin instalación
 **RF/RNF:** RF-001, RF-002
 
+> **Estado 17/08: cubierta en lo esencial por el prototipo publicado** en
+> <https://senderovivo.pages.dev> (carga de escena SOG, estados de carga y error, funciona sin
+> instalar nada). **No reimplementar desde cero**: lo que queda abierto son V6 y V7.
+
 **Criterios de aceptación**
-- [ ] La primera escena `.sog` carga en el navegador desde una URL, sin instalar nada.
-- [ ] Funciona en Chrome escritorio y en un celular real.
+- [x] La primera escena SOG carga en el navegador desde una URL, sin instalar nada.
+- [x] Funciona en Chrome escritorio y en un celular real.
 - [ ] **WebGPU con repliegue automático a WebGL** verificado (**resuelve V7**).
 - [ ] **Dispositivo de referencia de gama media definido** (**resuelve V6**).
 
 **Subtareas**
-- Alejandra Chambueta, Proyecto base con el componente `gsplat` y carga del asset.
+- ~~Alejandra Chambueta, Proyecto base con el componente `gsplat` y carga del asset~~ (hecho: `src/engine/SceneLoader.js`).
 - Alejandra Chambueta, Detección de WebGPU y repliegue a WebGL.
-- Juan Urrego, Publicar los `.sog` en una URL accesible.
+- ~~Juan Urrego, Publicar las escenas en una URL accesible~~ (hecho: Cloudflare Pages).
 - David Beltrán, Prueba en dispositivos y elección del celular de referencia.
 
 ---
@@ -476,10 +487,12 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 ### HU-17: Progreso de carga y fallo con reintento
 **RF/RNF:** RF-025, RNF-007, RNF-002
 
+> **Estado 17/08: implementada en el prototipo** (src/ui/overlay.js: barra de progreso real de descarga, error con reintento, revelado sin borroso). Queda la prueba formal de fallo de red y el diseño definitivo.
+
 **Criterios de aceptación**
-- [ ] Indicador de progreso visible mientras carga la escena.
-- [ ] Si la carga falla, se informa en español y se ofrece reintentar.
-- [ ] **Nunca hay pantalla en negro.**
+- [x] Indicador de progreso visible mientras carga la escena.
+- [x] Si la carga falla, se informa en español y se ofrece reintentar.
+- [x] **Nunca hay pantalla en negro.**
 - [ ] Probado forzando un fallo de red.
 
 **Subtareas**
@@ -492,10 +505,12 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 ### HU-18: Avanzar y retroceder por el trazado
 **RF/RNF:** RF-003
 
+> **Estado 17/08: implementada en el prototipo** (src/engine/TourEngine.js + flechas 3D en TrailMarkers.js). No reimplementar: extender.
+
 **Criterios de aceptación**
-- [ ] El usuario avanza y retrocede a lo largo del trazado guiado.
-- [ ] Funciona con teclado/ratón en escritorio y con gesto táctil en celular.
-- [ ] El movimiento es continuo, sin saltos bruscos.
+- [x] El usuario avanza y retrocede a lo largo del trazado guiado.
+- [x] Funciona con teclado/ratón en escritorio y con gesto táctil en celular.
+- [x] El movimiento es continuo, sin saltos bruscos.
 
 **Subtareas**
 - Alejandra Chambueta, Motor de avance sobre el trazado.
@@ -507,10 +522,12 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 ### HU-19: Mirada libre 360°
 **RF/RNF:** RF-005
 
+> **Estado 17/08: implementada en el prototipo** (TourEngine: arrastre con puntero y táctil, límite de pitch).
+
 **Criterios de aceptación**
-- [ ] La cámara rota 360° en cualquier punto del recorrido.
-- [ ] Rotar no desplaza al usuario fuera del trazado.
-- [ ] Arrastre en escritorio y en táctil.
+- [x] La cámara rota 360° en cualquier punto del recorrido.
+- [x] Rotar no desplaza al usuario fuera del trazado.
+- [x] Arrastre en escritorio y en táctil.
 
 **Subtareas**
 - Alejandra Chambueta, Control de cámara con rotación libre.
@@ -521,10 +538,12 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 ### HU-20: Restringir el desplazamiento al trazado autorizado
 **RF/RNF:** RF-004, RNF-015
 
+> **Estado 17/08: implementada en el prototipo** (TrailPath con corredor lateral de 1,5 unidades: margen sí, salida no). El vuelo libre solo existe con ?editor=1.
+
 **Criterios de aceptación**
-- [ ] No existe movimiento libre fuera del trazado.
-- [ ] No hay forma de "salirse" ni por gesto ni por teclado.
-- [ ] El diseño refuerza el camino autorizado, no lo sugiere como opcional.
+- [x] No existe movimiento libre fuera del trazado.
+- [x] No hay forma de "salirse" ni por gesto ni por teclado.
+- [x] El diseño refuerza el camino autorizado, no lo sugiere como opcional.
 
 **Subtareas**
 - Alejandra Chambueta, Restricción de posición al trazado.
@@ -961,7 +980,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 **RF/RNF:** todos
 
 **Criterios de aceptación**
-- [ ] Todas las ramas de épica fusionadas en `develop` y de ahí a `main`.
+- [ ] Todas las ramas personales integradas en `develop` y de ahí a `main`.
 - [ ] Recorrido completo de extremo a extremo sin errores.
 - [ ] Probado en Chrome, Safari y Firefox, escritorio y móvil.
 - [ ] Los RNF medibles verificados uno por uno.
@@ -984,7 +1003,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 - [ ] Desplegado en hosting estático con HTTPS.
 - [ ] Assets con política de caché adecuada.
 - [ ] Documentación actualizada: requerimientos, arquitectura, plan y ADRs.
-- [ ] `docs/03-avances-tecnologia.md` cerrado con los resultados reales de las validaciones V1–V14 (técnicas), A1–A5 (audio) y D1–D4 (diseño).
+- [ ] `docs/07-tecnologia.md` cerrado con los resultados reales de las validaciones V1–V14 (técnicas), A1–A5 (audio) y D1–D4 (diseño).
 
 **Subtareas**
 - Juan Urrego, Despliegue y configuración.
@@ -1014,13 +1033,13 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 
 ## 7. Referencias
 
-- Principios de trabajo y definición de "hecho": [`01-principios-de-trabajo.md`](01-principios-de-trabajo.md)
-- Plan de las cuatro visitas de campo: [`07-plan-de-visitas-de-campo.md`](07-plan-de-visitas-de-campo.md)
-- Ámbitos y fronteras de los tres programadores: [`09-ambitos-de-los-tres-programadores.md`](09-ambitos-de-los-tres-programadores.md)
-- Catálogo de fauna y flora con fuentes: [`05-catalogo-fauna-y-flora.md`](05-catalogo-fauna-y-flora.md)
-- Identidad visual y tokens: [`06-identidad-visual.md`](06-identidad-visual.md)
-- Ambientación sonora: [`08-ambientacion-sonora.md`](08-ambientacion-sonora.md)
-- Visión, alcance y riesgos: [`02-vision-de-proyecto.md`](02-vision-de-proyecto.md)
-- Investigación técnica y validaciones pendientes: [`03-avances-tecnologia.md`](03-avances-tecnologia.md)
+- Principios de trabajo y definición de "hecho": [`02-manual-del-equipo.md`](02-manual-del-equipo.md)
+- Plan de las cuatro visitas de campo: [`05-produccion-de-escenas.md`](05-produccion-de-escenas.md)
+- Ámbitos y fronteras de los tres programadores: [`03-arquitectura.md`](03-arquitectura.md)
+- Catálogo de fauna y flora con fuentes: [`06-contenido-de-la-experiencia.md`](06-contenido-de-la-experiencia.md)
+- Identidad visual y tokens: [`06-contenido-de-la-experiencia.md`](06-contenido-de-la-experiencia.md)
+- Ambientación sonora: [`06-contenido-de-la-experiencia.md`](06-contenido-de-la-experiencia.md)
+- Visión, alcance y riesgos: [`01-vision-y-alcance.md`](01-vision-y-alcance.md)
+- Investigación técnica y validaciones pendientes: [`07-tecnologia.md`](07-tecnologia.md)
 - Estimación en horas y cronograma semana a semana: [`../plan/plan_de_trabajo.md`](../plan/plan_de_trabajo.md)
 - Backlog importable a Jira: [`../plan/backlog-jira.csv`](../plan/backlog-jira.csv)

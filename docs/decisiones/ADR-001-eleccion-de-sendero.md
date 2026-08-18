@@ -1,6 +1,7 @@
 # ADR-001: Elección del sendero a capturar
 
-- **Estado:** Propuesta, se ratifica en el Sprint 1 (hito bloqueante, antes del viernes de la semana 1)
+- **Estado:** **Aceptada** (ratificada; compromiso de tramo fijado en 200 m)
+- **Estado hoy (18/08/2026):** decisión en vigor. V1 (reconocimiento) pendiente para la semana del 18–24/08; gestión con la EAAB pendiente de envío; hay un prototipo publicado con una escena de práctica que ya validó el pipeline completo antes de la salida
 - **Fecha:** 11/08/2026
 - **Responsable de la decisión:** Juan Urrego (PM)
 - **Participan:** todo el equipo
@@ -10,7 +11,7 @@
 
 ## Contexto
 
-Sendero Vivo captura y reconstruye **un tramo de 120 a 200 metros** de un sendero de los Cerros Orientales de Bogotá, en tres escenas. No el sendero completo: en un bosque cada metro es geometría nueva, no hay superficies repetibles que permitan simplificar sin perder el sitio, y el navegador tiene un techo duro de memoria y de coste de ordenamiento por profundidad.
+Sendero Vivo captura y reconstruye **un tramo de 200 metros** (rango inicial 120–200, fijado en 200) de un sendero de los Cerros Orientales de Bogotá, en tres escenas. No el sendero completo: en un bosque cada metro es geometría nueva, no hay superficies repetibles que permitan simplificar sin perder el sitio, y el navegador tiene un techo duro de memoria y de coste de ordenamiento por profundidad.
 
 Como se captura un solo tramo, **la elección del sendero determina todo el proyecto**: la calidad de la reconstrucción, el contenido biológico disponible para las fichas, la logística de la salida de campo y el riesgo de tener que repetirla.
 
@@ -84,7 +85,7 @@ Calle 71 con Avenida Circunvalar. TransMilenio a 700 m.
 
 **Se captura el tramo de entrada de la Quebrada La Vieja (Opción A).**
 
-Cifras del tramo previsto, Altitud: **2.712 m** · Recorrido: **340 m** · Desnivel: **62 m** · Pendiente media: **9 %**. El tramo capturado en tres escenas será de **120 a 200 m** dentro de ese recorrido.
+Cifras del tramo previsto, Altitud: **2.712 m** · Recorrido: **340 m** · Desnivel: **62 m** · Pendiente media: **9 %**. El tramo capturado en tres escenas es de **200 m** dentro de ese recorrido.
 
 **El motivo determinante es C1.** Escalones de piedra, barandas de madera y cauce rocoso son exactamente el tipo de superficie que el Gaussian Splatting reconstruye bien, y son la mitigación directa del riesgo más grave del proyecto: que el bosque altoandino salga con ruido y flotantes. Las otras dos opciones o no mejoran ese criterio (B) o lo empeoran (C).
 
@@ -108,7 +109,6 @@ La accesibilidad (C3) refuerza la decisión: con dos ventanas de salida reservad
 
 ### Qué queda pendiente de verificar en campo
 
-- `[por medir en campo]`, Longitud exacta del tramo capturable en 3 escenas dentro del rango de 120–200 m.
 - `[por medir en campo]`, Ubicación precisa de los 5–6 POIs sobre el tramo.
 - `[por evaluar]`, Comportamiento real de la luz a primera hora bajo el dosel.
 - `[por evaluar]`, Si el cauce estorba la reconstrucción más de lo previsto, se recompone el encuadre de las pasadas.
@@ -134,13 +134,13 @@ Dos precisiones posteriores a la redacción de este ADR. **No cambian la decisi�
 
 Las cifras de **340 m de recorrido, 62 m de desnivel y 9 % de pendiente** que aparecen arriba corresponden al **tramo de referencia evaluado en esta comparación**, no al tramo comprometido de 200 m. El desnivel y la pendiente de los 200 m están `[por medir en campo]` y se cierran en la visita de reconocimiento (V1).
 
-La visita de reconocimiento pasa a tener historia propia y criterios de aceptación verificables: **HU-42**. Ver [`../07-plan-de-visitas-de-campo.md`](../07-plan-de-visitas-de-campo.md).
+La visita de reconocimiento pasa a tener historia propia y criterios de aceptación verificables: **HU-42**. Ver [`../05-produccion-de-escenas.md`](../05-produccion-de-escenas.md).
 
 ---
 
 ## Referencias
 
-- Alcance y riesgos: [`../02-vision-de-proyecto.md`](../02-vision-de-proyecto.md)
-- Limitaciones técnicas en vegetación densa (riesgo RT-3): [`../03-avances-tecnologia.md`](../03-avances-tecnologia.md)
-- Historia que ejecuta esta decisión: HU-01, Sprint 1, [`../04-actividades-y-roles.md`](../04-actividades-y-roles.md)
-- Plan de las cuatro visitas de campo: [`../07-plan-de-visitas-de-campo.md`](../07-plan-de-visitas-de-campo.md)
+- Alcance y riesgos: [`../01-vision-y-alcance.md`](../01-vision-y-alcance.md)
+- Limitaciones técnicas en vegetación densa (riesgo RT-3): [`../07-tecnologia.md`](../07-tecnologia.md)
+- Historia que ejecuta esta decisión: HU-01, Sprint 1, [`../04-backlog.md`](../04-backlog.md)
+- Plan de las cuatro visitas de campo: [`../05-produccion-de-escenas.md`](../05-produccion-de-escenas.md)
