@@ -4,6 +4,8 @@
 
 Repositorio: [`JuanUrrego146/SenderoVivo`](https://github.com/JuanUrrego146/SenderoVivo)
 
+> **Empiezas a programar?** Lee primero [**CONTEXTO-EQUIPO.md**](CONTEXTO-EQUIPO.md): estado real del proyecto, cómo levantarlo, qué archivo tocas y las reglas que no se rompen.
+>
 > **Acceso rápido:** [**Guía de captura en campo**](docs/11-guia-de-captura-en-campo.md), el instructivo de escaneo paso a paso: configuración de cámara, pasadas por el sendero y procesamiento hasta el `.sog`.
 
 ---
