@@ -22,6 +22,7 @@ import { TourEngine } from '../engine/TourEngine.js';
 import { TrailRecorder } from '../engine/TrailRecorder.js';
 import { TrailMarkers } from '../engine/TrailMarkers.js';
 import { colorFromToken, cssFromToken } from '../ui/tokens.js';
+import AmbienceController from '../audio/AmbienceController.js';
 import {
     showLoading, setLoadingProgress, showPlaceholder, showError, showHint, hideOverlay
 } from '../ui/overlay.js';
@@ -100,6 +101,26 @@ async function startViewer(sceneUrl, sceneUp) {
     const camera = createCamera(app);
     const loader = new SceneLoader(app);
 
+    // Ambience controller: load config but do NOT autoplay sound (RNF-008)
+    const ambience = new AmbienceController(app, 'config/soundscape.json');
+
+    // Load soundscape config so the UI can reflect provisional status and the route.
+    let soundscapeCfg = {};
+    try {
+        const resp = await fetch('config/soundscape.json');
+        if (resp.ok) soundscapeCfg = await resp.json();
+    } catch (e) {
+        console.warn('Failed to fetch soundscape config for UI:', e);
+    }
+
+    // Create the UI toggle button always visible. UI will show "En silencio" when no audio configured.
+    createAudioToggleButton(ambience, soundscapeCfg);
+
+    ambience.load().catch((err) => {
+        // Loading failed: log only. The button remains visible and will show "En silencio" when appropriate.
+        console.warn('Ambience load failed:', err);
+    });
+
     await loader.load({
         url: sceneUrl,
         sceneUp,
@@ -120,6 +141,104 @@ async function startViewer(sceneUrl, sceneUp) {
     await setUpNavigation(app, camera);
     setLoadingProgress(100, 'Listo');
     hideOverlay();
+}
+
+function createAudioToggleButton(ambienceController, soundscapeCfg = {}) {
+    const id = 'audio-toggle-btn';
+    let btn = document.getElementById(id);
+    if (btn) return btn;
+
+    btn = document.createElement('button');
+    btn.id = id;
+    btn.setAttribute('aria-label', 'Control de ambiente');
+    btn.style.position = 'fixed';
+    btn.style.right = '16px';
+    btn.style.bottom = '16px';
+    btn.style.zIndex = '10000';
+    btn.style.padding = '10px 14px';
+    btn.style.borderRadius = '8px';
+    btn.style.border = 'none';
+    // Colors must come from tokens (no literals in JS)
+    btn.style.background = cssFromToken('--sv-scrim-550',);
+    btn.style.color = cssFromToken('--sv-gray-050',);
+    btn.style.fontSize = '14px';
+    btn.style.cursor = 'pointer';
+    btn.style.boxShadow = 'none';
+    btn.style.display = 'block';
+
+    let visibleInterval = null;
+
+    // provisional badge when audio is placeholder
+    const noteText = soundscapeCfg?.ambienceNote || '';
+    const hasAmbienceUrl = Boolean(soundscapeCfg?.ambienceUrl);
+
+    const badge = document.createElement('div');
+    badge.id = 'audio-provisional-badge';
+    badge.style.display = 'inline-block';
+    badge.style.marginLeft = '10px';
+    badge.style.padding = '6px 8px';
+    badge.style.borderRadius = '6px';
+    badge.style.fontSize = '12px';
+    badge.style.verticalAlign = 'middle';
+    badge.style.background = cssFromToken('--sv-badge-green', 'rgba(31,93,58,0.9)');
+    badge.style.color = cssFromToken('--sv-gray-050', '#EDF1EF');
+    badge.style.display = 'none';
+
+    const update = () => {
+        if (!ambienceController) return;
+
+        // If there is no ambience URL configured, show En silencio and the provisional badge
+        if (!hasAmbienceUrl) {
+            btn.textContent = 'En silencio (prototipo)';
+            badge.textContent = noteText || 'Audio provisional';
+            badge.style.display = 'inline-block';
+            return;
+        }
+
+        // If URL exists but controller not yet loaded, show loading state
+        if (!ambienceController.loaded) {
+            btn.textContent = 'Cargando audio…';
+            badge.style.display = 'none';
+            return;
+        }
+
+        // When loaded, reflect play state
+        const playing = typeof ambienceController.isPlaying === 'function' ? ambienceController.isPlaying() : false;
+        btn.textContent = (playing ? 'Silenciar' : 'Iniciar con sonido') + ' (prototipo)';
+        badge.style.display = 'none';
+    };
+
+    btn.addEventListener('click', (e) => {
+        // This click is the required user gesture for unlocking audio per RNF-008
+        // If no audio configured, do nothing but keep the control usable for feedback.
+        if (!hasAmbienceUrl) return;
+        if (!ambienceController.loaded) return;
+        ambienceController.toggle();
+        // Small timeout to wait for play() effect
+        setTimeout(update, 100);
+    });
+
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'fixed';
+    wrapper.style.right = '16px';
+    wrapper.style.bottom = '16px';
+    wrapper.style.zIndex = '10000';
+    wrapper.style.display = 'flex';
+    wrapper.style.alignItems = 'center';
+    wrapper.appendChild(btn);
+    wrapper.appendChild(badge);
+
+    document.body.appendChild(wrapper);
+
+    // Poll to update state (sound API doesn't emit DOM events here)
+    visibleInterval = setInterval(update, 500);
+
+    // Cleanup on unload
+    window.addEventListener('beforeunload', () => {
+        if (visibleInterval) clearInterval(visibleInterval);
+    });
+
+    return btn;
 }
 
 /** Vuelo libre: solo para marcar el trazado o mientras no exista uno. */
