@@ -1,0 +1,143 @@
+/*
+ * Estilos del visor prototipo. Todos los colores salen de styles/tokens.css.
+ */
+body {
+    margin: 0;
+    overflow: hidden;
+    background: var(--sv-black-900);
+    font-family: system-ui, sans-serif;
+}
+
+#overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: var(--sv-black-900);
+}
+#overlay[hidden] { display: none; }
+#overlay.desvanecer {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+#overlay-content {
+    max-width: 480px;
+    padding: 24px;
+    background: var(--sv-gray-800);
+    border: 1px solid var(--sv-gray-600);
+    border-radius: 8px;
+}
+#overlay-content h1 {
+    margin: 0 0 12px;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--sv-gray-050);
+}
+#overlay-content p {
+    margin: 0 0 12px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--sv-gray-200);
+}
+#overlay-content p:last-child { margin-bottom: 0; }
+#overlay-content a { color: var(--sv-green-300); }
+#overlay-content code {
+    padding: 1px 5px;
+    background: var(--sv-black-900);
+    border-radius: 4px;
+    color: var(--sv-gray-050);
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+#overlay-content button {
+    padding: 10px 20px;
+    background: var(--sv-gray-800);
+    border: 1px solid var(--sv-gray-600);
+    border-radius: 6px;
+    color: var(--sv-gray-050);
+    font-size: 16px;
+    cursor: pointer;
+}
+#overlay-content button:hover { border-color: var(--sv-green-500); }
+#overlay-content .nota {
+    font-size: 13px;
+    color: var(--sv-gray-400);
+}
+
+.spinner {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 16px;
+    border: 3px solid var(--sv-gray-600);
+    border-top-color: var(--sv-green-500);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Barra de progreso de la carga */
+.barra {
+    height: 6px;
+    margin: 14px 0 10px;
+    background: var(--sv-black-900);
+    border-radius: 3px;
+    overflow: hidden;
+}
+.barra-fill {
+    height: 100%;
+    width: 2%;
+    background: linear-gradient(90deg, var(--sv-green-700), var(--sv-green-300));
+    border-radius: 3px;
+    transition: width 0.35s ease;
+}
+
+/* Ayuda en pantalla, abajo a la izquierda */
+#hint {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 10;
+    max-width: calc(100% - 32px);
+    margin: 0;
+    padding: 10px 14px;
+    background: var(--sv-scrim-720);
+    border: 1px solid var(--sv-gray-600);
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--sv-gray-200);
+}
+#hint strong { color: var(--sv-green-300); }
+#hint[hidden] { display: none; }
+
+/* Distintivo de prototipo, siempre visible */
+#prototipo {
+    position: fixed;
+    top: 14px;
+    left: 16px;
+    z-index: 12;
+    padding: 6px 12px;
+    background: var(--sv-badge-green);
+    border: 1px solid var(--sv-green-300);
+    border-radius: 999px;
+    color: var(--sv-gray-050);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+#prototipo span {
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--sv-gray-200);
+}
+
+@media (max-width: 480px) {
+    #hint { font-size: 13px; padding: 8px 10px; }
+}

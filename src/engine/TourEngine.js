@@ -191,6 +191,21 @@ export class TourEngine {
         this.camera.setEulerAngles(this.pitch, this.yaw, 0);
     }
 
+    /**
+     * Lleva el recorrido a esa distancia del trazado, recortada a los extremos.
+     * Es la puerta de entrada para controles externos (flechas, botones): nadie
+     * escribe `distance` directamente ni dispara el progreso por su cuenta.
+     */
+    moveTo(distance) {
+        this.distance = Math.max(0, Math.min(distance, this.trailPath.totalLength()));
+        this._emitProgress();
+    }
+
+    /** Avanza (o retrocede, con delta negativo) desde la posición actual. */
+    advance(delta) {
+        this.moveTo(this.distance + delta);
+    }
+
     /** Control desde los botones en pantalla: 'forward'|'back'|'left'|'right'. */
     press(action) {
         if (action === 'forward') this._input.forward = 1;

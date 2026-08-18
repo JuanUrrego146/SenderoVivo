@@ -1,0 +1,27 @@
+/*
+ * Tokens de color de Sendero Vivo — docs/06-contenido-de-la-experiencia.md §B.
+ * ÚNICA fuente de color de la aplicación (invariante 14): ningún archivo .js
+ * ni componente escribe un color literal; el código lee estos tokens.
+ *
+ * Ámbito: Eybar Viasus y Alberto Alemán. Los programadores consumen, no definen.
+ * Si hace falta un color nuevo, se añade aquí y se le calcula el contraste
+ * (WCAG AA) antes de usarlo.
+ */
+:root {
+    --sv-black-900: #0E1210;
+    --sv-gray-800:  #1B211E;
+    --sv-gray-600:  #3A423E;
+    --sv-gray-400:  #6E7873;
+    --sv-gray-200:  #B9C1BC;
+    --sv-gray-050:  #EDF1EF;
+    --sv-green-700: #1F5D3A;
+    --sv-green-500: #2E8B57;
+    --sv-green-300: #6FCF97;
+    --sv-water-400: #4FA3A5;
+
+    /* Variantes con transparencia, para velos y fondos sobre la escena.
+     * Derivadas de black-900 y green-700; contraste heredado del token base. */
+    --sv-scrim-720: rgba(14, 18, 16, 0.72);
+    --sv-scrim-550: rgba(14, 18, 16, 0.55);
+    --sv-badge-green: rgba(31, 93, 58, 0.9);
+}
