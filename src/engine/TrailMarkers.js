@@ -73,8 +73,10 @@ export class TrailMarkers {
         this.holdDelay = options.holdDelay ?? 260;         // ms para pasar de toque a caminar sostenido
         this.targetDistance = null;                        // destino de la transición suave
         this.heldIndex = -1;                               // flecha mantenida pulsada
-        this.size = options.size ?? 0.9;                   // tamaño de la flecha
-        this.groundOffset = options.groundOffset ?? -1.4;  // altura respecto a la cámara
+        this.size = options.size ?? 1.1;                   // tamaño de la flecha
+        this.groundOffset = options.groundOffset ?? -1.0;  // altura respecto a la cámara
+        /** Solo se muestra la flecha que el visitante tiene delante. */
+        this.onlyVisible = options.onlyVisible ?? true;
         this.hoverIndex = -1;
 
         const green = getComputedStyle(document.documentElement)
@@ -236,9 +238,19 @@ export class TrailMarkers {
             pos.y += this.groundOffset;
             m.setPosition(pos);
 
-            // El plano nace horizontal: girarlo para que la punta siga el camino.
-            const yaw = Math.atan2(dir.x * m.direction, dir.z * m.direction) * 180 / Math.PI;
+            // El plano nace horizontal y con la punta hacia -Z en local: por eso
+            // los signos negativos. Sin ellos la flecha señala al revés.
+            const avance = new Vec3(dir.x * m.direction, 0, dir.z * m.direction).normalize();
+            const yaw = Math.atan2(-avance.x, -avance.z) * 180 / Math.PI;
             m.setEulerAngles(0, yaw, 0);
+
+            // Si la flecha queda a la espalda, se oculta: la que se ve es siempre
+            // la que lleva hacia donde el visitante está mirando.
+            if (this.onlyVisible) {
+                const haciaLaFlecha = new Vec3().sub2(pos, this.camera.getPosition()).normalize();
+                const mirada = this.camera.forward;
+                if (haciaLaFlecha.dot(mirada) < 0.15) { m.enabled = false; continue; }
+            }
 
             const resaltada = this.hoverIndex === i;
             m.baseMaterial.opacity = resaltada ? 1 : 0.85;
