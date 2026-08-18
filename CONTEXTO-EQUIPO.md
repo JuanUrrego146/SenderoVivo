@@ -44,12 +44,43 @@ El motor PlayCanvas se carga desde un CDN con un *import map* en `index.html`.
 
 ---
 
-## 2 bis. El prototipo está publicado
+## 2 bis. Tu trabajo se publica solo en una web
 
-**https://senderovivo.juandavidurregofonseca677.workers.dev**
+**Producción (rama `develop`): https://senderovivo.pages.dev**
 
-Esa web tiene lo mismo que ves en local: la escena, el recorrido y las flechas. Se
-actualiza desde la rama `develop`. Úsala para mostrar el avance sin montar nada.
+Y **cada quien tiene su propia web con sus cambios**. Al hacer `git push` a tu rama,
+Cloudflare la despliega automáticamente en una dirección propia:
+
+```
+https://dev-alejandra-chambueta.senderovivo.pages.dev
+https://dev-david-beltran.senderovivo.pages.dev
+https://dev-felipe-acevedo.senderovivo.pages.dev
+https://dev-eybar-viasus.senderovivo.pages.dev
+https://dev-alberto-aleman.senderovivo.pages.dev
+https://dev-juan-urrego.senderovivo.pages.dev
+```
+
+(La barra de `dev/tu-nombre` se convierte en guion.)
+
+**No hay que hacer nada más que `git push`.** Ni configurar, ni pedir permiso, ni avisar.
+El despliegue tarda entre uno y tres minutos; después recargas tu URL y ahí está tu
+trabajo, funcionando en internet, en cualquier dispositivo.
+
+Esto sirve para dos cosas: probar en un celular real sin montar servidor, y enseñarle a
+otro lo que hiciste mandándole un enlace en vez de explicárselo.
+
+### Probar tus cambios en la web publicada
+
+Todo lo que tu parte necesita ya está versionado, así que basta con subirlo:
+
+| Si trabajas en… | Sube a tu rama | Y lo ves en tu URL |
+|---|---|---|
+| **Audio** | tu código en `src/audio/`, el `.mp3` en `assets/audio/` y la ruta en `config/soundscape.json` | El botón de sonido y el ambiente funcionando |
+| **Puntos de interés** | tu código en `src/poi/`, el `.glb` en `assets/models/` y los datos en `config/pois.json` | El marcador, la ficha y el modelo girable |
+| **Interfaz** | tu CSS en `styles/` y el marcado que toque | La interfaz sobre la escena real |
+
+Los archivos de audio y los modelos `.glb` **sí van al repositorio**: pesan poco. Lo único
+que no cabe es el PLY de la escena, y para programar encima no hace falta (§8 bis).
 
 ---
 

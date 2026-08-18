@@ -4,7 +4,7 @@
 
 Repositorio: [`JuanUrrego146/SenderoVivo`](https://github.com/JuanUrrego146/SenderoVivo)
 
-**Prototipo en línea:** https://senderovivo.juandavidurregofonseca677.workers.dev
+**Prototipo en línea:** https://senderovivo.pages.dev
 
 > **Empiezas a programar?** Lee primero [**CONTEXTO-EQUIPO.md**](CONTEXTO-EQUIPO.md): estado real del proyecto, cómo levantarlo, qué archivo tocas y las reglas que no se rompen.
 >
