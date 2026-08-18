@@ -24,6 +24,8 @@ export class TrailPath {
         this.waypoints = waypoints.map(p => new Vec3(p.x, p.y, p.z));
         /** Anchura del margen lateral permitido, en unidades de la escena. */
         this.corridorRadius = corridorRadius;
+        /** Altura de los ojos sobre el trazado marcado. */
+        this.eyeHeight = 0;
         this.segmentLengths = [];
         this.cumulative = [0];
         this._rebuild();

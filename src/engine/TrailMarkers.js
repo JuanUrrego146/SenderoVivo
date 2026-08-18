@@ -83,6 +83,14 @@ export class TrailMarkers {
             .getPropertyValue('--sv-green-300').trim() || '#6FCF97';
         this.texture = createArrowTexture(app.graphicsDevice, green);
 
+        // La capa UI se dibuja DESPUÉS del mundo: sin esto las gaussianas tapan
+        // la flecha aunque esté delante, porque ambas son transparentes y el
+        // césped cercano se pinta después que ella.
+        this.layer = app.scene.layers.getLayerByName('UI');
+        if (this.layer && !camera.camera.layers.includes(this.layer.id)) {
+            camera.camera.layers = [...camera.camera.layers, this.layer.id];
+        }
+
         this.markers = [
             this._createMarker('marker-forward', 1),
             this._createMarker('marker-back', -1)
@@ -107,7 +115,8 @@ export class TrailMarkers {
         material.update();
 
         const entity = new Entity(name);
-        entity.addComponent('render', { type: 'plane', material });
+        const layers = this.layer ? [this.layer.id] : undefined;
+        entity.addComponent('render', layers ? { type: 'plane', material, layers } : { type: 'plane', material });
         entity.setLocalScale(this.size, 1, this.size);
         entity.direction = direction;
         entity.baseMaterial = material;

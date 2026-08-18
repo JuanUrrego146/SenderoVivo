@@ -14,5 +14,8 @@
       "z": 5.889
     }
   ],
-  "points": []
+  "points": [],
+  "eyeHeight": 0.75,
+  "corridorRadius": 1.5,
+  "eyeHeightNote": "Altura de los ojos sobre los puntos marcados. Los waypoints se marcan volando y quedan bajos; esto levanta la camara a altura de persona."
 }

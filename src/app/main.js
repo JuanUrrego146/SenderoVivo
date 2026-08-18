@@ -196,7 +196,9 @@ async function loadTrail() {
         const response = await fetch(TRACK_CONFIG_URL);
         if (!response.ok) return new TrailPath([]);
         const cfg = await response.json();
-        return new TrailPath(cfg.sceneWaypoints || []);
+        const path = new TrailPath(cfg.sceneWaypoints || [], cfg.corridorRadius ?? 1.5);
+        path.eyeHeight = cfg.eyeHeight ?? 0;
+        return path;
     } catch {
         return new TrailPath([]);
     }
@@ -230,21 +232,32 @@ async function setUpNavigation(app, camera) {
     }
 
     // Recorrido guiado: la cámara se mueve dentro del corredor del trazado (RF-004).
-    const tour = new TourEngine(app, camera, trail, { speed: 1.2 });
+    // eyeHeight sube la cámara sobre el trazado: los puntos se marcan volando y
+    // suelen quedar a ras de suelo. Se lee de config/track.json para ajustarlo
+    // sin tocar código.
+    const tour = new TourEngine(app, camera, trail, {
+        speed: 1.2,
+        eyeHeight: trail.eyeHeight
+    });
     tour.start();
     window.senderoTour = tour;
     // Flechas dentro de la escena, sobre el camino: se tocan para avanzar.
-    window.senderoMarkers = new TrailMarkers(app, camera, tour, { stepDistance: 3.2 });
+    window.senderoMarkers = new TrailMarkers(app, camera, tour, { stepDistance: 3.2, groundOffset: -0.15 });
 
     showHint(
-        'Toca las <strong>flechas del camino</strong> para avanzar · también <strong>W A S D</strong> · ' +
-        '<strong>Shift</strong> más rápido · arrastra para mirar en 360°<br>' +
-        '<span id="hud-progress">0 % del recorrido</span>'
+        'Toca las <strong>flechas del camino</strong> para avanzar · también <strong>W A S D</strong><br>' +
+        '<strong>R</strong> subir la vista · <strong>F</strong> bajarla · arrastra para mirar en 360°<br>' +
+        '<span id="hud-progress">0 % del recorrido</span> · ' +
+        'altura <span id="hud-eye">' + (trail.eyeHeight ?? 0).toFixed(2) + '</span>'
     );
 
     app.on('tour:progress', ({ distance, total }) => {
         const hud = document.getElementById('hud-progress');
         if (hud && total > 0) hud.textContent = Math.round(100 * distance / total) + ' % del recorrido';
+    });
+    app.on('tour:eyeheight', (v) => {
+        const hud = document.getElementById('hud-eye');
+        if (hud) hud.textContent = v.toFixed(2);
     });
 }
 

@@ -75,6 +75,12 @@ export class TourEngine {
         this._unbindInput();
     }
 
+    /** Ajusta la altura de los ojos y lo publica para el HUD. */
+    setEyeHeight(value) {
+        this.eyeHeight = Math.round(value * 100) / 100;
+        this.app.fire('tour:eyeheight', this.eyeHeight);
+    }
+
     /** Guarda el estado para restaurarlo al cerrar una ficha (RF-018). */
     saveState() {
         return { distance: this.distance, yaw: this.yaw, pitch: this.pitch };
@@ -97,6 +103,10 @@ export class TourEngine {
             if (k === 'a' || k === 'arrowleft') this._input.strafe = -1;
             if (k === 'd' || k === 'arrowright') this._input.strafe = 1;
             if (e.shiftKey) this._input.fast = true;
+            // Calibrar la altura de los ojos en vivo: la escala de cada escena
+            // es distinta y hay que verla para acertar.
+            if (k === 'r') this.setEyeHeight(this.eyeHeight + 0.15);
+            if (k === 'f') this.setEyeHeight(this.eyeHeight - 0.15);
         };
         this._keyUp = (e) => {
             const k = e.key.toLowerCase();
