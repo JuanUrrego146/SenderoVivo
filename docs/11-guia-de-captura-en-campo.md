@@ -81,7 +81,7 @@ Las ocho pasadas materializan la banda de alta densidad del ADR-002: del suelo h
    npx @playcanvas/splat-transform escena.ply --filter-nan scene-01.sog
    ```
 
-5. Verificar el resultado en el visor del prototipo (ver [`../PROTOTIPO.md`](../PROTOTIPO.md)).
+5. Verificar el resultado en el visor (ver [`../CONTEXTO-EQUIPO.md`](../CONTEXTO-EQUIPO.md)).
 
 ## 6. Qué medir y anotar durante la práctica
 

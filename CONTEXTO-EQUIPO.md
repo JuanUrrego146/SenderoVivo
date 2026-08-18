@@ -202,36 +202,42 @@ senderoTour.distance = senderoTour.trailPath.totalLength() * 0.5;
 
 ---
 
-## 8 bis. Dónde están los archivos del escaneo
+## 8 bis. Trabajar con las escenas
 
-En el repositorio está la escena **lista para usar** (`assets/scenes/scene-01/`, formato
-SOG desempaquetado, 56 MB). Es lo único que la web necesita.
+En el repositorio está la escena **lista para usar**: `assets/scenes/scene-01/`, en formato
+SOG desempaquetado (56 MB). Es lo único que la web necesita, y ya está ahí.
 
-**Los archivos intermedios NO están en Git y no pueden estarlo:** el PLY entrenado pesa
-**1.125 MB** y GitHub rechaza archivos de más de 100 MB. Viven en la máquina de Juan, en
-`F:\EscaneoPrototipo\`:
+**Los archivos intermedios no están en Git ni pueden estarlo.** El PLY que sale del
+entrenamiento pesa más de 1 GB y GitHub rechaza archivos de más de 100 MB. Si necesitas
+el PLY, los cuadros del video o la salida de COLMAP para reeditar algo, **pídeselos a
+Juan**: se pasan por disco o enlace.
 
-| Archivo | Qué es |
-|---|---|
-| `final/final_60000.ply` | El entrenamiento completo, 5 M de gaussianas |
-| `final/limpio.ply` | Ya filtrado, listo para abrir en SuperSplat |
-| `colmap/sparse/0/` | Poses de cámara y nube de puntos |
-| `frames/` | Los 1.110 cuadros extraídos del video |
-| `SenderoVivo_union.mp4` | Los 8 clips de video unidos |
+### Poner una escena nueva
 
-Si necesitas alguno, pídeselo a Juan: se pasa por disco o por enlace, no por Git.
-
-**El SOG que sí está versionado se genera así:**
+Desde un PLY ya limpio:
 
 ```bash
 splat-transform limpio.ply assets/scenes/scene-01/meta.json
 ```
 
-Se versiona la **carpeta desempaquetada** (`meta.json` + `.webp`), no el `.sog`
-empaquetado, porque el hosting rechaza archivos de más de 25 MB.
+Se versiona la **carpeta desempaquetada** (`meta.json` + los `.webp`), nunca el `.sog`
+empaquetado: el hosting rechaza archivos de más de 25 MB y un `.sog` entero los supera.
 
-Los parámetros de entrenamiento medidos y la receta recomendada están en
-[`docs/12-parametros-de-entrenamiento.md`](docs/12-parametros-de-entrenamiento.md).
+Después hay dos datos que van a `config/scenes.json`: la ruta al `meta.json` y el
+**`sceneUp`** de esa escena (sin él sale torcida). Cómo se calcula está en
+[`docs/12-parametros-de-entrenamiento.md`](docs/12-parametros-de-entrenamiento.md), junto
+con los parámetros de entrenamiento medidos y la receta recomendada.
+
+### Probar otra escena sin tocar la configuración
+
+```
+http://localhost:3000/?sog=assets/scenes/otra-escena/meta.json
+```
+
+### Marcar un trazado nuevo
+
+Abre `http://localhost:3000/?editor=1`, vuela con **W A S D** por el camino, pulsa **M**
+en cada punto, **Z** deshace y **X** descarga el `track.json`. Lo reemplazas en `config/`.
 
 ---
 
@@ -259,7 +265,6 @@ Los parámetros de entrenamiento medidos y la receta recomendada están en
 - **Arquitectura, diagramas y contratos:** `docs/arquitectura.md`
 - **Requerimientos (32 RF, 16 RNF, 15 CUS):** `docs/F_Analisis_de_Requerimientos_V1,0_SenderoVivo.md`
 - **Guía de captura en campo:** `docs/11-guia-de-captura-en-campo.md`
-- **Cómo levantar el visor:** `PROTOTIPO.md`
 - **Catálogo de fauna verificado:** `docs/05-catalogo-fauna-y-flora.md`
 - **Ámbitos y fronteras entre módulos:** `docs/09-ambitos-de-los-tres-programadores.md`
 - **Documentación oficial de PlayCanvas:** https://developer.playcanvas.com/user-manual/gaussian-splatting/
@@ -281,7 +286,7 @@ Los parámetros de entrenamiento medidos y la receta recomendada están en
 
 ## 12. Si algo no está aquí
 
-Antes de preguntar, mira en este orden: este documento → `PROTOTIPO.md` →
+Antes de preguntar, mira en este orden: este documento →
 `docs/arquitectura.md` → la issue que estás resolviendo (tiene una sección de ámbito con
 los archivos exactos que tocas). Si después de eso sigue sin estar claro, escribe en la
 issue: así queda registrado para el resto.
