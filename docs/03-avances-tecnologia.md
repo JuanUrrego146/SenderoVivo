@@ -343,10 +343,10 @@ Lista abierta. Cada punto tiene dueño y sprint. Ninguno está resuelto hoy.
 | # | Pregunta abierta | Dueño | Se resuelve en |
 |---|---|---|---|
 | V1 | ¿1x o 2x en la captura, dado que 1x (~26 mm) queda bajo el rango recomendado? | Juan Urrego | S1 |
-| V2 | ¿Cada cuántos cuadros se extraen imágenes del video 4K60? | Juan Urrego | S2 |
-| V3 | ¿Cuántas gaussianas necesita el tramo para verse bien? | Juan Urrego | S2 |
+| V2 | ~~¿Cada cuántos cuadros se extraen imágenes del video 4K60?~~ **RESUELTA:** 1 de cada 30 registra el 89 %; usar 1 de cada 20. Ver [doc 12](12-parametros-de-entrenamiento.md) | Juan Urrego | ✅ 17/08 |
+| V3 | ~~¿Cuántas gaussianas necesita el tramo?~~ **RESUELTA:** 1,5 M por escena; más no mejora y rompe el presupuesto móvil | Juan Urrego | ✅ 17/08 |
 | V4 | ¿Cuánto pesa realmente una escena nuestra en SOG? → fija RNF-003 | Juan Urrego | S2 |
-| V5 | ¿Cuánto tarda el entrenamiento en la estación del equipo? | Juan Urrego | S2 |
+| V5 | ~~¿Cuánto tarda el entrenamiento?~~ **RESUELTA:** ~5 h por escena (3,5 h COLMAP + 1,5 h Brush) en la RTX 3060 Ti | Juan Urrego | ✅ 17/08 |
 | V6 | ¿Qué celular concreto se adopta como "gama media" de referencia? | Alejandra Chambueta | S3 |
 | V7 | ¿WebGPU con repliegue a WebGL funciona en Safari iOS vigente? | Alejandra Chambueta | S3 |
 | V8 | ¿Qué `splatBudget` real sostiene 30 fps en el dispositivo de referencia? | Alejandra Chambueta | S4 |
