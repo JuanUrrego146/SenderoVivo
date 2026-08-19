@@ -34,6 +34,9 @@ export class TourEngine {
         this.smoothing = options.smoothing ?? 12;
         // La escena activa puede no aguantar vistas en reversa; entonces solo se avanza.
         this.forwardOnly = options.forwardOnly ?? false;
+        // Tope propio del picado hacia abajo: muy cerca del suelo el splatting se ve
+        // como brochazos, y algunas escenas piden no dejar meter la camara ahi.
+        this.pitchDownLimit = options.pitchDownLimit ?? this.pitchLimit;
 
         this.distance = 0;
         this.yaw = 0;
@@ -122,7 +125,7 @@ export class TourEngine {
             if (!this._looking) return;
             this.yaw -= e.movementX * this.lookSensitivity;
             this.pitch -= e.movementY * this.lookSensitivity;
-            this.pitch = Math.max(-this.pitchLimit, Math.min(this.pitchLimit, this.pitch));
+            this.pitch = Math.max(-this.pitchDownLimit, Math.min(this.pitchLimit, this.pitch));
         };
         // Táctil: un dedo mira, dos dedos avanzan.
         this._touchStart = (e) => {
@@ -135,7 +138,7 @@ export class TourEngine {
             if (this._lastTouch) {
                 this.yaw -= (t.clientX - this._lastTouch.clientX) * this.lookSensitivity;
                 this.pitch -= (t.clientY - this._lastTouch.clientY) * this.lookSensitivity;
-                this.pitch = Math.max(-this.pitchLimit, Math.min(this.pitchLimit, this.pitch));
+                this.pitch = Math.max(-this.pitchDownLimit, Math.min(this.pitchLimit, this.pitch));
             }
             this._lastTouch = { clientX: t.clientX, clientY: t.clientY };
         };

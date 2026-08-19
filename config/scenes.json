@@ -43,18 +43,15 @@
       "id": "scene-01-luma",
       "order": 90,
       "sogUrl": "assets/scenes/scene-01-luma/meta.json",
+      "render": "luma",
       "captureDate": "2026-08-18 (alterna: mismo parque, reconstruida por Luma desde el ZIP de fotos)",
-      "note": "No entra al recorrido por defecto (order alto). Se abre con ?sog=assets/scenes/scene-01-luma/meta.json; el visor toma de aqui su nivelacion y su restriccion de avance.",
-      "sceneUp": {
-        "x": -0.6069,
-        "y": -0.7871,
-        "z": -0.1104
-      },
-      "sceneUpNote": "Medido ajustando el plano del suelo (45,7 % de las gaussianas) por RANSAC: aqui no hay poses de COLMAP. La escena venia 141,9 grados torcida.",
+      "note": "Tecnica alterna de scene-01, conmutable con ?render=luma (o el switch del visor). No entra al recorrido por defecto (order alto).",
+      "baked": true,
+      "coordenadasNota": "REGISTRADA sobre el marco de mundo de scene-01: nivelacion, guinada, escala (1,23932) y traslacion horneadas en el archivo con registro automatico (ICP con correccion de pendiente, RMS 0,096 u). baked:true le dice al visor que NO aplique ninguna rotacion (ni la del ejemplo oficial): el archivo YA esta en coordenadas del mundo. Usa config/track.json igual que scene-01: cualquier POI o fuente de sonido cae en el mismo punto fisico en ambas tecnicas.",
       "forwardOnly": true,
       "forwardOnlyNote": "La reconstruccion solo aguanta vistas hacia adelante: en reversa se ve mal. El visor bloquea retroceder cuando la escena activa lo pide.",
-      "trackUrl": "config/track-scene-01-luma.json",
-      "trackUrlNote": "El trazado global (config/track.json) esta en el marco de la escena COLMAP; esta escena trae el suyo, generado del eje largo de su suelo."
+      "pitchDownLimit": 48,
+      "pitchDownLimitNote": "Tope del picado hacia abajo (grados). Muy cerca del suelo las gaussianas se ven como brochazos: se impide meter la camara ahi."
     }
   ]
 }

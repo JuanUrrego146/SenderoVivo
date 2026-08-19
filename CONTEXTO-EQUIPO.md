@@ -342,6 +342,34 @@ http://localhost:3000/?sog=assets/scenes/otra-escena/meta.json
 Abre `http://localhost:3000/?editor=1`, vuela con **W A S D** por el camino, pulsa **M**
 en cada punto, **Z** deshace y **X** descarga el `track.json`. Lo reemplazas en `config/`.
 
+### Las DOS técnicas de reconstrucción y el contrato de coordenadas
+
+El visor tiene **dos reconstrucciones del mismo parque**, conmutables con el switch de
+arriba a la derecha (o con `?render=luma` en la URL):
+
+| Técnica | Escena | Gaussianas | Peso | Notas |
+|---|---|---|---|---|
+| **COLMAP + Brush** (por defecto) | `assets/scenes/scene-01/` | 3,97 M | 57 MB | Más resolución |
+| **Luma AI** | `assets/scenes/scene-01-luma/` | 0,93 M | 16 MB | Más liviana; solo se avanza (en reversa se ve mal) |
+
+**El contrato que te importa: ambas escenas viven en LAS MISMAS coordenadas de mundo.**
+La escena Luma fue registrada automáticamente sobre el marco de la COLMAP (escala, giro y
+posición horneados en el archivo; sesgo medido: ~1 cm). Comparten `config/track.json`.
+Si anclas un POI, una fuente de sonido espacial o cualquier cosa en una posición
+(x, y, z), **cae en el mismo punto físico del parque en las dos técnicas** — programa
+contra el mundo, no contra una escena.
+
+Reglas para no romperlo:
+
+- La entrada de `scenes.json` de la escena Luma lleva **`"baked": true`**: significa que
+  el archivo YA está en coordenadas de mundo y el visor no debe aplicarle ninguna
+  rotación. No le agregues `sceneUp` ni la "endereces": la romperías.
+- Ojo con el visor: a las escenas **sin** `sceneUp` y **sin** `baked` les aplica un giro
+  de 180° en Z (la convención de los PLY de 3DGS). Por eso una escena nueva sin registrar
+  se ve al revés hasta que le mides su `sceneUp`.
+- Si se reemplaza cualquiera de las dos escenas, hay que **re-registrar** la otra
+  (los guiones están en la máquina de Juan; pedírselo a él).
+
 ---
 
 ## 9. Cosas que ya nos costaron tiempo (no las repitas)

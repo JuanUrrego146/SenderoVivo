@@ -125,8 +125,45 @@ function isRemoteUrl(url) {
     return /^https?:\/\//i.test(url);
 }
 
+/** Marca el botón activo del conmutador de técnica y engancha los clics. */
+function setUpTechSwitch(active) {
+    const bar = document.getElementById('tecnica');
+    if (!bar) return;
+    bar.hidden = false;
+    for (const btn of bar.querySelectorAll('button')) {
+        btn.classList.toggle('activa', btn.dataset.render === active);
+        btn.addEventListener('click', () => {
+            if (btn.dataset.render === active) return;
+            const params = new URLSearchParams(window.location.search);
+            if (btn.dataset.render === 'colmap') params.delete('render');
+            else params.set('render', btn.dataset.render);
+            params.delete('sog');
+            window.location.search = params.toString();
+        });
+    }
+}
+
 async function resolveSceneUrl() {
-    const override = new URLSearchParams(window.location.search).get('sog');
+    const params = new URLSearchParams(window.location.search);
+    // ?render=luma conmuta a la técnica alterna registrada en config/scenes.json.
+    // Ambas técnicas comparten coordenadas y trazado: solo cambia la reconstrucción.
+    const render = params.get('render');
+    if (render) {
+        const response = await fetch(SCENES_CONFIG_URL);
+        if (response.ok) {
+            const config = await response.json();
+            const match = (config.scenes || []).find(s => s.render === render);
+            if (match && match.sogUrl) {
+                return {
+                    url: match.sogUrl, isOverride: false, renderTech: render,
+                    sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
+                    eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
+                    pitchDownLimit: match.pitchDownLimit, baked: !!match.baked
+                };
+            }
+        }
+    }
+    const override = params.get('sog');
     if (override) {
         // Si la URL pedida coincide con una escena registrada, se usan su
         // nivelación y sus restricciones; si no, se carga tal cual (muestras remotas).
@@ -139,7 +176,8 @@ async function resolveSceneUrl() {
                     return {
                         url: override, isOverride: true,
                         sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
-                        eyeHeight: match.eyeHeight, trackUrl: match.trackUrl
+                        eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
+                        pitchDownLimit: match.pitchDownLimit, baked: !!match.baked
                     };
                 }
             }
@@ -155,7 +193,7 @@ async function resolveSceneUrl() {
     if (!scenes.length || !scenes[0].sogUrl) {
         throw new Error(`<code>${SCENES_CONFIG_URL}</code> no define ninguna escena con <code>sogUrl</code>.`);
     }
-    return { url: scenes[0].sogUrl, isOverride: false, sceneUp: scenes[0].sceneUp, forwardOnly: !!scenes[0].forwardOnly };
+    return { url: scenes[0].sogUrl, isOverride: false, renderTech: 'colmap', sceneUp: scenes[0].sceneUp, forwardOnly: !!scenes[0].forwardOnly };
 }
 
 async function localFileExists(url) {
@@ -167,7 +205,7 @@ async function localFileExists(url) {
     }
 }
 
-async function startViewer(sceneUrl, sceneUp, forwardOnly = false, sceneEyeHeight = undefined, sceneTrackUrl = undefined) {
+async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     const canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
 
@@ -228,9 +266,12 @@ async function startViewer(sceneUrl, sceneUp, forwardOnly = false, sceneEyeHeigh
         const up = new Vec3(sceneUp.x, sceneUp.y, sceneUp.z).normalize();
         const levelling = new Quat().setFromDirections(up, Vec3.UP);
         splat.setRotation(levelling);
-    } else {
+    } else if (!sceneOpts.baked) {
         splat.setEulerAngles(0, 0, 180);   // convención del ejemplo oficial, sin nivelar
     }
+    // Si la escena viene "baked" (nivelación y registro horneados en el archivo,
+    // como scene-01-luma), la entidad queda en identidad: el archivo YA está en
+    // las coordenadas del mundo y cualquier rotación extra la rompería.
     splat.addComponent('gsplat', { asset: sceneAsset });
     // El recorte por volumen descarta trozos de la escena cuando la cámara va
     // por dentro: se le da un volumen amplio para que no desaparezca nada.
@@ -239,7 +280,7 @@ async function startViewer(sceneUrl, sceneUp, forwardOnly = false, sceneEyeHeigh
 
     // La escena solo se revela cuando ya se ve bien: nada de mostrarla borrosa.
     await waitForStableRender(app);
-    await setUpNavigation(app, camera, forwardOnly, sceneEyeHeight, sceneTrackUrl);
+    await setUpNavigation(app, camera, sceneOpts);
     setLoadingProgress(100, 'Listo');
     overlay.classList.add('desvanecer');
     setTimeout(() => { overlay.hidden = true; overlay.classList.remove('desvanecer'); }, 420);
@@ -275,7 +316,9 @@ async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
     }
 }
 
-async function setUpNavigation(app, camera, forwardOnly = false, sceneEyeHeight = undefined, sceneTrackUrl = undefined) {
+async function setUpNavigation(app, camera, sceneOpts = {}) {
+    // Metadatos de la escena activa (config/scenes.json): restricciones y trazado propio.
+    const { forwardOnly = false, eyeHeight: sceneEyeHeight, trackUrl: sceneTrackUrl, pitchDownLimit } = sceneOpts;
     const isEditor = new URLSearchParams(window.location.search).has('editor');
     const trail = await loadTrail(sceneTrackUrl ?? TRACK_CONFIG_URL);
 
@@ -312,7 +355,9 @@ async function setUpNavigation(app, camera, forwardOnly = false, sceneEyeHeight 
         // el trazado se marcó en el marco de otra reconstrucción.
         eyeHeight: sceneEyeHeight ?? trail.eyeHeight,
         // Algunas reconstrucciones solo aguantan vistas hacia adelante (config/scenes.json).
-        forwardOnly
+        forwardOnly,
+        // Tope del picado hacia abajo: evita meter la camara donde el splat se ve mal.
+        pitchDownLimit
     });
     tour.start();
     window.senderoTour = tour;
@@ -338,7 +383,8 @@ async function setUpNavigation(app, camera, forwardOnly = false, sceneEyeHeight 
 
 async function main() {
     try {
-        const { url, isOverride, sceneUp, forwardOnly, eyeHeight, trackUrl } = await resolveSceneUrl();
+        const scene = await resolveSceneUrl();
+        const { url, isOverride, sceneUp } = scene;
         if (!isRemoteUrl(url) && !(await localFileExists(url))) {
             if (isOverride) {
                 showError(`No existe el archivo <code>${url}</code> en el servidor.`);
@@ -348,7 +394,8 @@ async function main() {
             return;
         }
         showLoading();
-        await startViewer(url, sceneUp, forwardOnly, eyeHeight, trackUrl);
+        if (scene.renderTech) setUpTechSwitch(scene.renderTech);
+        await startViewer(url, sceneUp, scene);
     } catch (error) {
         console.error(error);
         showError(error.message);

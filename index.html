@@ -163,6 +163,45 @@
                 #hint { font-size: 13px; padding: 8px 10px; }
             }
             #hint[hidden] { display: none; }
+
+            /* Conmutador de técnica de reconstrucción (COLMAP / Luma) */
+            #tecnica {
+                position: fixed;
+                top: 14px;
+                right: 16px;
+                z-index: 12;
+                display: flex;
+                border: 1px solid var(--sv-gray-600);
+                border-radius: 999px;
+                overflow: hidden;
+                background: rgba(14, 18, 16, 0.82);
+                font-size: 12px;
+            }
+            #tecnica button {
+                appearance: none;
+                border: 0;
+                background: transparent;
+                color: var(--sv-gray-200);
+                padding: 7px 14px;
+                font: inherit;
+                font-weight: 600;
+                letter-spacing: 0.04em;
+                cursor: pointer;
+            }
+            #tecnica button.activa {
+                background: var(--sv-green-700);
+                color: var(--sv-gray-050);
+            }
+            #tecnica button small {
+                display: block;
+                font-size: 10px;
+                font-weight: 400;
+                color: inherit;
+                opacity: 0.75;
+            }
+            @media (max-width: 640px) {
+                #tecnica { top: 52px; }
+            }
         </style>
         <script type="importmap">
         {
@@ -180,6 +219,11 @@
             </div>
         </div>
         <div id="prototipo">Prototipo <span>· escaneo de prueba, no es el sendero</span></div>
+        <!-- Dos reconstrucciones del mismo parque, mismas coordenadas: se conmutan aquí. -->
+        <div id="tecnica" hidden>
+            <button type="button" data-render="colmap">COLMAP<small>más resolución</small></button>
+            <button type="button" data-render="luma">Luma<small>más liviana</small></button>
+        </div>
         <p id="hint" hidden>
             <strong>W A S D</strong> caminar · <strong>Q E</strong> bajar y subir · <strong>Shift</strong> más rápido ·
             arrastrar para mirar · rueda para acercar
