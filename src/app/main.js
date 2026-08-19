@@ -193,6 +193,20 @@ async function resolveSceneUrl() {
     if (!scenes.length || !scenes[0].sogUrl) {
         throw new Error(`<code>${SCENES_CONFIG_URL}</code> no define ninguna escena con <code>sogUrl</code>.`);
     }
+    // En celular la técnica por defecto es la LIVIANA: la COLMAP de ~4 M de
+    // gaussianas revienta el presupuesto móvil de render (~1 M según PlayCanvas).
+    // El switch sigue permitiendo forzar la otra.
+    if (window.matchMedia('(max-width: 640px)').matches) {
+        const liviana = scenes.find(s => s.render === 'luma' && s.sogUrl);
+        if (liviana) {
+            return {
+                url: liviana.sogUrl, isOverride: false, renderTech: 'luma',
+                sceneUp: liviana.sceneUp, forwardOnly: !!liviana.forwardOnly,
+                eyeHeight: liviana.eyeHeight, trackUrl: liviana.trackUrl,
+                pitchDownLimit: liviana.pitchDownLimit, baked: !!liviana.baked
+            };
+        }
+    }
     return { url: scenes[0].sogUrl, isOverride: false, renderTech: 'colmap', sceneUp: scenes[0].sceneUp, forwardOnly: !!scenes[0].forwardOnly };
 }
 
@@ -217,6 +231,13 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     });
     app.setCanvasFillMode(FILLMODE_FILL_WINDOW);
     app.setCanvasResolution(RESOLUTION_AUTO);
+    // En celular el render por defecto sale borroso (1 píxel de canvas por punto
+    // CSS con densidades de 3x). Se sube la nitidez a 2x, que la escena liviana
+    // aguanta; en escritorio se respeta el ajuste actual, que ya se ve bien.
+    if (window.matchMedia('(max-width: 640px)').matches) {
+        app.graphicsDevice.maxPixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        app.resizeCanvas();   // sin esto el ratio nuevo solo aplicaria tras girar el telefono
+    }
     app.start();
     // Expuesta para inspeccion y capturas desde la consola del navegador.
     window.senderoApp = app;

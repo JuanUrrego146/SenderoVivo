@@ -12,12 +12,8 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
         <style>
-            /*
-             * Tokens de color de docs/06-identidad-visual.md §6.
-             * Cuando exista styles/tokens.css (ámbito de Eybar y Alberto),
-             * este bloque :root se reemplaza por un <link> a ese archivo.
-             */
-            /* Los tokens de color viven en styles/tokens.css (dueños: Eybar y Alberto). */
+            /* Los tokens de color viven en styles/tokens.css (dueños: Eybar y Alberto),
+               enlazado arriba; la paleta está documentada en docs/06-contenido-de-la-experiencia.md §B.2. */
 
             body {
                 margin: 0;
@@ -160,16 +156,6 @@
             }
 
 
-            @media (max-width: 640px) {
-                #hint {
-                    right: 12px;
-                    left: 12px;
-                    bottom: 88px;   /* sobre la navegación en celular */
-                    max-width: none;
-                    font-size: 12px;
-                    padding: 8px 10px;
-                }
-            }
             #hint[hidden] { display: none; }
 
             /* Reset local con especificidad CERO (:where): apaga el estilo de botón del
@@ -258,8 +244,27 @@
                 color: inherit;
                 opacity: 0.75;
             }
+
+            /* ===== MODO CELULAR: menos cajas, cada cosa en su sitio =====
+               En pantalla chica la interfaz se COMPACTA en vez de apilarse:
+               fuera la ayuda de teclado y el banner (su información vive en el
+               HUD y en la Bitácora), el HUD baja pegado a la navegación, y el
+               switch se encoge y baja bajo el bloque de encabezado+filtros.
+               El visor además elige la escena liviana (Luma) y sube la nitidez
+               del render: eso se decide en src/app/main.js.
+               OJO: este bloque va al FINAL de la hoja a propósito — debe ganar
+               la cascada a las reglas base de #tecnica de más arriba. */
             @media (max-width: 640px) {
-                #tecnica { top: 136px; }   /* en celular baja, bajo el encabezado y los filtros */
+                #hint { display: none; }              /* W A S D no existe en un teléfono */
+                #banner-progreso { display: none; }   /* el % vive en el HUD; los puntos, en Bitácora */
+                #hud-datos {
+                    left: 10px;
+                    right: 10px;
+                    bottom: 78px;   /* pegado sobre la navegación */
+                }
+                #tecnica { top: 186px; right: 10px; padding: 4px; }
+                #tecnica button { padding: 5px 10px; font-size: 11px; }
+                #tecnica button small { display: none; }   /* sin subtítulos en chico */
             }
         </style>
         <script type="importmap">
@@ -324,7 +329,7 @@
             <div id="hotspots-overlay" class="absolute inset-0 pointer-events-none z-20"></div>
 
             <!-- HUD de datos del recorrido (docs/06 B: cifras tabulares, acento del agua) -->
-            <div class="absolute bottom-40 left-4 right-4 sm:bottom-44 sm:left-4 sm:right-auto sm:w-80 z-30 pointer-events-none">
+            <div id="hud-datos" class="absolute bottom-40 left-4 right-4 sm:bottom-44 sm:left-4 sm:right-auto sm:w-80 z-30 pointer-events-none">
                 <div class="glass-panel rounded-2xl p-2 grid grid-cols-4 gap-1 shadow-2xl" style="font-variant-numeric: tabular-nums;">
                     <div class="text-center px-1">
                         <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Altitud</div>
@@ -345,7 +350,7 @@
                 </div>
             </div>
 
-            <div class="absolute bottom-20 left-4 right-4 sm:bottom-24 sm:left-4 sm:right-auto sm:w-80 z-30 pointer-events-auto">
+            <div id="banner-progreso" class="absolute bottom-20 left-4 right-4 sm:bottom-24 sm:left-4 sm:right-auto sm:w-80 z-30 pointer-events-auto">
                 <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between text-xs shadow-2xl">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">

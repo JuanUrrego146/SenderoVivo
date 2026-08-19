@@ -1,1 +1,7 @@
+/* @tailwind base es NECESARIO aunque preflight esté apagado en tailwind.config.js:
+   con preflight:false la capa base no emite el reset de estilos, pero SÍ las
+   variables por defecto (--tw-translate-x, --tw-rotate, ...) sin las cuales
+   las utilidades de transform (-translate-x-1/2, translate-y-full) computan
+   "none" y la nav queda descentrada y la hoja inferior sin animación. */
+@tailwind base;
 @tailwind components; @tailwind utilities;
