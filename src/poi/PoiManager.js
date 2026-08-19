@@ -12,8 +12,24 @@ export class PoiManager {
 
         this.pois = [];
         this.markers = [];
+
         this.selectedPoi = null;
         this.savedState = null;
+
+        /*
+         * =====================================================
+         * ESTADO DE LA FICHA
+         * =====================================================
+         */
+
+        this.poiCardOpen = false;
+
+
+        /*
+         * =====================================================
+         * BIND
+         * =====================================================
+         */
 
         this._onPointerDown =
             this._onPointerDown.bind(this);
@@ -21,9 +37,16 @@ export class PoiManager {
         this._onUpdate =
             this._onUpdate.bind(this);
 
+        this._onPoiOpen =
+            this._onPoiOpen.bind(this);
+
+        this._onPoiClose =
+            this._onPoiClose.bind(this);
+
+
         /*
          * =====================================================
-         * CLICK
+         * CLICK SOBRE CANVAS
          * =====================================================
          */
 
@@ -33,9 +56,10 @@ export class PoiManager {
             true
         );
 
+
         /*
          * =====================================================
-         * ACTUALIZAR POSICIÓN DE LOS BOTONES
+         * ACTUALIZACIÓN
          * =====================================================
          */
 
@@ -43,6 +67,120 @@ export class PoiManager {
             'update',
             this._onUpdate
         );
+
+
+        /*
+         * =====================================================
+         * EVENTOS DE LA FICHA
+         * =====================================================
+         */
+
+        app.on(
+            'poi:open',
+            this._onPoiOpen
+        );
+
+        app.on(
+            'poi:close',
+            this._onPoiClose
+        );
+
+
+        console.log(
+            'PoiManager listo'
+        );
+    }
+
+
+    /*
+     * =========================================================
+     * CUANDO SE ABRE UNA FICHA
+     * =========================================================
+     */
+
+    _onPoiOpen(poi) {
+
+        console.log(
+            'PoiManager: ficha abierta',
+            poi?.id
+        );
+
+        this.poiCardOpen = true;
+
+        this._hideAllMarkers();
+    }
+
+
+    /*
+     * =========================================================
+     * CUANDO SE CIERRA UNA FICHA
+     * =========================================================
+     */
+
+    _onPoiClose() {
+
+        console.log(
+            'PoiManager: ficha cerrada'
+        );
+
+        this.poiCardOpen = false;
+
+        this._showAllMarkers();
+    }
+
+
+    /*
+     * =========================================================
+     * OCULTAR POI
+     * =========================================================
+     */
+
+    _hideAllMarkers() {
+
+        for (const marker of this.markers) {
+
+            if (
+                !marker ||
+                !marker.element
+            ) {
+                continue;
+            }
+
+            marker.element.style.display =
+                'none';
+
+            marker.element.style.visibility =
+                'hidden';
+
+            marker.element.style.pointerEvents =
+                'none';
+        }
+    }
+
+
+    /*
+     * =========================================================
+     * MOSTRAR POI
+     * =========================================================
+     */
+
+    _showAllMarkers() {
+
+        for (const marker of this.markers) {
+
+            if (
+                !marker ||
+                !marker.element
+            ) {
+                continue;
+            }
+
+            marker.element.style.visibility =
+                'visible';
+
+            marker.element.style.pointerEvents =
+                'auto';
+        }
     }
 
 
@@ -55,7 +193,9 @@ export class PoiManager {
     async load() {
 
         const response =
-            await fetch(POIS_CONFIG_URL);
+            await fetch(
+                POIS_CONFIG_URL
+            );
 
         if (!response.ok) {
 
@@ -72,8 +212,29 @@ export class PoiManager {
                 ? config.pois
                 : [];
 
+
         /*
-         * Crear todos los POIs.
+         * Por seguridad, limpiar marcadores
+         * anteriores si load() se llama otra vez.
+         */
+
+        this.markers.forEach(
+            marker => {
+
+                if (
+                    marker.element
+                ) {
+                    marker.element.remove();
+                }
+
+            }
+        );
+
+        this.markers = [];
+
+
+        /*
+         * Crear POIs
          */
 
         this.pois.forEach(
@@ -87,10 +248,130 @@ export class PoiManager {
             }
         );
 
+
         console.log(
             'POIs cargados:',
             this.markers
         );
+    }
+
+
+    /*
+     * =========================================================
+     * RESOLVER POSICIÓN DEL POI
+     * =========================================================
+     *
+     * PRIORIDAD:
+     *
+     * 1. anchor
+     * 2. distanceMeters
+     * 3. posición 0,0,0
+     *
+     * Esto permite que posteriormente podamos colocar
+     * cada modelo exactamente en coordenadas del mundo.
+     */
+
+    _resolveWorldPosition(poi) {
+
+        /*
+         * =====================================================
+         * OPCIÓN 1: COORDENADAS DEL MUNDO
+         * =====================================================
+         */
+
+        if (
+            poi.anchor &&
+            typeof poi.anchor.x === 'number' &&
+            typeof poi.anchor.y === 'number' &&
+            typeof poi.anchor.z === 'number'
+        ) {
+
+            console.log(
+                `POI ${poi.id} usando anchor:`,
+                poi.anchor
+            );
+
+            return {
+                x: poi.anchor.x,
+                y: poi.anchor.y,
+                z: poi.anchor.z
+            };
+        }
+
+
+        /*
+         * =====================================================
+         * OPCIÓN 2: DISTANCIA SOBRE EL SENDERO
+         * =====================================================
+         */
+
+        const distanceMeters =
+            Number(
+                poi.distanceMeters
+            );
+
+
+        const trail =
+            this.tour?.trailPath;
+
+
+        if (
+            trail &&
+            trail.isUsable &&
+            Number.isFinite(distanceMeters)
+        ) {
+
+            const total =
+                trail.totalLength();
+
+
+            const distance =
+                Math.max(
+                    0,
+                    Math.min(
+                        distanceMeters,
+                        total
+                    )
+                );
+
+
+            const position =
+                trail.positionAt(
+                    distance
+                );
+
+
+            console.log(
+                `POI ${poi.id} usando distanceMeters:`,
+                distance
+            );
+
+
+            return {
+                x: position.x,
+                y: position.y,
+                z: position.z
+            };
+        }
+
+
+        /*
+         * =====================================================
+         * OPCIÓN 3: RESPALDO
+         * =====================================================
+         */
+
+        console.warn(
+            `POI ${poi.id} no tiene posición válida. ` +
+            `Usando 0,0,0.`
+        );
+
+
+        return {
+            x: 0,
+            y: 0,
+            z: 0
+        };
     }
 
 
@@ -104,84 +385,67 @@ export class PoiManager {
 
         /*
          * =====================================================
-         * OBTENER SENDERO
+         * POSICIÓN 3D REAL
          * =====================================================
          */
 
-        const trail =
-            this.tour.trailPath;
-
-        let position;
-
-
-        if (
-            trail &&
-            trail.isUsable
-        ) {
-
-            const total =
-                trail.totalLength();
-
-            /*
-             * POI ubicado cerca del inicio,
-             * pero no pegado a la cámara.
-             *
-             * 18% del recorrido.
-             */
-
-            const distance =
-                total * 0.18;
-
-            position =
-                trail.positionAt(
-                    distance
-                );
-
-        } else {
-
-            /*
-             * Posición de respaldo.
-             */
-
-            position = {
-                x: 0,
-                y: 0,
-                z: 0
-            };
-        }
+        const position =
+            this._resolveWorldPosition(
+                poi
+            );
 
 
         /*
-         * =====================================================
-         * POSICIÓN DEL POI
-         * =====================================================
+         * Levantar ligeramente el marcador
+         * respecto al suelo.
          *
-         * Solo lo levantamos un poquito del suelo.
-         *
-         * NO usamos +0.5 ni +1.5 porque eso hacía
-         * que pareciera flotando demasiado.
+         * IMPORTANTE:
+         * Esta pequeña elevación solo afecta al botón.
+         * El anchor original permanece intacto.
          */
 
         const worldPosition = {
+
             x: position.x,
+
             y: position.y + 0.12,
+
             z: position.z
         };
 
 
         /*
          * =====================================================
-         * CREAR BOTÓN HTML
+         * CREAR BOTÓN
          * =====================================================
          */
 
         const button =
-            document.createElement('button');
+            document.createElement(
+                'button'
+            );
 
 
         /*
          * =====================================================
-         * ESTILO DEL BOTÓN
+         * IDENTIFICACIÓN
+         * =====================================================
+         */
+
+        button.className =
+            'sendero-vivo-poi-marker';
+
+        button.dataset.poiId =
+            poi.id ||
+            `poi-${index}`;
+
+        button.dataset.poiMarker =
+            'true';
+
+
+        /*
+         * =====================================================
+         * ESTILO
          * =====================================================
          */
 
@@ -242,10 +506,6 @@ export class PoiManager {
         button.style.pointerEvents =
             'auto';
 
-        /*
-         * Evita estilos por defecto del navegador.
-         */
-
         button.style.outline =
             'none';
 
@@ -262,18 +522,18 @@ export class PoiManager {
 
         /*
          * =====================================================
-         * INFORMACIÓN DEL POI
+         * INFORMACIÓN
          * =====================================================
          */
 
         button.title =
             poi.commonName ||
-            'Fauna';
+            'Punto de interés';
 
 
         /*
          * =====================================================
-         * EFECTO HOVER
+         * HOVER
          * =====================================================
          */
 
@@ -281,8 +541,14 @@ export class PoiManager {
             'mouseenter',
             () => {
 
+                if (
+                    this.poiCardOpen
+                ) {
+                    return;
+                }
+
                 button.style.transform =
-                    'scale(1.12)';
+                    'translate(-50%, -50%) scale(1.12)';
 
                 button.style.boxShadow =
                     '0 6px 18px rgba(0,0,0,0.55)';
@@ -295,7 +561,7 @@ export class PoiManager {
             () => {
 
                 button.style.transform =
-                    'scale(1)';
+                    'translate(-50%, -50%) scale(1)';
 
                 button.style.boxShadow =
                     '0 4px 14px rgba(0,0,0,0.45)';
@@ -316,10 +582,19 @@ export class PoiManager {
                 event.preventDefault();
                 event.stopPropagation();
 
+
+                if (
+                    this.poiCardOpen
+                ) {
+                    return;
+                }
+
+
                 console.log(
                     'POI seleccionado:',
                     poi
                 );
+
 
                 this.openPoi(
                     poi
@@ -330,7 +605,7 @@ export class PoiManager {
 
         /*
          * =====================================================
-         * AGREGAR BOTÓN A LA PÁGINA
+         * AGREGAR AL DOM
          * =====================================================
          */
 
@@ -341,7 +616,7 @@ export class PoiManager {
 
         /*
          * =====================================================
-         * GUARDAR INFORMACIÓN
+         * GUARDAR MARKER
          * =====================================================
          */
 
@@ -359,8 +634,30 @@ export class PoiManager {
             worldPosition:
                 worldPosition,
 
+            /*
+             * Posición original sin offset.
+             * Esta es la que utilizaremos para
+             * anclar el modelo 3D.
+             */
+
+            anchorPosition: {
+
+                x: position.x,
+
+                y: position.y,
+
+                z: position.z
+            },
+
             enabled:
-                true
+                true,
+
+            /*
+             * Referencia futura al modelo 3D.
+             */
+
+            modelEntity:
+                null
         };
 
 
@@ -380,28 +677,38 @@ export class PoiManager {
         );
 
         console.log(
-            `POI ${index + 1} creado:`,
+            `POI ${index + 1}:`,
             poi.commonName
         );
 
         console.log(
-            'Posición:',
-            worldPosition
+            'ID:',
+            poi.id
         );
 
         console.log(
-            'Tipo:',
-            'Botón HTML'
-        );
-
-        console.log(
-            'Tamaño:',
-            '48px'
+            'Anchor:',
+            poi.anchor
         );
 
         console.log(
             'Distancia:',
-            '18% del recorrido'
+            poi.distanceMeters
+        );
+
+        console.log(
+            'World position:',
+            marker.anchorPosition
+        );
+
+        console.log(
+            'Modelo:',
+            poi.modelUrl
+        );
+
+        console.log(
+            'Animación:',
+            poi.idleAnimation
         );
 
         console.log(
@@ -412,7 +719,7 @@ export class PoiManager {
 
     /*
      * =========================================================
-     * ACTUALIZAR BOTONES EN PANTALLA
+     * ACTUALIZAR POSICIÓN EN PANTALLA
      * =========================================================
      */
 
@@ -426,6 +733,21 @@ export class PoiManager {
         }
 
 
+        /*
+         * Si hay una ficha abierta,
+         * no actualizar marcadores.
+         */
+
+        if (
+            this.poiCardOpen
+        ) {
+
+            this._hideAllMarkers();
+
+            return;
+        }
+
+
         const canvas =
             this.app.graphicsDevice.canvas;
 
@@ -434,7 +756,9 @@ export class PoiManager {
 
 
         /*
-         * Revisar todos los POIs.
+         * =====================================================
+         * PROYECTAR POIS
+         * =====================================================
          */
 
         for (
@@ -442,17 +766,13 @@ export class PoiManager {
         ) {
 
             if (
+                !marker ||
                 !marker.enabled ||
                 !marker.element
             ) {
                 continue;
             }
 
-
-            /*
-             * Convertir posición 3D
-             * a posición de pantalla.
-             */
 
             const screen =
                 this.camera.camera.worldToScreen(
@@ -461,8 +781,7 @@ export class PoiManager {
 
 
             /*
-             * Si está detrás de la cámara,
-             * ocultamos el botón.
+             * Detrás de la cámara
              */
 
             if (
@@ -477,7 +796,7 @@ export class PoiManager {
 
 
             /*
-             * Coordenadas dentro del canvas.
+             * Coordenadas de pantalla
              */
 
             const screenX =
@@ -490,15 +809,16 @@ export class PoiManager {
 
 
             /*
-             * Si está demasiado fuera de la pantalla,
-             * también lo ocultamos.
+             * Fuera de pantalla
              */
 
             if (
                 screenX < -60 ||
-                screenX > window.innerWidth + 60 ||
+                screenX >
+                    window.innerWidth + 60 ||
                 screenY < -60 ||
-                screenY > window.innerHeight + 60
+                screenY >
+                    window.innerHeight + 60
             ) {
 
                 marker.element.style.display =
@@ -509,16 +829,21 @@ export class PoiManager {
 
 
             /*
-             * Mostrar botón.
+             * Mostrar
              */
 
             marker.element.style.display =
                 'flex';
 
+            marker.element.style.visibility =
+                'visible';
+
+            marker.element.style.pointerEvents =
+                'auto';
+
 
             /*
-             * Centrar el botón exactamente
-             * sobre el punto 3D.
+             * Posición
              */
 
             marker.element.style.left =
@@ -537,18 +862,23 @@ export class PoiManager {
      * =========================================================
      * CLICK SOBRE EL CANVAS
      * =========================================================
-     *
-     * Lo mantenemos como respaldo.
-     * El botón HTML ya tiene su propio click.
      */
 
     _onPointerDown(event) {
+
+        if (
+            this.poiCardOpen
+        ) {
+            return;
+        }
+
 
         const canvas =
             this.app.graphicsDevice.canvas;
 
         const rect =
             canvas.getBoundingClientRect();
+
 
         const x =
             event.clientX -
@@ -559,21 +889,19 @@ export class PoiManager {
             rect.top;
 
 
-        let closest = null;
+        let closest =
+            null;
 
         let closestDistance =
             Infinity;
 
-
-        /*
-         * Revisar todos los POIs.
-         */
 
         for (
             const marker of this.markers
         ) {
 
             if (
+                !marker ||
                 !marker.enabled
             ) {
                 continue;
@@ -585,10 +913,6 @@ export class PoiManager {
                     marker.worldPosition
                 );
 
-
-            /*
-             * Detrás de la cámara.
-             */
 
             if (
                 screen.z <= 0
@@ -603,10 +927,6 @@ export class PoiManager {
                     screen.y - y
                 );
 
-
-            /*
-             * Área de selección.
-             */
 
             if (
                 distance < 35 &&
@@ -647,25 +967,43 @@ export class PoiManager {
 
     /*
      * =========================================================
-     * ABRIR FICHA
+     * ABRIR POI
      * =========================================================
      */
 
     openPoi(poi) {
 
+        if (
+            this.poiCardOpen
+        ) {
+            return;
+        }
+
+
         /*
-         * Guardar posición actual.
+         * Guardar posición del recorrido.
          */
 
         this.savedState =
             this.tour.saveState();
+
 
         this.selectedPoi =
             poi;
 
 
         /*
-         * Abrir la ficha.
+         * Ocultar botones.
+         */
+
+        this.poiCardOpen =
+            true;
+
+        this._hideAllMarkers();
+
+
+        /*
+         * Abrir ficha.
          */
 
         this.app.fire(
@@ -677,11 +1015,15 @@ export class PoiManager {
 
     /*
      * =========================================================
-     * CERRAR FICHA
+     * CERRAR POI
      * =========================================================
      */
 
     closePoi() {
+
+        /*
+         * Cerrar ficha.
+         */
 
         this.app.fire(
             'poi:close'
@@ -702,9 +1044,87 @@ export class PoiManager {
         }
 
 
-        this.savedState = null;
+        this.savedState =
+            null;
 
-        this.selectedPoi = null;
+        this.selectedPoi =
+            null;
+
+
+        /*
+         * Restaurar botones.
+         */
+
+        this.poiCardOpen =
+            false;
+
+        this._showAllMarkers();
+    }
+
+
+    /*
+     * =========================================================
+     * OBTENER POSICIÓN DE UN POI
+     * =========================================================
+     *
+     * Esta función nos servirá después para cargar el GLB
+     * directamente en la escena.
+     *
+     * Ejemplo:
+     *
+     * const pos =
+     *     poiManager.getPoiWorldPosition(
+     *         'poi-colibri-chillon'
+     *     );
+     */
+
+    getPoiWorldPosition(poiId) {
+
+        const marker =
+            this.markers.find(
+                m =>
+                    m.id === poiId
+            );
+
+
+        if (
+            !marker
+        ) {
+
+            console.warn(
+                `No existe el POI ${poiId}`
+            );
+
+            return null;
+        }
+
+
+        return {
+
+            x:
+                marker.anchorPosition.x,
+
+            y:
+                marker.anchorPosition.y,
+
+            z:
+                marker.anchorPosition.z
+        };
+    }
+
+
+    /*
+     * =========================================================
+     * OBTENER MARKER
+     * =========================================================
+     */
+
+    getMarker(poiId) {
+
+        return this.markers.find(
+            marker =>
+                marker.id === poiId
+        ) || null;
     }
 
 
@@ -720,12 +1140,20 @@ export class PoiManager {
             this.app.graphicsDevice.canvas;
 
 
+        /*
+         * Quitar listener del canvas.
+         */
+
         canvas.removeEventListener(
             'pointerdown',
             this._onPointerDown,
             true
         );
 
+
+        /*
+         * Quitar update.
+         */
 
         this.app.off(
             'update',
@@ -734,7 +1162,22 @@ export class PoiManager {
 
 
         /*
-         * Eliminar botones HTML.
+         * Quitar eventos.
+         */
+
+        this.app.off(
+            'poi:open',
+            this._onPoiOpen
+        );
+
+        this.app.off(
+            'poi:close',
+            this._onPoiClose
+        );
+
+
+        /*
+         * Eliminar botones.
          */
 
         this.markers.forEach(
@@ -747,10 +1190,29 @@ export class PoiManager {
                     marker.element.remove();
                 }
 
+
+                /*
+                 * Si posteriormente hay un modelo
+                 * 3D cargado, también lo destruimos.
+                 */
+
+                if (
+                    marker.modelEntity
+                ) {
+
+                    marker.modelEntity.destroy();
+
+                    marker.modelEntity =
+                        null;
+                }
+
             }
         );
 
 
         this.markers = [];
+
+        this.poiCardOpen =
+            false;
     }
 }

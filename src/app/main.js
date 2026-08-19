@@ -1,11 +1,14 @@
 /*
  * Visor prototipo de escenas SOG — Sendero Vivo.
  *
- * Sigue "Your First Splat App" (Engine API) de la documentación oficial:
- * https://developer.playcanvas.com/user-manual/gaussian-splatting/building/your-first-app/engine/
+ * Integración:
+ * - Escenas Gaussian Splatting (COLMAP / Luma)
+ * - Navegación guiada
+ * - POIs
+ * - Modelos 3D anclados a coordenadas del mundo
  *
- * Alcance: cargar una escena SOG y poder inspeccionarla con cámara orbital.
- * TourEngine, POIs, audio y HUD llegan en el Sprint 3 sobre esta misma base.
+ * Los modelos 3D usan las mismas coordenadas de mundo
+ * independientemente de la técnica de render utilizada.
  */
 
 import {
@@ -27,12 +30,8 @@ import { TourEngine } from '../engine/TourEngine.js';
 import { TrailRecorder } from '../engine/TrailRecorder.js';
 import { TrailMarkers } from '../engine/TrailMarkers.js';
 
-// ============================================================
-// TU PARTE: PUNTOS DE INTERÉS
-// ============================================================
 import { PoiManager } from '../poi/PoiManager.js';
 import { PoiCard } from '../poi/PoiCard.js';
-// ============================================================
 
 const CAMERA_CONTROLS_URL =
     'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
@@ -40,103 +39,173 @@ const CAMERA_CONTROLS_URL =
 const SCENES_CONFIG_URL = 'config/scenes.json';
 const TRACK_CONFIG_URL = 'config/track.json';
 
-// Escena de muestra de la documentación oficial de PlayCanvas,
-// para probar el visor sin captura propia.
 const SAMPLE_SOG_URL =
     'https://developer.playcanvas.com/assets/toy-cat.sog';
 
-const overlay = document.getElementById('overlay');
-const overlayContent = document.getElementById('overlay-content');
-const hint = document.getElementById('hint');
+const overlay =
+    document.getElementById('overlay');
+
+const overlayContent =
+    document.getElementById('overlay-content');
+
+const hint =
+    document.getElementById('hint');
+
 
 function showOverlay(html) {
+
     overlay.hidden = false;
+
     overlayContent.innerHTML = html;
 }
 
+
 function showLoading() {
+
     showOverlay(`
         <div class="spinner"></div>
+
         <h1>Preparando el recorrido…</h1>
-        <p id="carga-detalle">Descargando la escena</p>
+
+        <p id="carga-detalle">
+            Descargando la escena
+        </p>
+
         <div class="barra">
-            <div class="barra-fill" id="carga-barra"></div>
+            <div
+                class="barra-fill"
+                id="carga-barra">
+            </div>
         </div>
+
         <p class="nota">
-            La escena pesa 56 MB. La primera visita tarda;
+            La escena pesa 56 MB.
+            La primera visita tarda;
             después queda en caché.
         </p>
     `);
 }
 
-/** Actualiza la barra de progreso de la descarga. */
-function setLoadingProgress(porcentaje, texto) {
-    const barra = document.getElementById('carga-barra');
-    const detalle = document.getElementById('carga-detalle');
+
+function setLoadingProgress(
+    porcentaje,
+    texto
+) {
+
+    const barra =
+        document.getElementById(
+            'carga-barra'
+        );
+
+    const detalle =
+        document.getElementById(
+            'carga-detalle'
+        );
 
     if (barra) {
+
         barra.style.width =
-            Math.max(2, Math.min(100, porcentaje)) + '%';
+            Math.max(
+                2,
+                Math.min(
+                    100,
+                    porcentaje
+                )
+            ) + '%';
     }
 
-    if (detalle && texto) {
-        detalle.textContent = texto;
+    if (
+        detalle &&
+        texto
+    ) {
+
+        detalle.textContent =
+            texto;
     }
 }
 
-/**
- * Espera a que el splat esté realmente presentable.
- * Al cargar, el motor ordena millones de gaussianas por profundidad durante los
- * primeros cuadros: si se muestra antes, se ve borroso.
- */
+
 function waitForStableRender(
     app,
-    { frames = 200, minMs = 2800 } = {}
+    {
+        frames = 200,
+        minMs = 2800
+    } = {}
 ) {
-    return new Promise((resolve) => {
-        const inicio = Date.now();
-        let contados = 0;
 
-        const listo = () => {
-            app.off('frameend', contar);
-            resolve();
-        };
+    return new Promise(
+        (resolve) => {
 
-        const contar = () => {
-            contados++;
+            const inicio =
+                Date.now();
 
-            const porCuadros =
-                contados / frames;
+            let contados = 0;
 
-            const porTiempo =
-                (Date.now() - inicio) / minMs;
+            const listo = () => {
 
-            setLoadingProgress(
-                90 + 10 * Math.min(
-                    porCuadros,
-                    porTiempo
-                ),
-                'Afinando la escena'
+                app.off(
+                    'frameend',
+                    contar
+                );
+
+                resolve();
+            };
+
+            const contar = () => {
+
+                contados++;
+
+                const porCuadros =
+                    contados / frames;
+
+                const porTiempo =
+                    (
+                        Date.now() -
+                        inicio
+                    ) / minMs;
+
+                setLoadingProgress(
+                    90 +
+                    10 *
+                    Math.min(
+                        porCuadros,
+                        porTiempo
+                    ),
+                    'Afinando la escena'
+                );
+
+                if (
+                    contados >= frames &&
+                    Date.now() - inicio >= minMs
+                ) {
+
+                    listo();
+                }
+            };
+
+            app.on(
+                'frameend',
+                contar
             );
 
-            if (
-                contados >= frames &&
-                Date.now() - inicio >= minMs
-            ) {
-                listo();
-            }
-        };
-
-        app.on('frameend', contar);
-
-        // Salvavidas
-        setTimeout(listo, 12000);
-    });
+            setTimeout(
+                listo,
+                12000
+            );
+        }
+    );
 }
 
-function showPlaceholder(expectedUrl) {
+
+function showPlaceholder(
+    expectedUrl
+) {
+
     showOverlay(`
-        <h1>Aún no hay ninguna escena capturada</h1>
+
+        <h1>
+            Aún no hay ninguna escena capturada
+        </h1>
 
         <p>
             Copia tu archivo SOG como
@@ -146,34 +215,48 @@ function showPlaceholder(expectedUrl) {
 
         <p>
             El archivo sale del pipeline de captura:
-            <code>splat-transform escena.ply scene-01.sog</code>
+            <code>
+                splat-transform escena.ply scene-01.sog
+            </code>
         </p>
 
         <p>
             ¿Quieres probar el visor mientras tanto?
             <a href="?sog=${SAMPLE_SOG_URL}">
-                Abrir la escena de muestra de PlayCanvas
+                Abrir la escena de muestra
             </a>
-            (requiere internet).
         </p>
+
     `);
 }
 
-/** Ayuda en pantalla, abajo a la izquierda. */
+
 function showHint(html) {
+
     hint.innerHTML = html;
+
     hint.hidden = false;
 }
 
+
 function showError(message) {
+
     showOverlay(`
-        <h1>⚠ No se pudo cargar la escena</h1>
-        <p>${message}</p>
+
+        <h1>
+            ⚠ No se pudo cargar la escena
+        </h1>
+
+        <p>
+            ${message}
+        </p>
+
         <p>
             <button id="retry">
                 Reintentar
             </button>
         </p>
+
     `);
 
     document
@@ -184,19 +267,25 @@ function showError(message) {
         );
 }
 
-function colorFromToken(tokenName) {
-    // Invariante del proyecto:
-    // ningún color literal en JS;
-    // se leen los tokens CSS.
+
+function colorFromToken(
+    tokenName
+) {
+
     const hex =
         getComputedStyle(
             document.documentElement
         )
-            .getPropertyValue(tokenName)
+            .getPropertyValue(
+                tokenName
+            )
             .trim();
 
     const value =
-        parseInt(hex.slice(1), 16);
+        parseInt(
+            hex.slice(1),
+            16
+        );
 
     return new Color(
         ((value >> 16) & 255) / 255,
@@ -205,20 +294,30 @@ function colorFromToken(tokenName) {
     );
 }
 
+
 function isRemoteUrl(url) {
+
     return /^https?:\/\//i.test(url);
 }
 
-/** Marca el botón activo del conmutador de técnica y engancha los clics. */
+
 function setUpTechSwitch(active) {
+
     const bar =
-        document.getElementById('tecnica');
+        document.getElementById(
+            'tecnica'
+        );
 
     if (!bar) return;
 
     bar.hidden = false;
 
-    for (const btn of bar.querySelectorAll('button')) {
+    for (
+        const btn of bar.querySelectorAll(
+            'button'
+        )
+    ) {
+
         btn.classList.toggle(
             'activa',
             btn.dataset.render === active
@@ -227,6 +326,7 @@ function setUpTechSwitch(active) {
         btn.addEventListener(
             'click',
             () => {
+
                 if (
                     btn.dataset.render === active
                 ) {
@@ -239,17 +339,25 @@ function setUpTechSwitch(active) {
                     );
 
                 if (
-                    btn.dataset.render === 'colmap'
+                    btn.dataset.render ===
+                    'colmap'
                 ) {
-                    params.delete('render');
+
+                    params.delete(
+                        'render'
+                    );
+
                 } else {
+
                     params.set(
                         'render',
                         btn.dataset.render
                     );
                 }
 
-                params.delete('sog');
+                params.delete(
+                    'sog'
+                );
 
                 window.location.search =
                     params.toString();
@@ -258,50 +366,67 @@ function setUpTechSwitch(active) {
     }
 }
 
+
 async function resolveSceneUrl() {
+
     const params =
         new URLSearchParams(
             window.location.search
         );
 
-    // ?render=luma conmuta a la técnica alterna
-    // registrada en config/scenes.json.
     const render =
         params.get('render');
 
     if (render) {
+
         const response =
             await fetch(
                 SCENES_CONFIG_URL
             );
 
         if (response.ok) {
+
             const config =
                 await response.json();
 
             const match =
                 (config.scenes || [])
                     .find(
-                        s => s.render === render
+                        s =>
+                            s.render === render
                     );
 
             if (
                 match &&
                 match.sogUrl
             ) {
+
                 return {
-                    url: match.sogUrl,
-                    isOverride: false,
-                    renderTech: render,
-                    sceneUp: match.sceneUp,
+
+                    url:
+                        match.sogUrl,
+
+                    isOverride:
+                        false,
+
+                    renderTech:
+                        render,
+
+                    sceneUp:
+                        match.sceneUp,
+
                     forwardOnly:
                         !!match.forwardOnly,
+
                     eyeHeight:
                         match.eyeHeight,
+
                     trackUrl:
                         match.trackUrl,
+
                     pitchDownLimit:
                         match.pitchDownLimit,
+
                     baked:
                         !!match.baked
                 };
@@ -313,51 +438,68 @@ async function resolveSceneUrl() {
         params.get('sog');
 
     if (override) {
-        // Si la URL pedida coincide con una escena registrada,
-        // se usan su nivelación y sus restricciones.
+
         try {
+
             const response =
                 await fetch(
                     SCENES_CONFIG_URL
                 );
 
             if (response.ok) {
+
                 const config =
                     await response.json();
 
                 const match =
                     (config.scenes || [])
                         .find(
-                            s => s.sogUrl === override
+                            s =>
+                                s.sogUrl ===
+                                override
                         );
 
                 if (match) {
+
                     return {
-                        url: override,
-                        isOverride: true,
+
+                        url:
+                            override,
+
+                        isOverride:
+                            true,
+
                         sceneUp:
                             match.sceneUp,
+
                         forwardOnly:
                             !!match.forwardOnly,
+
                         eyeHeight:
                             match.eyeHeight,
+
                         trackUrl:
                             match.trackUrl,
+
                         pitchDownLimit:
                             match.pitchDownLimit,
+
                         baked:
                             !!match.baked
                     };
                 }
             }
+
         } catch {
-            // Sin config no hay metadatos,
-            // pero la escena igual se abre.
         }
 
         return {
-            url: override,
-            isOverride: true
+
+            url:
+                override,
+
+            isOverride:
+                true
         };
     }
 
@@ -367,9 +509,9 @@ async function resolveSceneUrl() {
         );
 
     if (!response.ok) {
+
         throw new Error(
-            `No se pudo leer <code>${SCENES_CONFIG_URL}</code> ` +
-            `(HTTP ${response.status}).`
+            `No se pudo leer <code>${SCENES_CONFIG_URL}</code>`
         );
     }
 
@@ -377,17 +519,22 @@ async function resolveSceneUrl() {
         await response.json();
 
     const scenes =
-        Array.isArray(config.scenes)
-            ? [...config.scenes]
-                .sort(
-                    (a, b) => a.order - b.order
-                )
+        Array.isArray(
+            config.scenes
+        )
+            ? [
+                ...config.scenes
+            ].sort(
+                (a, b) =>
+                    a.order - b.order
+            )
             : [];
 
     if (
         !scenes.length ||
         !scenes[0].sogUrl
     ) {
+
         throw new Error(
             `<code>${SCENES_CONFIG_URL}</code> ` +
             `no define ninguna escena con ` +
@@ -395,12 +542,12 @@ async function resolveSceneUrl() {
         );
     }
 
-    // En celular la técnica por defecto es la LIVIANA.
     if (
         window.matchMedia(
             '(max-width: 640px)'
         ).matches
     ) {
+
         const liviana =
             scenes.find(
                 s =>
@@ -409,20 +556,33 @@ async function resolveSceneUrl() {
             );
 
         if (liviana) {
+
             return {
-                url: liviana.sogUrl,
-                isOverride: false,
-                renderTech: 'luma',
+
+                url:
+                    liviana.sogUrl,
+
+                isOverride:
+                    false,
+
+                renderTech:
+                    'luma',
+
                 sceneUp:
                     liviana.sceneUp,
+
                 forwardOnly:
                     !!liviana.forwardOnly,
+
                 eyeHeight:
                     liviana.eyeHeight,
+
                 trackUrl:
                     liviana.trackUrl,
+
                 pitchDownLimit:
                     liviana.pitchDownLimit,
+
                 baked:
                     !!liviana.baked
             };
@@ -430,18 +590,29 @@ async function resolveSceneUrl() {
     }
 
     return {
-        url: scenes[0].sogUrl,
-        isOverride: false,
-        renderTech: 'colmap',
+
+        url:
+            scenes[0].sogUrl,
+
+        isOverride:
+            false,
+
+        renderTech:
+            'colmap',
+
         sceneUp:
             scenes[0].sceneUp,
+
         forwardOnly:
             !!scenes[0].forwardOnly
     };
 }
 
+
 async function localFileExists(url) {
+
     try {
+
         const response =
             await fetch(
                 url,
@@ -451,28 +622,185 @@ async function localFileExists(url) {
             );
 
         return response.ok;
+
     } catch {
+
         return false;
     }
 }
+
+
+/*
+ * ============================================================
+ * CARGAR MODELO 3D EN LA ESCENA
+ * ============================================================
+ *
+ * IMPORTANTE:
+ *
+ * Estas coordenadas son coordenadas de MUNDO.
+ *
+ * El modelo queda anclado a:
+ *
+ * X = 0
+ * Y = 0
+ * Z = 0
+ *
+ * Puedes cambiarlas posteriormente cuando definan
+ * la posición exacta del ave dentro del sendero.
+ *
+ * Tanto COLMAP como Luma utilizan el mismo sistema
+ * de coordenadas del mundo.
+ * ============================================================
+ */
+
+async function loadWorldModel(
+    app,
+    {
+        url,
+        position = new Vec3(
+            0,
+            0,
+            0
+        ),
+        rotation = new Vec3(
+            0,
+            0,
+            0
+        ),
+        scale = 1
+    } = {}
+) {
+
+    console.log(
+        'Cargando modelo 3D:',
+        url
+    );
+
+    const modelAsset =
+        new Asset(
+            'world-model',
+            'container',
+            {
+                url
+            }
+        );
+
+    app.assets.add(
+        modelAsset
+    );
+
+    await new Promise(
+        (resolve, reject) => {
+
+            modelAsset.ready(
+                resolve
+            );
+
+            modelAsset.on(
+                'error',
+                reject
+            );
+
+            app.assets.load(
+                modelAsset
+            );
+        }
+    );
+
+    if (
+        !modelAsset.loaded ||
+        !modelAsset.resource
+    ) {
+
+        throw new Error(
+            `No se pudo cargar el modelo 3D: ${url}`
+        );
+    }
+
+    const model =
+        modelAsset.resource
+            .instantiateRenderEntity();
+
+    /*
+     * Posición de mundo.
+     */
+    model.setPosition(
+        position.x,
+        position.y,
+        position.z
+    );
+
+    /*
+     * Rotación de mundo.
+     */
+    model.setEulerAngles(
+        rotation.x,
+        rotation.y,
+        rotation.z
+    );
+
+    /*
+     * Escala.
+     */
+    model.setLocalScale(
+        scale,
+        scale,
+        scale
+    );
+
+    /*
+     * Lo añadimos directamente
+     * al root de la escena.
+     *
+     * Así no hereda transformaciones
+     * del Gaussian Splat.
+     */
+    app.root.addChild(
+        model
+    );
+
+    console.log(
+        'Modelo 3D anclado:',
+        {
+            position,
+            rotation,
+            scale
+        }
+    );
+
+    return {
+        entity: model,
+        asset: modelAsset
+    };
+}
+
+
+/*
+ * ============================================================
+ * START VIEWER
+ * ============================================================
+ */
 
 async function startViewer(
     sceneUrl,
     sceneUp,
     sceneOpts = {}
 ) {
-    const canvas =
-        document.createElement('canvas');
 
-    document.body.appendChild(canvas);
+    const canvas =
+        document.createElement(
+            'canvas'
+        );
+
+    document.body.appendChild(
+        canvas
+    );
 
     const app =
         new Application(
             canvas,
             {
                 graphicsDeviceOptions: {
-                    // El cuello de botella del splatting
-                    // es el fill rate.
                     antialias: false
                 }
             }
@@ -486,12 +814,12 @@ async function startViewer(
         RESOLUTION_AUTO
     );
 
-    // En celular se sube la nitidez a 2x.
     if (
         window.matchMedia(
             '(max-width: 640px)'
         ).matches
     ) {
+
         app.graphicsDevice.maxPixelRatio =
             Math.min(
                 window.devicePixelRatio || 1,
@@ -503,9 +831,8 @@ async function startViewer(
 
     app.start();
 
-    // Expuesta para inspección y capturas
-    // desde la consola del navegador.
-    window.senderoApp = app;
+    window.senderoApp =
+        app;
 
     window.addEventListener(
         'resize',
@@ -513,11 +840,13 @@ async function startViewer(
     );
 
     const assets = [
+
         new Asset(
             'camera-controls',
             'script',
             {
-                url: CAMERA_CONTROLS_URL
+                url:
+                    CAMERA_CONTROLS_URL
             }
         ),
 
@@ -525,26 +854,38 @@ async function startViewer(
             'scene',
             'gsplat',
             {
-                url: sceneUrl
+                url:
+                    sceneUrl
             }
         )
     ];
 
-    // Progreso real de la descarga del splat.
     assets[1].on(
         'progress',
-        (recibido, total) => {
+        (
+            recibido,
+            total
+        ) => {
+
             if (total > 0) {
+
                 const mb =
-                    (recibido / 1048576)
-                        .toFixed(0);
+                    (
+                        recibido /
+                        1048576
+                    ).toFixed(0);
 
                 const totalMb =
-                    (total / 1048576)
-                        .toFixed(0);
+                    (
+                        total /
+                        1048576
+                    ).toFixed(0);
 
                 setLoadingProgress(
-                    (recibido / total) * 85,
+                    (
+                        recibido /
+                        total
+                    ) * 85,
                     `Descargando la escena · ` +
                     `${mb} de ${totalMb} MB`
                 );
@@ -560,7 +901,9 @@ async function startViewer(
 
     await new Promise(
         resolve =>
-            loader.load(resolve)
+            loader.load(
+                resolve
+            )
     );
 
     const [
@@ -568,24 +911,35 @@ async function startViewer(
         sceneAsset
     ] = assets;
 
-    if (!controlsAsset.loaded) {
+    if (
+        !controlsAsset.loaded
+    ) {
+
         throw new Error(
-            'No se pudo descargar el control ' +
-            'de cámara desde el CDN. ' +
-            'Revisa la conexión a internet.'
+            'No se pudo descargar el control de cámara.'
         );
     }
 
-    if (!sceneAsset.loaded) {
+    if (
+        !sceneAsset.loaded
+    ) {
+
         throw new Error(
             `El archivo <code>${sceneUrl}</code> ` +
-            `existe pero no se pudo cargar. ` +
-            `Revisa que sea un SOG válido.`
+            `no se pudo cargar.`
         );
     }
 
+    /*
+     * ============================================================
+     * CÁMARA
+     * ============================================================
+     */
+
     const camera =
-        new Entity('camera');
+        new Entity(
+            'camera'
+        );
 
     camera.setPosition(
         0,
@@ -603,19 +957,28 @@ async function startViewer(
         }
     );
 
-    // El oyente del audio espacial
-    // es la cámara activa.
     camera.addComponent(
         'audiolistener'
     );
 
-    app.root.addChild(camera);
+    app.root.addChild(
+        camera
+    );
+
+
+    /*
+     * ============================================================
+     * GAUSSIAN SPLAT
+     * ============================================================
+     */
 
     const splat =
-        new Entity('scene');
+        new Entity(
+            'scene'
+        );
 
-    // Nivelación de la reconstrucción.
     if (sceneUp) {
+
         const up =
             new Vec3(
                 sceneUp.x,
@@ -633,7 +996,11 @@ async function startViewer(
         splat.setRotation(
             levelling
         );
-    } else if (!sceneOpts.baked) {
+
+    } else if (
+        !sceneOpts.baked
+    ) {
+
         splat.setEulerAngles(
             0,
             0,
@@ -641,17 +1008,14 @@ async function startViewer(
         );
     }
 
-    // Si la escena viene baked,
-    // ya está nivelada.
     splat.addComponent(
         'gsplat',
         {
-            asset: sceneAsset
+            asset:
+                sceneAsset
         }
     );
 
-    // Volumen amplio para que no desaparezca
-    // parte de la escena.
     splat.gsplat.customAabb =
         new BoundingBox(
             new Vec3(
@@ -670,10 +1034,102 @@ async function startViewer(
         splat
     );
 
-    // Esperamos a que el splat esté estable.
+
+    /*
+     * ============================================================
+     * MODELO 3D ANCLADO
+     * ============================================================
+     *
+     * CAMBIA SOLO ESTAS COORDENADAS
+     * cuando tengas la ubicación definitiva.
+     *
+     * ============================================================
+     */
+
+    try {
+
+        const worldModel =
+            await loadWorldModel(
+                app,
+                {
+                    url:
+                        'assets/models/golondrina-plomiza.glb',
+
+                    /*
+                     * COORDENADAS DEL MUNDO
+                     *
+                     * X = izquierda / derecha
+                     * Y = altura
+                     * Z = adelante / atrás
+                     */
+
+                    position:
+                        new Vec3(
+                            0,
+                            0,
+                            0
+                        ),
+
+                    /*
+                     * Rotación del modelo.
+                     */
+
+                    rotation:
+                        new Vec3(
+                            0,
+                            0,
+                            0
+                        ),
+
+                    /*
+                     * Tamaño del modelo.
+                     */
+
+                    scale:
+                        1
+                }
+            );
+
+        /*
+         * Lo dejamos disponible
+         * desde la consola.
+         */
+
+        window.senderoWorldModel =
+            worldModel.entity;
+
+        window.senderoWorldModelAsset =
+            worldModel.asset;
+
+        console.log(
+            '✓ Modelo 3D integrado en la escena'
+        );
+
+    } catch (error) {
+
+        console.error(
+            '⚠ No se pudo cargar el modelo 3D:',
+            error
+        );
+    }
+
+
+    /*
+     * ============================================================
+     * ESTABILIZAR SPLAT
+     * ============================================================
+     */
+
     await waitForStableRender(
         app
     );
+
+
+    /*
+     * ============================================================
+     * NAVEGACIÓN
+     * ============================================================
+     */
 
     await setUpNavigation(
         app,
@@ -692,17 +1148,30 @@ async function startViewer(
 
     setTimeout(
         () => {
-            overlay.hidden = true;
+
+            overlay.hidden =
+                true;
+
             overlay.classList.remove(
                 'desvanecer'
             );
+
         },
         420
     );
 }
 
-/** Vuelo libre: solo para marcar el trazado o mientras no exista uno. */
-function enableFreeFlight(camera) {
+
+/*
+ * ============================================================
+ * VUELO LIBRE
+ * ============================================================
+ */
+
+function enableFreeFlight(
+    camera
+) {
+
     camera.addComponent(
         'script'
     );
@@ -713,6 +1182,7 @@ function enableFreeFlight(camera) {
         );
 
     if (controls) {
+
         controls.enableFly =
             true;
 
@@ -748,17 +1218,29 @@ function enableFreeFlight(camera) {
     return controls;
 }
 
+
+/*
+ * ============================================================
+ * TRAIL
+ * ============================================================
+ */
+
 async function loadTrail(
     trackUrl = TRACK_CONFIG_URL
 ) {
+
     try {
+
         const response =
             await fetch(
                 trackUrl
             );
 
         if (!response.ok) {
-            return new TrailPath([]);
+
+            return new TrailPath(
+                []
+            );
         }
 
         const cfg =
@@ -776,16 +1258,26 @@ async function loadTrail(
         return path;
 
     } catch {
-        return new TrailPath([]);
+
+        return new TrailPath(
+            []
+        );
     }
 }
+
+
+/*
+ * ============================================================
+ * NAVEGACIÓN
+ * ============================================================
+ */
 
 async function setUpNavigation(
     app,
     camera,
     sceneOpts = {}
 ) {
-    // Metadatos de la escena activa.
+
     const {
         forwardOnly = false,
         eyeHeight: sceneEyeHeight,
@@ -796,7 +1288,9 @@ async function setUpNavigation(
     const isEditor =
         new URLSearchParams(
             window.location.search
-        ).has('editor');
+        ).has(
+            'editor'
+        );
 
     const trail =
         await loadTrail(
@@ -805,12 +1299,13 @@ async function setUpNavigation(
         );
 
     if (isEditor) {
+
         enableFreeFlight(
             camera
         );
 
         const pintar =
-            (n) =>
+            n =>
                 showHint(
                     '<strong>EDITOR DEL TRAZADO</strong> · ' +
                     n +
@@ -821,7 +1316,7 @@ async function setUpNavigation(
                     '<strong>X</strong> descargar track.json<br>' +
 
                     'Vuela con <strong>W A S D</strong> ' +
-                    'por el camino y ve marcando, de principio a fin.'
+                    'por el camino.'
                 );
 
         window.senderoRecorder =
@@ -840,28 +1335,24 @@ async function setUpNavigation(
     }
 
     if (!trail.isUsable) {
+
         enableFreeFlight(
             camera
         );
 
         showHint(
-            '<strong>Sin trazado definido:</strong> vuelo libre. ' +
-            '<strong>W A S D</strong> moverse · ' +
-            '<strong>Q E</strong> bajar y subir · arrastrar para mirar.<br>' +
-
-            'Para marcar el camino del sendero abre ' +
-
-            '<a href="?editor=1" ' +
-            'style="color:var(--sv-green-300)">' +
-            'el editor del trazado</a>.'
+            '<strong>Sin trazado definido:</strong> vuelo libre.'
         );
 
         return;
     }
 
-    // ============================================================
-    // RECORRIDO GUIADO
-    // ============================================================
+
+    /*
+     * ============================================================
+     * TOUR ENGINE
+     * ============================================================
+     */
 
     const tour =
         new TourEngine(
@@ -869,7 +1360,8 @@ async function setUpNavigation(
             camera,
             trail,
             {
-                speed: 1.2,
+                speed:
+                    1.2,
 
                 eyeHeight:
                     sceneEyeHeight ??
@@ -886,22 +1378,33 @@ async function setUpNavigation(
     window.senderoTour =
         tour;
 
-    // Flechas dentro de la escena,
-    // sobre el camino.
+
+    /*
+     * ============================================================
+     * TRAIL MARKERS
+     * ============================================================
+     */
+
     window.senderoMarkers =
         new TrailMarkers(
             app,
             camera,
             tour,
             {
-                stepDistance: 3.2,
-                groundOffset: -0.6
+                stepDistance:
+                    3.2,
+
+                groundOffset:
+                    -0.6
             }
         );
 
-    // ============================================================
-    // TU PARTE: PUNTOS DE INTERÉS (POIs)
-    // ============================================================
+
+    /*
+     * ============================================================
+     * POIs
+     * ============================================================
+     */
 
     const poiManager =
         new PoiManager(
@@ -911,54 +1414,55 @@ async function setUpNavigation(
         );
 
     const poiCard =
-        new PoiCard(app);
+        new PoiCard(
+            app
+        );
 
-    // Se exponen para poder inspeccionarlos
-    // desde la consola del navegador.
     window.senderoPoiManager =
         poiManager;
 
     window.senderoPoiCard =
         poiCard;
 
-    /*
-     * Cuando se cierra la tarjeta del POI,
-     * PoiCard solicita que PoiManager
-     * restaure el recorrido.
-     */
+
     app.on(
         'poi:request-close',
         () => {
+
             poiManager.closePoi();
         }
     );
 
-    /*
-     * Cargar los puntos de interés
-     * definidos en config/pois.json.
-     *
-     * Si ocurre un error, no se rompe
-     * el recorrido principal.
-     */
+
     try {
+
         await poiManager.load();
+
     } catch (error) {
+
         console.warn(
-            'No se pudieron cargar los puntos de interés:',
+            'No se pudieron cargar los POIs:',
             error
         );
     }
 
-    // ============================================================
-    // HUD DEL RECORRIDO
-    // ============================================================
+
+    /*
+     * ============================================================
+     * HUD
+     * ============================================================
+     */
 
     showHint(
-        'Toca las <strong>flechas del camino</strong> para avanzar · ' +
-        'también <strong>W A S D</strong><br>' +
+
+        'Toca las <strong>flechas del camino</strong> ' +
+        'para avanzar · ' +
+
+        '<strong>W A S D</strong><br>' +
 
         '<strong>R</strong> subir la vista · ' +
         '<strong>F</strong> bajarla · ' +
+
         'arrastra para mirar en 360°<br>' +
 
         '<span id="hud-progress">' +
@@ -968,14 +1472,21 @@ async function setUpNavigation(
         'altura ' +
 
         '<span id="hud-eye">' +
-        (trail.eyeHeight ?? 0)
-            .toFixed(2) +
+        (
+            trail.eyeHeight ??
+            0
+        ).toFixed(2) +
         '</span>'
     );
 
+
     app.on(
         'tour:progress',
-        ({ distance, total }) => {
+        ({
+            distance,
+            total
+        }) => {
+
             const hud =
                 document.getElementById(
                     'hud-progress'
@@ -985,6 +1496,7 @@ async function setUpNavigation(
                 hud &&
                 total > 0
             ) {
+
                 hud.textContent =
                     Math.round(
                         100 *
@@ -996,15 +1508,18 @@ async function setUpNavigation(
         }
     );
 
+
     app.on(
         'tour:eyeheight',
-        (v) => {
+        v => {
+
             const hud =
                 document.getElementById(
                     'hud-eye'
                 );
 
             if (hud) {
+
                 hud.textContent =
                     v.toFixed(2);
             }
@@ -1012,8 +1527,17 @@ async function setUpNavigation(
     );
 }
 
+
+/*
+ * ============================================================
+ * MAIN
+ * ============================================================
+ */
+
 async function main() {
+
     try {
+
         const scene =
             await resolveSceneUrl();
 
@@ -1027,12 +1551,15 @@ async function main() {
             !isRemoteUrl(url) &&
             !(await localFileExists(url))
         ) {
+
             if (isOverride) {
+
                 showError(
-                    `No existe el archivo <code>${url}</code> ` +
-                    `en el servidor.`
+                    `No existe el archivo <code>${url}</code>`
                 );
+
             } else {
+
                 showPlaceholder(
                     url
                 );
@@ -1043,7 +1570,10 @@ async function main() {
 
         showLoading();
 
-        if (scene.renderTech) {
+        if (
+            scene.renderTech
+        ) {
+
             setUpTechSwitch(
                 scene.renderTech
             );
@@ -1056,12 +1586,16 @@ async function main() {
         );
 
     } catch (error) {
-        console.error(error);
+
+        console.error(
+            error
+        );
 
         showError(
             error.message
         );
     }
 }
+
 
 main();

@@ -1,81 +1,417 @@
-﻿export class PoiCard {
+﻿import { ModelViewer } from './ModelViewer.js';
+
+
+export class PoiCard {
+
     constructor(app) {
+
         this.app = app;
+
         this.element = null;
 
-        this._onOpen = this._onOpen.bind(this);
-        this._onClose = this._onClose.bind(this);
+        this.modelViewer = null;
 
-        app.on('poi:open', this._onOpen);
-        app.on('poi:close', this._onClose);
+        this.cantoAudio = null;
+        this.narracionAudio = null;
 
-        console.log('PoiCard listo');
+        /*
+         * Guardamos los botones de POI que ocultamos
+         * mientras la ficha está abierta.
+         */
+
+        this.hiddenPoiMarkers = [];
+
+
+        /*
+         * Bind
+         */
+
+        this._onOpen =
+            this._onOpen.bind(this);
+
+        this._onClose =
+            this._onClose.bind(this);
+
+
+        /*
+         * Eventos
+         */
+
+        app.on(
+            'poi:open',
+            this._onOpen
+        );
+
+        app.on(
+            'poi:close',
+            this._onClose
+        );
+
+
+        console.log(
+            'PoiCard listo'
+        );
     }
 
-    _onOpen(poi) {
 
-        console.log('ABRIENDO FICHA:', poi);
+    /*
+     * =========================================================
+     * OCULTAR BOTONES POI
+     * =========================================================
+     *
+     * Los botones creados por PoiManager son hijos directos
+     * de document.body.
+     *
+     * Por eso NO vamos a depender del z-index.
+     *
+     * Los ocultamos directamente.
+     */
+
+    _hidePoiMarkers() {
+
+        this.hiddenPoiMarkers = [];
+
+
+        /*
+         * Buscar botones hijos directos del body.
+         *
+         * Los POI son creados por PoiManager directamente
+         * con document.body.appendChild(button).
+         */
+
+        const bodyChildren =
+            Array.from(
+                document.body.children
+            );
+
+
+        for (
+            const element of bodyChildren
+        ) {
+
+            /*
+             * No tocar la ficha.
+             */
+
+            if (
+                element === this.element
+            ) {
+                continue;
+            }
+
+
+            /*
+             * Solo botones.
+             */
+
+            if (
+                element.tagName !== 'BUTTON'
+            ) {
+                continue;
+            }
+
+
+            /*
+             * Guardar su display original.
+             */
+
+            this.hiddenPoiMarkers.push({
+
+                element:
+                    element,
+
+                display:
+                    element.style.display,
+
+                visibility:
+                    element.style.visibility,
+
+                pointerEvents:
+                    element.style.pointerEvents
+
+            });
+
+
+            /*
+             * Ocultarlo completamente.
+             */
+
+            element.style.setProperty(
+                'display',
+                'none',
+                'important'
+            );
+
+            element.style.setProperty(
+                'visibility',
+                'hidden',
+                'important'
+            );
+
+            element.style.setProperty(
+                'pointer-events',
+                'none',
+                'important'
+            );
+        }
+
+
+        console.log(
+            'POI ocultos:',
+            this.hiddenPoiMarkers.length
+        );
+    }
+
+
+    /*
+     * =========================================================
+     * MOSTRAR BOTONES POI
+     * =========================================================
+     */
+
+    _showPoiMarkers() {
+
+        for (
+            const marker of this.hiddenPoiMarkers
+        ) {
+
+            if (
+                !marker.element ||
+                !marker.element.isConnected
+            ) {
+                continue;
+            }
+
+
+            /*
+             * Restaurar valores originales.
+             */
+
+            if (
+                marker.display
+            ) {
+
+                marker.element.style.display =
+                    marker.display;
+
+            } else {
+
+                marker.element.style.removeProperty(
+                    'display'
+                );
+            }
+
+
+            if (
+                marker.visibility
+            ) {
+
+                marker.element.style.visibility =
+                    marker.visibility;
+
+            } else {
+
+                marker.element.style.removeProperty(
+                    'visibility'
+                );
+            }
+
+
+            if (
+                marker.pointerEvents
+            ) {
+
+                marker.element.style.pointerEvents =
+                    marker.pointerEvents;
+
+            } else {
+
+                marker.element.style.removeProperty(
+                    'pointer-events'
+                );
+            }
+        }
+
+
+        this.hiddenPoiMarkers = [];
+
+
+        console.log(
+            'POI mostrados nuevamente'
+        );
+    }
+
+
+    /*
+     * =========================================================
+     * ABRIR FICHA
+     * =========================================================
+     */
+
+    async _onOpen(poi) {
+
+        console.log(
+            '================================='
+        );
+
+        console.log(
+            'ABRIENDO FICHA:',
+            poi
+        );
+
+        console.log(
+            '================================='
+        );
+
+
+        /*
+         * Limpiar ficha anterior.
+         */
 
         this._remove();
 
-        // ==============================
-        // OVERLAY
-        // ==============================
 
-        const overlay = document.createElement('div');
+        /*
+         * =====================================================
+         * OVERLAY
+         * =====================================================
+         */
 
-        overlay.style.position = 'fixed';
-        overlay.style.inset = '0';
-        overlay.style.width = '100vw';
-        overlay.style.height = '100vh';
-        overlay.style.background = 'rgba(0, 0, 0, 0.65)';
-        overlay.style.display = 'flex';
-        overlay.style.alignItems = 'center';
-        overlay.style.justifyContent = 'center';
-        overlay.style.zIndex = '999999';
-        overlay.style.pointerEvents = 'auto';
+        const overlay =
+            document.createElement(
+                'div'
+            );
 
-        // ==============================
-        // TARJETA
-        // ==============================
 
-        const card = document.createElement('div');
+        overlay.id =
+            'sendero-vivo-poi-overlay';
 
-        card.style.position = 'relative';
-        card.style.width = '420px';
-        card.style.maxWidth = '90vw';
-        card.style.maxHeight = '85vh';
-        card.style.overflowY = 'auto';
-        card.style.background = '#18251d';
-        card.style.color = 'white';
-        card.style.borderRadius = '24px';
-        card.style.padding = '30px';
-        card.style.boxSizing = 'border-box';
-        card.style.fontFamily = 'Arial, sans-serif';
-        card.style.boxShadow = '0 20px 60px rgba(0,0,0,0.6)';
-        card.style.border = '1px solid rgba(111,207,151,0.5)';
 
-        // ==============================
-        // DATOS
-        // ==============================
+        overlay.style.position =
+            'fixed';
+
+        overlay.style.inset =
+            '0';
+
+        overlay.style.width =
+            '100vw';
+
+        overlay.style.height =
+            '100vh';
+
+        overlay.style.background =
+            'rgba(0, 0, 0, 0.65)';
+
+        overlay.style.display =
+            'flex';
+
+        overlay.style.alignItems =
+            'center';
+
+        overlay.style.justifyContent =
+            'center';
+
+        /*
+         * Z-index altísimo.
+         */
+
+        overlay.style.zIndex =
+            '2147483647';
+
+        overlay.style.pointerEvents =
+            'auto';
+
+        overlay.style.boxSizing =
+            'border-box';
+
+
+        /*
+         * =====================================================
+         * TARJETA
+         * =====================================================
+         */
+
+        const card =
+            document.createElement(
+                'div'
+            );
+
+
+        card.style.position =
+            'relative';
+
+        card.style.width =
+            '420px';
+
+        card.style.maxWidth =
+            '90vw';
+
+        card.style.maxHeight =
+            '85vh';
+
+        card.style.overflowY =
+            'auto';
+
+        card.style.background =
+            '#18251d';
+
+        card.style.color =
+            'white';
+
+        card.style.borderRadius =
+            '24px';
+
+        card.style.padding =
+            '30px';
+
+        card.style.boxSizing =
+            'border-box';
+
+        card.style.fontFamily =
+            'Arial, sans-serif';
+
+        card.style.boxShadow =
+            '0 20px 60px rgba(0,0,0,0.6)';
+
+        card.style.border =
+            '1px solid rgba(111,207,151,0.5)';
+
+        card.style.zIndex =
+            '2147483647';
+
+
+        /*
+         * =====================================================
+         * DATOS
+         * =====================================================
+         */
 
         const commonName =
-            poi?.commonName || 'Colibrí chillón';
+            poi?.commonName ||
+            'Golondrina plomiza';
+
 
         const scientificName =
-            poi?.scientificName || 'Colibri coruscans';
+            poi?.scientificName ||
+            'Notiochelidon murina';
+
 
         const altitude =
-            poi?.altitudeRange || '1.700 – 3.500 msnm';
+            poi?.altitudeRange ||
+            '1.700 – 3.500 msnm';
 
-        // ==============================
-        // CONTENIDO
-        // ==============================
+
+        /*
+         * =====================================================
+         * CONTENIDO
+         * =====================================================
+         */
 
         card.innerHTML = `
 
             <button
                 id="poi-close-button"
+                type="button"
                 style="
                     position:absolute;
                     top:12px;
@@ -88,20 +424,52 @@
                     color:white;
                     font-size:26px;
                     cursor:pointer;
+                    z-index:10;
                 "
             >
                 ×
             </button>
 
+
+            <!-- ========================================= -->
+            <!-- VISOR 3D -->
+            <!-- ========================================= -->
+
             <div
+                id="poi-model"
                 style="
-                    text-align:center;
-                    font-size:70px;
-                    margin-bottom:10px;
+                    width:100%;
+                    height:220px;
+                    margin-bottom:15px;
+                    border-radius:16px;
+                    overflow:hidden;
+                    background:#101510;
+                    position:relative;
                 "
             >
-                🐦
+
+                <div
+                    id="poi-model-loading"
+                    style="
+                        position:absolute;
+                        inset:0;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        color:#6fcf97;
+                        font-size:14px;
+                        z-index:2;
+                    "
+                >
+                    Cargando modelo 3D...
+                </div>
+
             </div>
+
+
+            <!-- ========================================= -->
+            <!-- NOMBRE -->
+            <!-- ========================================= -->
 
             <h2
                 style="
@@ -114,6 +482,7 @@
                 ${commonName}
             </h2>
 
+
             <p
                 style="
                     text-align:center;
@@ -124,6 +493,11 @@
             >
                 ${scientificName}
             </p>
+
+
+            <!-- ========================================= -->
+            <!-- INFORMACIÓN -->
+            <!-- ========================================= -->
 
             <div
                 style="
@@ -151,6 +525,11 @@
 
             </div>
 
+
+            <!-- ========================================= -->
+            <!-- DESCRIPCIÓN -->
+            <!-- ========================================= -->
+
             <h3
                 style="
                     margin-top:25px;
@@ -160,17 +539,6 @@
                 Sobre esta especie
             </h3>
 
-            <p
-                style="
-                    line-height:1.6;
-                    color:#e5e5e5;
-                "
-            >
-                El colibrí chillón
-                (<em>Colibri coruscans</em>)
-                es una especie de colibrí característica
-                de diferentes ecosistemas de montaña.
-            </p>
 
             <p
                 style="
@@ -178,10 +546,28 @@
                     color:#e5e5e5;
                 "
             >
-                Se caracteriza por su comportamiento
-                activo y por sus vocalizaciones fuertes,
-                de donde proviene su nombre común.
+                La golondrina plomiza
+                (<em>${scientificName}</em>)
+                es una especie de ave que habita
+                diferentes ecosistemas de montaña.
             </p>
+
+
+            <p
+                style="
+                    line-height:1.6;
+                    color:#e5e5e5;
+                "
+            >
+                Su presencia forma parte de la
+                biodiversidad que podemos encontrar
+                en los Cerros Orientales de Bogotá.
+            </p>
+
+
+            <!-- ========================================= -->
+            <!-- AUDIO -->
+            <!-- ========================================= -->
 
             <div
                 style="
@@ -194,6 +580,7 @@
 
                 <button
                     id="poi-canto"
+                    type="button"
                     style="
                         padding:14px;
                         border:none;
@@ -208,8 +595,10 @@
                     🔊 Escuchar canto
                 </button>
 
+
                 <button
                     id="poi-narracion"
+                    type="button"
                     style="
                         padding:14px;
                         border:1px solid #6fcf97;
@@ -225,73 +614,526 @@
                 </button>
 
             </div>
+
         `;
 
-        // ==============================
-        // AGREGAR A LA PÁGINA
-        // ==============================
 
-        overlay.appendChild(card);
+        /*
+         * =====================================================
+         * AGREGAR AL DOM
+         * =====================================================
+         */
 
-        document.body.appendChild(overlay);
+        overlay.appendChild(
+            card
+        );
 
-        this.element = overlay;
+        document.body.appendChild(
+            overlay
+        );
 
-        console.log('FICHA INSERTADA EN EL DOM');
 
-        // ==============================
-        // BOTÓN CERRAR
-        // ==============================
+        this.element =
+            overlay;
+
+
+        /*
+         * =====================================================
+         * AHORA SÍ:
+         * OCULTAR LOS POI
+         * =====================================================
+         *
+         * Se hace DESPUÉS de agregar el overlay.
+         */
+
+        this._hidePoiMarkers();
+
+
+        /*
+         * =====================================================
+         * BOTÓN CERRAR
+         * ===================================================== */
 
         const closeButton =
-            card.querySelector('#poi-close-button');
+            card.querySelector(
+                '#poi-close-button'
+            );
+
 
         closeButton.addEventListener(
             'click',
             (event) => {
 
+                event.preventDefault();
+
                 event.stopPropagation();
 
-                console.log('Cerrando ficha');
-
-                this._onClose();
+                this.app.fire(
+                    'poi:request-close'
+                );
             }
         );
 
-        // ==============================
-        // CLIC FUERA DE LA TARJETA
-        // ==============================
+
+        /*
+         * =====================================================
+         * CLIC FUERA
+         * =====================================================
+         */
 
         overlay.addEventListener(
             'click',
             (event) => {
 
-                if (event.target === overlay) {
-                    this._onClose();
+                if (
+                    event.target === overlay
+                ) {
+
+                    this.app.fire(
+                        'poi:request-close'
+                    );
+                }
+            }
+        );
+
+
+        /*
+         * =====================================================
+         * AUDIO
+         * =====================================================
+         */
+
+        this._setupAudio(
+            card
+        );
+
+
+        /*
+         * =====================================================
+         * MODELO 3D
+         * =====================================================
+         */
+
+        await this._loadModel(
+            card
+        );
+    }
+
+
+    /*
+     * =========================================================
+     * CARGAR MODELO 3D
+     * =========================================================
+     */
+
+    async _loadModel(card) {
+
+        const container =
+            card.querySelector(
+                '#poi-model'
+            );
+
+
+        const loading =
+            card.querySelector(
+                '#poi-model-loading'
+            );
+
+
+        try {
+
+            this.modelViewer =
+                new ModelViewer(
+                    container
+                );
+
+
+            await this.modelViewer.load(
+                'assets/models/golondrina-plomiza.glb'
+            );
+
+
+            if (
+                loading
+            ) {
+
+                loading.remove();
+            }
+
+
+            console.log(
+                'Modelo 3D cargado correctamente'
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                'Error cargando modelo 3D:',
+                error
+            );
+
+
+            if (
+                loading
+            ) {
+
+                loading.textContent =
+                    'No se pudo cargar el modelo 3D';
+
+                loading.style.color =
+                    '#ff8888';
+            }
+        }
+    }
+
+
+    /*
+     * =========================================================
+     * AUDIO
+     * =========================================================
+     */
+
+    _setupAudio(card) {
+
+        this.cantoAudio =
+            new Audio(
+                'assets/audio/golondrina-canto.mp3'
+            );
+
+
+        this.narracionAudio =
+            new Audio(
+                'assets/audio/golondrina-narracion.mp3'
+            );
+
+
+        this.cantoAudio.preload =
+            'auto';
+
+        this.narracionAudio.preload =
+            'auto';
+
+
+        const cantoButton =
+            card.querySelector(
+                '#poi-canto'
+            );
+
+
+        const narracionButton =
+            card.querySelector(
+                '#poi-narracion'
+            );
+
+
+        /*
+         * CANTO
+         */
+
+        cantoButton.addEventListener(
+            'click',
+            async (event) => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                if (
+                    this.narracionAudio
+                ) {
+
+                    this.narracionAudio.pause();
+
+                    this.narracionAudio.currentTime =
+                        0;
                 }
 
+
+                if (
+                    !this.cantoAudio.paused
+                ) {
+
+                    this.cantoAudio.pause();
+
+                    this.cantoAudio.currentTime =
+                        0;
+
+                    cantoButton.textContent =
+                        '🔊 Escuchar canto';
+
+                    return;
+                }
+
+
+                try {
+
+                    await this.cantoAudio.play();
+
+                    cantoButton.textContent =
+                        '⏸ Detener canto';
+
+                    narracionButton.textContent =
+                        '🎧 Escuchar narración';
+
+                } catch (error) {
+
+                    console.error(
+                        'No se pudo reproducir el canto:',
+                        error
+                    );
+                }
+            }
+        );
+
+
+        /*
+         * NARRACIÓN
+         */
+
+        narracionButton.addEventListener(
+            'click',
+            async (event) => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                if (
+                    this.cantoAudio
+                ) {
+
+                    this.cantoAudio.pause();
+
+                    this.cantoAudio.currentTime =
+                        0;
+                }
+
+
+                if (
+                    !this.narracionAudio.paused
+                ) {
+
+                    this.narracionAudio.pause();
+
+                    this.narracionAudio.currentTime =
+                        0;
+
+                    narracionButton.textContent =
+                        '🎧 Escuchar narración';
+
+                    return;
+                }
+
+
+                try {
+
+                    await this.narracionAudio.play();
+
+                    narracionButton.textContent =
+                        '⏸ Detener narración';
+
+                    cantoButton.textContent =
+                        '🔊 Escuchar canto';
+
+                } catch (error) {
+
+                    console.error(
+                        'No se pudo reproducir la narración:',
+                        error
+                    );
+                }
+            }
+        );
+
+
+        /*
+         * AUDIO TERMINADO
+         */
+
+        this.cantoAudio.addEventListener(
+            'ended',
+            () => {
+
+                if (
+                    cantoButton
+                ) {
+
+                    cantoButton.textContent =
+                        '🔊 Escuchar canto';
+                }
+            }
+        );
+
+
+        this.narracionAudio.addEventListener(
+            'ended',
+            () => {
+
+                if (
+                    narracionButton
+                ) {
+
+                    narracionButton.textContent =
+                        '🎧 Escuchar narración';
+                }
             }
         );
     }
 
+
+    /*
+     * =========================================================
+     * CERRAR FICHA
+     * =========================================================
+     */
+
     _onClose() {
 
-        console.log('FICHA CERRADA');
+        console.log(
+            'FICHA CERRADA'
+        );
 
-        this._remove();
 
-        this.app.fire('poi:request-close');
-    }
+        /*
+         * Detener audios.
+         */
 
-    _remove() {
+        if (
+            this.cantoAudio
+        ) {
 
-        if (this.element) {
+            this.cantoAudio.pause();
+
+            this.cantoAudio.currentTime =
+                0;
+        }
+
+
+        if (
+            this.narracionAudio
+        ) {
+
+            this.narracionAudio.pause();
+
+            this.narracionAudio.currentTime =
+                0;
+        }
+
+
+        /*
+         * Destruir visor 3D.
+         */
+
+        if (
+            this.modelViewer
+        ) {
+
+            this.modelViewer.destroy();
+
+            this.modelViewer =
+                null;
+        }
+
+
+        this.cantoAudio =
+            null;
+
+        this.narracionAudio =
+            null;
+
+
+        /*
+         * Eliminar ficha.
+         */
+
+        if (
+            this.element
+        ) {
 
             this.element.remove();
 
-            this.element = null;
+            this.element =
+                null;
+        }
+
+
+        /*
+         * =====================================================
+         * MOSTRAR NUEVAMENTE LOS POI
+         * =====================================================
+         */
+
+        this._showPoiMarkers();
+    }
+
+
+    /*
+     * =========================================================
+     * ELIMINAR FICHA
+     * =========================================================
+     */
+
+    _remove() {
+
+        if (
+            this.modelViewer
+        ) {
+
+            this.modelViewer.destroy();
+
+            this.modelViewer =
+                null;
+        }
+
+
+        if (
+            this.cantoAudio
+        ) {
+
+            this.cantoAudio.pause();
+
+            this.cantoAudio.currentTime =
+                0;
+
+            this.cantoAudio =
+                null;
+        }
+
+
+        if (
+            this.narracionAudio
+        ) {
+
+            this.narracionAudio.pause();
+
+            this.narracionAudio.currentTime =
+                0;
+
+            this.narracionAudio =
+                null;
+        }
+
+
+        if (
+            this.element
+        ) {
+
+            this.element.remove();
+
+            this.element =
+                null;
         }
     }
+
+
+    /*
+     * =========================================================
+     * DESTRUIR
+     * =========================================================
+     */
 
     destroy() {
 
@@ -300,10 +1142,15 @@
             this._onOpen
         );
 
+
         this.app.off(
             'poi:close',
             this._onClose
         );
+
+
+        this._showPoiMarkers();
+
 
         this._remove();
     }

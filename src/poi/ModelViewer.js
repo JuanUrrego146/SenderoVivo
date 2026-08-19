@@ -1,219 +1,308 @@
-﻿import {
-    Application,
-    Asset,
-    Entity,
-    Color,
-    FILLMODE_FILL_WINDOW,
-    RESOLUTION_AUTO
-} from 'playcanvas';
+﻿export class ModelViewer {
 
-export class ModelViewer {
     constructor(container) {
+
         this.container = container;
-        this.app = null;
-        this.camera = null;
-        this.entity = null;
-        this.asset = null;
+        this.model = null;
 
-        this.rotationY = 0;
-        this.rotationX = 0;
-        this.distance = 3;
-
-        this.dragging = false;
-        this.lastX = 0;
-        this.lastY = 0;
-
-        this._pointerDown = this._pointerDown.bind(this);
-        this._pointerMove = this._pointerMove.bind(this);
-        this._pointerUp = this._pointerUp.bind(this);
-        this._wheel = this._wheel.bind(this);
     }
+
 
     async load(url) {
+
+        console.log('=================================');
+        console.log('MODEL VIEWER');
+        console.log('Cargando modelo:', url);
+        console.log('=================================');
+
+
+        // Cargar la librería
+        await this._loadModelViewer();
+
+
+        // Limpiar contenedor
         this.container.innerHTML = '';
 
-        const canvas = document.createElement('canvas');
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.display = 'block';
-        canvas.style.touchAction = 'none';
 
-        this.container.appendChild(canvas);
+        // Crear visor
+        const model =
+            document.createElement('model-viewer');
 
-        this.app = new Application(canvas, {
-            graphicsDeviceOptions: {
-                antialias: true,
-                alpha: true
-            }
-        });
 
-        this.app.setCanvasFillMode(FILLMODE_FILL_WINDOW);
-        this.app.setCanvasResolution(RESOLUTION_AUTO);
-        this.app.start();
+        this.model = model;
 
-        this.app.scene.ambientLight = new Color(0.8, 0.8, 0.8);
 
-        this.camera = new Entity('poi-camera');
-        this.camera.addComponent('camera', {
-            clearColor: new Color(0.05, 0.05, 0.05)
-        });
+        // =========================================
+        // MODELO
+        // =========================================
 
-        this.camera.setPosition(0, 0, this.distance);
-        this.app.root.addChild(this.camera);
+        model.src = url;
 
-        return new Promise((resolve, reject) => {
-            this.asset = new Asset(
-                'poi-model',
-                'container',
-                { url }
-            );
 
-            this.app.assets.add(this.asset);
+        // =========================================
+        // ESTILO
+        // =========================================
 
-            this.asset.ready((asset) => {
-                try {
-                    this.entity = asset.resource.instantiateRenderEntity();
+        model.style.width = '100%';
+        model.style.height = '100%';
+        model.style.display = 'block';
+        model.style.background = '#101510';
 
-                    this.entity.setLocalPosition(0, 0, 0);
-                    this.entity.setLocalEulerAngles(
-                        this.rotationX,
-                        this.rotationY,
-                        0
+
+        // =========================================
+        // CONTROLES
+        // =========================================
+
+        model.setAttribute(
+            'camera-controls',
+            ''
+        );
+
+
+        // =========================================
+        // CÁMARA
+        // =========================================
+
+        model.setAttribute(
+            'camera-orbit',
+            '0deg 75deg 2.5m'
+        );
+
+
+        model.setAttribute(
+            'field-of-view',
+            '35deg'
+        );
+
+
+        // =========================================
+        // ILUMINACIÓN
+        // =========================================
+
+        model.setAttribute(
+            'exposure',
+            '1'
+        );
+
+
+        model.setAttribute(
+            'shadow-intensity',
+            '1'
+        );
+
+
+        model.setAttribute(
+            'shadow-softness',
+            '0.8'
+        );
+
+
+        // =========================================
+        // INTERACCIÓN
+        // =========================================
+
+        model.setAttribute(
+            'interaction-prompt',
+            'none'
+        );
+
+
+        // =========================================
+        // AGREGAR
+        // =========================================
+
+        this.container.appendChild(
+            model
+        );
+
+
+        // =========================================
+        // ESPERAR CARGA
+        // =========================================
+
+        await new Promise(
+            (resolve, reject) => {
+
+                let terminado = false;
+
+
+                const timeout =
+                    setTimeout(
+                        () => {
+
+                            if (terminado) {
+                                return;
+                            }
+
+                            terminado = true;
+
+                            reject(
+                                new Error(
+                                    'El modelo tardó demasiado en cargar.'
+                                )
+                            );
+
+                        },
+                        20000
                     );
 
-                    this.app.root.addChild(this.entity);
 
-                    this._bindEvents();
+                model.addEventListener(
+                    'load',
+                    () => {
 
-                    resolve(this.entity);
-                } catch (error) {
-                    reject(error);
-                }
-            });
+                        if (terminado) {
+                            return;
+                        }
 
-            this.asset.on('error', (error) => {
-                reject(error);
-            });
+                        terminado = true;
 
-            this.app.assets.load(this.asset);
-        });
+                        clearTimeout(
+                            timeout
+                        );
+
+
+                        console.log(
+                            '================================='
+                        );
+
+                        console.log(
+                            'MODELO 3D VISIBLE'
+                        );
+
+                        console.log(
+                            '================================='
+                        );
+
+
+                        resolve();
+
+                    },
+                    {
+                        once: true
+                    }
+                );
+
+
+                model.addEventListener(
+                    'error',
+                    (event) => {
+
+                        if (terminado) {
+                            return;
+                        }
+
+                        terminado = true;
+
+                        clearTimeout(
+                            timeout
+                        );
+
+
+                        console.error(
+                            'ERROR CARGANDO MODELO 3D:',
+                            event
+                        );
+
+
+                        reject(
+                            new Error(
+                                'No se pudo cargar el archivo GLB.'
+                            )
+                        );
+
+                    },
+                    {
+                        once: true
+                    }
+                );
+
+            }
+        );
+
+
+        console.log(
+            'Modelo 3D cargado correctamente.'
+        );
+
+
+        return model;
     }
 
-    _bindEvents() {
-        this.container.addEventListener(
-            'pointerdown',
-            this._pointerDown
-        );
 
-        window.addEventListener(
-            'pointermove',
-            this._pointerMove
-        );
+    async _loadModelViewer() {
 
-        window.addEventListener(
-            'pointerup',
-            this._pointerUp
-        );
+        // Si ya existe, no hacemos nada
+        if (
+            customElements.get(
+                'model-viewer'
+            )
+        ) {
 
-        this.container.addEventListener(
-            'wheel',
-            this._wheel,
-            { passive: false }
-        );
-    }
-
-    _pointerDown(event) {
-        this.dragging = true;
-        this.lastX = event.clientX;
-        this.lastY = event.clientY;
-
-        this.container.setPointerCapture?.(event.pointerId);
-    }
-
-    _pointerMove(event) {
-        if (!this.dragging || !this.entity) return;
-
-        const dx = event.clientX - this.lastX;
-        const dy = event.clientY - this.lastY;
-
-        this.rotationY += dx * 0.7;
-        this.rotationX += dy * 0.3;
-
-        this.rotationX = Math.max(
-            -80,
-            Math.min(80, this.rotationX)
-        );
-
-        this.entity.setLocalEulerAngles(
-            this.rotationX,
-            this.rotationY,
-            0
-        );
-
-        this.lastX = event.clientX;
-        this.lastY = event.clientY;
-    }
-
-    _pointerUp() {
-        this.dragging = false;
-    }
-
-    _wheel(event) {
-        event.preventDefault();
-
-        this.distance += event.deltaY * 0.002;
-
-        this.distance = Math.max(
-            1.5,
-            Math.min(6, this.distance)
-        );
-
-        if (this.camera) {
-            this.camera.setPosition(
-                0,
-                0,
-                this.distance
-            );
+            return;
         }
+
+
+        // Buscar script existente
+        let script =
+            document.querySelector(
+                'script[data-model-viewer]'
+            );
+
+
+        // Crear script si no existe
+        if (!script) {
+
+            script =
+                document.createElement(
+                    'script'
+                );
+
+
+            script.type =
+                'module';
+
+
+            script.src =
+                'https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js';
+
+
+            script.dataset.modelViewer =
+                'true';
+
+
+            document.head.appendChild(
+                script
+            );
+
+        }
+
+
+        // Esperar a que la librería esté lista
+        await customElements.whenDefined(
+            'model-viewer'
+        );
+
+
+        console.log(
+            'Model Viewer disponible.'
+        );
     }
+
 
     destroy() {
-        this.container.removeEventListener(
-            'pointerdown',
-            this._pointerDown
-        );
 
-        window.removeEventListener(
-            'pointermove',
-            this._pointerMove
-        );
+        if (this.model) {
 
-        window.removeEventListener(
-            'pointerup',
-            this._pointerUp
-        );
+            this.model.remove();
 
-        this.container.removeEventListener(
-            'wheel',
-            this._wheel
-        );
-
-        if (this.entity) {
-            this.entity.destroy();
-            this.entity = null;
+            this.model = null;
         }
 
-        if (this.asset && this.app) {
-            this.app.assets.remove(this.asset);
-            this.asset = null;
-        }
 
-        if (this.app) {
-            this.app.destroy();
-            this.app = null;
-        }
+        if (this.container) {
 
-        this.camera = null;
-        this.container.innerHTML = '';
+            this.container.innerHTML = '';
+        }
     }
 }
