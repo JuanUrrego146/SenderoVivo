@@ -32,6 +32,11 @@ export class TourEngine {
         this.lookSensitivity = options.lookSensitivity ?? 0.2;
         this.pitchLimit = options.pitchLimit ?? 85;
         this.smoothing = options.smoothing ?? 12;
+        // La escena activa puede no aguantar vistas en reversa; entonces solo se avanza.
+        this.forwardOnly = options.forwardOnly ?? false;
+        // Tope propio del picado hacia abajo: muy cerca del suelo el splatting se ve
+        // como brochazos, y algunas escenas piden no dejar meter la camara ahi.
+        this.pitchDownLimit = options.pitchDownLimit ?? this.pitchLimit;
 
         this.distance = 0;
         this.yaw = 0;
@@ -99,7 +104,7 @@ export class TourEngine {
         this._keyDown = (e) => {
             const k = e.key.toLowerCase();
             if (k === 'w' || k === 'arrowup') this._input.forward = 1;
-            if (k === 's' || k === 'arrowdown') this._input.forward = -1;
+            if (k === 's' || k === 'arrowdown') this._input.forward = this.forwardOnly ? 0 : -1;
             if (k === 'a' || k === 'arrowleft') this._input.strafe = -1;
             if (k === 'd' || k === 'arrowright') this._input.strafe = 1;
             if (e.shiftKey) this._input.fast = true;
@@ -120,7 +125,7 @@ export class TourEngine {
             if (!this._looking) return;
             this.yaw -= e.movementX * this.lookSensitivity;
             this.pitch -= e.movementY * this.lookSensitivity;
-            this.pitch = Math.max(-this.pitchLimit, Math.min(this.pitchLimit, this.pitch));
+            this.pitch = Math.max(-this.pitchDownLimit, Math.min(this.pitchLimit, this.pitch));
         };
         // Táctil: un dedo mira, dos dedos avanzan.
         this._touchStart = (e) => {
@@ -133,7 +138,7 @@ export class TourEngine {
             if (this._lastTouch) {
                 this.yaw -= (t.clientX - this._lastTouch.clientX) * this.lookSensitivity;
                 this.pitch -= (t.clientY - this._lastTouch.clientY) * this.lookSensitivity;
-                this.pitch = Math.max(-this.pitchLimit, Math.min(this.pitchLimit, this.pitch));
+                this.pitch = Math.max(-this.pitchDownLimit, Math.min(this.pitchLimit, this.pitch));
             }
             this._lastTouch = { clientX: t.clientX, clientY: t.clientY };
         };
@@ -162,6 +167,8 @@ export class TourEngine {
     }
 
     _update(dt) {
+        // Cinturón extra para cualquier entrada (táctil incluida) cuando no hay reversa.
+        if (this.forwardOnly && this._input.forward < 0) this._input.forward = 0;
         if (this._input.forward !== 0) {
             const speed = this.speed * (this._input.fast ? this.fastMultiplier : 1);
             this.distance += this._input.forward * speed * dt;
@@ -191,25 +198,10 @@ export class TourEngine {
         this.camera.setEulerAngles(this.pitch, this.yaw, 0);
     }
 
-    /**
-     * Lleva el recorrido a esa distancia del trazado, recortada a los extremos.
-     * Es la puerta de entrada para controles externos (flechas, botones): nadie
-     * escribe `distance` directamente ni dispara el progreso por su cuenta.
-     */
-    moveTo(distance) {
-        this.distance = Math.max(0, Math.min(distance, this.trailPath.totalLength()));
-        this._emitProgress();
-    }
-
-    /** Avanza (o retrocede, con delta negativo) desde la posición actual. */
-    advance(delta) {
-        this.moveTo(this.distance + delta);
-    }
-
     /** Control desde los botones en pantalla: 'forward'|'back'|'left'|'right'. */
     press(action) {
         if (action === 'forward') this._input.forward = 1;
-        if (action === 'back') this._input.forward = -1;
+        if (action === 'back') this._input.forward = this.forwardOnly ? 0 : -1;
         if (action === 'left') this._input.strafe = -1;
         if (action === 'right') this._input.strafe = 1;
     }

@@ -19,6 +19,23 @@
       "sightingTips": "[por completar tras V1]"
     },
     {
+      "id": "poi-golondrina-plomiza",
+      "type": "fauna",
+      "commonName": "Golondrina plomiza",
+      "scientificName": "[por verificar: HU-11.2, la fuente cita solo el nombre común]",
+      "sceneId": "scene-01",
+      "anchor": { "x": 0, "y": 0, "z": 0 },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/golondrina-plomiza.glb",
+      "idleAnimation": "[pendiente: el .mb fuente no trae animación; RF-029 con Felipe]",
+      "narrationUrl": "assets/audio/golondrina-narracion.mp3",
+      "transcriptUrl": "assets/text/golondrina-transcripcion.txt",
+      "birdCallUrl": "assets/audio/golondrina-canto.mp3",
+      "altitudeRange": "[por completar]",
+      "fieldIdTips": "[por completar]",
+      "sightingTips": "[por completar tras V1]"
+    },
+    {
       "id": "poi-muro-antiguo",
       "type": "patrimonio",
       "commonName": "Colibrí chillón",

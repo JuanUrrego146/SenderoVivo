@@ -38,6 +38,20 @@
       "entryDistanceMeters": 140,
       "exitDistanceMeters": 200,
       "captureDate": "[por definir tras la captura V2]"
+    },
+    {
+      "id": "scene-01-luma",
+      "order": 90,
+      "sogUrl": "assets/scenes/scene-01-luma/meta.json",
+      "render": "luma",
+      "captureDate": "2026-08-18 (alterna: mismo parque, reconstruida por Luma desde el ZIP de fotos)",
+      "note": "Tecnica alterna de scene-01, conmutable con ?render=luma (o el switch del visor). No entra al recorrido por defecto (order alto).",
+      "baked": true,
+      "coordenadasNota": "REGISTRADA sobre el marco de mundo de scene-01: nivelacion, guinada, escala (1,24629) y traslacion horneadas en el archivo con registro automatico (ICP con correccion de pendiente, RMS 0,125 u). La alameda es casi simetrica y el ICP tenia dos soluciones a 180 grados casi empatadas: la orientacion correcta la fijo Juan contra los referentes reales (muro a la izquierda, parque infantil a la derecha). baked:true le dice al visor que NO aplique ninguna rotacion (ni la del ejemplo oficial): el archivo YA esta en coordenadas del mundo. Usa config/track.json igual que scene-01: cualquier POI o fuente de sonido cae en el mismo punto fisico en ambas tecnicas.",
+      "forwardOnly": true,
+      "forwardOnlyNote": "La reconstruccion solo aguanta vistas hacia adelante: en reversa se ve mal. El visor bloquea retroceder cuando la escena activa lo pide.",
+      "pitchDownLimit": 48,
+      "pitchDownLimitNote": "Tope del picado hacia abajo (grados). Muy cerca del suelo las gaussianas se ven como brochazos: se impide meter la camara ahi."
     }
   ]
 }

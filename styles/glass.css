@@ -1,0 +1,55 @@
+/*
+ * Vidrio del cascarón (diseño de Eybar Viasus) re-entonado a la paleta del
+ * proyecto: los fondos son el negro verdoso del bosque y el acento activo es
+ * el verde documentado, no el esmeralda de Tailwind.
+ */
+.glass-panel {
+    background: rgba(14, 18, 16, 0.62);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(237, 241, 239, 0.12);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.glass-pill {
+    background: rgba(237, 241, 239, 0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(237, 241, 239, 0.14);
+}
+
+.glass-pill-active {
+    background: rgba(111, 207, 151, 0.22);
+    border-color: rgba(111, 207, 151, 0.55);
+    color: #6FCF97;
+    box-shadow: 0 0 15px rgba(111, 207, 151, 0.25);
+}
+
+/* Pulso de los puntos de interés */
+.hotspot-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid rgba(111, 207, 151, 0.8);
+    animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+    0% { width: 100%; height: 100%; opacity: 1; }
+    100% { width: 220%; height: 220%; opacity: 0; }
+}
+
+/* Utilidades */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+::-webkit-scrollbar-thumb {
+    background: rgba(111, 207, 151, 0.4);
+    border-radius: 10px;
+}

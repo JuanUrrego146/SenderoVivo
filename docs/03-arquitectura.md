@@ -753,6 +753,7 @@ SenderoVivo/
 │   ├── resumen-auditoria-2026-08-13.md
 │   └── backlog-jira.csv        DEPRECADO (13/08): el backlog se edita en GitHub/Jira
 ├── scripts/
+│   ├── setup_repo.sh           DEPRECADO (13/08): bootstrap ya ejecutado; historia
 │   └── sync-github.mjs         DEPRECADO (13/08)
 ├── src/
 │   ├── app/                    Juan:      main.js (orquestación)

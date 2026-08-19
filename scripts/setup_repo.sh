@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
 #
-# setup_repo.sh - Sendero Vivo
+# scripts/setup_repo.sh - Sendero Vivo
 #
-# Prepara el remoto de GitHub: sube las ramas y sincroniza labels, milestones e
+# DEPRECADO (13/08/2026): bootstrap de un solo uso, ya ejecutado. El repo, las 7
+# ramas y las issues existen; el backlog se edita hoy directo en GitHub y Jira.
+# Se conserva por su valor historico (documenta el workaround de email privacy y
+# los pasos manuales del arranque), igual que sus companeros plan/backlog-jira.csv
+# y scripts/sync-github.mjs.
+#
+# Preparaba el remoto de GitHub: sube las ramas y sincroniza labels, milestones e
 # issues desde plan/backlog-jira.csv.
 #
 # QUE CAMBIO RESPECTO A LA VERSION ANTERIOR
 #   La version del 11/08/2026 traia las 41 issues escritas a mano dentro del propio
 #   script (1.500 lineas). El backlog cambia, y mantener el mismo contenido en dos
-#   sitios garantiza que se desincronicen. Ahora el CSV es la unica fuente de verdad
-#   y scripts/sync-github.mjs lo lee: 4 epicas, 51 historias y 157 subtareas.
+#   sitios garantiza que se desincronicen. En su momento el CSV era la fuente de
+#   verdad y scripts/sync-github.mjs lo leia: 4 epicas, 51 historias y 157 subtareas.
 #
-# USO:
-#   bash setup_repo.sh                  # sube ramas y sincroniza GitHub
-#   bash setup_repo.sh --dry-run        # solo muestra que haria en GitHub
+# USO (desde la raiz del repositorio):
+#   bash scripts/setup_repo.sh           # sube ramas y sincroniza GitHub
+#   bash scripts/setup_repo.sh --dry-run # solo muestra que haria en GitHub
 #
 # Es idempotente: labels y milestones se actualizan, las issues que ya existen se
 # omiten por titulo.
@@ -65,8 +71,7 @@ echo "==> 2. Subir las ramas"
 if ! git push -u origin main; then
   echo ""
   echo "    ERROR: el push de main fallo. Lee la nota que hay justo encima de esta"
-  echo "           linea en el propio script, o la seccion 'Estado del repositorio'"
-  echo "           del README."
+  echo "           linea en el propio script."
   exit 1
 fi
 

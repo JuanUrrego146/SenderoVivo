@@ -82,6 +82,101 @@ Todo lo que tu parte necesita ya está versionado, así que basta con subirlo:
 Los archivos de audio y los modelos `.glb` **sí van al repositorio**: pesan poco. Lo único
 que no cabe es el PLY de la escena, y para programar encima no hace falta (§8 bis).
 
+### El flujo completo, en tres comandos y sin ventanas secundarias
+
+```bash
+git add -A
+git commit -m "feat(audio): lo que hiciste, en una frase"
+git push
+```
+
+Eso es TODO. Uno a tres minutos después, recarga tu URL de arriba (con
+Ctrl+Shift+R si el navegador se aferra al caché) y tus cambios están en internet.
+Sin pull requests, sin aprobaciones, sin pestañas de configuración: tu rama ES tu
+entorno de pruebas publicado. Cuando algo esté listo para todos, avísale a Juan y
+él lo integra a `develop` (producción).
+
+### La interfaz del visor: cómo está armada (desde el 18/08)
+
+La página principal es el **visor 3DGS con el cascarón de interfaz de Eybar**
+encima (header de vidrio, filtros, hoja de ficha, pestañas y navegación):
+
+| Pieza | Archivo | Nota |
+|---|---|---|
+| Marcado del cascarón | `index.html` (bloque CASCARÓN) | Los overlays flotan sobre el canvas del visor |
+| Lógica de la interfaz | `src/ui/shell.js` | Datos del catálogo, fichas, pestañas, búsqueda, hotspots |
+| Tokens de color | `styles/tokens.css` | LA única fuente de color (docs/06 §B.2) |
+| Utilidades Tailwind | `styles/tailwind.css` | **Compilado estático**, no CDN |
+| Vidrio (glassmorphism) | `styles/glass.css` | Paneles y píldoras |
+| Iconos | `assets/vendor/fontawesome/` | Empaquetados, no CDN |
+
+**Regla de oro: nada de CDN en tiempo de ejecución.** El `tailwind is not defined`
+que sufrimos venía de ahí. Si añades clases de Tailwind nuevas en `index.html` o
+`src/ui/shell.js`, recompila el CSS antes del push:
+
+```bash
+npx tailwindcss@3.4.17 -c tailwind.config.js -i tailwind.in.css -o styles/tailwind.css --minify
+```
+
+(Si solo tocas CSS propio, tokens o contenido, no hace falta recompilar nada.)
+
+Los **hotspots** de la interfaz están anclados a coordenadas del MUNDO (distancia
+sobre el trazado + desplazamiento lateral, en `src/ui/shell.js`) y se proyectan con
+la cámara real en cada fotograma: si anclas algo en (x, y, z), se ve en el mismo
+punto físico en la técnica COLMAP y en la Luma.
+
+### La línea de diseño (léela ANTES de tocar la interfaz — vale para humanos y para IAs)
+
+Si le pasas esta interfaz a una IA para que la extienda, dale esta sección como
+contexto: es el contrato visual completo.
+
+**La idea central: la escena capturada es la protagonista; la interfaz es vidrio
+oscuro discreto que flota encima y nunca compite con ella.**
+
+1. **Lenguaje visual = glassmorphism del bosque.** Paneles `glass-panel`
+   (fondo `rgba(14,18,16,0.62)` + blur 16px + borde `rgba(237,241,239,0.12)`),
+   píldoras `glass-pill`, y estado activo SIEMPRE con el verde del proyecto
+   (`rgba(111,207,151,…)`), definidos en `styles/glass.css`.
+2. **Los colores tienen significado y son SOLO estos** (docs/06 §B.2):
+   - Fondos y cromo: `#0E1210` (black-900), `#1B211E` (gray-800), `#3A423E` (gray-600).
+   - Texto: `#EDF1EF` (principal sobre oscuro), `#B9C1BC` (secundario).
+   - **Verde = lo vivo** (marcadores de especies, estados activos, acentos):
+     `#6FCF97` sobre oscuro, `#2E8B57` para señal, `#1F5D3A` para superficies de énfasis.
+   - **Agua `#4FA3A5` = los DATOS del recorrido** (HUD, fauna acuática, GPS).
+   - **Gris = patrimonio** (lo no vivo va deliberadamente en gris, no en verde).
+   - PROHIBIDOS: rojo, naranja, amarillo y rosa como colores de interfaz.
+3. **Las clases de Tailwind ya hablan esta paleta**: `tailwind.config.js` remapea
+   slate→grises del proyecto, emerald→verdes, teal/sky→agua, amber→gris. Escribe
+   `text-emerald-400` con confianza: sale `#6FCF97`. NO escribas hex sueltos en
+   marcado ni JS; si necesitas un color nuevo, nace en `styles/tokens.css` con su
+   contraste calculado.
+4. **Tipografía**: Plus Jakarta Sans (Google Fonts con caída a system-ui). Nombres
+   científicos SIEMPRE en cursiva. Cifras que cambian (HUD, duraciones) SIEMPRE
+   con `font-variant-numeric: tabular-nums` para que no salten.
+5. **Nada se comunica solo por color (RNF-006)**: cada estado lleva además forma,
+   icono o texto (los marcadores cambian de tamaño y forma, no solo de tono).
+   Todo botón tiene `:focus-visible` verde. `prefers-reduced-motion` apaga pulsos.
+6. **El audio jamás arranca solo (RNF-008)**: cualquier control de sonido nace
+   apagado y suena únicamente con un toque explícito del usuario.
+7. **Contenido: solo el catálogo real** (docs/06 Parte A). Lo no verificado se
+   muestra con su marca `[por verificar]` — la honestidad es parte del diseño.
+8. **Ventanas**: la ficha de un punto es hoja deslizante inferior (`#bottom-sheet`,
+   max-w-lg centrada); las secciones (Especies/Sonidos/Bitácora) son TARJETA
+   FLOTANTE centrada (`#tab-panel-container`) con la escena visible y desenfocada
+   alrededor — nunca una pantalla opaca que tape el fondo.
+9. **Puestos fijos en pantalla**: encabezado + filtros arriba-izquierda · switch
+   COLMAP/Luma arriba-derecha · HUD de datos y banner de progreso abajo-izquierda ·
+   navegación centrada abajo · ayuda abajo-derecha. En celular (<640px) el switch
+   baja bajo los filtros y la ayuda sube sobre la navegación. Un solo inquilino
+   por esquina.
+10. **Hotspots**: nodos DOM persistentes (no reconstruir con innerHTML: parpadea),
+    reposicionados en cada frame con `worldToScreen`. Para añadir un punto de
+    interés basta una entrada en `trailData` (shell.js) con
+    `anchor: { d: distancia, lat: lateral, alt: altura }` — el resto sale solo.
+11. **Trampa de CSS conocida**: el reset de botones usa `:where()` para tener
+    especificidad CERO. Si escribes CSS nuevo para el cascarón, cuida no pisar
+    las clases de utilidad con selectores de ID.
+
 ---
 
 ## 3. Qué hay hecho y funcionando
@@ -341,6 +436,34 @@ http://localhost:3000/?sog=assets/scenes/otra-escena/meta.json
 
 Abre `http://localhost:3000/?editor=1`, vuela con **W A S D** por el camino, pulsa **M**
 en cada punto, **Z** deshace y **X** descarga el `track.json`. Lo reemplazas en `config/`.
+
+### Las DOS técnicas de reconstrucción y el contrato de coordenadas
+
+El visor tiene **dos reconstrucciones del mismo parque**, conmutables con el switch de
+arriba a la derecha (o con `?render=luma` en la URL):
+
+| Técnica | Escena | Gaussianas | Peso | Notas |
+|---|---|---|---|---|
+| **COLMAP + Brush** (por defecto) | `assets/scenes/scene-01/` | 3,97 M | 57 MB | Más resolución |
+| **Luma AI** | `assets/scenes/scene-01-luma/` | 0,93 M | 16 MB | Más liviana; solo se avanza (en reversa se ve mal) |
+
+**El contrato que te importa: ambas escenas viven en LAS MISMAS coordenadas de mundo.**
+La escena Luma fue registrada automáticamente sobre el marco de la COLMAP (escala, giro y
+posición horneados en el archivo; sesgo medido: ~1 cm). Comparten `config/track.json`.
+Si anclas un POI, una fuente de sonido espacial o cualquier cosa en una posición
+(x, y, z), **cae en el mismo punto físico del parque en las dos técnicas** — programa
+contra el mundo, no contra una escena.
+
+Reglas para no romperlo:
+
+- La entrada de `scenes.json` de la escena Luma lleva **`"baked": true`**: significa que
+  el archivo YA está en coordenadas de mundo y el visor no debe aplicarle ninguna
+  rotación. No le agregues `sceneUp` ni la "endereces": la romperías.
+- Ojo con el visor: a las escenas **sin** `sceneUp` y **sin** `baked` les aplica un giro
+  de 180° en Z (la convención de los PLY de 3DGS). Por eso una escena nueva sin registrar
+  se ve al revés hasta que le mides su `sceneUp`.
+- Si se reemplaza cualquiera de las dos escenas, hay que **re-registrar** la otra
+  (los guiones están en la máquina de Juan; pedírselo a él).
 
 ---
 

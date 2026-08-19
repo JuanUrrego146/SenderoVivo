@@ -5,7 +5,268 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Sendero Vivo — Prototipo</title>
         <link rel="stylesheet" href="styles/tokens.css">
-        <link rel="stylesheet" href="styles/app.css">
+        <link rel="stylesheet" href="styles/tailwind.css">
+        <link rel="stylesheet" href="styles/glass.css">
+        <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <style>
+            /* Los tokens de color viven en styles/tokens.css (dueños: Eybar y Alberto),
+               enlazado arriba; la paleta está documentada en docs/06-contenido-de-la-experiencia.md §B.2. */
+
+            body {
+                margin: 0;
+                overflow: hidden;
+                background: var(--sv-black-900);
+                font-family: system-ui, sans-serif;
+            }
+
+            #overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 10;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+                background: var(--sv-black-900);
+            }
+            #overlay[hidden] { display: none; }
+
+            #overlay-content {
+                max-width: 480px;
+                padding: 24px;
+                background: var(--sv-gray-800);
+                border: 1px solid var(--sv-gray-600);
+                border-radius: 8px;
+            }
+            #overlay-content h1 {
+                margin: 0 0 12px;
+                font-size: 22px;
+                font-weight: 600;
+                color: var(--sv-gray-050);
+            }
+            #overlay-content p {
+                margin: 0 0 12px;
+                font-size: 16px;
+                line-height: 1.5;
+                color: var(--sv-gray-200);
+            }
+            #overlay-content p:last-child { margin-bottom: 0; }
+            #overlay-content a { color: var(--sv-green-300); }
+            #overlay-content code {
+                padding: 1px 5px;
+                background: var(--sv-black-900);
+                border-radius: 4px;
+                color: var(--sv-gray-050);
+                font-size: 15px;
+                overflow-wrap: anywhere;
+            }
+            #overlay-content button {
+                padding: 10px 20px;
+                background: var(--sv-gray-800);
+                border: 1px solid var(--sv-gray-600);
+                border-radius: 6px;
+                color: var(--sv-gray-050);
+                font-size: 16px;
+                cursor: pointer;
+            }
+            #overlay-content button:hover { border-color: var(--sv-green-500); }
+
+            .spinner {
+                width: 28px;
+                height: 28px;
+                margin-bottom: 16px;
+                border: 3px solid var(--sv-gray-600);
+                border-top-color: var(--sv-green-500);
+                border-radius: 50%;
+                animation: spin 0.9s linear infinite;
+            }
+            @keyframes spin { to { transform: rotate(360deg); } }
+
+            /* La ayuda habla el mismo idioma de vidrio que el resto del cascarón */
+            #hint {
+                position: fixed;
+                right: 16px;
+                bottom: 16px;
+                z-index: 10;
+                max-width: 360px;
+                margin: 0;
+                padding: 10px 14px;
+                background: var(--sv-glass-bg, rgba(15, 23, 42, 0.68));
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid var(--sv-glass-border, rgba(255, 255, 255, 0.12));
+                border-radius: 16px;
+                font-size: 13px;
+                line-height: 1.55;
+                color: var(--sv-gray-200);
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+            }
+            #hint strong { color: var(--sv-green-300); }
+
+            /* Barra de progreso de la carga */
+            .barra {
+                height: 6px;
+                margin: 14px 0 10px;
+                background: var(--sv-black-900);
+                border-radius: 3px;
+                overflow: hidden;
+            }
+            .barra-fill {
+                height: 100%;
+                width: 2%;
+                background: linear-gradient(90deg, var(--sv-green-700), var(--sv-green-300));
+                border-radius: 3px;
+                transition: width 0.35s ease;
+            }
+            #overlay-content .nota {
+                font-size: 13px;
+                color: var(--sv-gray-400);
+            }
+            #overlay.desvanecer {
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                pointer-events: none;
+            }
+
+            /* El encabezado de vidrio del cascarón reemplaza al distintivo suelto */
+            #prototipo { display: none; }
+            #prototipo-oculto {
+                position: fixed;
+                top: 14px;
+                left: 16px;
+                z-index: 12;
+                padding: 6px 12px;
+                background: rgba(31, 93, 58, 0.9);
+                border: 1px solid var(--sv-green-300);
+                border-radius: 999px;
+                color: var(--sv-gray-050);
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+            #prototipo span {
+                font-weight: 400;
+                letter-spacing: 0;
+                text-transform: none;
+                color: var(--sv-gray-200);
+            }
+
+
+            #hint[hidden] { display: none; }
+
+            /* Reset local con especificidad CERO (:where): apaga el estilo de botón del
+               navegador sin pisar las clases de utilidad del cascarón */
+            :where(#shell, #bottom-sheet, #tab-panel-container, #search-modal) :where(button) {
+                background: none;
+                border: none;
+                margin: 0;
+                padding: 0;
+                font: inherit;
+                color: inherit;
+                text-align: inherit;
+                cursor: pointer;
+            }
+
+            /* La hoja deslizante: entra y sale con gracia, y cerrada no se asoma */
+            #bottom-sheet { transition: transform 0.3s ease-out; }
+            #bottom-sheet.translate-y-full {
+                visibility: hidden;
+                transition: transform 0.3s ease-out, visibility 0s linear 0.3s;
+            }
+
+            /* Botón de cerrar del panel: flota arriba a la derecha de la tarjeta,
+               y acompaña el scroll para estar siempre a mano */
+            .sticky-cerrar {
+                position: sticky;
+                top: 0;
+                float: right;
+                margin-left: 12px;
+                margin-bottom: 4px;
+                z-index: 5;
+            }
+
+            /* El foco de teclado se ve (RNF-006) */
+            #shell button:focus-visible, #bottom-sheet button:focus-visible,
+            #tab-panel-container button:focus-visible, #search-modal button:focus-visible,
+            #tecnica button:focus-visible {
+                outline: 2px solid var(--sv-green-300);
+                outline-offset: 2px;
+            }
+
+            /* Menos movimiento para quien lo pide */
+            @media (prefers-reduced-motion: reduce) {
+                .hotspot-ring, .animate-ping { animation: none !important; }
+                #bottom-sheet { transition: none; }
+            }
+
+            /* Conmutador de técnica de reconstrucción (COLMAP / Luma), en vidrio */
+            #tecnica {
+                position: fixed;
+                top: 16px;
+                right: 16px;
+                z-index: 12;
+                display: flex;
+                gap: 4px;
+                padding: 5px;
+                border: 1px solid var(--sv-glass-border, rgba(255, 255, 255, 0.12));
+                border-radius: 999px;
+                background: var(--sv-glass-bg, rgba(15, 23, 42, 0.68));
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                font-size: 12px;
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+            }
+            #tecnica button {
+                appearance: none;
+                border: 1px solid transparent;
+                border-radius: 999px;
+                background: transparent;
+                color: var(--sv-gray-200);
+                padding: 6px 13px;
+                font: inherit;
+                font-weight: 600;
+                letter-spacing: 0.04em;
+                cursor: pointer;
+            }
+            #tecnica button.activa {
+                background: var(--sv-green-300-25, rgba(111, 207, 151, 0.25));
+                border-color: var(--sv-green-300-60, rgba(111, 207, 151, 0.6));
+                color: var(--sv-green-300);
+            }
+            #tecnica button small {
+                display: block;
+                font-size: 10px;
+                font-weight: 400;
+                color: inherit;
+                opacity: 0.75;
+            }
+
+            /* ===== MODO CELULAR: menos cajas, cada cosa en su sitio =====
+               En pantalla chica la interfaz se COMPACTA en vez de apilarse:
+               fuera la ayuda de teclado y el banner (su información vive en el
+               HUD y en la Bitácora), el HUD baja pegado a la navegación, y el
+               switch se encoge y baja bajo el bloque de encabezado+filtros.
+               El visor además elige la escena liviana (Luma) y sube la nitidez
+               del render: eso se decide en src/app/main.js.
+               OJO: este bloque va al FINAL de la hoja a propósito — debe ganar
+               la cascada a las reglas base de #tecnica de más arriba. */
+            @media (max-width: 640px) {
+                #hint { display: none; }              /* W A S D no existe en un teléfono */
+                #banner-progreso { display: none; }   /* el % vive en el HUD; los puntos, en Bitácora */
+                #hud-datos {
+                    left: 10px;
+                    right: 10px;
+                    bottom: 78px;   /* pegado sobre la navegación */
+                }
+                #tecnica { top: 186px; right: 10px; padding: 4px; }
+                #tecnica button { padding: 5px 10px; font-size: 11px; }
+                #tecnica button small { display: none; }   /* sin subtítulos en chico */
+            }
+        </style>
         <script type="importmap">
         {
             "imports": {
@@ -22,10 +283,153 @@
             </div>
         </div>
         <div id="prototipo">Prototipo <span>· escaneo de prueba, no es el sendero</span></div>
+
+        <!-- ============ CASCARÓN DE INTERFAZ (diseño de Eybar Viasus) ============ -->
+        <div id="shell" class="fixed inset-0 z-20 pointer-events-none font-sans">
+            <div class="absolute top-4 left-4 right-16 sm:right-24 z-30 flex flex-col gap-2.5 max-w-md pointer-events-none">
+                <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between shadow-xl pointer-events-auto">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-slate-950 font-bold text-base shadow-md">
+                            <i class="fa-solid fa-tree"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xs sm:text-sm font-bold text-slate-100 leading-tight">Sendero Vivo · Quebrada La Vieja</h2>
+                            <p class="text-[10px] sm:text-[11px] text-emerald-300 font-medium flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                                Prototipo · escaneo de prueba, no es el sendero
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="openSearchModal()" ontouchstart="openSearchModal()"
+                        class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-slate-200 hover:text-emerald-400 transition cursor-pointer touch-manipulation pointer-events-auto shadow-md">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </button>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-1.5 grid grid-cols-4 gap-1 border border-slate-700/60 shadow-xl bg-slate-950/80 backdrop-blur-md pointer-events-auto w-full">
+                    <button id="filter-all" onclick="filterCategory('all')" ontouchstart="filterCategory('all'); event.preventDefault();"
+                            class="glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-border-all text-[10px]"></i> <span class="truncate">Todo</span>
+                    </button>
+                    <button id="filter-flora" onclick="filterCategory('flora')" ontouchstart="filterCategory('flora'); event.preventDefault();"
+                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-seedling text-[10px]"></i> <span class="truncate">Flora</span>
+                    </button>
+                    <button id="filter-fauna" onclick="filterCategory('fauna')" ontouchstart="filterCategory('fauna'); event.preventDefault();"
+                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-dove text-[10px]"></i> <span class="truncate">Fauna</span>
+                    </button>
+                    <button id="filter-curiosidades" onclick="filterCategory('curiosidades')" ontouchstart="filterCategory('curiosidades')"
+                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-lightbulb text-[10px]"></i> <span class="truncate">Datos</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="hotspots-overlay" class="absolute inset-0 pointer-events-none z-20"></div>
+
+            <!-- HUD de datos del recorrido (docs/06 B: cifras tabulares, acento del agua) -->
+            <div id="hud-datos" class="absolute bottom-40 left-4 right-4 sm:bottom-44 sm:left-4 sm:right-auto sm:w-80 z-30 pointer-events-none">
+                <div class="glass-panel rounded-2xl p-2 grid grid-cols-4 gap-1 shadow-2xl" style="font-variant-numeric: tabular-nums;">
+                    <div class="text-center px-1">
+                        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Altitud</div>
+                        <div class="text-[13px] font-semibold text-teal-400" id="hud-altitud">2.712 m</div>
+                    </div>
+                    <div class="text-center px-1">
+                        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Recorrido</div>
+                        <div class="text-[13px] font-semibold text-teal-400" id="hud-recorrido">0 m</div>
+                    </div>
+                    <div class="text-center px-1">
+                        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Desnivel</div>
+                        <div class="text-[13px] font-semibold text-teal-400" id="hud-desnivel">+0 m</div>
+                    </div>
+                    <div class="text-center px-1">
+                        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Pendiente</div>
+                        <div class="text-[13px] font-semibold text-teal-400" id="hud-pendiente">0 %</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="banner-progreso" class="absolute bottom-20 left-4 right-4 sm:bottom-24 sm:left-4 sm:right-auto sm:w-80 z-30 pointer-events-auto">
+                <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between text-xs shadow-2xl">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                            <i class="fa-solid fa-location-arrow text-xs"></i>
+                        </div>
+                        <div>
+                            <span id="progreso-pct" class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Progreso sendero · 0 %</span>
+                            <span class="text-xs font-semibold text-slate-200" id="discovered-counter">0 de 6 puntos vistos</span>
+                        </div>
+                    </div>
+                    <button onclick="switchTab('quest')" class="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold hover:bg-emerald-500/30 transition">
+                        Bitácora
+                    </button>
+                </div>
+            </div>
+
+            <nav class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-3 flex items-center gap-5 sm:gap-10 shadow-2xl border border-slate-700/50 pointer-events-auto">
+                <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="flex flex-col items-center gap-0.5 text-emerald-400 font-medium touch-manipulation cursor-pointer transition hover:text-emerald-300">
+                    <i class="fa-solid fa-compass text-base sm:text-lg"></i>
+                    <span class="text-[9px] sm:text-[10px]">Sendero</span>
+                </button>
+                <button id="nav-catalog" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                    <i class="fa-solid fa-book-bookmark text-base sm:text-lg"></i>
+                    <span class="text-[9px] sm:text-[10px]">Especies</span>
+                </button>
+                <button id="nav-audio" onclick="switchTab('audio')" ontouchstart="switchTab('audio')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                    <i class="fa-solid fa-headphones text-base sm:text-lg"></i>
+                    <span class="text-[9px] sm:text-[10px]">Sonidos</span>
+                </button>
+                <button id="nav-quest" onclick="switchTab('quest')" ontouchstart="switchTab('quest')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                    <i class="fa-solid fa-trophy text-base sm:text-lg"></i>
+                    <span class="text-[9px] sm:text-[10px]">Bitácora</span>
+                </button>
+            </nav>
+        </div>
+
+        <div id="bottom-sheet"
+            class="fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-300 ease-out max-w-lg mx-auto px-4 pb-24 pt-2 pointer-events-auto">
+            <div class="glass-panel rounded-3xl p-5 shadow-2xl relative border border-slate-700/60 bg-slate-950/90 backdrop-blur-xl max-h-[75vh] overflow-y-auto no-scrollbar">
+                <div id="sheet-content"></div>
+            </div>
+        </div>
+
+        <!-- Panel de pestañas: tarjeta flotante centrada; la escena se ve alrededor -->
+        <div id="tab-panel-container" class="fixed inset-0 z-40 hidden items-center justify-center p-3 sm:p-8"
+             style="background: rgba(14, 18, 16, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);">
+            <div class="glass-panel rounded-3xl w-full max-w-lg max-h-[78vh] overflow-y-auto no-scrollbar p-5 relative">
+                <button onclick="closeTabPanel()" class="sticky-cerrar w-9 h-9 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center hover:text-white shadow-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div id="tab-panel-content" class="w-full"></div>
+            </div>
+        </div>
+
+        <div id="search-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+            <div class="glass-panel w-full max-w-md rounded-3xl p-5 border border-slate-700 shadow-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass text-emerald-400"></i> Buscar en el sendero
+                    </h3>
+                    <button onclick="closeSearchModal()" class="text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Ej. Colibrí, Helecho, Puente..." class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-emerald-400 mb-4">
+                <div id="search-results" class="space-y-2 max-h-60 overflow-y-auto no-scrollbar"></div>
+            </div>
+        </div>
+        <!-- ============ FIN DEL CASCARÓN ============ -->
+        <!-- Dos reconstrucciones del mismo parque, mismas coordenadas: se conmutan aquí. -->
+        <div id="tecnica" hidden>
+            <button type="button" data-render="colmap">COLMAP<small>más resolución</small></button>
+            <button type="button" data-render="luma">Luma<small>más liviana</small></button>
+        </div>
         <p id="hint" hidden>
             <strong>W A S D</strong> caminar · <strong>Q E</strong> bajar y subir · <strong>Shift</strong> más rápido ·
             arrastrar para mirar · rueda para acercar
         </p>
         <script type="module" src="src/app/main.js"></script>
+        <script src="src/ui/shell.js" defer></script>
     </body>
 </html>

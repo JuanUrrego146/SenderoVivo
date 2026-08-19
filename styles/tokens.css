@@ -1,27 +1,56 @@
 /*
- * Tokens de color de Sendero Vivo — docs/06-contenido-de-la-experiencia.md §B.
- * ÚNICA fuente de color de la aplicación (invariante 14): ningún archivo .js
- * ni componente escribe un color literal; el código lee estos tokens.
+ * Tokens de color de Sendero Vivo: LA ÚNICA fuente de color de la aplicación.
+ * Definidos en docs/06-contenido-de-la-experiencia.md §B.2, con contrastes
+ * WCAG ya calculados. Si hace falta un color nuevo, se añade AQUÍ primero
+ * y se le calcula el contraste antes de usarlo.
  *
- * Ámbito: Eybar Viasus y Alberto Alemán. Los programadores consumen, no definen.
- * Si hace falta un color nuevo, se añade aquí y se le calcula el contraste
- * (WCAG AA) antes de usarlo.
+ * Dueños: Eybar Viasus y Alberto Alemán. Los demás consumen, no definen.
  */
 :root {
-    --sv-black-900: #0E1210;
-    --sv-gray-800:  #1B211E;
-    --sv-gray-600:  #3A423E;
-    --sv-gray-400:  #6E7873;
-    --sv-gray-200:  #B9C1BC;
-    --sv-gray-050:  #EDF1EF;
-    --sv-green-700: #1F5D3A;
-    --sv-green-500: #2E8B57;
-    --sv-green-300: #6FCF97;
-    --sv-water-400: #4FA3A5;
+    /* Paleta documentada (docs/06 §B.2) */
+    --sv-black-900: #0E1210;   /* fondo base de ficha y HUD */
+    --sv-gray-800:  #1B211E;   /* superficie elevada: panel, tarjeta */
+    --sv-gray-600:  #3A423E;   /* bordes, separadores, deshabilitado */
+    --sv-gray-400:  #6E7873;   /* texto secundario SOLO sobre fondo claro */
+    --sv-gray-200:  #B9C1BC;   /* texto secundario sobre fondo oscuro */
+    --sv-gray-050:  #EDF1EF;   /* texto principal sobre oscuro; fondo modo claro */
+    --sv-green-700: #1F5D3A;   /* verde bosque: énfasis sobre fondo claro */
+    --sv-green-500: #2E8B57;   /* verde señal: marcador, estado activo (NUNCA texto sobre claro) */
+    --sv-green-300: #6FCF97;   /* acento sobre oscuro: nombre científico, enlaces */
+    --sv-water-400: #4FA3A5;   /* acento único del agua: HUD de datos */
 
-    /* Variantes con transparencia, para velos y fondos sobre la escena.
-     * Derivadas de black-900 y green-700; contraste heredado del token base. */
+    /* Derivados de superficie (composiciones de la paleta, no colores nuevos) */
+    --sv-gray-100:  var(--sv-gray-050);          /* alias: no existe gray-100 en la paleta */
+    --sv-scrim-550: rgba(14, 18, 16, 0.55);      /* velo sobre black-900 */
     --sv-scrim-720: rgba(14, 18, 16, 0.72);
-    --sv-scrim-550: rgba(14, 18, 16, 0.55);
-    --sv-badge-green: rgba(31, 93, 58, 0.9);
+    --sv-glass-bg:     rgba(27, 33, 30, 0.55);   /* gray-800 translúcido (paneles vidrio) */
+    --sv-glass-border: rgba(237, 241, 239, 0.14);/* gray-050 translúcido */
+    --sv-green-300-25: rgba(111, 207, 151, 0.25);/* green-300 translúcido (estado activo) */
+    --sv-green-300-60: rgba(111, 207, 151, 0.6);
+    --sv-green-300-30: rgba(111, 207, 151, 0.3);
+    --sv-green-300-40: rgba(111, 207, 151, 0.4);
 }
+
+/* ------------------------------------------------------------------
+ * Compatibilidad con la interfaz de Eybar (design/interfaz/), que llego
+ * nombrando la paleta de Tailwind. Se mapea a la paleta DOCUMENTADA:
+ * los nombres se conservan para no romper su codigo, los valores son
+ * los del proyecto (docs/06 B.2). El ambar/cielo/rosa de Tailwind no
+ * existen en la identidad: se mapean a los acentos legitimos.
+ * ------------------------------------------------------------------ */
+:root {
+    --sv-gray-950: var(--sv-black-900);
+    --sv-gray-900: var(--sv-black-900);
+    --sv-gray-700: var(--sv-gray-600);
+    --sv-gray-300: var(--sv-gray-200);
+    --sv-emerald-400: var(--sv-green-300);
+    --sv-emerald-500: var(--sv-green-500);
+    --sv-emerald-600: var(--sv-green-500);
+    --sv-emerald-900: var(--sv-green-700);
+    --sv-emerald-950: var(--sv-green-700);
+    --sv-teal-400: var(--sv-water-400);
+    --sv-amber-400: var(--sv-green-500);
+    --sv-sky-400: var(--sv-water-400);
+    --sv-pink-400: var(--sv-green-300);
+}
+

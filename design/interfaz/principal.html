@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sendero Vivo — Interfaz (prototipo de diseño)</title>
+    <!--
+      Prototipo de la interfaz según docs/06-contenido-de-la-experiencia.md Parte B.
+      Reglas que este archivo cumple y que la versión final DEBE conservar:
+        · Cero CDN: todo el CSS es propio y los colores salen SOLO de styles/tokens.css.
+        · Contenido real del catálogo (Parte A): nada inventado, todo con fuente.
+        · La ficha es la pantalla reina (B.4). Diseñada primero a 375 px.
+        · Los controles de audio nacen apagados; los textos del inicio son literales (RNF-008).
+        · Nada se comunica solo por color (RNF-006).
+      La versión anterior (dependiente del CDN de Tailwind) quedó en original-tailwind/.
+    -->
+    <link rel="stylesheet" href="../../styles/tokens.css">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--sv-gray-800);
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            color: var(--sv-gray-050);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 24px;
+            padding: 24px 12px;
+        }
+
+        /* Marco de celular: la interfaz se diseña primero a 375 px (docs/06 B.4) */
+        .telefono {
+            width: 375px;
+            min-height: 720px;
+            background: var(--sv-black-900);
+            border: 1px solid var(--sv-gray-600);
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .marco-titulo {
+            width: 375px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--sv-gray-200);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin: 8px 0 6px;
+        }
+
+        /* ====== PANTALLA 1 · INICIO (RNF-008: el sonido se elige, nunca se impone) */
+        .inicio {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-height: 720px;
+            padding: 20px;
+            /* La escena real capturada va de fondo; aquí un sustituto neutro de la paleta */
+            background:
+                radial-gradient(ellipse at 50% 30%, rgba(31, 93, 58, 0.35), transparent 70%),
+                var(--sv-black-900);
+        }
+        .inicio .marca {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--sv-green-300);
+        }
+        .inicio h1 {
+            margin: 6px 0 4px;
+            font-size: 30px;
+            font-weight: 600;
+            line-height: 1.15;
+        }
+        .inicio .lugar {
+            margin: 0 0 22px;
+            font-size: 15px;
+            color: var(--sv-gray-200);
+        }
+        .boton {
+            display: block;
+            width: 100%;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--sv-gray-600);
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            background: var(--sv-gray-800);
+            color: var(--sv-gray-050);
+        }
+        .boton.principal {
+            background: var(--sv-green-700);
+            border-color: var(--sv-green-500);
+        }
+        .boton:focus-visible { outline: 2px solid var(--sv-green-300); outline-offset: 2px; }
+        .inicio .nota {
+            font-size: 12px;
+            color: var(--sv-gray-400);
+            text-align: center;
+            margin: 8px 0 0;
+        }
+
+        /* ====== PANTALLA 2 · RECORRIDO (HUD de datos + marcador de POI) */
+        .recorrido {
+            min-height: 720px;
+            position: relative;
+            background:
+                linear-gradient(rgba(14, 18, 16, 0.15), rgba(14, 18, 16, 0.15)),
+                var(--sv-gray-600);
+        }
+        .recorrido .fondo-nota {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--sv-gray-200);
+            font-size: 13px;
+            text-align: center;
+            padding: 40px;
+        }
+        .hud {
+            position: absolute;
+            top: 14px;
+            left: 12px;
+            right: 12px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        .hud .dato {
+            background: var(--sv-scrim-720);
+            border: 1px solid var(--sv-gray-600);
+            border-radius: 8px;
+            padding: 7px 6px;
+            text-align: center;
+        }
+        .hud .etiqueta {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: var(--sv-gray-200);
+        }
+        .hud .valor {
+            font-size: 16px;
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;   /* cifras tabulares: no "saltan" (B.3) */
+            color: var(--sv-water-400);            /* el acento del agua es el de los datos */
+        }
+        /* Marcador de POI: tres estados por FORMA y tamaño, no solo color (RNF-006) */
+        .marcador {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .marcador .punto {
+            border-radius: 50%;
+        }
+        .marcador.reposo { top: 300px; left: 60px; }
+        .marcador.reposo .punto {
+            width: 10px; height: 10px;
+            background: var(--sv-gray-200);
+            opacity: 0.6;
+            box-shadow: 0 0 0 4px rgba(185, 193, 188, 0.25);
+        }
+        .marcador.cercano { top: 330px; right: 84px; }
+        .marcador.cercano .punto {
+            width: 18px; height: 18px;
+            background: var(--sv-green-500);
+            box-shadow: 0 0 0 5px rgba(46, 139, 87, 0.3);
+        }
+        .marcador.cercano .nombre {
+            background: var(--sv-scrim-720);
+            border: 1px solid var(--sv-gray-600);
+            color: var(--sv-gray-050);
+            font-size: 13px;
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+        .silencio {
+            position: absolute;
+            bottom: 18px;
+            right: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--sv-scrim-720);
+            border: 1px solid var(--sv-gray-600);
+            border-radius: 999px;
+            padding: 9px 14px;
+            color: var(--sv-gray-050);
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        /* ====== PANTALLA 3 · LA FICHA (docs/06 B.4: la pantalla reina) */
+        .ficha { min-height: 720px; display: flex; flex-direction: column; }
+        .ficha .visor {
+            height: 340px;
+            background: var(--sv-black-900);
+            border-bottom: 1px solid var(--sv-gray-600);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+        }
+        .ficha .visor .ave {
+            width: 130px;
+            height: 88px;
+            /* silueta esquemática mientras llega el modelo real (assets/models/) */
+            background: var(--sv-green-700);
+            clip-path: polygon(50% 0, 64% 26%, 100% 18%, 72% 44%, 78% 74%, 50% 58%, 22% 74%, 28% 44%, 0 18%, 36% 26%);
+            animation: aleteo 1.6s ease-in-out infinite;
+        }
+        @keyframes aleteo {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.82) translateY(4px); }
+        }
+        .ficha .visor .ayuda-visor {
+            font-size: 12px;
+            color: var(--sv-gray-400);
+        }
+        .ficha .cerrar {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--sv-gray-600);
+            background: var(--sv-scrim-720);
+            color: var(--sv-gray-050);
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .ficha .contenido { padding: 18px 20px; }
+        .ficha h2 {
+            margin: 0;
+            font-size: 22px;       /* nombre común: 22 px / 600 (B.3) */
+            font-weight: 600;
+            color: var(--sv-gray-050);
+        }
+        .ficha .cientifico {
+            margin: 2px 0 16px;
+            font-size: 15px;
+            font-style: italic;    /* cursiva por convención taxonómica */
+            color: var(--sv-green-300);  /* el único texto en color de la ficha */
+        }
+        .audio-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            background: var(--sv-gray-800);
+            border: 1px solid var(--sv-gray-600);
+            border-radius: 10px;
+            color: var(--sv-gray-050);
+            font-size: 15px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .audio-control .icono {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            border: 1.5px solid var(--sv-gray-200);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+        .audio-control .duracion {
+            margin-left: auto;
+            font-variant-numeric: tabular-nums;
+            color: var(--sv-gray-200);
+            font-size: 13px;
+        }
+        .ficha .datos {
+            margin: 14px 0 0;
+            padding: 0;
+            list-style: none;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--sv-gray-200);
+        }
+        .ficha .datos strong { color: var(--sv-gray-050); font-weight: 600; }
+        .ficha .fuente {
+            margin-top: 14px;
+            font-size: 12px;
+            color: var(--sv-gray-400);
+        }
+
+        @media (max-width: 1240px) { body { flex-wrap: wrap; } }
+    </style>
+</head>
+<body>
+    <div>
+        <p class="marco-titulo">1 · Inicio</p>
+        <section class="telefono inicio" aria-label="Pantalla de inicio">
+            <p class="marca">Sendero Vivo · Prototipo</p>
+            <h1>Quebrada La Vieja</h1>
+            <p class="lugar">Sector Claro de Luna · Cerros Orientales de Bogotá · 200 m del sendero</p>
+            <!-- Textos LITERALES de la regla de audio (docs/06 C.4). No se cambian. -->
+            <button class="boton principal" type="button">Iniciar recorrido · con sonido</button>
+            <button class="boton" type="button">Iniciar en silencio</button>
+            <p class="nota">La preferencia se recuerda. Nada suena antes de este gesto.</p>
+        </section>
+    </div>
+
+    <div>
+        <p class="marco-titulo">2 · Recorrido</p>
+        <section class="telefono recorrido" aria-label="Pantalla de recorrido">
+            <p class="fondo-nota">Aquí va la escena capturada real<br>(el visor 3DGS que ya está publicado)</p>
+            <div class="hud">
+                <div class="dato"><div class="etiqueta">ALTITUD</div><div class="valor">2.712 m</div></div>
+                <div class="dato"><div class="etiqueta">RECORRIDO</div><div class="valor">46 m</div></div>
+                <div class="dato"><div class="etiqueta">DESNIVEL</div><div class="valor">+8 m</div></div>
+                <div class="dato"><div class="etiqueta">PENDIENTE</div><div class="valor">6 %</div></div>
+            </div>
+            <div class="marcador reposo" aria-label="Punto de interés lejano">
+                <span class="punto"></span>
+            </div>
+            <div class="marcador cercano" aria-label="Punto de interés en rango">
+                <span class="punto"></span>
+                <span class="nombre">Colibrí chillón</span>
+            </div>
+            <button class="silencio" type="button" aria-pressed="false">
+                <span aria-hidden="true">♪</span> Silenciar
+            </button>
+        </section>
+    </div>
+
+    <div>
+        <p class="marco-titulo">3 · Ficha (la pantalla reina)</p>
+        <section class="telefono ficha" aria-label="Ficha del colibrí chillón">
+            <div class="visor">
+                <button class="cerrar" type="button" aria-label="Cerrar la ficha">✕</button>
+                <div class="ave" role="img" aria-label="Modelo 3D del colibrí con aleteo"></div>
+                <p class="ayuda-visor">Arrastra para girar · pellizca para acercar</p>
+            </div>
+            <div class="contenido">
+                <h2>Colibrí chillón</h2>
+                <p class="cientifico">Colibri coruscans</p>
+                <!-- Los tres controles nacen APAGADOS. Ninguno suena solo (RNF-008). -->
+                <button class="audio-control" type="button">
+                    <span class="icono" aria-hidden="true">▶</span>
+                    Escuchar narración
+                    <span class="duracion">0:48</span>
+                </button>
+                <button class="audio-control" type="button">
+                    <span class="icono" aria-hidden="true">▶</span>
+                    Escuchar el canto
+                </button>
+                <button class="audio-control" type="button">
+                    <span class="icono" aria-hidden="true">≡</span>
+                    Ver transcripción
+                </button>
+                <ul class="datos">
+                    <li><strong>Vive entre 1.700 y 3.500 msnm.</strong></li>
+                    <li>Cómo identificarlo: verde iridiscente, parche azul violeta en la garganta.</li>
+                    <li>Consejo: se posa en ramas altas y canta al amanecer.</li>
+                </ul>
+                <p class="fuente">Rango de altitud verificado en el catálogo del proyecto (docs/06 Parte A). Un dato sin fuente no se publica.</p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
