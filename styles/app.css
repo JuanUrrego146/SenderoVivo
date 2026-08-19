@@ -34,10 +34,10 @@ body {
 }
 
 .glass-pill-active {
-    background: rgba(52, 211, 153, 0.25);
-    border-color: rgba(52, 211, 153, 0.6);
-    color: var(--sv-emerald-400);
-    box-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
+    background: var(--sv-green-300-25);
+    border-color: var(--sv-green-300-60);
+    color: var(--sv-green-300);
+    box-shadow: 0 0 15px var(--sv-green-300-30);
 }
 
 /* ==========================================================================
@@ -51,7 +51,7 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 2px solid var(--sv-emerald-400);
+    border: 2px solid var(--sv-green-300);
     animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
 }
 
@@ -74,6 +74,6 @@ body {
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
 ::-webkit-scrollbar-thumb {
-    background: rgba(52, 211, 153, 0.4);
+    background: var(--sv-green-300-40);
     border-radius: 10px;
 }
