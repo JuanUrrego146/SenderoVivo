@@ -323,6 +323,28 @@
 
             <div id="hotspots-overlay" class="absolute inset-0 pointer-events-none z-20"></div>
 
+            <!-- HUD de datos del recorrido (docs/06 B: cifras tabulares, acento del agua) -->
+            <div class="absolute bottom-40 left-4 right-4 sm:bottom-44 sm:left-4 sm:right-auto sm:w-80 z-30 pointer-events-none">
+                <div class="glass-panel rounded-2xl p-2 grid grid-cols-4 gap-1 shadow-2xl" style="font-variant-numeric: tabular-nums;">
+                    <div class="text-center px-1">
+                        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Altitud</div>
+                        <div class="text-[13px] font-semibold text-teal-400" id="hud-altitud">2.712 m</div>
+                    </div>
+                    <div class="text-center px-1">
+                        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Recorrido</div>
+                        <div class="text-[13px] font-semibold text-teal-400" id="hud-recorrido">0 m</div>
+                    </div>
+                    <div class="text-center px-1">
+                        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Desnivel</div>
+                        <div class="text-[13px] font-semibold text-teal-400" id="hud-desnivel">+0 m</div>
+                    </div>
+                    <div class="text-center px-1">
+                        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Pendiente</div>
+                        <div class="text-[13px] font-semibold text-teal-400" id="hud-pendiente">0 %</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="absolute bottom-20 left-4 right-4 sm:bottom-24 sm:left-4 sm:right-auto sm:w-80 z-30 pointer-events-auto">
                 <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between text-xs shadow-2xl">
                     <div class="flex items-center gap-3">

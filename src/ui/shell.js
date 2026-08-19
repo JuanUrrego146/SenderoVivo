@@ -234,12 +234,26 @@ function esperarVisor() {
     construirHotspots();
     visorApp.on('update', updateHotspotsOverlay);
 
-    // progreso real del recorrido en el banner
+    // progreso y datos reales del recorrido (tour:progress del motor)
+    // Escala medida del parque de práctica: 14,31 unidades ≈ 30 m caminados.
+    const METROS_POR_UNIDAD = 2.096;
+    const ALTITUD_BASE = 2712;   // msnm del inicio del sendero real (config/scenes.json)
+    let yInicial = null;
     visorApp.on('tour:progress', (e) => {
         const pct = document.getElementById('progreso-pct');
         if (pct && e.total > 0) {
             pct.innerText = `Progreso sendero · ${Math.round(100 * e.distance / e.total)} %`;
         }
+        if (!e.position) return;
+        if (yInicial === null) yInicial = e.position.y;
+        const recorridoM = e.distance * METROS_POR_UNIDAD;
+        const desnivelM = (e.position.y - yInicial) * METROS_POR_UNIDAD;
+        const pendiente = recorridoM > 1 ? (100 * desnivelM / recorridoM) : 0;
+        const set = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
+        set('hud-recorrido', `${recorridoM.toFixed(0)} m`);
+        set('hud-desnivel', `${desnivelM >= 0 ? '+' : ''}${desnivelM.toFixed(1)} m`);
+        set('hud-altitud', `${(ALTITUD_BASE + desnivelM).toLocaleString('es-CO', { maximumFractionDigits: 0 })} m`);
+        set('hud-pendiente', `${Math.abs(pendiente).toFixed(0)} %`);
     });
 }
 
