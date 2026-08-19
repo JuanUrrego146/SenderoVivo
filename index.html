@@ -5,7 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Sendero Vivo — Prototipo</title>
         <link rel="stylesheet" href="styles/tokens.css">
-        <link rel="stylesheet" href="styles/app.css">
+        <link rel="stylesheet" href="styles/tailwind.css">
+        <link rel="stylesheet" href="styles/glass.css">
+        <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
         <style>
             /*
              * Tokens de color de docs/06-identidad-visual.md §6.
@@ -87,7 +92,7 @@
             #hint {
                 position: fixed;
                 left: 16px;
-                bottom: 16px;
+                bottom: 152px;   /* deja sitio al banner de progreso y a la navegación del cascarón */
                 z-index: 10;
                 max-width: calc(100% - 32px);
                 margin: 0;
@@ -126,8 +131,9 @@
                 pointer-events: none;
             }
 
-            /* Distintivo de prototipo, siempre visible */
-            #prototipo {
+            /* El encabezado de vidrio del cascarón reemplaza al distintivo suelto */
+            #prototipo { display: none; }
+            #prototipo-oculto {
                 position: fixed;
                 top: 14px;
                 left: 16px;
@@ -158,7 +164,7 @@
             /* Conmutador de técnica de reconstrucción (COLMAP / Luma) */
             #tecnica {
                 position: fixed;
-                top: 14px;
+                top: 128px;   /* debajo del encabezado y los filtros del cascarón */
                 right: 16px;
                 z-index: 12;
                 display: flex;
@@ -210,6 +216,117 @@
             </div>
         </div>
         <div id="prototipo">Prototipo <span>· escaneo de prueba, no es el sendero</span></div>
+
+        <!-- ============ CASCARÓN DE INTERFAZ (diseño de Eybar Viasus) ============ -->
+        <div id="shell" class="fixed inset-0 z-20 pointer-events-none font-sans">
+            <div class="absolute top-4 left-4 right-16 sm:right-24 z-30 flex flex-col gap-2.5 max-w-md pointer-events-none">
+                <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between shadow-xl pointer-events-auto">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-slate-950 font-bold text-base shadow-md">
+                            <i class="fa-solid fa-tree"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xs sm:text-sm font-bold text-slate-100 leading-tight">Sendero Vivo · Quebrada La Vieja</h2>
+                            <p class="text-[10px] sm:text-[11px] text-emerald-300 font-medium flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                                Prototipo · escaneo de prueba, no es el sendero
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="openSearchModal()" ontouchstart="openSearchModal()"
+                        class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-slate-200 hover:text-emerald-400 transition cursor-pointer touch-manipulation pointer-events-auto shadow-md">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </button>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-1.5 grid grid-cols-4 gap-1 border border-slate-700/60 shadow-xl bg-slate-950/80 backdrop-blur-md pointer-events-auto w-full">
+                    <button id="filter-all" onclick="filterCategory('all')" ontouchstart="filterCategory('all'); event.preventDefault();"
+                            class="glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-border-all text-[10px]"></i> <span class="truncate">Todo</span>
+                    </button>
+                    <button id="filter-flora" onclick="filterCategory('flora')" ontouchstart="filterCategory('flora'); event.preventDefault();"
+                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-seedling text-[10px]"></i> <span class="truncate">Flora</span>
+                    </button>
+                    <button id="filter-fauna" onclick="filterCategory('fauna')" ontouchstart="filterCategory('fauna'); event.preventDefault();"
+                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-dove text-[10px]"></i> <span class="truncate">Fauna</span>
+                    </button>
+                    <button id="filter-curiosidades" onclick="filterCategory('curiosidades')" ontouchstart="filterCategory('curiosidades')"
+                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-lightbulb text-[10px]"></i> <span class="truncate">Datos</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="hotspots-overlay" class="absolute inset-0 pointer-events-none z-20"></div>
+
+            <div class="absolute bottom-20 left-4 right-4 sm:bottom-24 sm:left-4 sm:right-auto sm:w-80 z-30 pointer-events-auto">
+                <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between text-xs shadow-2xl">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                            <i class="fa-solid fa-location-arrow text-xs"></i>
+                        </div>
+                        <div>
+                            <span id="progreso-pct" class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Progreso sendero · 0 %</span>
+                            <span class="text-xs font-semibold text-slate-200" id="discovered-counter">0 de 6 puntos vistos</span>
+                        </div>
+                    </div>
+                    <button onclick="switchTab('quest')" class="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold hover:bg-emerald-500/30 transition">
+                        Bitácora
+                    </button>
+                </div>
+            </div>
+
+            <nav class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-3 flex items-center gap-5 sm:gap-10 shadow-2xl border border-slate-700/50 pointer-events-auto">
+                <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="flex flex-col items-center gap-0.5 text-emerald-400 font-medium touch-manipulation cursor-pointer transition hover:text-emerald-300">
+                    <i class="fa-solid fa-compass text-base sm:text-lg"></i>
+                    <span class="text-[9px] sm:text-[10px]">Sendero</span>
+                </button>
+                <button id="nav-catalog" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                    <i class="fa-solid fa-book-bookmark text-base sm:text-lg"></i>
+                    <span class="text-[9px] sm:text-[10px]">Especies</span>
+                </button>
+                <button id="nav-audio" onclick="switchTab('audio')" ontouchstart="switchTab('audio')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                    <i class="fa-solid fa-headphones text-base sm:text-lg"></i>
+                    <span class="text-[9px] sm:text-[10px]">Sonidos</span>
+                </button>
+                <button id="nav-quest" onclick="switchTab('quest')" ontouchstart="switchTab('quest')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                    <i class="fa-solid fa-trophy text-base sm:text-lg"></i>
+                    <span class="text-[9px] sm:text-[10px]">Bitácora</span>
+                </button>
+            </nav>
+        </div>
+
+        <div id="bottom-sheet"
+            class="fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-300 ease-out max-w-lg mx-auto px-4 pb-24 pt-2 pointer-events-auto">
+            <div class="glass-panel rounded-3xl p-5 shadow-2xl relative border border-slate-700/60 bg-slate-950/90 backdrop-blur-xl max-h-[75vh] overflow-y-auto no-scrollbar">
+                <div id="sheet-content"></div>
+            </div>
+        </div>
+
+        <div id="tab-panel-container" class="fixed inset-0 bg-slate-950/90 backdrop-blur-xl z-40 hidden flex-col p-4 sm:p-10 pt-20 pb-28 overflow-y-auto no-scrollbar max-w-2xl mx-auto">
+            <button onclick="closeTabPanel()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center hover:text-white shadow-lg z-50">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div id="tab-panel-content" class="w-full flex-1"></div>
+        </div>
+
+        <div id="search-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+            <div class="glass-panel w-full max-w-md rounded-3xl p-5 border border-slate-700 shadow-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass text-emerald-400"></i> Buscar en el sendero
+                    </h3>
+                    <button onclick="closeSearchModal()" class="text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Ej. Colibrí, Helecho, Puente..." class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-emerald-400 mb-4">
+                <div id="search-results" class="space-y-2 max-h-60 overflow-y-auto no-scrollbar"></div>
+            </div>
+        </div>
+        <!-- ============ FIN DEL CASCARÓN ============ -->
         <!-- Dos reconstrucciones del mismo parque, mismas coordenadas: se conmutan aquí. -->
         <div id="tecnica" hidden>
             <button type="button" data-render="colmap">COLMAP<small>más resolución</small></button>
@@ -220,5 +337,6 @@
             arrastrar para mirar · rueda para acercar
         </p>
         <script type="module" src="src/app/main.js"></script>
+        <script src="src/ui/shell.js" defer></script>
     </body>
 </html>
