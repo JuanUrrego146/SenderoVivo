@@ -32,7 +32,7 @@ const trailData = [
         conservation: 'Verificado',
         curiosity: 'Su nombre viene del canto insistente y chillón que emite desde perchas altas, sobre todo al amanecer.',
         discovered: false,
-        anchor: { d: 2.5, lat: -1.0, alt: 1.2 },
+        anchor: { d: 1.3, lat: -0.9, alt: 1.1 },
         audioFreq: 880
     },
     {
@@ -49,7 +49,7 @@ const trailData = [
         conservation: '[por verificar]',
         curiosity: 'Señalar la especie exacta exige verla: ningún dato del proyecto se publica sin fuente citable o medición propia.',
         discovered: false,
-        anchor: { d: 4.8, lat: 1.1, alt: 0.7 },
+        anchor: { d: 2.4, lat: 1.0, alt: 0.8 },
         audioFreq: 600
     },
     {
@@ -66,7 +66,7 @@ const trailData = [
         conservation: 'Verificado',
         curiosity: 'Aparece en la lista oficial de vegetación principal del sendero junto al cedro, el raque, el tíbar y el chuwacá.',
         discovered: false,
-        anchor: { d: 7.2, lat: -1.2, alt: 0.9 },
+        anchor: { d: 3.6, lat: -1.1, alt: 0.9 },
         audioFreq: 520
     },
     {
@@ -83,7 +83,7 @@ const trailData = [
         conservation: 'Verificado · candidato a POI',
         curiosity: 'Distinguirlo de un perro doméstico es parte del contenido: en las mismas cámaras trampa también aparecen perros.',
         discovered: false,
-        anchor: { d: 9.5, lat: 0.9, alt: 0.5 },
+        anchor: { d: 4.8, lat: 0.9, alt: 0.6 },
         audioFreq: 220
     },
     {
@@ -100,7 +100,7 @@ const trailData = [
         conservation: '[por verificar] la historia',
         curiosity: 'Los Cerros Orientales guardan patrimonio de acueducto documentado: si aparece infraestructura análoga en la quebrada, hay dónde buscar fuente.',
         discovered: false,
-        anchor: { d: 11.6, lat: -0.8, alt: 0.6 },
+        anchor: { d: 6.0, lat: -0.8, alt: 0.7 },
         audioFreq: 330
     },
     {
@@ -117,7 +117,7 @@ const trailData = [
         conservation: 'Invasora presente',
         curiosity: 'Es candidata a POI de flora: la decisión se toma en la visita V1, viendo si es visible desde el trazado.',
         discovered: false,
-        anchor: { d: 13.2, lat: 1.0, alt: 0.5 },
+        anchor: { d: 7.2, lat: 1.0, alt: 0.6 },
         audioFreq: 440
     }
 ];
