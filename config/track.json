@@ -4,14 +4,14 @@
   "note": "Trazado marcado sobre la escena con el editor del prototipo. Las coordenadas están en unidades del motor, no en metros.",
   "sceneWaypoints": [
     {
-      "x": 3.454,
+      "x": 2.942,
       "y": -0.488,
-      "z": -1.465
+      "z": -2.205
     },
     {
-      "x": -8.254,
+      "x": -8.766,
       "y": 0.942,
-      "z": 6.629
+      "z": 5.889
     }
   ],
   "points": [],
