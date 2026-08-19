@@ -15,6 +15,7 @@
       "entryDistanceMeters": 0,
       "exitDistanceMeters": 70,
       "captureDate": "2026-08-17 (prototipo: parque de prueba, no el sendero)",
+      "sourceNote": "Version de alcance completo (19/08): mismo entrenamiento de 60 mil pasos que la anterior, pero re-limpiado SIN caja de recorte (solo agujas p99,7 y niebla por opacidad). 4,82 M de gaussianas; ahora se ven el fondo de la alameda, el parque infantil entero, los edificios y el cielo. Mismo marco de mundo: el registro de la escena Luma y el trazado NO cambian.",
       "rotationNote": "Nivelacion calculada desde las 987 poses de camara de COLMAP: lleva el 'arriba' real de la escena al eje Y del motor. Se recalcula por escena.",
       "sceneUp": {
         "x": -0.204,
