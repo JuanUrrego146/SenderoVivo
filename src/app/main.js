@@ -128,6 +128,22 @@ function isRemoteUrl(url) {
 async function resolveSceneUrl() {
     const override = new URLSearchParams(window.location.search).get('sog');
     if (override) {
+        // Si la URL pedida coincide con una escena registrada, se usan su
+        // nivelación y sus restricciones; si no, se carga tal cual (muestras remotas).
+        try {
+            const response = await fetch(SCENES_CONFIG_URL);
+            if (response.ok) {
+                const config = await response.json();
+                const match = (config.scenes || []).find(s => s.sogUrl === override);
+                if (match) {
+                    return {
+                        url: override, isOverride: true,
+                        sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
+                        eyeHeight: match.eyeHeight, trackUrl: match.trackUrl
+                    };
+                }
+            }
+        } catch { /* sin config no hay metadatos, pero la escena igual se abre */ }
         return { url: override, isOverride: true };
     }
     const response = await fetch(SCENES_CONFIG_URL);
@@ -139,7 +155,7 @@ async function resolveSceneUrl() {
     if (!scenes.length || !scenes[0].sogUrl) {
         throw new Error(`<code>${SCENES_CONFIG_URL}</code> no define ninguna escena con <code>sogUrl</code>.`);
     }
-    return { url: scenes[0].sogUrl, isOverride: false, sceneUp: scenes[0].sceneUp };
+    return { url: scenes[0].sogUrl, isOverride: false, sceneUp: scenes[0].sceneUp, forwardOnly: !!scenes[0].forwardOnly };
 }
 
 async function localFileExists(url) {
@@ -151,7 +167,7 @@ async function localFileExists(url) {
     }
 }
 
-async function startViewer(sceneUrl, sceneUp) {
+async function startViewer(sceneUrl, sceneUp, forwardOnly = false, sceneEyeHeight = undefined, sceneTrackUrl = undefined) {
     const canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
 
@@ -223,7 +239,7 @@ async function startViewer(sceneUrl, sceneUp) {
 
     // La escena solo se revela cuando ya se ve bien: nada de mostrarla borrosa.
     await waitForStableRender(app);
-    await setUpNavigation(app, camera);
+    await setUpNavigation(app, camera, forwardOnly, sceneEyeHeight, sceneTrackUrl);
     setLoadingProgress(100, 'Listo');
     overlay.classList.add('desvanecer');
     setTimeout(() => { overlay.hidden = true; overlay.classList.remove('desvanecer'); }, 420);
@@ -246,9 +262,9 @@ function enableFreeFlight(camera) {
     return controls;
 }
 
-async function loadTrail() {
+async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
     try {
-        const response = await fetch(TRACK_CONFIG_URL);
+        const response = await fetch(trackUrl);
         if (!response.ok) return new TrailPath([]);
         const cfg = await response.json();
         const path = new TrailPath(cfg.sceneWaypoints || [], cfg.corridorRadius ?? 1.5);
@@ -259,9 +275,9 @@ async function loadTrail() {
     }
 }
 
-async function setUpNavigation(app, camera) {
+async function setUpNavigation(app, camera, forwardOnly = false, sceneEyeHeight = undefined, sceneTrackUrl = undefined) {
     const isEditor = new URLSearchParams(window.location.search).has('editor');
-    const trail = await loadTrail();
+    const trail = await loadTrail(sceneTrackUrl ?? TRACK_CONFIG_URL);
 
     if (isEditor) {
         enableFreeFlight(camera);
@@ -292,7 +308,11 @@ async function setUpNavigation(app, camera) {
     // sin tocar código.
     const tour = new TourEngine(app, camera, trail, {
         speed: 1.2,
-        eyeHeight: trail.eyeHeight
+        // La escena activa puede traer su propia altura de ojos (config/scenes.json):
+        // el trazado se marcó en el marco de otra reconstrucción.
+        eyeHeight: sceneEyeHeight ?? trail.eyeHeight,
+        // Algunas reconstrucciones solo aguantan vistas hacia adelante (config/scenes.json).
+        forwardOnly
     });
     tour.start();
     window.senderoTour = tour;
@@ -318,7 +338,7 @@ async function setUpNavigation(app, camera) {
 
 async function main() {
     try {
-        const { url, isOverride, sceneUp } = await resolveSceneUrl();
+        const { url, isOverride, sceneUp, forwardOnly, eyeHeight, trackUrl } = await resolveSceneUrl();
         if (!isRemoteUrl(url) && !(await localFileExists(url))) {
             if (isOverride) {
                 showError(`No existe el archivo <code>${url}</code> en el servidor.`);
@@ -328,7 +348,7 @@ async function main() {
             return;
         }
         showLoading();
-        await startViewer(url, sceneUp);
+        await startViewer(url, sceneUp, forwardOnly, eyeHeight, trackUrl);
     } catch (error) {
         console.error(error);
         showError(error.message);

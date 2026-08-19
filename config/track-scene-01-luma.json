@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "note": "Trazado de la escena Luma (scene-01-luma), generado del eje largo del suelo nivelado. Coordenadas en el marco del mundo (nivelacion ya aplicada).",
+  "eyeHeight": 0,
+  "corridorRadius": 0.571,
+  "sceneWaypoints": [
+    {
+      "x": -3.879,
+      "y": 0.465,
+      "z": -1.082
+    },
+    {
+      "x": -2.24,
+      "y": 0.465,
+      "z": -0.114
+    },
+    {
+      "x": -0.601,
+      "y": 0.465,
+      "z": 0.854
+    },
+    {
+      "x": 1.037,
+      "y": 0.465,
+      "z": 1.822
+    },
+    {
+      "x": 2.676,
+      "y": 0.465,
+      "z": 2.79
+    },
+    {
+      "x": 4.315,
+      "y": 0.465,
+      "z": 3.759
+    },
+    {
+      "x": 5.954,
+      "y": 0.465,
+      "z": 4.727
+    }
+  ]
+}

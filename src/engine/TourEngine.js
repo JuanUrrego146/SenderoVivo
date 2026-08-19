@@ -32,6 +32,8 @@ export class TourEngine {
         this.lookSensitivity = options.lookSensitivity ?? 0.2;
         this.pitchLimit = options.pitchLimit ?? 85;
         this.smoothing = options.smoothing ?? 12;
+        // La escena activa puede no aguantar vistas en reversa; entonces solo se avanza.
+        this.forwardOnly = options.forwardOnly ?? false;
 
         this.distance = 0;
         this.yaw = 0;
@@ -99,7 +101,7 @@ export class TourEngine {
         this._keyDown = (e) => {
             const k = e.key.toLowerCase();
             if (k === 'w' || k === 'arrowup') this._input.forward = 1;
-            if (k === 's' || k === 'arrowdown') this._input.forward = -1;
+            if (k === 's' || k === 'arrowdown') this._input.forward = this.forwardOnly ? 0 : -1;
             if (k === 'a' || k === 'arrowleft') this._input.strafe = -1;
             if (k === 'd' || k === 'arrowright') this._input.strafe = 1;
             if (e.shiftKey) this._input.fast = true;
@@ -162,6 +164,8 @@ export class TourEngine {
     }
 
     _update(dt) {
+        // Cinturón extra para cualquier entrada (táctil incluida) cuando no hay reversa.
+        if (this.forwardOnly && this._input.forward < 0) this._input.forward = 0;
         if (this._input.forward !== 0) {
             const speed = this.speed * (this._input.fast ? this.fastMultiplier : 1);
             this.distance += this._input.forward * speed * dt;
@@ -194,7 +198,7 @@ export class TourEngine {
     /** Control desde los botones en pantalla: 'forward'|'back'|'left'|'right'. */
     press(action) {
         if (action === 'forward') this._input.forward = 1;
-        if (action === 'back') this._input.forward = -1;
+        if (action === 'back') this._input.forward = this.forwardOnly ? 0 : -1;
         if (action === 'left') this._input.strafe = -1;
         if (action === 'right') this._input.strafe = 1;
     }

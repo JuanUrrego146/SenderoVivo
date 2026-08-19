@@ -38,6 +38,23 @@
       "entryDistanceMeters": 140,
       "exitDistanceMeters": 200,
       "captureDate": "[por definir tras la captura V2]"
+    },
+    {
+      "id": "scene-01-luma",
+      "order": 90,
+      "sogUrl": "assets/scenes/scene-01-luma/meta.json",
+      "captureDate": "2026-08-18 (alterna: mismo parque, reconstruida por Luma desde el ZIP de fotos)",
+      "note": "No entra al recorrido por defecto (order alto). Se abre con ?sog=assets/scenes/scene-01-luma/meta.json; el visor toma de aqui su nivelacion y su restriccion de avance.",
+      "sceneUp": {
+        "x": -0.6069,
+        "y": -0.7871,
+        "z": -0.1104
+      },
+      "sceneUpNote": "Medido ajustando el plano del suelo (45,7 % de las gaussianas) por RANSAC: aqui no hay poses de COLMAP. La escena venia 141,9 grados torcida.",
+      "forwardOnly": true,
+      "forwardOnlyNote": "La reconstruccion solo aguanta vistas hacia adelante: en reversa se ve mal. El visor bloquea retroceder cuando la escena activa lo pide.",
+      "trackUrl": "config/track-scene-01-luma.json",
+      "trackUrlNote": "El trazado global (config/track.json) esta en el marco de la escena COLMAP; esta escena trae el suyo, generado del eje largo de su suelo."
     }
   ]
 }
