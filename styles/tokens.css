@@ -1,0 +1,31 @@
+/*
+ * Tokens de color del Sendero Ecológico.
+ * Basado en el esquema de diseño del Sendero Ecológico (colores esmeralda y pizarra).
+ * Ámbito: Toda la aplicación. Los componentes consumen estos tokens para mantener consistencia.
+ */
+:root {
+    --sv-black-900: #020617;
+    --sv-gray-950: #020617;
+    --sv-gray-900: #0f172a;
+    --sv-gray-800: #1e293b;
+    --sv-gray-700: #334155;
+    --sv-gray-600: #475569;
+    --sv-gray-400: #94a3b8;
+    --sv-gray-300: #cbd5e1;
+    --sv-gray-200: #e2e8f0;
+    --sv-gray-100: #f1f5f9;
+    --sv-emerald-400: #34d399;
+    --sv-emerald-500: #10b981;
+    --sv-emerald-600: #059669;
+    --sv-emerald-900: #064e3b;
+    --sv-emerald-950: #022c22;
+    --sv-teal-400: #2dd4bf;
+    --sv-amber-400: #fbbf24;
+    --sv-sky-400: #38bdf8;
+    --sv-pink-400: #f472b6;
+
+    /* Variantes con transparencia para efectos de cristal (glassmorphism) */
+    --sv-glass-bg: rgba(15, 23, 42, 0.68);
+    --sv-glass-border: rgba(255, 255, 255, 0.12);
+    --sv-scrim-720: rgba(2, 6, 23, 0.72);
+}
