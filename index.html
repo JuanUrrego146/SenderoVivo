@@ -192,6 +192,17 @@
                 transition: transform 0.3s ease-out, visibility 0s linear 0.3s;
             }
 
+            /* Botón de cerrar del panel: flota arriba a la derecha de la tarjeta,
+               y acompaña el scroll para estar siempre a mano */
+            .sticky-cerrar {
+                position: sticky;
+                top: 0;
+                float: right;
+                margin-left: 12px;
+                margin-bottom: 4px;
+                z-index: 5;
+            }
+
             /* El foco de teclado se ve (RNF-006) */
             #shell button:focus-visible, #bottom-sheet button:focus-visible,
             #tab-panel-container button:focus-visible, #search-modal button:focus-visible,
@@ -356,11 +367,15 @@
             </div>
         </div>
 
-        <div id="tab-panel-container" class="fixed inset-0 bg-slate-950/90 backdrop-blur-xl z-40 hidden flex-col p-4 sm:p-10 pt-20 pb-28 overflow-y-auto no-scrollbar max-w-2xl mx-auto">
-            <button onclick="closeTabPanel()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center hover:text-white shadow-lg z-50">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-            <div id="tab-panel-content" class="w-full flex-1"></div>
+        <!-- Panel de pestañas: tarjeta flotante centrada; la escena se ve alrededor -->
+        <div id="tab-panel-container" class="fixed inset-0 z-40 hidden items-center justify-center p-3 sm:p-8"
+             style="background: rgba(14, 18, 16, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);">
+            <div class="glass-panel rounded-3xl w-full max-w-lg max-h-[78vh] overflow-y-auto no-scrollbar p-5 relative">
+                <button onclick="closeTabPanel()" class="sticky-cerrar w-9 h-9 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center hover:text-white shadow-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div id="tab-panel-content" class="w-full"></div>
+            </div>
         </div>
 
         <div id="search-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">

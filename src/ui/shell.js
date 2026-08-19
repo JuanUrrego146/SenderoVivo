@@ -24,7 +24,7 @@ const trailData = [
         scientific: 'Colibri coruscans',
         category: 'fauna',
         icon: 'fa-dove',
-        color: '#38bdf8',
+        color: '#4FA3A5',
         typeLabel: 'Avifauna · Verificado',
         image: null,
         shortDesc: 'El ave insignia del proyecto. POI confirmado del catálogo.',
@@ -41,7 +41,7 @@ const trailData = [
         scientific: 'Género Cyathea · [por verificar en V1]',
         category: 'flora',
         icon: 'fa-seedling',
-        color: '#34d399',
+        color: '#6FCF97',
         typeLabel: 'Flora · POI confirmado',
         image: null,
         shortDesc: 'POI confirmado. La especie exacta se confirma con la planta delante.',
@@ -58,7 +58,7 @@ const trailData = [
         scientific: 'Weinmannia tomentosa',
         category: 'flora',
         icon: 'fa-tree',
-        color: '#34d399',
+        color: '#6FCF97',
         typeLabel: 'Flora · Verificado',
         image: null,
         shortDesc: 'Especie estructural del bosque altoandino.',
@@ -75,7 +75,7 @@ const trailData = [
         scientific: 'Cerdocyon thous',
         category: 'fauna',
         icon: 'fa-paw',
-        color: '#38bdf8',
+        color: '#4FA3A5',
         typeLabel: 'Mamífero · Verificado',
         image: null,
         shortDesc: 'El mamífero mejor documentado del sendero.',
@@ -92,7 +92,7 @@ const trailData = [
         scientific: 'Punto patrimonial',
         category: 'curiosidades',
         icon: 'fa-landmark',
-        color: '#fbbf24',
+        color: '#B9C1BC',
         typeLabel: 'Patrimonio · POI confirmado',
         image: null,
         shortDesc: 'No todo el contenido del sendero está vivo.',
@@ -109,7 +109,7 @@ const trailData = [
         scientific: '[binomio por verificar]',
         category: 'curiosidades',
         icon: 'fa-triangle-exclamation',
-        color: '#fbbf24',
+        color: '#B9C1BC',
         typeLabel: 'Especie invasora · Verificada',
         image: null,
         shortDesc: 'Una invasora contada es mejor que una invasora escondida.',
@@ -151,39 +151,28 @@ function prepararAnclas() {
     return true;
 }
 
-function updateHotspotsOverlay() {
+/*
+ * Los hotspots son nodos PERSISTENTES: se crean una sola vez y en cada
+ * fotograma del motor solo se actualiza su transform. Así no parpadean (no se
+ * reconstruye el DOM), el pulso no se reinicia y quedan clavados al mundo:
+ * la proyección corre a la velocidad del render, no a 8 veces por segundo.
+ */
+const nodosHotspot = {};
+
+function construirHotspots() {
     const overlay = document.getElementById('hotspots-overlay');
-    if (!overlay || !visorCamara || !anclas) return;
-
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const camPos = visorCamara.getPosition();
-    const camFwd = visorCamara.forward;
-    let html = '';
-
-    trailData.forEach(item => {
-        if (currentFilter !== 'all' && item.category !== currentFilter) return;
-        const world = anclas[item.id];
-        if (!world) return;
-
-        // descarta lo que queda detrás de la cámara
-        const vx = world.x - camPos.x, vy = world.y - camPos.y, vz = world.z - camPos.z;
-        if (camFwd.x * vx + camFwd.y * vy + camFwd.z * vz < 0.3) return;
-
-        const p = visorCamara.camera.worldToScreen(world);
-        if (p.x < -40 || p.x > w + 40 || p.y < -40 || p.y > h + 40) return;
-
-        html += `
-            <div onclick="selectHotspot('${item.id}')"
-                 ontouchstart="selectHotspot('${item.id}')"
-                 style="left: ${p.x.toFixed(0)}px; top: ${p.y.toFixed(0)}px;"
-                 class="absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 cursor-pointer group z-30 touch-manipulation">
-                <div class="relative w-10 h-10">
-                    <div class="hotspot-ring"></div>
-                    <div class="absolute inset-0 rounded-2xl glass-panel border flex items-center justify-center text-sm transition-all duration-300 transform group-hover:scale-125 shadow-xl"
-                         style="border-color: ${item.color}; color: ${item.color}; background: rgba(15, 23, 42, 0.85);">
-                        <i class="fa-solid ${item.icon}"></i>
-                    </div>
+    if (!overlay) return;
+    overlay.innerHTML = '';
+    for (const item of trailData) {
+        const el = document.createElement('div');
+        el.className = 'absolute pointer-events-auto cursor-pointer group z-30 touch-manipulation';
+        el.style.cssText = 'left:0; top:0; display:none; will-change:transform;';
+        el.innerHTML = `
+            <div class="relative w-10 h-10 -translate-x-1/2 -translate-y-1/2">
+                <div class="hotspot-ring"></div>
+                <div class="absolute inset-0 rounded-2xl glass-panel border flex items-center justify-center text-sm transition-all duration-300 transform group-hover:scale-125 shadow-xl"
+                     style="border-color: ${item.color}; color: ${item.color}; background: rgba(14, 18, 16, 0.85);">
+                    <i class="fa-solid ${item.icon}"></i>
                 </div>
                 <div class="absolute left-1/2 -translate-x-1/2 top-12 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
                     <div class="glass-panel px-2.5 py-1 rounded-xl text-[10px] font-bold text-slate-100 flex items-center gap-1.5 shadow-lg">
@@ -193,9 +182,41 @@ function updateHotspotsOverlay() {
                 </div>
             </div>
         `;
-    });
+        el.addEventListener('click', () => selectHotspot(item.id));
+        overlay.appendChild(el);
+        nodosHotspot[item.id] = el;
+    }
+}
 
-    overlay.innerHTML = html;
+function updateHotspotsOverlay() {
+    if (!visorCamara || !anclas) return;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const camPos = visorCamara.getPosition();
+    const camFwd = visorCamara.forward;
+
+    for (const item of trailData) {
+        const el = nodosHotspot[item.id];
+        if (!el) continue;
+        const world = anclas[item.id];
+        if (!world || (currentFilter !== 'all' && item.category !== currentFilter)) {
+            el.style.display = 'none';
+            continue;
+        }
+        // descarta lo que queda detrás de la cámara
+        const vx = world.x - camPos.x, vy = world.y - camPos.y, vz = world.z - camPos.z;
+        if (camFwd.x * vx + camFwd.y * vy + camFwd.z * vz < 0.3) {
+            el.style.display = 'none';
+            continue;
+        }
+        const p = visorCamara.camera.worldToScreen(world);
+        if (p.x < -60 || p.x > w + 60 || p.y < -60 || p.y > h + 60) {
+            el.style.display = 'none';
+            continue;
+        }
+        el.style.display = 'block';
+        el.style.transform = `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0)`;
+    }
 }
 
 function esperarVisor() {
@@ -208,8 +229,10 @@ function esperarVisor() {
 
     if (!prepararAnclas()) { setTimeout(esperarVisor, 600); return; }
 
-    // proyección con ritmo propio: 8 veces por segundo alcanza para chips flotantes
-    setInterval(updateHotspotsOverlay, 125);
+    // los nodos se crean una vez y se reposicionan en CADA fotograma del motor:
+    // quedan clavados al mundo, sin parpadeo ni arrastre respecto a la escena
+    construirHotspots();
+    visorApp.on('update', updateHotspotsOverlay);
 
     // progreso real del recorrido en el banner
     visorApp.on('tour:progress', (e) => {

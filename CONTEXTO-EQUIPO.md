@@ -82,6 +82,49 @@ Todo lo que tu parte necesita ya está versionado, así que basta con subirlo:
 Los archivos de audio y los modelos `.glb` **sí van al repositorio**: pesan poco. Lo único
 que no cabe es el PLY de la escena, y para programar encima no hace falta (§8 bis).
 
+### El flujo completo, en tres comandos y sin ventanas secundarias
+
+```bash
+git add -A
+git commit -m "feat(audio): lo que hiciste, en una frase"
+git push
+```
+
+Eso es TODO. Uno a tres minutos después, recarga tu URL de arriba (con
+Ctrl+Shift+R si el navegador se aferra al caché) y tus cambios están en internet.
+Sin pull requests, sin aprobaciones, sin pestañas de configuración: tu rama ES tu
+entorno de pruebas publicado. Cuando algo esté listo para todos, avísale a Juan y
+él lo integra a `develop` (producción).
+
+### La interfaz del visor: cómo está armada (desde el 18/08)
+
+La página principal es el **visor 3DGS con el cascarón de interfaz de Eybar**
+encima (header de vidrio, filtros, hoja de ficha, pestañas y navegación):
+
+| Pieza | Archivo | Nota |
+|---|---|---|
+| Marcado del cascarón | `index.html` (bloque CASCARÓN) | Los overlays flotan sobre el canvas del visor |
+| Lógica de la interfaz | `src/ui/shell.js` | Datos del catálogo, fichas, pestañas, búsqueda, hotspots |
+| Tokens de color | `styles/tokens.css` | LA única fuente de color (docs/06 §B.2) |
+| Utilidades Tailwind | `styles/tailwind.css` | **Compilado estático**, no CDN |
+| Vidrio (glassmorphism) | `styles/glass.css` | Paneles y píldoras |
+| Iconos | `assets/vendor/fontawesome/` | Empaquetados, no CDN |
+
+**Regla de oro: nada de CDN en tiempo de ejecución.** El `tailwind is not defined`
+que sufrimos venía de ahí. Si añades clases de Tailwind nuevas en `index.html` o
+`src/ui/shell.js`, recompila el CSS antes del push:
+
+```bash
+npx tailwindcss@3.4.17 -c tailwind.config.js -i tailwind.in.css -o styles/tailwind.css --minify
+```
+
+(Si solo tocas CSS propio, tokens o contenido, no hace falta recompilar nada.)
+
+Los **hotspots** de la interfaz están anclados a coordenadas del MUNDO (distancia
+sobre el trazado + desplazamiento lateral, en `src/ui/shell.js`) y se proyectan con
+la cámara real en cada fotograma: si anclas algo en (x, y, z), se ve en el mismo
+punto físico en la técnica COLMAP y en la Luma.
+
 ---
 
 ## 3. Qué hay hecho y funcionando
