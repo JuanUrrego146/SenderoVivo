@@ -178,10 +178,12 @@ function updateHotspotsOverlay() {
                  ontouchstart="selectHotspot('${item.id}')"
                  style="left: ${p.x.toFixed(0)}px; top: ${p.y.toFixed(0)}px;"
                  class="absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 cursor-pointer group z-30 touch-manipulation">
-                <div class="hotspot-ring"></div>
-                <div class="w-10 h-10 rounded-2xl glass-panel border flex items-center justify-center text-sm transition-all duration-300 transform group-hover:scale-125 shadow-xl"
-                     style="border-color: ${item.color}; color: ${item.color}; background: rgba(15, 23, 42, 0.85);">
-                    <i class="fa-solid ${item.icon}"></i>
+                <div class="relative w-10 h-10">
+                    <div class="hotspot-ring"></div>
+                    <div class="absolute inset-0 rounded-2xl glass-panel border flex items-center justify-center text-sm transition-all duration-300 transform group-hover:scale-125 shadow-xl"
+                         style="border-color: ${item.color}; color: ${item.color}; background: rgba(15, 23, 42, 0.85);">
+                        <i class="fa-solid ${item.icon}"></i>
+                    </div>
                 </div>
                 <div class="absolute left-1/2 -translate-x-1/2 top-12 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
                     <div class="glass-panel px-2.5 py-1 rounded-xl text-[10px] font-bold text-slate-100 flex items-center gap-1.5 shadow-lg">

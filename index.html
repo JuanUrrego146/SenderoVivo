@@ -89,20 +89,24 @@
             }
             @keyframes spin { to { transform: rotate(360deg); } }
 
+            /* La ayuda habla el mismo idioma de vidrio que el resto del cascarón */
             #hint {
                 position: fixed;
-                left: 16px;
-                bottom: 152px;   /* deja sitio al banner de progreso y a la navegación del cascarón */
+                right: 16px;
+                bottom: 16px;
                 z-index: 10;
-                max-width: calc(100% - 32px);
+                max-width: 360px;
                 margin: 0;
                 padding: 10px 14px;
-                background: rgba(14, 18, 16, 0.72);
-                border: 1px solid var(--sv-gray-600);
-                border-radius: 8px;
-                font-size: 14px;
-                line-height: 1.5;
+                background: var(--sv-glass-bg, rgba(15, 23, 42, 0.68));
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid var(--sv-glass-border, rgba(255, 255, 255, 0.12));
+                border-radius: 16px;
+                font-size: 13px;
+                line-height: 1.55;
                 color: var(--sv-gray-200);
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
             }
             #hint strong { color: var(--sv-green-300); }
 
@@ -156,38 +160,85 @@
             }
 
 
-            @media (max-width: 480px) {
-                #hint { font-size: 13px; padding: 8px 10px; }
+            @media (max-width: 640px) {
+                #hint {
+                    right: 12px;
+                    left: 12px;
+                    bottom: 88px;   /* sobre la navegación en celular */
+                    max-width: none;
+                    font-size: 12px;
+                    padding: 8px 10px;
+                }
             }
             #hint[hidden] { display: none; }
 
-            /* Conmutador de técnica de reconstrucción (COLMAP / Luma) */
+            /* Reset local con especificidad CERO (:where): apaga el estilo de botón del
+               navegador sin pisar las clases de utilidad del cascarón */
+            :where(#shell, #bottom-sheet, #tab-panel-container, #search-modal) :where(button) {
+                background: none;
+                border: none;
+                margin: 0;
+                padding: 0;
+                font: inherit;
+                color: inherit;
+                text-align: inherit;
+                cursor: pointer;
+            }
+
+            /* La hoja deslizante: entra y sale con gracia, y cerrada no se asoma */
+            #bottom-sheet { transition: transform 0.3s ease-out; }
+            #bottom-sheet.translate-y-full {
+                visibility: hidden;
+                transition: transform 0.3s ease-out, visibility 0s linear 0.3s;
+            }
+
+            /* El foco de teclado se ve (RNF-006) */
+            #shell button:focus-visible, #bottom-sheet button:focus-visible,
+            #tab-panel-container button:focus-visible, #search-modal button:focus-visible,
+            #tecnica button:focus-visible {
+                outline: 2px solid var(--sv-green-300);
+                outline-offset: 2px;
+            }
+
+            /* Menos movimiento para quien lo pide */
+            @media (prefers-reduced-motion: reduce) {
+                .hotspot-ring, .animate-ping { animation: none !important; }
+                #bottom-sheet { transition: none; }
+            }
+
+            /* Conmutador de técnica de reconstrucción (COLMAP / Luma), en vidrio */
             #tecnica {
                 position: fixed;
-                top: 128px;   /* debajo del encabezado y los filtros del cascarón */
+                top: 16px;
                 right: 16px;
                 z-index: 12;
                 display: flex;
-                border: 1px solid var(--sv-gray-600);
+                gap: 4px;
+                padding: 5px;
+                border: 1px solid var(--sv-glass-border, rgba(255, 255, 255, 0.12));
                 border-radius: 999px;
-                overflow: hidden;
-                background: rgba(14, 18, 16, 0.82);
+                background: var(--sv-glass-bg, rgba(15, 23, 42, 0.68));
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
                 font-size: 12px;
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
             }
             #tecnica button {
                 appearance: none;
-                border: 0;
+                border: 1px solid transparent;
+                border-radius: 999px;
                 background: transparent;
                 color: var(--sv-gray-200);
-                padding: 7px 14px;
+                padding: 6px 13px;
                 font: inherit;
                 font-weight: 600;
                 letter-spacing: 0.04em;
                 cursor: pointer;
             }
             #tecnica button.activa {
-                background: var(--sv-green-700);
-                color: var(--sv-gray-050);
+                background: var(--sv-green-300-25, rgba(111, 207, 151, 0.25));
+                border-color: var(--sv-green-300-60, rgba(111, 207, 151, 0.6));
+                color: var(--sv-green-300);
             }
             #tecnica button small {
                 display: block;
@@ -197,7 +248,7 @@
                 opacity: 0.75;
             }
             @media (max-width: 640px) {
-                #tecnica { top: 52px; }
+                #tecnica { top: 136px; }   /* en celular baja, bajo el encabezado y los filtros */
             }
         </style>
         <script type="importmap">
