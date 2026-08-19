@@ -125,6 +125,58 @@ sobre el trazado + desplazamiento lateral, en `src/ui/shell.js`) y se proyectan 
 la cámara real en cada fotograma: si anclas algo en (x, y, z), se ve en el mismo
 punto físico en la técnica COLMAP y en la Luma.
 
+### La línea de diseño (léela ANTES de tocar la interfaz — vale para humanos y para IAs)
+
+Si le pasas esta interfaz a una IA para que la extienda, dale esta sección como
+contexto: es el contrato visual completo.
+
+**La idea central: la escena capturada es la protagonista; la interfaz es vidrio
+oscuro discreto que flota encima y nunca compite con ella.**
+
+1. **Lenguaje visual = glassmorphism del bosque.** Paneles `glass-panel`
+   (fondo `rgba(14,18,16,0.62)` + blur 16px + borde `rgba(237,241,239,0.12)`),
+   píldoras `glass-pill`, y estado activo SIEMPRE con el verde del proyecto
+   (`rgba(111,207,151,…)`), definidos en `styles/glass.css`.
+2. **Los colores tienen significado y son SOLO estos** (docs/06 §B.2):
+   - Fondos y cromo: `#0E1210` (black-900), `#1B211E` (gray-800), `#3A423E` (gray-600).
+   - Texto: `#EDF1EF` (principal sobre oscuro), `#B9C1BC` (secundario).
+   - **Verde = lo vivo** (marcadores de especies, estados activos, acentos):
+     `#6FCF97` sobre oscuro, `#2E8B57` para señal, `#1F5D3A` para superficies de énfasis.
+   - **Agua `#4FA3A5` = los DATOS del recorrido** (HUD, fauna acuática, GPS).
+   - **Gris = patrimonio** (lo no vivo va deliberadamente en gris, no en verde).
+   - PROHIBIDOS: rojo, naranja, amarillo y rosa como colores de interfaz.
+3. **Las clases de Tailwind ya hablan esta paleta**: `tailwind.config.js` remapea
+   slate→grises del proyecto, emerald→verdes, teal/sky→agua, amber→gris. Escribe
+   `text-emerald-400` con confianza: sale `#6FCF97`. NO escribas hex sueltos en
+   marcado ni JS; si necesitas un color nuevo, nace en `styles/tokens.css` con su
+   contraste calculado.
+4. **Tipografía**: Plus Jakarta Sans (Google Fonts con caída a system-ui). Nombres
+   científicos SIEMPRE en cursiva. Cifras que cambian (HUD, duraciones) SIEMPRE
+   con `font-variant-numeric: tabular-nums` para que no salten.
+5. **Nada se comunica solo por color (RNF-006)**: cada estado lleva además forma,
+   icono o texto (los marcadores cambian de tamaño y forma, no solo de tono).
+   Todo botón tiene `:focus-visible` verde. `prefers-reduced-motion` apaga pulsos.
+6. **El audio jamás arranca solo (RNF-008)**: cualquier control de sonido nace
+   apagado y suena únicamente con un toque explícito del usuario.
+7. **Contenido: solo el catálogo real** (docs/06 Parte A). Lo no verificado se
+   muestra con su marca `[por verificar]` — la honestidad es parte del diseño.
+8. **Ventanas**: la ficha de un punto es hoja deslizante inferior (`#bottom-sheet`,
+   max-w-lg centrada); las secciones (Especies/Sonidos/Bitácora) son TARJETA
+   FLOTANTE centrada (`#tab-panel-container`) con la escena visible y desenfocada
+   alrededor — nunca una pantalla opaca que tape el fondo.
+9. **Puestos fijos en pantalla**: encabezado + filtros arriba-izquierda · switch
+   COLMAP/Luma arriba-derecha · HUD de datos y banner de progreso abajo-izquierda ·
+   navegación centrada abajo · ayuda abajo-derecha. En celular (<640px) el switch
+   baja bajo los filtros y la ayuda sube sobre la navegación. Un solo inquilino
+   por esquina.
+10. **Hotspots**: nodos DOM persistentes (no reconstruir con innerHTML: parpadea),
+    reposicionados en cada frame con `worldToScreen`. Para añadir un punto de
+    interés basta una entrada en `trailData` (shell.js) con
+    `anchor: { d: distancia, lat: lateral, alt: altura }` — el resto sale solo.
+11. **Trampa de CSS conocida**: el reset de botones usa `:where()` para tener
+    especificidad CERO. Si escribes CSS nuevo para el cascarón, cuida no pisar
+    las clases de utilidad con selectores de ID.
+
 ---
 
 ## 3. Qué hay hecho y funcionando
