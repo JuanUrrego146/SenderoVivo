@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sendero Ecológico 3D - App Web Interativa</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Canvas Confetti for Gamification -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            400: '#34d399',
+                            500: '#10b981',
+                            900: '#064e3b',
+                            950: '#022c22'
+                        },
+                        glass: {
+                            bg: 'rgba(15, 23, 42, 0.65)',
+                            border: 'rgba(255, 255, 255, 0.12)',
+                            active: 'rgba(52, 211, 153, 0.2)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"Fira Code"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 h-screen w-screen overflow-hidden select-none font-sans flex flex-col">
+
+    <!-- Main Container Frame (Full Viewport) -->
+    <main id="app-wrapper" class="relative w-full h-full flex flex-col overflow-hidden">
+        
+        <!-- VIEWPORT 3D CONTAINER -->
+        <div class="relative flex-1 w-full h-full overflow-hidden">
+            <!-- 3D Canvas -->
+            <canvas id="three-canvas" class="w-full h-full absolute inset-0 cursor-grab active:cursor-grabbing"></canvas>
+            
+            <!-- Splat Vignette & Ambient Glow Overlay -->
+            <div class="absolute inset-0 splat-vignette"></div>
+
+
+                <!-- CONTENEDOR SUPERIOR UNIFICADO (Sin scroll y completamente fijo) -->
+            <div class="absolute top-4 left-4 right-16 sm:right-24 z-30 flex flex-col gap-2.5 max-w-md pointer-events-none">
+                
+                <!-- App Top Header Overlay -->
+                <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between shadow-xl pointer-events-auto">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-slate-950 font-bold text-base shadow-md">
+                            <i class="fa-solid fa-tree"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xs sm:text-sm font-bold text-slate-100 leading-tight">Sendero El Bosque</h2>
+                            <p class="text-[10px] sm:text-[11px] text-emerald-300 font-medium flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                                Bosque Nublado • 18°C
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="openSearchModal()" ontouchstart="openSearchModal()" 
+                        class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-slate-200 hover:text-emerald-400 transition cursor-pointer touch-manipulation pointer-events-auto shadow-md">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- BARRA DE FILTRADO ADAPTATIVA (Sin scroll, distribución fija) -->
+                <div class="glass-panel rounded-2xl p-1.5 grid grid-cols-4 gap-1 border border-slate-700/60 shadow-xl bg-slate-950/80 backdrop-blur-md pointer-events-auto w-full">
+                    <button id="filter-all" onclick="filterCategory('all')" ontouchstart="filterCategory('all'); event.preventDefault();" 
+                            class="glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-border-all text-[10px]"></i> <span class="truncate">Todo</span>
+                    </button>
+                    <button id="filter-flora" onclick="filterCategory('flora')" ontouchstart="filterCategory('flora'); event.preventDefault();" 
+                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-seedling text-[10px]"></i> <span class="truncate">Flora</span>
+                    </button>
+                    <button id="filter-fauna" onclick="filterCategory('fauna')" ontouchstart="filterCategory('fauna'); event.preventDefault();" 
+                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-dove text-[10px]"></i> <span class="truncate">Fauna</span>
+                    </button>
+                    <button id="filter-curiosidades" onclick="filterCategory('curiosidades')" ontouchstart="filterCategory('curiosidades')" 
+                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-lightbulb text-[10px]"></i> <span class="truncate">Datos</span>
+                    </button>
+                </div>
+            </div>
+            </div>
+
+            <!-- DYNAMIC FLOATING GLASS HOTSPOTS CONTAINER -->
+            <div id="hotspots-overlay" class="absolute inset-0 pointer-events-none z-20"></div>
+
+            <!-- Bottom Floating Mini Banner (GPS Trail Progress - Alineado a la Izquierda) -->
+            <div class="absolute bottom-20 left-4 right-4 sm:bottom-24 sm:left-4 sm:right-auto sm:w-80 z-30">
+                <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between text-xs shadow-2xl">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                            <i class="fa-solid fa-location-arrow text-xs"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Progreso Sendero</span>
+                            <span class="text-xs font-semibold text-slate-200" id="discovered-counter">3 de 6 Especies Descubiertas</span>
+                        </div>
+                    </div>
+                    <button onclick="switchTab('quest')" class="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold hover:bg-emerald-500/30 transition">
+                        Logros
+                    </button>
+                </div>
+            </div>
+
+            <!-- BOTTOM SHEET MODAL (Con padding inferior para evitar que el menú lo tape) -->
+            <div id="bottom-sheet" 
+                class="fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-300 ease-out max-w-lg mx-auto px-4 pb-24 pt-2 pointer-events-auto">
+                <div class="glass-panel rounded-3xl p-5 shadow-2xl relative border border-slate-700/60 bg-slate-950/90 backdrop-blur-xl max-h-[75vh] overflow-y-auto no-scrollbar">
+                    <!-- Contenido dinámico inyectado desde JS -->
+                    <div id="sheet-content"></div>
+                </div>
+            </div>
+
+            <!-- TAB PANELS OVERLAY (Ajustado con pb-28 para que no se corte contenido abajo) -->
+            <div id="tab-panel-container" class="absolute inset-0 bg-slate-950/90 backdrop-blur-xl z-40 hidden flex-col p-4 sm:p-10 pt-20 pb-28 overflow-y-auto no-scrollbar max-w-2xl mx-auto">
+                <button onclick="closeTabPanel()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center hover:text-white shadow-lg z-50">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+                <div id="tab-panel-content" class="w-full flex-1"></div>
+            </div>
+        </div>
+
+        <!-- GLASS BOTTOM NAVIGATION BAR (Ubicación segura sobre el borde inferior) -->
+        <nav class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-3 flex items-center gap-5 sm:gap-10 shadow-2xl border border-slate-700/50 pointer-events-auto">
+            <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="flex flex-col items-center gap-0.5 text-emerald-400 font-medium touch-manipulation cursor-pointer transition hover:text-emerald-300">
+                <i class="fa-solid fa-compass text-base sm:text-lg"></i>
+                <span class="text-[9px] sm:text-[10px]">Sendero</span>
+            </button>
+            <button id="nav-catalog" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                <i class="fa-solid fa-book-bookmark text-base sm:text-lg"></i>
+                <span class="text-[9px] sm:text-[10px]">Especies</span>
+            </button>
+            <button id="nav-audio" onclick="switchTab('audio')" ontouchstart="switchTab('audio')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                <i class="fa-solid fa-headphones text-base sm:text-lg"></i>
+                <span class="text-[9px] sm:text-[10px]">Sonidos</span>
+            </button>
+            <button id="nav-quest" onclick="switchTab('quest')" ontouchstart="switchTab('quest')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                <i class="fa-solid fa-trophy text-base sm:text-lg"></i>
+                <span class="text-[9px] sm:text-[10px]">Logros</span>
+            </button>
+        </nav>
+    </main>
+
+    <!-- SEARCH MODAL -->
+    <div id="search-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-md rounded-3xl p-5 border border-slate-700 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-emerald-400"></i> Buscar en el Sendero
+                </h3>
+                <button onclick="closeSearchModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Ej. Palma de cera, Colibrí, Musgo..." class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-emerald-400 mb-4">
+            <div id="search-results" class="space-y-2 max-h-60 overflow-y-auto no-scrollbar"></div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>
