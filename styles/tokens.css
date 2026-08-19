@@ -30,3 +30,27 @@
     --sv-green-300-30: rgba(111, 207, 151, 0.3);
     --sv-green-300-40: rgba(111, 207, 151, 0.4);
 }
+
+/* ------------------------------------------------------------------
+ * Compatibilidad con la interfaz de Eybar (design/interfaz/), que llego
+ * nombrando la paleta de Tailwind. Se mapea a la paleta DOCUMENTADA:
+ * los nombres se conservan para no romper su codigo, los valores son
+ * los del proyecto (docs/06 B.2). El ambar/cielo/rosa de Tailwind no
+ * existen en la identidad: se mapean a los acentos legitimos.
+ * ------------------------------------------------------------------ */
+:root {
+    --sv-gray-950: var(--sv-black-900);
+    --sv-gray-900: var(--sv-black-900);
+    --sv-gray-700: var(--sv-gray-600);
+    --sv-gray-300: var(--sv-gray-200);
+    --sv-emerald-400: var(--sv-green-300);
+    --sv-emerald-500: var(--sv-green-500);
+    --sv-emerald-600: var(--sv-green-500);
+    --sv-emerald-900: var(--sv-green-700);
+    --sv-emerald-950: var(--sv-green-700);
+    --sv-teal-400: var(--sv-water-400);
+    --sv-amber-400: var(--sv-green-500);
+    --sv-sky-400: var(--sv-water-400);
+    --sv-pink-400: var(--sv-green-300);
+}
+
