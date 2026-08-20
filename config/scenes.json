@@ -11,7 +11,12 @@
     {
       "id": "scene-01",
       "order": 1,
+      "render": "colmap",
       "sogUrl": "assets/scenes/scene-01/meta.json",
+      "movilSogUrl": "assets/scenes/scene-01-movil/meta.json",
+      "movilNota": "Variante para celular: la MISMA escena podada por importancia (scripts/escenas/muestrear.js, estilo LightGaussian) de 4,82 M a 1,2 M de gaussianas (~19 MB), dentro del presupuesto movil de PlayCanvas (~1 M). Nada se mueve ni se reescala: mismo marco, mismo sceneUp, mismo trazado y POIs. El visor la elige solo cuando pantalla <=640px pide la tecnica COLMAP.",
+      "lodUrl": "assets/scenes/scene-01-stream/lod-meta.json",
+      "lodNota": "SOG en STREAMING (19/08): la misma escena empaquetada con 4 niveles de detalle (100%/50%/25%/10%, decimados por fusion con splat-transform) y troceada en chunks con arbol espacial. En escritorio el visor la prefiere: solo carga y ordena lo que la camara ve, detalle pleno de cerca, menos gaussianas a lo lejos (subpixel), presupuesto global de 3,5 M como garantia de fps. sogUrl queda como respaldo y para ?sog=.",
       "entryDistanceMeters": 0,
       "exitDistanceMeters": 70,
       "captureDate": "2026-08-17 (prototipo: parque de prueba, no el sendero)",

@@ -135,8 +135,10 @@ function setUpTechSwitch(active) {
         btn.addEventListener('click', () => {
             if (btn.dataset.render === active) return;
             const params = new URLSearchParams(window.location.search);
-            if (btn.dataset.render === 'colmap') params.delete('render');
-            else params.set('render', btn.dataset.render);
+            // Siempre explicito: sin parametro la resolucion es automatica
+            // (escritorio -> COLMAP, celular -> Luma liviana), asi que borrar
+            // ?render en celular convertia el boton COLMAP en un no-op.
+            params.set('render', btn.dataset.render);
             params.delete('sog');
             window.location.search = params.toString();
         });
@@ -154,8 +156,19 @@ async function resolveSceneUrl() {
             const config = await response.json();
             const match = (config.scenes || []).find(s => s.render === render);
             if (match && match.sogUrl) {
+                // En celular, si la escena declara una variante podada
+                // (movilSogUrl), se usa: misma escena y mismo marco, menos
+                // gaussianas — la completa revienta el presupuesto del telefono.
+                // En escritorio, si declara lodUrl (SOG en streaming con niveles
+                // de detalle), se prefiere: el motor carga por chunks segun lo
+                // que la camara ve y baja el detalle solo con la distancia.
+                const esMovil = window.matchMedia('(max-width: 640px)').matches;
+                const urlElegida = esMovil
+                    ? (match.movilSogUrl || match.sogUrl)
+                    : (match.lodUrl || match.sogUrl);
                 return {
-                    url: match.sogUrl, isOverride: false, renderTech: render,
+                    url: urlElegida, stream: !esMovil && !!match.lodUrl,
+                    isOverride: false, renderTech: render,
                     sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
                     eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
                     pitchDownLimit: match.pitchDownLimit, baked: !!match.baked
@@ -207,7 +220,12 @@ async function resolveSceneUrl() {
             };
         }
     }
-    return { url: scenes[0].sogUrl, isOverride: false, renderTech: 'colmap', sceneUp: scenes[0].sceneUp, forwardOnly: !!scenes[0].forwardOnly };
+    // Escritorio: si la escena principal declara lodUrl (SOG en streaming), se
+    // prefiere — carga por chunks lo que la camara ve, detalle pleno de cerca.
+    return {
+        url: scenes[0].lodUrl || scenes[0].sogUrl, stream: !!scenes[0].lodUrl,
+        isOverride: false, renderTech: 'colmap', sceneUp: scenes[0].sceneUp, forwardOnly: !!scenes[0].forwardOnly
+    };
 }
 
 async function localFileExists(url) {
@@ -226,7 +244,10 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     const app = new Application(canvas, {
         graphicsDeviceOptions: {
             // El cuello de botella del splatting es el fill rate; el antialiasing lo multiplica.
-            antialias: false
+            antialias: false,
+            // En portatiles con dos GPU, pedir la dedicada (sin esto algunos navegadores
+            // eligen la integrada y el visor va a tirones sin razon aparente).
+            powerPreference: 'high-performance'
         }
     });
     app.setCanvasFillMode(FILLMODE_FILL_WINDOW);
@@ -293,15 +314,49 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     // Si la escena viene "baked" (nivelación y registro horneados en el archivo,
     // como scene-01-luma), la entidad queda en identidad: el archivo YA está en
     // las coordenadas del mundo y cualquier rotación extra la rompería.
-    splat.addComponent('gsplat', { asset: sceneAsset });
-    // El recorte por volumen descarta trozos de la escena cuando la cámara va
-    // por dentro: se le da un volumen amplio para que no desaparezca nada.
-    splat.gsplat.customAabb = new BoundingBox(new Vec3(0, 0, 0), new Vec3(60, 60, 60));
+    if (sceneOpts.stream) {
+        // SOG en streaming (lod-meta.json): el render unificado trocea la escena
+        // en chunks con niveles de detalle — solo se carga y ordena lo que la
+        // camara ve, con detalle pleno de cerca y menos gaussianas a lo lejos
+        // (subpixel: no se nota). El presupuesto global es la garantia de fps;
+        // el motor reparte el detalle para no pasarse.
+        // OJO: NO se pasa ningun flag "unified": el streaming se activa solo por
+        // cargar un lod-meta.json (asi lo hace el ejemplo oficial del motor;
+        // pasar unified:true lo manda por otra ruta y no renderiza nada).
+        app.scene.gsplat.splatBudget = window.matchMedia('(max-width: 640px)').matches ? 1000000 : 3500000;
+        app.scene.gsplat.radialSorting = true;
+        splat.addComponent('gsplat', { asset: sceneAsset });
+        // Distancias de transicion en unidades de mundo (1 u ≈ 2,1 m):
+        // detalle pleno hasta ~17 m, y cada nivel siguiente al triple.
+        splat.gsplat.lodBaseDistance = 8;
+        splat.gsplat.lodMultiplier = 3;
+    } else {
+        splat.addComponent('gsplat', { asset: sceneAsset });
+        // El recorte por volumen descarta trozos de la escena cuando la cámara va
+        // por dentro: se le da un volumen amplio para que no desaparezca nada.
+        splat.gsplat.customAabb = new BoundingBox(new Vec3(0, 0, 0), new Vec3(60, 60, 60));
+    }
     app.root.addChild(splat);
 
     // La escena solo se revela cuando ya se ve bien: nada de mostrarla borrosa.
     await waitForStableRender(app);
     await setUpNavigation(app, camera, sceneOpts);
+    if (sceneOpts.stream) {
+        // El sorter del render unificado solo dispara su PRIMER ordenamiento
+        // cuando la camara SE MUEVE despues de que el mundo streamed esta listo
+        // (medido: quieta queda en negro para siempre, 1 mm no supera el epsilon,
+        // 2 cm si, y un empujon temprano se pierde porque los chunks aun no
+        // llegaron). Se patea al frame:ready del motor y ademas con reintentos
+        // durante los primeros segundos: 2 cm ida y vuelta, imperceptible.
+        const patear = () => {
+            const p = camera.getPosition(), px = p.x, py = p.y, pz = p.z;
+            camera.setPosition(px + 0.02, py, pz);
+            setTimeout(() => camera.setPosition(px, py, pz), 350);
+        };
+        app.once('frame:ready', patear);
+        for (const ms of [700, 2000, 4000, 7000, 11000]) setTimeout(patear, ms);
+        await new Promise(r => setTimeout(r, 1500));
+    }
     setLoadingProgress(100, 'Listo');
     overlay.classList.add('desvanecer');
     setTimeout(() => { overlay.hidden = true; overlay.classList.remove('desvanecer'); }, 420);
