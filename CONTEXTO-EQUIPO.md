@@ -402,8 +402,15 @@ senderoTour.distance = senderoTour.trailPath.totalLength() * 0.5;
 
 ## 8 bis. Trabajar con las escenas
 
-En el repositorio está la escena **lista para usar**: `assets/scenes/scene-01/`, en formato
-SOG desempaquetado (56 MB). Es lo único que la web necesita, y ya está ahí.
+> **La guía completa de máquina** — de los videos de la cámara hasta la escena publicada,
+> con jerarquía de carpetas, ffmpeg, COLMAP, parámetros de Brush, limpieza, los tres
+> empaques (clásico/streaming/móvil) y la publicación — es
+> [docs/08-de-video-a-web.md](docs/08-de-video-a-web.md). Esta sección es el resumen operativo.
+
+En el repositorio está la escena **lista para usar** en tres empaques: `assets/scenes/scene-01/`
+(SOG clásico, respaldo), `scene-01-stream/` (streaming LOD — lo que carga escritorio) y
+`scene-01-movil/` (poda de 1,2 M — lo que carga un celular si fuerza COLMAP). Es lo único
+que la web necesita, y ya está ahí.
 
 **Los archivos intermedios no están en Git ni pueden estarlo.** El PLY que sale del
 entrenamiento pesa más de 1 GB y GitHub rechaza archivos de más de 100 MB. Si necesitas
