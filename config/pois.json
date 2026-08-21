@@ -38,8 +38,7 @@
     {
       "id": "poi-muro-antiguo",
       "type": "patrimonio",
-      "commonName": "Colibrí chillón",
-      "scientificName": "Colibri coruscans",
+      "commonName": "[por identificar en V1]",
       "sceneId": "scene-02",
       "anchor": { "x": 0, "y": 0, "z": 0 },
       "distanceMeters": 0,
