@@ -24,6 +24,8 @@ import { TrailPath } from '../engine/TrailPath.js';
 import { TourEngine } from '../engine/TourEngine.js';
 import { TrailRecorder } from '../engine/TrailRecorder.js';
 import { TrailMarkers } from '../engine/TrailMarkers.js';
+import { PoiManager } from '../poi/PoiManager.js';
+import { PoiCard } from '../poi/PoiCard.js';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
 const SCENES_CONFIG_URL = 'config/scenes.json';
@@ -237,6 +239,31 @@ async function localFileExists(url) {
     }
 }
 
+/**
+ * Carga un GLB anclado a coordenadas de MUNDO (modulo de Alejandra, portado).
+ * Va colgado del ROOT, no del splat: no hereda la nivelacion de la escena,
+ * asi el mismo punto fisico coincide en ambas tecnicas (contrato de
+ * coordenadas del registro, docs/03 par. 8 y CONTEXTO-EQUIPO par. 8bis).
+ */
+async function loadWorldModel(app, { url, position = new Vec3(0, 0, 0), rotation = new Vec3(0, 0, 0), scale = 1 } = {}) {
+    const modelAsset = new Asset('world-model', 'container', { url });
+    app.assets.add(modelAsset);
+    await new Promise((resolve, reject) => {
+        modelAsset.ready(resolve);
+        modelAsset.on('error', reject);
+        app.assets.load(modelAsset);
+    });
+    if (!modelAsset.loaded || !modelAsset.resource) {
+        throw new Error(`No se pudo cargar el modelo 3D: ${url}`);
+    }
+    const model = modelAsset.resource.instantiateRenderEntity();
+    model.setPosition(position.x, position.y, position.z);
+    model.setEulerAngles(rotation.x, rotation.y, rotation.z);
+    model.setLocalScale(scale, scale, scale);
+    app.root.addChild(model);
+    return { entity: model, asset: modelAsset };
+}
+
 async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     const canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
@@ -341,6 +368,34 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     // La escena solo se revela cuando ya se ve bien: nada de mostrarla borrosa.
     await waitForStableRender(app);
     await setUpNavigation(app, camera, sceneOpts);
+    // ===== Integracion de Alejandra (dev/alejandra-chambueta): =====
+    // modelo 3D anclado al mundo + sistema de POIs con ficha (src/poi/).
+    try {
+        const worldModel = await loadWorldModel(app, {
+            url: 'assets/models/golondrina-plomiza.glb',
+            // Ubicacion PROVISIONAL (origen del mundo): la definitiva la
+            // decide Alejandra; solo hay que cambiar estas coordenadas.
+            position: new Vec3(0, 0, 0),
+            rotation: new Vec3(0, 0, 0),
+            scale: 1
+        });
+        window.senderoWorldModel = worldModel.entity;
+        window.senderoWorldModelAsset = worldModel.asset;
+    } catch (error) {
+        console.warn('Modelo 3D no cargado:', error);
+    }
+    if (window.senderoTour) {
+        const poiManager = new PoiManager(app, camera, window.senderoTour);
+        const poiCard = new PoiCard(app);
+        window.senderoPoiManager = poiManager;
+        window.senderoPoiCard = poiCard;
+        app.on('poi:request-close', () => poiManager.closePoi());
+        try {
+            await poiManager.load();
+        } catch (error) {
+            console.warn('No se pudieron cargar los POIs:', error);
+        }
+    }
     if (sceneOpts.stream) {
         // El sorter del render unificado solo dispara su PRIMER ordenamiento
         // cuando la camara SE MUEVE despues de que el mundo streamed esta listo
