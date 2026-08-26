@@ -1,6 +1,6 @@
 # Backlog propuesto: del prototipo al proyecto real
 
-> **Propuesta, todavía no aplicada.** Sustituye las 53 issues abiertas por 43 tareas escritas
+> **Propuesta, todavía no aplicada.** Sustituye las 53 issues abiertas por 44 tareas escritas
 > sobre lo que ya existe. Las 14 issues cerradas se conservan como registro de lo entregado.
 >
 > Fecha: 25 de agosto de 2026 · Cierre del proyecto: 28 de noviembre de 2026 (14 semanas)
@@ -128,7 +128,7 @@ no por llamadas directas.
 
 ---
 
-## 5. Las 43 tareas
+## 5. Las 44 tareas
 
 ### 5.1 Software · Arquitectura MVC — 5 tareas
 
@@ -181,7 +181,7 @@ no por llamadas directas.
 | SW-25 | WebGPU con repliegue automático a WebGL | Alejandra |
 | SW-26 | Integración final, pruebas cruzadas y entrega documental | Juan |
 
-### 5.6 Arte — 11 tareas
+### 5.6 Arte — 12 tareas
 
 | Id | Tarea | Quién |
 |---|---|---|
@@ -193,13 +193,27 @@ no por llamadas directas.
 | ART-06 | Verificar los nombres científicos que faltan | Felipe |
 | ART-07 | Helecho arbóreo y flora del tramo | Felipe + Alberto |
 | ART-08 | Puente de madera y señalización | Felipe + Alberto |
-| ART-09 | Narraciones y transcripciones de cada POI | Alberto |
-| ART-10 | Contenido patrimonial con fuente citable | Alberto |
-| ART-11 | Optimización final del catálogo 3D | Felipe |
+| ART-09 | Escribir los guiones de narración y sus transcripciones | Alberto |
+| ART-10 | **Grabar las voces de las narraciones** de fauna, flora y patrimonio | Alberto + Felipe · *espera campo* |
+| ART-11 | Contenido patrimonial con fuente citable | Alberto |
+| ART-12 | Optimización final del catálogo 3D | Felipe |
 
 **Las cuatro aves salen del catálogo verificado** de `docs/06-contenido-de-la-experiencia.md`
 §A.3. Las anteriores (mirla, copetón, pava andina) quedaron fuera: dos están *Por verificar* y
 la pava tiene *Discrepancia* sin resolver, así que sus fichas no se podrían publicar.
+
+**Por qué ART-09 y ART-10 son dos tareas y no una.** El **guion** se puede escribir desde ya
+para las especies que ya tienen ficha, y la **transcripción** sale del propio guion, que es lo
+que exige RNF-006 para accesibilidad. La **grabación de las voces** espera a la visita: lo que
+se cuenta de cada especie y de cada punto patrimonial depende de qué hay realmente en los 200 m
+y de qué se ve desde el trazado, y eso solo se sabe estando allá.
+
+Las voces las ponen **Alberto y Felipe**. No se confunde con la grabación de campo de V3
+(CAM-04, de David), que es otra cosa: aquella captura el lecho ambiente y los cantos reales de
+las aves en el sendero; esta es la voz humana que narra la ficha.
+
+**Regla que sigue vigente:** si un canto no se logra grabar, la ficha lo dice y no suena. No se
+descarga de bancos de sonido.
 
 ### 5.7 Campo y gestión — 6 tareas
 
@@ -246,7 +260,31 @@ va llena: si alguien pierde una semana, se recupera sin mover la fecha de entreg
 
 ---
 
-## 8. Pendiente de decisión
+## 8. David: en pausa hasta que su rama esté al día
+
+**Decisión de Juan del 25/08:** a David **no se le asigna nada** hasta que su rama esté
+actualizada e integrada con el resto. Hoy está 36 commits atrás y su diff contra `develop`
+borraría **8.152 líneas**, incluida toda la interfaz de Eybar. Ayer eran 4.602: el número crece
+cada día que `develop` avanza.
+
+Lo que hay que hacer antes de darle tareas, en este orden:
+
+1. **QA trae a `develop` los tres archivos suyos que sí se integran tal cual**, sin fusionar su
+   rama: `src/audio/AmbienceController.js` (68 líneas, clase autónoma sin imports),
+   `config/soundscape.json` (el contrato de la ambientación, ya bien escrito) y
+   `assets/audio/AudioPrueba.mp3`.
+2. **QA no trae las 119 líneas de cableado** de `src/app/main.js`: llaman a `cssFromToken`, que
+   no existe en `develop` (allí se llama `colorFromToken`), y crean un botón flotante que
+   duplica la pestaña «Sonidos» que ya existe en la interfaz de Eybar.
+3. **QA recrea `dev/david-beltran`** desde `develop` actual.
+4. **Solo entonces** se le asignan SW-07, SW-20, SW-21 y SW-22.
+
+Nota que corrige una suposición anterior: **`config/soundscape.json` no hay que redactarlo**,
+David ya lo escribió. SW-08 se reduce a traer su archivo y revisarlo.
+
+---
+
+## 9. Pendiente de decisión
 
 1. **Las issues de Jira no se pueden borrar** desde el conector: solo crear, editar y cambiar
    de estado. O las borra Juan a mano, o quedan marcadas como canceladas.
