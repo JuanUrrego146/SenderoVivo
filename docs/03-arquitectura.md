@@ -178,7 +178,7 @@ Nombres en **inglés**, según la convención del proyecto.
 | `AmbienceController`, `SpatialAudioSource`, `AudioPlayer` | **[existe]** / [previsto] | `AmbienceController` en `src/audio/AmbienceController.js`; `SpatialAudioSource` y `AudioPlayer` siguen [previsto] |
 | `QualityProfile`, `LodController` | [previsto] | `src/engine/` — Alejandra |
 | `HudView` | [previsto] | `src/ui/` — Juan pinta, Eybar/Alberto diseñan. El prototipo tiene un HUD provisional dentro del hint |
-| `WorldModel` | **[huérfano]** | `src/WorldModel.js`, nadie lo importa; `main.js:249` usa su propia `loadWorldModel()`. Se resuelve en SW-02 |
+| `WorldModel` | **[huérfano]** | `src/WorldModel.js`, nadie lo importa; `main.js:249` usa su propia `loadWorldModel()`. Se elimina en SW-02 (#77) |
 
 ```mermaid
 classDiagram
@@ -382,22 +382,22 @@ carpetas es trabajo de SW-02, SW-03 y SW-04; aquí solo se decide el reparto.
 - **VISTA** — todo lo que produce píxeles o DOM. Recibe datos ya decididos y los pinta. No decide nada: cuando el visitante actúa, publica la intención y se olvida.
 - **CONTROLADOR** — escucha intenciones, cambia el Modelo y avisa a las Vistas. No pinta.
 
-| Archivo | Capa | Por qué |
-|---|---|---|
-| `config/*.json` | Modelo | los datos del dominio; el código no los inventa |
-| `src/engine/TrailPath.js` | Modelo | geometría pura: recibe distancias, devuelve posiciones; `clampToTrail` es regla de dominio (RF-004) |
-| `src/engine/TourEngine.js` | Controlador | decide el avance, lee la entrada, publica `tour:progress`. El estado que guarda (`distance`, `yaw`, `pitch`, `eyeHeight`) es Modelo incrustado: se extrae como `TourState` en SW-02 |
-| `src/engine/TrailMarkers.js` | Mixta | flechas 3D = Vista; picking y avance = Controlador. Se parte en SW-02 |
-| `src/engine/TrailRecorder.js` | Controlador | herramienta de edición del trazado (`?editor=1`) |
-| `src/poi/PoiManager.js` | Mixta | decide qué POI se abre = Controlador; crea las entidades de los marcadores = Vista. Se parte en SW-03 |
-| `src/poi/PoiCard.js` | Vista | la ficha en DOM. Ya se comporta como Vista: dispara `poi:request-close` y no cierra nada |
-| `src/poi/ModelViewer.js` | Vista | visor 3D dentro de la ficha |
-| `src/audio/AmbienceController.js` | Controlador | decide qué suena; no pinta |
-| `src/ui/shell.js` | Vista | overlay, HUD y pestañas. Hoy incumple la capa: ver la nota de deuda |
-| `src/app/main.js` | Controlador | arranque y cableado de todo |
-| `src/WorldModel.js` | ninguna | código muerto, ver la nota de deuda |
-| `index.html` | Vista | el shell del visor |
-| `styles/*.css` | Vista | `tokens.css` es la única fuente de color |
+| Archivo | Capa | Por qué | Destino |
+|---|---|---|---|
+| `config/*.json` | Modelo | los datos del dominio; el código no los inventa | se queda donde está (no es código) |
+| `src/engine/TrailPath.js` | Modelo | geometría pura: recibe distancias, devuelve posiciones; `clampToTrail` es regla de dominio (RF-004) | `src/models/` (SW-02, #77) |
+| `src/engine/TourEngine.js` | Controlador | decide el avance, lee la entrada, publica `tour:progress`. El estado que guarda (`distance`, `yaw`, `pitch`, `eyeHeight`) es Modelo incrustado: se extrae como `TourState` en SW-02 | `src/controllers/` (SW-04, #81) |
+| `src/engine/TrailMarkers.js` | Mixta | flechas 3D = Vista; picking y avance = Controlador. Se parte entre SW-03 y SW-04 | flechas → `src/views/` (#79); picking y avance → `src/controllers/` (#81) |
+| `src/engine/TrailRecorder.js` | Controlador | herramienta de edición del trazado (`?editor=1`) | `src/controllers/` (SW-04, #81) |
+| `src/poi/PoiManager.js` | Mixta | decide qué POI se abre = Controlador; crea las entidades de los marcadores = Vista. Se parte entre SW-03 y SW-04 | decisión → `src/controllers/` (#81); marcadores → `src/views/` (#79) |
+| `src/poi/PoiCard.js` | Vista | la ficha en DOM. Ya se comporta como Vista: dispara `poi:request-close` y no cierra nada | `src/views/` (SW-03, #79) |
+| `src/poi/ModelViewer.js` | Vista | visor 3D dentro de la ficha | `src/views/` (SW-03, #79) |
+| `src/audio/AmbienceController.js` | Controlador | decide qué suena; no pinta | `src/controllers/` (SW-04, #81) |
+| `src/ui/shell.js` | Vista | overlay, HUD y pestañas. Hoy incumple la capa: ver la nota de deuda | `src/views/` (SW-03, #79) |
+| `src/app/main.js` | Controlador | arranque y cableado de todo | `src/controllers/` (SW-04, #81) |
+| `src/WorldModel.js` | ninguna | código muerto, ver la nota de deuda | se elimina en SW-02 (#77) |
+| `index.html` | Vista | el shell del visor | se queda donde está |
+| `styles/*.css` | Vista | `tokens.css` es la única fuente de color | se queda donde está |
 
 **Regla de comunicación.** Dos familias de eventos:
 
@@ -420,10 +420,10 @@ No existe `poi:selected`. El par real, ya en producción, es `poi:open` / `poi:c
 
 **Deuda conocida (26/08/2026):**
 
-- **`src/WorldModel.js` está huérfano y mal nombrado.** Nadie lo importa; `main.js:249` define su propia `loadWorldModel()` local. Pese al nombre, no es Modelo: crea `Entity` y la mete en la escena. Se resuelve en SW-02.
-- **`src/ui/shell.js` habla por globales `window.sendero*` en vez de por eventos.** Se carga como script clásico (`index.html:433`, sin `type="module"`) y llama métodos de Controlador directamente (`window.senderoAmbience.toggle()`, `window.senderoPoiManager`, entre otros). Se resuelve en SW-04.
-- **`TrailMarkers` mezcla Vista y Controlador.** Crea las flechas (Vista) y además hace picking y mueve al visitante (Controlador). Se resuelve en SW-02.
-- **`PoiManager` mezcla Vista y Controlador.** Decide qué POI se abre (Controlador) y crea las entidades de los marcadores (Vista). Se resuelve en SW-03.
+- **`src/WorldModel.js` está huérfano y mal nombrado.** Nadie lo importa; `main.js:249` define su propia `loadWorldModel()` local. Pese al nombre, no es Modelo: crea `Entity` y la mete en la escena. Se elimina en SW-02 (#77).
+- **`src/ui/shell.js` habla por globales `window.sendero*` en vez de por eventos.** Se carga como script clásico (`index.html:433`, sin `type="module"`) y llama métodos de Controlador directamente (`window.senderoAmbience.toggle()`, `window.senderoPoiManager`, entre otros). Se resuelve en SW-04 (#81).
+- **`TrailMarkers` mezcla Vista y Controlador.** Crea las flechas (Vista) y además hace picking y mueve al visitante (Controlador). Se resuelve entre SW-03 (#79, flechas) y SW-04 (#81, picking y avance).
+- **`PoiManager` mezcla Vista y Controlador.** Decide qué POI se abre (Controlador) y crea las entidades de los marcadores (Vista). Se resuelve entre SW-04 (#81, decisión) y SW-03 (#79, marcadores).
 
 Estos cuatro incumplimientos están declarados y fechados, no descubiertos: son el trabajo de las historias siguientes.
 
