@@ -15,112 +15,56 @@
  */
 
 /* ==========================================================================
-   DATOS: catálogo real del proyecto (docs/06 Parte A)
+   DATOS: catálogo ÚNICO del proyecto — config/pois.json
+   Antes este catálogo estaba escrito a mano aquí y convivía con el de
+   PoiManager: dos listas distintas para lo mismo. Ahora se lee del contrato
+   declarativo, que es el único sitio donde se añade o se edita un punto
+   (RF-021, RNF-009, invariante 3). Este archivo solo lo PINTA.
    ========================================================================== */
-const trailData = [
-    {
-        id: 'colibri_chillon',
-        name: 'Colibrí chillón',
-        scientific: 'Colibri coruscans',
-        category: 'fauna',
-        icon: 'fa-dove',
-        color: '#4FA3A5',
-        typeLabel: 'Avifauna · Verificado',
-        image: null,
-        shortDesc: 'El ave insignia del proyecto. POI confirmado del catálogo.',
-        fullDesc: 'Colibrí de verde iridiscente con parche azul violeta en la garganta. Vive entre 1.700 y 3.500 msnm, el único rango de altitud ya verificado del catálogo. Verificado para los Cerros Orientales por la Fundación Cerros de Bogotá.',
-        conservation: 'Verificado',
-        curiosity: 'Su nombre viene del canto insistente y chillón que emite desde perchas altas, sobre todo al amanecer.',
+let trailData = [];
+
+const CATALOGO_URL = 'config/pois.json';
+
+/** Lee un color de styles/tokens.css. Invariante 14: ni un literal en JS. */
+function colorDeToken(nombreToken) {
+    if (!nombreToken) return '';
+    return getComputedStyle(document.documentElement)
+        .getPropertyValue(nombreToken)
+        .trim();
+}
+
+/** Traduce una entrada del contrato a la forma que pinta este cascarón. */
+function desdeContrato(poi) {
+    return {
+        id: poi.id,
+        name: poi.commonName,
+        scientific: poi.scientificName || '',
+        category: poi.category || poi.type || 'curiosidades',
+        icon: poi.icon || 'fa-location-dot',
+        color: colorDeToken(poi.colorToken) || colorDeToken('--sv-green-300'),
+        typeLabel: poi.typeLabel || '',
+        shortDesc: poi.shortDesc || '',
+        fullDesc: poi.fullDesc || '',
+        conservation: poi.conservation || '',
+        curiosity: poi.curiosity || '',
+        audioFreq: poi.audioFreq || 440,
         discovered: false,
-        anchor: { d: 1.3, lat: -0.9, alt: 1.1 },
-        audioFreq: 880
-    },
-    {
-        id: 'helecho_arboreo',
-        name: 'Helecho arborescente',
-        scientific: 'Género Cyathea · [por verificar en V1]',
-        category: 'flora',
-        icon: 'fa-seedling',
-        color: '#6FCF97',
-        typeLabel: 'Flora · POI confirmado',
-        image: null,
-        shortDesc: 'POI confirmado. La especie exacta se confirma con la planta delante.',
-        fullDesc: 'La fuente oficial del Acueducto lo cita como "helecho arborescente", que es un grupo y no una especie. En los Cerros suele corresponder al género Cyathea, pero la regla del proyecto es no publicar el binomio hasta verificarlo en campo, en la visita V1.',
-        conservation: '[por verificar]',
-        curiosity: 'Señalar la especie exacta exige verla: ningún dato del proyecto se publica sin fuente citable o medición propia.',
-        discovered: false,
-        anchor: { d: 2.4, lat: 1.0, alt: 0.8 },
-        audioFreq: 600
-    },
-    {
-        id: 'encenillo',
-        name: 'Encenillo',
-        scientific: 'Weinmannia tomentosa',
-        category: 'flora',
-        icon: 'fa-tree',
-        color: '#6FCF97',
-        typeLabel: 'Flora · Verificado',
-        image: null,
-        shortDesc: 'Especie estructural del bosque altoandino.',
-        fullDesc: 'Verificada por el Acueducto de Bogotá para la Quebrada La Vieja. El encenillo arma la estructura del bosque altoandino: buena parte del dosel que se recorre en el sendero está sostenido por esta especie.',
-        conservation: 'Verificado',
-        curiosity: 'Aparece en la lista oficial de vegetación principal del sendero junto al cedro, el raque, el tíbar y el chuwacá.',
-        discovered: false,
-        anchor: { d: 3.6, lat: -1.1, alt: 0.9 },
-        audioFreq: 520
-    },
-    {
-        id: 'zorro_perro',
-        name: 'Zorro perro',
-        scientific: 'Cerdocyon thous',
-        category: 'fauna',
-        icon: 'fa-paw',
-        color: '#4FA3A5',
-        typeLabel: 'Mamífero · Verificado',
-        image: null,
-        shortDesc: 'El mamífero mejor documentado del sendero.',
-        fullDesc: 'Reportado nominalmente para la Quebrada La Vieja por el Acueducto y el más registrado por cámaras trampa en los Cerros Orientales. Es candidato a sexto POI de fauna: entra si la visita V1 encuentra su rastro o lugar de paso dentro de los 200 m.',
-        conservation: 'Verificado · candidato a POI',
-        curiosity: 'Distinguirlo de un perro doméstico es parte del contenido: en las mismas cámaras trampa también aparecen perros.',
-        discovered: false,
-        anchor: { d: 4.8, lat: 0.9, alt: 0.6 },
-        audioFreq: 220
-    },
-    {
-        id: 'puente_madera',
-        name: 'Puente de madera',
-        scientific: 'Punto patrimonial',
-        category: 'curiosidades',
-        icon: 'fa-landmark',
-        color: '#B9C1BC',
-        typeLabel: 'Patrimonio · POI confirmado',
-        image: null,
-        shortDesc: 'No todo el contenido del sendero está vivo.',
-        fullDesc: 'El puente de madera es el primer POI patrimonial confirmado del proyecto. Los datos históricos siguen la misma regla dura que la biología: sin fuente citable no se publica nada, se marca [por verificar] y la ficha muestra solo lo que sí se sabe.',
-        conservation: '[por verificar] la historia',
-        curiosity: 'Los Cerros Orientales guardan patrimonio de acueducto documentado: si aparece infraestructura análoga en la quebrada, hay dónde buscar fuente.',
-        discovered: false,
-        anchor: { d: 6.0, lat: -0.8, alt: 0.7 },
-        audioFreq: 330
-    },
-    {
-        id: 'retamo_espinoso',
-        name: 'Retamo espinoso',
-        scientific: '[binomio por verificar]',
-        category: 'curiosidades',
-        icon: 'fa-triangle-exclamation',
-        color: '#B9C1BC',
-        typeLabel: 'Especie invasora · Verificada',
-        image: null,
-        shortDesc: 'Una invasora contada es mejor que una invasora escondida.',
-        fullDesc: 'El Acueducto verifica su presencia en el sendero. Explicar por qué está ahí, por qué es un problema para el bosque nativo y por qué no hay que salirse del camino sirve directamente al propósito ambiental del proyecto.',
-        conservation: 'Invasora presente',
-        curiosity: 'Es candidata a POI de flora: la decisión se toma en la visita V1, viendo si es visible desde el trazado.',
-        discovered: false,
-        anchor: { d: 7.2, lat: 1.0, alt: 0.6 },
-        audioFreq: 440
+        anchor: poi.trailAnchor || { d: 0, lat: 0, alt: 1 },
+        // Funcionalidad de Alejandra: rutas reales del contrato, nunca a mano.
+        modelUrl: poi.modelUrl || '',
+        narrationUrl: poi.narrationUrl || '',
+        birdCallUrl: poi.birdCallUrl || ''
+    };
+}
+
+async function cargarCatalogo() {
+    const respuesta = await fetch(CATALOGO_URL);
+    if (!respuesta.ok) {
+        throw new Error(`No se pudo leer ${CATALOGO_URL}: ${respuesta.status}`);
     }
-];
+    const datos = await respuesta.json();
+    trailData = (datos.pois || []).map(desdeContrato);
+}
 
 let currentFilter = 'all';
 
@@ -269,6 +213,50 @@ function medallonHTML(item, tam) {
     `;
 }
 
+/*
+ * Acciones de medios de la ficha, con la plantilla de Eybar y las rutas reales
+ * del contrato. Regla nueva: NO se ofrece un botón de audio que no se pueda
+ * cumplir. Sin grabación en el contrato solo aparece el tono sintético, dicho
+ * como lo que es. Nunca se reproduce el audio de otra especie — ese era el
+ * defecto medido el 25/08, con las tres fichas sonando a golondrina.
+ */
+function accionesMediaHTML(item) {
+    const claseBoton = 'flex-1 min-w-[7rem] py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-2 touch-manipulation cursor-pointer';
+    const botones = [];
+
+    if (item.birdCallUrl) {
+        botones.push(`
+            <button onclick="sonarEspecie('${item.id}')" ontouchstart="sonarEspecie('${item.id}'); event.preventDefault();" class="${claseBoton}">
+                <i class="fa-solid fa-volume-high text-emerald-400"></i> Escuchar canto
+            </button>
+        `);
+    } else {
+        botones.push(`
+            <button onclick="playSpeciesSound(${item.audioFreq})" ontouchstart="playSpeciesSound(${item.audioFreq}); event.preventDefault();" class="${claseBoton}">
+                <i class="fa-solid fa-wave-square text-slate-400"></i> Tono provisional
+            </button>
+        `);
+    }
+
+    if (item.narrationUrl) {
+        botones.push(`
+            <button onclick="sonarNarracion('${item.id}')" ontouchstart="sonarNarracion('${item.id}'); event.preventDefault();" class="${claseBoton}">
+                <i class="fa-solid fa-headphones text-emerald-400"></i> Narración
+            </button>
+        `);
+    }
+
+    if (item.modelUrl) {
+        botones.push(`
+            <button onclick="verModelo3D('${item.id}')" ontouchstart="verModelo3D('${item.id}'); event.preventDefault();" class="${claseBoton}">
+                <i class="fa-solid fa-cube text-emerald-400"></i> Ver en 3D
+            </button>
+        `);
+    }
+
+    return `<div class="flex gap-2 flex-wrap mb-2">${botones.join('')}</div>`;
+}
+
 function selectHotspot(id) {
     const item = trailData.find(x => x.id === id);
     if (!item) return;
@@ -308,11 +296,9 @@ function selectHotspot(id) {
                 <p class="text-[11px] text-slate-300">${item.curiosity}</p>
             </div>
 
+            ${accionesMediaHTML(item)}
+
             <div class="flex gap-2">
-                <button onclick="playSpeciesSound(${item.audioFreq})" ontouchstart="playSpeciesSound(${item.audioFreq}); event.preventDefault();"
-                        class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-2 touch-manipulation cursor-pointer">
-                    <i class="fa-solid fa-volume-high text-emerald-400"></i> Escuchar (provisional)
-                </button>
                 <button onclick="markAsDiscovered('${item.id}')" ontouchstart="markAsDiscovered('${item.id}'); event.preventDefault();"
                         class="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 font-bold text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 touch-manipulation cursor-pointer">
                     <i class="fa-solid fa-circle-check"></i> ${item.discovered ? 'Visto' : 'Marcar visto'}
@@ -620,6 +606,33 @@ function sonarEspecie(id) {
     });
 }
 
+function sonarNarracion(id) {
+    const item = trailData.find(x => x.id === id);
+    if (!item || !item.narrationUrl) return;
+    if (audioEspecie) {
+        audioEspecie.pause();
+        audioEspecie.currentTime = 0;
+    }
+    audioEspecie = new Audio(item.narrationUrl);
+    audioEspecie.play().catch(error => {
+        console.warn('Narración no disponible:', item.narrationUrl, error);
+    });
+}
+
+/*
+ * Puente a la ficha 3D de Alejandra (PoiManager + PoiCard + ModelViewer):
+ * la estética la pone el cascarón de Eybar, el modelo con giro y zoom lo pone
+ * su sistema. Un solo catálogo detrás de los dos.
+ */
+function verModelo3D(id) {
+    const gestor = window.senderoPoiManager;
+    if (!gestor || !Array.isArray(gestor.pois)) return;
+    const poi = gestor.pois.find(p => p.id === id);
+    if (!poi) return;
+    closeBottomSheet();
+    gestor.openPoi(poi);
+}
+
 /* ==========================================================================
    BÚSQUEDA — lógica de Eybar
    ========================================================================== */
@@ -677,6 +690,19 @@ window.openSearchModal = openSearchModal;
 window.closeSearchModal = closeSearchModal;
 window.handleSearch = handleSearch;
 window.playSpeciesSound = playSpeciesSound;
+window.alternarAmbiente = alternarAmbiente;
+window.sonarEspecie = sonarEspecie;
+window.sonarNarracion = sonarNarracion;
+window.verModelo3D = verModelo3D;
 
-updateDiscoveredProgress();
-esperarVisor();
+// El catálogo manda: primero se lee config/pois.json y solo entonces se pinta.
+// Si fallara, el visor sigue vivo y la interfaz queda sin puntos, nunca en
+// negro ni muda (RNF-007).
+cargarCatalogo()
+    .catch(error => {
+        console.error('No se pudo leer el catálogo de puntos:', error);
+    })
+    .finally(() => {
+        updateDiscoveredProgress();
+        esperarVisor();
+    });

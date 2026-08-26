@@ -704,7 +704,8 @@ export class PoiCard {
          */
 
         this._setupAudio(
-            card
+            card,
+            poi
         );
 
 
@@ -794,25 +795,22 @@ export class PoiCard {
      * =========================================================
      */
 
-    _setupAudio(card) {
+    _setupAudio(card, poi) {
 
-        this.cantoAudio =
-            new Audio(
-                'assets/audio/golondrina-canto.mp3'
-            );
+        /*
+         * Las rutas salen del CONTRATO (config/pois.json), no escritas a mano.
+         * Antes estaban fijas a la golondrina y las tres fichas reproducian su
+         * canto, incluida la del colibri: medido en produccion el 25/08.
+         * Invariante 3: anadir un POI no toca codigo.
+         */
 
+        const cantoUrl =
+            (poi && poi.birdCallUrl) ||
+            '';
 
-        this.narracionAudio =
-            new Audio(
-                'assets/audio/golondrina-narracion.mp3'
-            );
-
-
-        this.cantoAudio.preload =
-            'auto';
-
-        this.narracionAudio.preload =
-            'auto';
+        const narracionUrl =
+            (poi && poi.narrationUrl) ||
+            '';
 
 
         const cantoButton =
@@ -828,10 +826,64 @@ export class PoiCard {
 
 
         /*
-         * CANTO
+         * Sin grabacion declarada no se ofrece el boton: mas vale que no este
+         * a que prometa un audio que no existe o suene el de otra especie.
          */
 
-        cantoButton.addEventListener(
+        if (!cantoUrl) {
+
+            if (cantoButton) {
+                cantoButton.style.display =
+                    'none';
+            }
+        }
+
+        if (!narracionUrl) {
+
+            if (narracionButton) {
+                narracionButton.style.display =
+                    'none';
+            }
+        }
+
+        if (
+            !cantoUrl &&
+            !narracionUrl
+        ) {
+            this.cantoAudio = null;
+            this.narracionAudio = null;
+            return;
+        }
+
+
+        this.cantoAudio =
+            cantoUrl
+                ? new Audio(cantoUrl)
+                : null;
+
+
+        this.narracionAudio =
+            narracionUrl
+                ? new Audio(narracionUrl)
+                : null;
+
+
+        if (this.cantoAudio) {
+            this.cantoAudio.preload =
+                'auto';
+        }
+
+        if (this.narracionAudio) {
+            this.narracionAudio.preload =
+                'auto';
+        }
+
+
+        /*
+         * CANTO — solo se engancha si este POI declara canto en el contrato.
+         */
+
+        if (cantoButton && this.cantoAudio) cantoButton.addEventListener(
             'click',
             async (event) => {
 
@@ -874,8 +926,10 @@ export class PoiCard {
                     cantoButton.textContent =
                         '⏸ Detener canto';
 
-                    narracionButton.textContent =
-                        '🎧 Escuchar narración';
+                    if (narracionButton) {
+                        narracionButton.textContent =
+                            '🎧 Escuchar narración';
+                    }
 
                 } catch (error) {
 
@@ -889,10 +943,10 @@ export class PoiCard {
 
 
         /*
-         * NARRACIÓN
+         * NARRACIÓN — solo si este POI declara narración en el contrato.
          */
 
-        narracionButton.addEventListener(
+        if (narracionButton && this.narracionAudio) narracionButton.addEventListener(
             'click',
             async (event) => {
 
@@ -935,8 +989,10 @@ export class PoiCard {
                     narracionButton.textContent =
                         '⏸ Detener narración';
 
-                    cantoButton.textContent =
-                        '🔊 Escuchar canto';
+                    if (cantoButton) {
+                        cantoButton.textContent =
+                            '🔊 Escuchar canto';
+                    }
 
                 } catch (error) {
 
@@ -953,7 +1009,7 @@ export class PoiCard {
          * AUDIO TERMINADO
          */
 
-        this.cantoAudio.addEventListener(
+        if (this.cantoAudio) this.cantoAudio.addEventListener(
             'ended',
             () => {
 
@@ -968,7 +1024,7 @@ export class PoiCard {
         );
 
 
-        this.narracionAudio.addEventListener(
+        if (this.narracionAudio) this.narracionAudio.addEventListener(
             'ended',
             () => {
 
