@@ -77,16 +77,3 @@ body {
     background: var(--sv-green-300-40);
     border-radius: 10px;
 }
-
-/* ==========================================================================
-   UN SOLO SISTEMA DE HOTSPOTS (issue #62)
-   Convivían dos: el medallón de Eybar (#hotspots-overlay) y el marcador 🐦 de
-   PoiManager. Manda el medallón, que es la estética acordada. El marcador de
-   PoiManager se oculta pero su sistema sigue VIVO: conserva posición y
-   proximidad, y su ficha 3D se abre desde el botón «Ver en 3D» del medallón.
-   Lleva !important porque PoiManager escribe style.display por fotograma.
-   Para volver atrás basta con borrar esta regla.
-   ========================================================================== */
-.sendero-vivo-poi-marker {
-    display: none !important;
-}
