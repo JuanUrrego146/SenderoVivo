@@ -337,6 +337,9 @@ checkout, con plumbing (`merge-tree --write-tree` → `commit-tree` → `update-
    de estado. O las borra Juan a mano, o quedan marcadas como canceladas.
 2. **El componente `<model-viewer>` se descarga de un CDN.** Hoy la ficha 3D depende de que
    haya internet más allá del propio sitio. Hay que decidir si se empaqueta antes de la entrega.
-3. **Si Alberto pasa a apoyar interfaz**, las texturas de las cuatro aves se quedan sin dueño.
+3. ~~Si Alberto pasa a apoyar interfaz, las texturas se quedan sin dueño.~~ **RESUELTO el 26/08:**
+   Alberto lleva las dos cosas. Sigue en texturas y contenido, y **entra a apoyar interfaz hacia
+   finales de septiembre**, cuando el refactor a MVC ya esté terminado y las vistas separadas, para
+   que no se pise con nadie. Eybar sigue siendo el responsable de la interfaz.
 4. **`muro-antiguo` en `pois.json`**: o se le modela un `.glb`, o se retira del JSON hasta que
    V1 identifique qué es realmente ese punto patrimonial. Hoy apunta a una escena inexistente.
