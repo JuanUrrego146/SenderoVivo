@@ -418,10 +418,29 @@ function switchTab(tab) {
             <h2 class="text-base font-bold text-slate-100 mb-3 flex items-center gap-2">
                 <i class="fa-solid fa-headphones text-emerald-400"></i> Sonidos del sendero
             </h2>
-            <p class="text-[11px] text-slate-400 mb-3">Los sonidos definitivos se graban en el propio sendero (visita V3): la regla del proyecto es no usar audio de banco. Estos son tonos provisionales del prototipo.</p>
+            <p class="text-[11px] text-slate-400 mb-3">Los sonidos definitivos se graban en el propio sendero (visita V3): la regla del proyecto es no usar audio de banco. Lo de abajo es provisional.</p>
+
+            <div class="glass-panel rounded-2xl p-3 mb-4">
+                <div class="flex items-center justify-between gap-3 mb-2">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <i class="fa-solid fa-tree text-emerald-400 text-lg"></i>
+                        <div class="min-w-0">
+                            <h5 class="text-xs font-bold text-slate-200">Ambiente del bosque</h5>
+                            <span id="ambiente-estado" class="text-[10px] text-slate-400">${ambienteEstadoTexto()}</span>
+                        </div>
+                    </div>
+                    <button id="ambiente-toggle" onclick="alternarAmbiente()" ontouchstart="alternarAmbiente(); event.preventDefault();"
+                            class="shrink-0 py-2 px-3 rounded-xl glass-pill text-[11px] font-semibold text-slate-200 transition flex items-center gap-1.5 cursor-pointer touch-manipulation">
+                        ${ambienteBotonTexto()}
+                    </button>
+                </div>
+                <p class="text-[10px] text-slate-500 leading-snug">${ambienteNotaTexto()}</p>
+            </div>
+
+            <h3 class="text-[11px] font-bold text-slate-300 uppercase tracking-wide mb-2">Por especie</h3>
             <div class="space-y-2">
                 ${trailData.filter(x => x.category === 'fauna').map(item => `
-                    <div onclick="playSpeciesSound(${item.audioFreq})" ontouchstart="playSpeciesSound(${item.audioFreq})"
+                    <div onclick="sonarEspecie('${item.id}')" ontouchstart="sonarEspecie('${item.id}'); event.preventDefault();"
                          class="glass-panel p-3 rounded-xl flex items-center justify-between cursor-pointer hover:bg-slate-800/60 touch-manipulation">
                         <div class="flex items-center gap-2.5">
                             <i class="fa-solid fa-circle-play text-emerald-400 text-lg"></i>
@@ -430,7 +449,7 @@ function switchTab(tab) {
                                 <span class="text-[10px] text-slate-400 font-mono">${item.scientific}</span>
                             </div>
                         </div>
-                        <span class="text-[10px] font-mono text-emerald-400">provisional</span>
+                        <span class="text-[10px] font-mono text-emerald-400">${item.birdCallUrl ? 'grabado' : 'provisional'}</span>
                     </div>
                 `).join('')}
             </div>
@@ -527,6 +546,78 @@ function playSpeciesSound(freq = 440) {
             osc.stop(audioCtx.currentTime + t + 0.18);
         });
     } catch { /* sin audio no se rompe nada */ }
+}
+
+/* ==========================================================================
+   AMBIENTE DEL BOSQUE — AmbienceController de David, dentro de la pestaña
+   «Sonidos». El controlador lo instancia src/app/main.js y lo publica en
+   window.senderoAmbience; aquí solo se le manda. Nunca arranca solo: el toque
+   del visitante en «Iniciar» ES el gesto que desbloquea el audio (RNF-008).
+   ========================================================================== */
+function ambienteDisponible() {
+    const controlador = window.senderoAmbience;
+    return !!(controlador && controlador.ambienceUrl);
+}
+
+function ambienteEstadoTexto() {
+    if (!window.senderoAmbience) return 'Cargando el contrato…';
+    if (!ambienteDisponible()) return 'En silencio (prototipo)';
+    return window.senderoAmbience.isPlaying() ? 'Sonando' : 'Listo para sonar';
+}
+
+function ambienteBotonTexto() {
+    if (!ambienteDisponible()) return '<i class="fa-solid fa-volume-xmark"></i> Sin lecho';
+    return window.senderoAmbience.isPlaying()
+        ? '<i class="fa-solid fa-pause"></i> Silenciar'
+        : '<i class="fa-solid fa-play"></i> Iniciar';
+}
+
+function ambienteNotaTexto() {
+    const controlador = window.senderoAmbience;
+    if (!controlador) return 'El contrato de ambientación aún no ha terminado de cargar.';
+    if (!controlador.ambienceUrl) {
+        return 'Todavía no hay lecho grabado: el control queda a la vista y en silencio hasta la visita V3.';
+    }
+    return controlador.ambienceNote || '';
+}
+
+function refrescarControlAmbiente() {
+    const boton = document.getElementById('ambiente-toggle');
+    if (boton) boton.innerHTML = ambienteBotonTexto();
+    const estado = document.getElementById('ambiente-estado');
+    if (estado) estado.innerText = ambienteEstadoTexto();
+}
+
+function alternarAmbiente() {
+    if (!ambienteDisponible()) return;
+    window.senderoAmbience.toggle();
+    // play() es asíncrono: se refresca un poco después para leer el estado real.
+    setTimeout(refrescarControlAmbiente, 300);
+}
+
+/* ==========================================================================
+   SONIDO POR ESPECIE — archivo grabado si existe, tono sintético si no.
+   Las rutas salen del catálogo (config/pois.json), nunca escritas a mano.
+   ========================================================================== */
+let audioEspecie = null;
+
+function sonarEspecie(id) {
+    const item = trailData.find(x => x.id === id);
+    if (!item) return;
+    if (!item.birdCallUrl) {
+        // Sin grabación todavía: el tono provisional de Eybar.
+        playSpeciesSound(item.audioFreq || 440);
+        return;
+    }
+    if (audioEspecie) {
+        audioEspecie.pause();
+        audioEspecie.currentTime = 0;
+    }
+    audioEspecie = new Audio(item.birdCallUrl);
+    audioEspecie.play().catch(() => {
+        // Si el archivo declarado no está, no se deja al visitante sin respuesta.
+        playSpeciesSound(item.audioFreq || 440);
+    });
 }
 
 /* ==========================================================================

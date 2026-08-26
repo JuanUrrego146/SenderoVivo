@@ -26,6 +26,7 @@ import { TrailRecorder } from '../engine/TrailRecorder.js';
 import { TrailMarkers } from '../engine/TrailMarkers.js';
 import { PoiManager } from '../poi/PoiManager.js';
 import { PoiCard } from '../poi/PoiCard.js';
+import AmbienceController from '../audio/AmbienceController.js';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
 const SCENES_CONFIG_URL = 'config/scenes.json';
@@ -395,6 +396,18 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
         } catch (error) {
             console.warn('No se pudieron cargar los POIs:', error);
         }
+    }
+    // Ambientacion sonora (AmbienceController de David). Se instancia y se deja
+    // expuesta, pero NO suena: load() solo lee config/soundscape.json y no crea
+    // ni AudioContext ni elemento de audio. El arranque nace siempre de un toque
+    // del visitante, desde la pestana «Sonidos» del cascaron (src/ui/shell.js).
+    // RNF-008 e invariante 6.
+    const ambience = new AmbienceController(app);
+    window.senderoAmbience = ambience;
+    try {
+        await ambience.load();
+    } catch (error) {
+        console.warn('No se pudo leer el contrato de ambientacion:', error);
     }
     if (sceneOpts.stream) {
         // El sorter del render unificado solo dispara su PRIMER ordenamiento
