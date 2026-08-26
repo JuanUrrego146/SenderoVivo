@@ -279,15 +279,64 @@ Lo que hay que hacer antes de darle tareas, en este orden:
 3. **QA recrea `dev/david-beltran`** desde `develop` actual.
 4. **Solo entonces** se le asignan SW-07, SW-20, SW-21 y SW-22.
 
-Nota que corrige una suposición anterior: **`config/soundscape.json` no hay que redactarlo**,
-David ya lo escribió. SW-08 se reduce a traer su archivo y revisarlo.
+### 8.1 Corrección sobre `config/soundscape.json` (26/08)
+
+Una versión anterior de este documento decía que el archivo «no hay que redactarlo porque David
+ya lo escribió». **Eso ya no se sostiene.** Lo escribió en su commit `5d6c30e`, sí, pero al
+recrear su rama el archivo no sobrevivió: hoy **no está ni en `develop` ni en
+`dev/david-beltran`**, solo en ese commit original y en la etiqueta de respaldo de QA.
+
+**Decisión del PM:** el archivo se trae, pero **con `ambienceUrl` en `null`** y sin
+`assets/audio/AudioPrueba.mp3`. Razones:
+
+- Su `ambienceUrl` apunta a un mp3 de prueba de 3,4 MB. Traer el JSON sin el mp3 dejaría una
+  referencia rota; traer el mp3 mete en el repositorio 3,4 MB de audio desechable que se
+  sustituye en cuanto se grabe el lecho real en V3.
+- **`AmbienceController` ya contempla el caso nulo por diseño**: hace
+  `this.ambienceUrl = cfg?.ambienceUrl || null` y tanto `play()` como `_ensureAudioElement()`
+  salen temprano si no hay URL. El botón de David muestra «En silencio (prototipo)» en ese
+  estado. Es decir, `null` no es un apaño: es el estado previsto mientras no haya grabación.
+
+Con eso el contrato queda publicado y David puede declarar fuentes sin tocar código, que es lo
+que exige RNF-009, sin arrastrar un archivo provisional.
 
 ---
 
-## 9. Pendiente de decisión
+## 9. Defectos abiertos que no tienen issue
+
+Detectados el 25 y 26/08. Entran en el backlog nuevo; ninguno está registrado hoy.
+
+| # | Defecto | Dónde entra |
+|---|---|---|
+| 1 | **`assets/models/muro-antiguo.glb` no existe** aunque `config/pois.json` lo referencia. Es el mismo defecto que el colibrí, pero este no está en ninguna issue | ART-11 (patrimonio) y SW-06 (validación) |
+| 2 | **39 `console.log` en producción**: `PoiManager.js` 17, `ModelViewer.js` 9, `PoiCard.js` 8, `WorldModel.js` 5. `PoiManager` imprime la ficha completa de cada POI en la consola, a la vista de cualquiera | SW-02 a SW-04: al mover el código a MVC se limpian |
+| 3 | **`pois.json` declara un POI de una escena que no existe** (`muro-antiguo` apunta a `scene-02`) y los tres POIs están en la coordenada (0,0,0) | SW-06: la validación debe avisar de esto |
+
+---
+
+## 10. Cómo trabajan los agentes
+
+**Un worktree por agente.** El 25/08 el agente PM y el agente QA compartieron el mismo
+directorio de trabajo: el PM cambió la rama a `develop` y commiteó mientras QA integraba, y el
+`git branch -f develop` de QA falló con *cannot force update the branch used by worktree*. Git
+evitó el choque, pero por suerte, no por diseño. QA salió adelante haciendo las fusiones sin
+checkout, con plumbing (`merge-tree --write-tree` → `commit-tree` → `update-ref`).
+
+**Reglas que quedan:**
+
+1. Cada agente trabaja en **su propio worktree**, nunca en el árbol principal.
+2. **El PM no cambia de rama** en un árbol compartido. Si necesita publicar documentación,
+   commitea sobre la rama que ya esté activa y avisa, o se lo pasa a QA.
+3. **Solo QA fusiona ramas.** El PM audita, escribe y reparte tareas.
+
+---
+
+## 11. Pendiente de decisión
 
 1. **Las issues de Jira no se pueden borrar** desde el conector: solo crear, editar y cambiar
    de estado. O las borra Juan a mano, o quedan marcadas como canceladas.
 2. **El componente `<model-viewer>` se descarga de un CDN.** Hoy la ficha 3D depende de que
    haya internet más allá del propio sitio. Hay que decidir si se empaqueta antes de la entrega.
 3. **Si Alberto pasa a apoyar interfaz**, las texturas de las cuatro aves se quedan sin dueño.
+4. **`muro-antiguo` en `pois.json`**: o se le modela un `.glb`, o se retira del JSON hasta que
+   V1 identifique qué es realmente ese punto patrimonial. Hoy apunta a una escena inexistente.
