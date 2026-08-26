@@ -4,7 +4,15 @@
 > preguntar: qué existe hoy, cómo se levanta, qué archivo tocas, qué reglas no se rompen
 > y cómo pruebas lo que hiciste.
 >
-> Actualizado: 17/08/2026 · Mantiene: Juan Urrego
+> Actualizado: 26/08/2026 · Mantiene: Juan Urrego
+
+---
+
+> ⛔ **src/ congelado desde el 26/08/2026**
+> Nadie abre PR que toque `src/` mientras dure el traslado a MVC (SW-02, SW-03,
+> SW-04). Excepción: quien tenga asignada una de esas tres historias.
+> Lo que ya esté empezado se termina y se avisa antes de fusionar.
+> Ver [docs/03-arquitectura.md §3.1](docs/03-arquitectura.md#31-las-tres-capas-modelo-vista-y-controlador).
 
 ---
 
