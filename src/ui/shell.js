@@ -115,7 +115,7 @@ function construirHotspots() {
             <div class="relative w-10 h-10 -translate-x-1/2 -translate-y-1/2">
                 <div class="hotspot-ring"></div>
                 <div class="absolute inset-0 rounded-2xl glass-panel border flex items-center justify-center text-sm transition-all duration-300 transform group-hover:scale-125 shadow-xl"
-                     style="border-color: ${item.color}; color: ${item.color}; background: rgba(14, 18, 16, 0.85);">
+                     style="border-color: ${item.color}; color: ${item.color}; background: var (--sv-scrim-850);">
                     <i class="fa-solid ${item.icon}"></i>
                 </div>
                 <div class="absolute left-1/2 -translate-x-1/2 top-12 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
