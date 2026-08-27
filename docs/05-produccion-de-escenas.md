@@ -252,11 +252,18 @@ Video 4K a 60 fps con exposición, foco y balance de blancos **manuales y bloque
 cámara nativa del iPhone no permite fijar obturación e ISO en video; una app gratuita que sí
 lo permite es **Blackmagic Camera** (sugerencia operativa, no requisito del protocolo).
 
+> **Revisión del 26/08/2026 tras auditar el prototipo del parque.** Dos ajustes de esta
+> sección resultaron ser causa directa de la baja calidad y quedan corregidos abajo:
+> la **obturación de 1/125 s es demasiado lenta** para captura caminando (las guías de
+> captura 3DGS de 2026 piden **mínimo 1/500 s, idealmente 1/1000 s**), y el **video no es
+> el mejor soporte**: los fotogramas seleccionados de una cámara de fotos dan más nitidez
+> porque no arrastran compresión de video ni desenfoque de movimiento. Ver §8.3.
+
 | Ajuste | Nuestro valor | Qué recomienda PlayCanvas | Motivo |
 |---|---|---|---|
 | Resolución | 4K (2160p) | **4K mínimo**; 1080p no da detalle suficiente | — |
 | Cuadros por segundo | 60 fps | **60 fps o más** | — |
-| Obturación | 1/125 s fija (1/250 con buena luz) | **mínimo 1/125 s** a pulso | Congela el detalle a pulso |
+| Obturación | **1/500 s mínimo, 1/1000 s ideal** (corregido 26/08; antes 1/125) | **mínimo 1/500 s, ideal 1/1000 s** | A 1/125 caminando el detalle fino sale movido y el entrenamiento no puede recuperarlo |
 | ISO | Fijo, el más bajo con exposición correcta (bajo árboles, 400 es normal) | 100–400 (200–400 en día nublado) | Se prefiere grano a desenfoque: subir ISO antes que bajar obturación |
 | Exposición | Bloqueada en manual | **Bloqueada en manual**, evita parpadeo entre cuadros | Es el ajuste crítico |
 | Balance de blancos | Fijo (nublado, ~6500 K) | Fijo | Consistencia entre cuadros |
@@ -288,6 +295,32 @@ POI**, y **el objeto de tamaño conocido** dentro de la escena. Lo último es lo
 que la capa de datos (altitud, distancia, desnivel) se corresponda con la geometría
 reconstruida y no con unidades arbitrarias del entrenamiento.
 
+### 8.3 Fotos o video, y con qué cámara (revisión del 26/08/2026)
+
+Las guías de captura 3DGS coinciden en que **las fotos ganan**: el fotógrafo controla el
+instante del disparo, no hay compresión de video de por medio y se descartan las tomas
+movidas una por una. El video es más cómodo y sirve, pero paga un precio en nitidez. La
+regla que sí es transversal: **más fotos no es mejor calidad; fotos movidas hay que
+borrarlas**, no alimentarlas al entrenamiento.
+
+**Cuántas.** 120–140 imágenes bastan para una escena acotada; una escena grande al aire
+libre puede pedir hasta ~600, y muy rara vez se necesitan más de 300 útiles. Solape
+**60–80 %** entre cuadros contiguos.
+
+**Con qué cámara.** Contra la intuición, una réflex o mirrorless *vieja* puede rendir mejor
+que un celular moderno para esto, porque da lo que el celular no da fácil: control manual
+real de obturación, diafragma, ISO, enfoque y balance de blancos, sensor grande y RAW. Las
+guías recomiendan justamente réflex/mirrorless con **lente equivalente 16–50 mm** y
+**diafragma f/8–f/11** para nitidez y profundidad de campo. La **Sony del equipo (~2012)**
+cumple ese perfil: disparando fotos en manual a f/8 y 1/1000 s produce mejor material que un
+video de celular. El celular queda como cámara de apoyo y para las pasadas donde el tamaño
+importa (agachado, brazo en alto).
+
+**Condiciones.** Día **nublado** (luz pareja, sin sombras duras) y **sin viento**. Y un
+criterio de encuadre que aplica de lleno a la Quebrada: **que el dosel movido por el viento
+no sea el anclaje visual principal**; el ancla debe ser lo que no se mueve — el piso, los
+muros, las rejas, los troncos gruesos.
+
 ## 9. Las ocho pasadas
 
 Caminar **lento** (un paso por segundo, rodillas semiflexionadas, codos pegados al cuerpo,
@@ -313,8 +346,23 @@ cuadros borrosos inservibles.
 | P4 | Centro, regreso | Brazo en alto | Picada hacia abajo ~30 grados |
 | P5 | Borde izquierdo, ida | Ojos | Cruzada hacia el centro y la derecha (30 a 45 grados) |
 | P6 | Borde derecho, regreso | Ojos | Cruzada hacia el centro y la izquierda |
-| P7 | Centro, ida | Ojos | Lateral izquierda: vegetación y troncos de ese lado |
-| P8 | Centro, regreso | Ojos | Lateral derecha |
+| P7 | Centro, ida | Ojos | Vegetación y troncos de la **izquierda**, en diagonal ~45° hacia adelante (no a 90°: ver la nota) |
+| P8 | Centro, regreso | Ojos | Ídem hacia la **derecha**, diagonal ~45° |
+
+> **Por qué las pasadas laterales son las que reconstruyen (y las frontales no).** El
+> paralaje —lo que permite triangular la profundidad— nace de que la cámara **se traslada**
+> respecto a lo que mira, no de que gire. Caminando paralelo a la vegetación y apuntándole,
+> cada paso cambia mucho el ángulo hacia esos troncos: base amplia, triangulación buena. En
+> cambio, avanzar de frente mirando de frente es la **dirección degenerada**: lo que está
+> adelante crece de tamaño pero casi no se desplaza angularmente. Las pasadas frontales
+> (P1–P4) son necesarias para la sensación de recorrido y para cubrir lo que el visitante
+> verá, pero aportan poca geometría; las laterales y cruzadas (P5–P8) son las que sostienen
+> la reconstrucción.
+>
+> **Corrección del 26/08/2026: apuntar a 45°, no a 90°.** A 90° exactos cada tronco entra y
+> sale del encuadre demasiado rápido: pocos cuadros lo ven y se pierde solape. A ~45° se ve
+> venir, se pasa y se deja atrás, así que más cuadros lo capturan desde ángulos que
+> convergen sobre el mismo punto. Se conserva el paralaje y se gana solape.
 
 Las ocho pasadas **materializan la banda de alta densidad del ADR-002**: desde el suelo hasta
 ≈ 1 m por encima de la altura de los ojos (≈ 2,6 m sobre el suelo), y ≈ 1 m a cada lado del
