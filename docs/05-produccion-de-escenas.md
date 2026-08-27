@@ -323,6 +323,14 @@ muros, las rejas, los troncos gruesos.
 
 ## 9. Las ocho pasadas
 
+> **Versión imprimible para llevar al campo:**
+> [`docs/protocolos/protocolo-de-campo-las-ocho-pasadas.pdf`](protocolos/protocolo-de-campo-las-ocho-pasadas.pdf).
+> Resume esta sección y la §8 en una hoja, con tres diagramas: por qué mirar en diagonal
+> reconstruye y mirar al frente no, los tres carriles vistos desde arriba, y las tres
+> alturas de cámara vistas de lado. Se regenera desde su `.html`; ver
+> [`docs/protocolos/LEEME.md`](protocolos/LEEME.md). **Si el PDF y este documento se
+> contradicen, manda este documento.**
+
 Caminar **lento** (un paso por segundo, rodillas semiflexionadas, codos pegados al cuerpo,
 cámara con las dos manos). En un tramo de 30 m cada pasada toma ~90 segundos. **Un clip por
 pasada**: si una sale mal se repite sola, sin contaminar las demás. Al final de cada pasada
