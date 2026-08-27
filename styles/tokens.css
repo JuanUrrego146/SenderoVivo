@@ -23,6 +23,7 @@
     --sv-gray-100:  var(--sv-gray-050);          /* alias: no existe gray-100 en la paleta */
     --sv-scrim-550: rgba(14, 18, 16, 0.55);      /* velo sobre black-900 */
     --sv-scrim-720: rgba(14, 18, 16, 0.72);
+    --sv-scrim-850: rgba(14, 18, 16, 0.85);      /* velo oscuro: medallón de hotspot */
     --sv-glass-bg:     rgba(27, 33, 30, 0.55);   /* gray-800 translúcido (paneles vidrio) */
     --sv-glass-border: rgba(237, 241, 239, 0.14);/* gray-050 translúcido */
     --sv-green-300-25: rgba(111, 207, 151, 0.25);/* green-300 translúcido (estado activo) */
