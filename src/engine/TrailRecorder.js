@@ -3,7 +3,7 @@
  *
  * Solo se usa en desarrollo: se recorre la escena en vuelo libre y se van
  * marcando los puntos por donde pasa el camino. Al terminar, exporta el JSON
- * que consume TrailPath. Así el trazado se define viendo la escena real, sin
+ * que consume TrailModel. Así el trazado se define viendo la escena real, sin
  * adivinar coordenadas y sin tocar código.
  *
  * Se activa con ?editor=1 en la URL.

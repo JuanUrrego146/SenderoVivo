@@ -20,7 +20,7 @@ import {
     Vec2,
     Vec3
 } from 'playcanvas';
-import { TrailPath } from '../engine/TrailPath.js';
+import { TrailModel } from '../models/TrailModel.js';
 import { TourEngine } from '../engine/TourEngine.js';
 import { TrailRecorder } from '../engine/TrailRecorder.js';
 import { TrailMarkers } from '../engine/TrailMarkers.js';
@@ -450,13 +450,13 @@ function enableFreeFlight(camera) {
 async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
     try {
         const response = await fetch(trackUrl);
-        if (!response.ok) return new TrailPath([]);
+        if (!response.ok) return new TrailModel([]);
         const cfg = await response.json();
-        const path = new TrailPath(cfg.sceneWaypoints || [], cfg.corridorRadius ?? 1.5);
+        const path = new TrailModel(cfg.sceneWaypoints || [],cfg.corridorRadius ?? 1.5);
         path.eyeHeight = cfg.eyeHeight ?? 0;
         return path;
     } catch {
-        return new TrailPath([]);
+        return new TrailModel([]);
     }
 }
 
