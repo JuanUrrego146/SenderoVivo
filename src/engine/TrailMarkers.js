@@ -79,10 +79,9 @@ export class TrailMarkers {
         this.onlyVisible = options.onlyVisible ?? true;
         this.hoverIndex = -1;
 
-        // El color llega de fuera (token de styles/tokens.css): el motor no
-        // conoce nombres de token ni colores literales.
-        const color = options.color || '#6FCF97';
-        this.texture = createArrowTexture(app.graphicsDevice, color);
+        const green = getComputedStyle(document.documentElement)
+            .getPropertyValue('--sv-green-300').trim() || '#6FCF97';
+        this.texture = createArrowTexture(app.graphicsDevice, green);
 
         // La capa UI se dibuja DESPUÉS del mundo: sin esto las gaussianas tapan
         // la flecha aunque esté delante, porque ambas son transparentes y el
@@ -205,8 +204,9 @@ export class TrailMarkers {
             objetivo = this.targetDistance;
             sentido = Math.sign(objetivo - this.tour.distance);
             if (Math.abs(objetivo - this.tour.distance) < 0.02) {
+                this.tour.distance = objetivo;
                 this.targetDistance = null;
-                this.tour.moveTo(objetivo);
+                this.tour._emitProgress();
                 return;
             }
         } else if (this.heldIndex >= 0) {
@@ -220,7 +220,8 @@ export class TrailMarkers {
         if (objetivo !== null) {
             nueva = sentido > 0 ? Math.min(nueva, objetivo) : Math.max(nueva, objetivo);
         }
-        this.tour.moveTo(Math.min(nueva, total));
+        this.tour.distance = Math.max(0, Math.min(nueva, total));
+        this.tour._emitProgress();
     }
 
     _update(dt) {

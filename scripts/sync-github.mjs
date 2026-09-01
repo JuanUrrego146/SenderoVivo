@@ -5,7 +5,7 @@
  * Crea en GitHub los labels, los milestones y una issue por historia de usuario,
  * leyendo `plan/backlog-jira.csv` como unica fuente de verdad.
  *
- * Se sustituyo al antiguo setup_repo.sh (1.500 lineas escritas a mano) porque el
+ * Se sustituyo al antiguo setup_repo.sh, hoy scripts/setup_repo.sh (1.500 lineas escritas a mano) porque el
  * backlog cambia y mantener dos copias del mismo contenido garantiza que se
  * desincronicen. Aqui el CSV manda: si una historia cambia en el CSV, se vuelve a
  * ejecutar este script y GitHub se pone al dia.

@@ -725,7 +725,7 @@ Invariantes. Una PR que rompa cualquiera de estas se rechaza sin discusión.
 
 ---
 
-## 9. Estructura de carpetas (real al 18/08/2026)
+## 9. Estructura de carpetas (real al 19/08/2026)
 
 ```
 SenderoVivo/
@@ -742,6 +742,8 @@ SenderoVivo/
 │   ├── 05-produccion-de-escenas.md
 │   ├── 06-contenido-de-la-experiencia.md
 │   ├── 07-tecnologia.md
+│   ├── 08-de-video-a-web.md    Guía de máquina completa: videos → COLMAP → Brush →
+│   │                           limpieza → empaques (SOG/streaming/móvil) → publicación
 │   ├── F_Analisis_de_Requerimientos_V1,0_SenderoVivo.md  (+ .docx)
 │   └── decisiones/
 │       ├── ADR-001-eleccion-de-sendero.md
@@ -753,6 +755,12 @@ SenderoVivo/
 │   ├── resumen-auditoria-2026-08-13.md
 │   └── backlog-jira.csv        DEPRECADO (13/08): el backlog se edita en GitHub/Jira
 ├── scripts/
+│   ├── escenas/                Pipeline de escenas: medir.js (radiografía de un PLY),
+│   │                           filtrar.js (limpieza log-espacio sin cajas),
+│   │                           muestrear.js (poda por importancia para móvil)
+│   ├── modelos/                Pipeline de modelos: extraer_mb.py (parser del .mb de
+│   │                           Maya) y ensamblar_glb.py (GLB con PBR embebido)
+│   ├── setup_repo.sh           DEPRECADO (13/08): bootstrap ya ejecutado; historia
 │   └── sync-github.mjs         DEPRECADO (13/08)
 ├── src/
 │   ├── app/                    Juan:      main.js (orquestación)
@@ -773,10 +781,12 @@ SenderoVivo/
 │   └── soundscape.json         (esqueleto: sources vacío hasta V3)
 └── assets/
     ├── raw/                    (ignorado por Git: video y capturas brutas)
-    ├── scenes/                 scene-01/ y scene-01-luma/ VERSIONADAS (SOG desempaquetado);
+    ├── scenes/                 VERSIONADAS (SOG desempaquetado): scene-01/ (respaldo),
+    │                           scene-01-stream/ (streaming LOD, escritorio),
+    │                           scene-01-movil/ (poda 1,2 M, celular) y scene-01-luma/;
     │                           los .sog y .ply sueltos siguen ignorados
-    ├── models/                 marcador-provisional.glb · golondrina-plomiza-fuente/ (Maya
-    │                           + texturas de Felipe, sin integrar) · los .glb finales
+    ├── models/                 marcador-provisional.glb · golondrina-plomiza.glb (convertido
+    │                           19/08 con scripts/modelos/) · golondrina-plomiza-fuente/
     ├── audio/
     └── text/
 ```

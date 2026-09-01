@@ -380,34 +380,85 @@ perdida — se resuelve extrayendo más cuadros, no reentrenando.
 
 ### 12.3 Entrenamiento con Brush
 
+Hay **dos recetas** según para qué es la corrida. No son intercambiables: está medido
+(19/08, ver §13 epílogo) que la rápida no alcanza acabado de publicación.
+
+**Borrador rápido** — para verificar que el dataset cierra, probar cobertura e iterar:
+
 ```bash
 brush_app.exe "ruta\al\dataset" --total-steps 30000 --max-resolution 1920 --max-splats 1500000 --export-every 10000 --export-path "ruta\salida" --export-name "escena_{iter}.ply"
 ```
 
-Tiempo esperado: **1 a 2 horas**, contra las 19,5 h de nuestra primera corrida "de máxima
-calidad", que resultó ser peor negocio (§13).
+Tiempo: **1 a 2 horas** (43 min medidos con techo 2,5 M en la RTX 3060 Ti). Advertencia
+medida: con pocos pasos y pocas gaussianas, cada una se **estira** para cubrir su zona y el
+resultado sale **filamentoso** — en la corrida del 18/08 (30 mil pasos, 2,5 M) la "agujeza"
+mediana (ver `scripts/escenas/medir.js`) igualó el p97 de la escena de producción: vellos
+por toda la cámara que ningún filtro quita sin destrozar la escena. **Un borrador no se
+publica.**
 
-### 12.4 Limpieza, en dos pasadas separadas
+**Calidad de publicación** — la corrida que produjo la scene-01 vigente:
 
 ```bash
-# 1) Acotar: quita gigantes, lejanas y casi invisibles. Caja AMPLIA (±30): ver la advertencia
-splat-transform entrada.ply --filter-nan --filter-value scale_0,lt,0.5 --filter-value scale_1,lt,0.5 --filter-value scale_2,lt,0.5 --filter-box -30,-30,-30,30,30,30 --filter-value opacity,gt,0.05 acotado.ply
-
-# 2) Ahora sí, flotantes (la escena ya tiene un volumen sano)
-splat-transform acotado.ply --filter-floaters limpio.ply
-
-# 3) Neblina fuera y compresión a SOG desempaquetado (meta.json + varios .webp)
-splat-transform limpio.ply --filter-value opacity,gt,0.15 assets/scenes/scene-01/meta.json
+brush_app.exe "ruta\al\dataset" --total-steps 60000 --max-resolution 3840 --max-splats 5000000 --growth-grad-threshold 0.00002 --export-every 15000 --export-path "ruta\salida" --export-name "escena_{iter}.ply"
 ```
 
-> **La caja de recorte corta en diagonal (lección del 18/08).** `--filter-box` se aplica en
-> el marco de coordenadas de COLMAP, que sale con orientación arbitraria (el nuestro estaba
+Tiempo: **~19,5 h** en la RTX 3060 Ti. Esta configuración tiene una ineficiencia conocida
+(§13: topa el techo de 5 M antes del paso 15.000), pero las horas restantes de
+**refinamiento** son precisamente las que compran el acabado fino: gaussianas pequeñas y
+redondas en vez de hilos. Es la única receta que ha producido calidad publicable.
+
+> Candidata **por probar** para la próxima escena (aún sin evidencia): mismo presupuesto y
+> pasos pero con umbral por defecto (`--total-steps 60000 --max-splats 5000000` sin tocar
+> `--growth-grad-threshold`), que debería crecer orgánico sin topar y refinar igual de
+> largo. Hasta no medirla contra esta, la receta oficial sigue siendo la de arriba.
+
+**Sobre el alcance:** Brush **no tiene ningún flag espacial** — todo lo que las cámaras
+vieron queda en el PLY (el nuestro llega a ±40 unidades, cielo incluido). El alcance solo
+se pierde si la limpieza lo recorta; por eso la limpieza vigente **no usa cajas** (§12.4).
+
+### 12.4 Limpieza SIN caja de recorte (vigente desde el 19/08)
+
+La regla suprema: **el alcance completo del entrenamiento se conserva**. Nada de cajas
+espaciales — solo se quitan defectos medibles: NaN, agujas (gaussianas gigantes en algún
+eje) y neblina (opacidad casi nula). Los umbrales **se miden en el propio archivo**, no se
+inventan. Las herramientas viven versionadas en `scripts/escenas/`.
+
+```bash
+# 1) Radiografía: conteo, NaN, percentiles de escala, extensión por eje y "agujeza"
+node scripts/escenas/medir.js entrenado.ply
+
+# 2) Filtrar en log-espacio: tope de agujas = el p99,7 de ESE archivo (lo da medir.js);
+#    niebla = alfa > 0,05 (logit -2,944). Sin cajas.
+node scripts/escenas/filtrar.js entrenado.ply limpio.ply <p99,7 medido> -2.944
+
+# 3) Comprimir a SOG desempaquetado (meta.json + .webp) directo a la carpeta de la escena
+npx --yes @playcanvas/splat-transform -w limpio.ply assets/scenes/scene-01/meta.json
+```
+
+**Por qué `filtrar.js` y no `--filter-value` de splat-transform:** medimos (18/08) que
+`--filter-value` compara en espacio **lineal/activado** (sigma, alfa) y **rechaza valores
+negativos** ("No Gaussians to write"), así que no puede aplicar topes en log-espacio como
+el p99,7. El filtro propio lee el PLY en streaming y solo decide qué filas quedan.
+
+**La escena publicada (19/08) salió exactamente así:** `final_60000.ply` (5 M) →
+p99,7 = −1,5607 y alfa > 0,05 → quitó solo el **3,65 %** → 4,82 M de gaussianas → SOG de
+68 MB (archivo mayor 15 MB, bajo el límite de 25 MiB por archivo de Cloudflare Pages).
+
+**Checklist antes de dar una limpieza por buena:**
+
+1. `medir.js` del resultado: extensión por eje SIN "clavos" en un valor redondo (un
+   mín/máx clavado en ±15 delata una caja — así se detectó el recorte histórico), NaN en
+   cero, agujeza cerca de la referencia de producción (p50 1,41 · p90 2,63 · p99 3,57).
+2. En el visor: los **BORDES** de la escena (rejas, fondo de la alameda, cielo), no solo
+   el centro, y el recorrido andado completo.
+3. Peso: ningún archivo del SOG por encima de 25 MiB.
+
+> **Por qué quedó prohibida la caja (lección del 18/08).** `--filter-box` se aplica en el
+> marco de coordenadas de COLMAP, que sale con orientación arbitraria (el nuestro estaba
 > 151,5° torcido): una caja alineada a esos ejes rebana el mundo en diagonal. Con ±15 —y
 > peor, con una segunda caja vertical para "recortar cielo"— desaparecieron las rejas del
-> costado izquierdo de la escena. **Regla: caja única y generosa (±30) solo para descartar
-> lo lejano; la neblina y el cielo se controlan con `opacity`, nunca con un recorte
-> espacial; y antes de dar una limpieza por buena se verifican los BORDES de la escena en
-> el visor, no solo el centro.**
+> costado izquierdo y el fondo entero de la escena. La neblina y el cielo se controlan con
+> `opacity`; lo lejano no molesta: pesa poco y da profundidad real.
 
 ### 12.5 Nivelación y publicación
 
@@ -445,6 +496,34 @@ Combinados: **cuatro veces más agresivo que el valor por defecto**.
 > **Regla que sacamos de esto:** si subes la resolución, el umbral de crecimiento hay que
 > subirlo en la misma proporción, no bajarlo. O más simple: **no toques el umbral.**
 
+### Epílogo (19/08): las 14 horas no estaban perdidas
+
+El diagnóstico de arriba sigue siendo cierto — el crecimiento estaba mal configurado y topó
+temprano — pero la conclusión de "peor negocio" resultó **falsa**. Dos descubrimientos con
+evidencia:
+
+1. **Las horas de refinamiento compraron el acabado.** Del paso 15.000 al 60.000 no nació
+   ninguna gaussiana, pero las 5 M existentes se volvieron finas y redondas. Métrica
+   "agujeza" (`max − medio` de las escalas log, con `scripts/escenas/medir.js`):
+
+   | Corrida | Gaussianas | Pasos | Agujeza p50 / p90 / p99 |
+   |---|---|---|---|
+   | 19,5 h (producción) | 5 M | 60.000 | **1,41 / 2,63 / 3,57** |
+   | Receta rápida (18/08) | 2,5 M | 30.000 | 2,10 / 5,23 / 8,31 |
+
+   La rápida tiene su **mediana** al nivel del p97 de producción: hilos de 180:1 visibles
+   como vellos junto a la cámara, imposibles de filtrar sin destrozar la escena.
+
+2. **El "recorte" de la escena vieja nunca fue del entrenamiento.** El PLY crudo de esta
+   corrida siempre tuvo el alcance completo (±40 unidades, cielo incluido); la caja ±15 se
+   aplicó en la limpieza. Re-limpiado SIN caja (§12.4) es la scene-01 publicada el 19/08.
+
+> **Regla revisada:** el intento fallido se juzga por su MECÁNICA (aquí: creció mal), pero
+> el archivo exportado se juzga con métricas y el visor antes de tirarlo. Y la calidad de
+> publicación necesita **presupuesto** (≈5 M) y **pasos de refinamiento** (≈60 mil): ni el
+> umbral doblado (mata el crecimiento, 18/08 tarde) ni la receta corta (deja hilos, 18/08
+> noche) llegan.
+
 ---
 
 ## 14. Más gaussianas no es mejor
@@ -461,6 +540,13 @@ Es contraintuitivo, pero está medido:
 Y hay una restricción que manda sobre todo lo demás: **PlayCanvas documenta un presupuesto de
 1 millón de gaussianas para móvil** y 3+ millones para escritorio. Con 5 M estábamos cinco
 veces por encima de lo que un celular puede mover a 30 fps.
+
+> **Matiz medido el 19/08:** "más gaussianas no es mejor" aplica al PSNR por primitiva,
+> pero el ACABADO (gaussianas finas en vez de hilos, ver §13 epílogo) sí necesita
+> presupuesto: la scene-01 publicada usa 4,82 M y se ve mejor que cualquier intento con
+> menos. La contradicción con el presupuesto móvil se resolvió por otra vía: **en celular
+> el visor sirve por defecto la escena Luma liviana** (933 mil gaussianas, decidido en
+> `src/app/main.js`), así que los 4,82 M solo los paga el escritorio.
 
 ### 14.1 Peso y descarga
 

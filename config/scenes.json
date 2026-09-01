@@ -11,10 +11,16 @@
     {
       "id": "scene-01",
       "order": 1,
+      "render": "colmap",
       "sogUrl": "assets/scenes/scene-01/meta.json",
+      "movilSogUrl": "assets/scenes/scene-01-movil/meta.json",
+      "movilNota": "Variante para celular: la MISMA escena podada por importancia (scripts/escenas/muestrear.js, estilo LightGaussian) de 4,82 M a 1,2 M de gaussianas (~19 MB), dentro del presupuesto movil de PlayCanvas (~1 M). Nada se mueve ni se reescala: mismo marco, mismo sceneUp, mismo trazado y POIs. El visor la elige solo cuando pantalla <=640px pide la tecnica COLMAP.",
+      "lodUrl": "assets/scenes/scene-01-stream/lod-meta.json",
+      "lodNota": "SOG en STREAMING (19/08): la misma escena empaquetada con 4 niveles de detalle (100%/50%/25%/10%, decimados por fusion con splat-transform) y troceada en chunks con arbol espacial. En escritorio el visor la prefiere: solo carga y ordena lo que la camara ve, detalle pleno de cerca, menos gaussianas a lo lejos (subpixel), presupuesto global de 3,5 M como garantia de fps. sogUrl queda como respaldo y para ?sog=.",
       "entryDistanceMeters": 0,
       "exitDistanceMeters": 70,
       "captureDate": "2026-08-17 (prototipo: parque de prueba, no el sendero)",
+      "sourceNote": "Version de alcance completo (19/08): mismo entrenamiento de 60 mil pasos que la anterior, pero re-limpiado SIN caja de recorte (solo agujas p99,7 y niebla por opacidad). 4,82 M de gaussianas; ahora se ven el fondo de la alameda, el parque infantil entero, los edificios y el cielo. Mismo marco de mundo: el registro de la escena Luma y el trazado NO cambian.",
       "rotationNote": "Nivelacion calculada desde las 987 poses de camara de COLMAP: lleva el 'arriba' real de la escena al eje Y del motor. Se recalcula por escena.",
       "sceneUp": {
         "x": -0.204,
@@ -38,6 +44,20 @@
       "entryDistanceMeters": 140,
       "exitDistanceMeters": 200,
       "captureDate": "[por definir tras la captura V2]"
+    },
+    {
+      "id": "scene-01-luma",
+      "order": 90,
+      "sogUrl": "assets/scenes/scene-01-luma/meta.json",
+      "render": "luma",
+      "captureDate": "2026-08-18 (alterna: mismo parque, reconstruida por Luma desde el ZIP de fotos)",
+      "note": "Tecnica alterna de scene-01, conmutable con ?render=luma (o el switch del visor). No entra al recorrido por defecto (order alto).",
+      "baked": true,
+      "coordenadasNota": "REGISTRADA sobre el marco de mundo de scene-01: nivelacion, guinada, escala (1,24629) y traslacion horneadas en el archivo con registro automatico (ICP con correccion de pendiente, RMS 0,125 u). La alameda es casi simetrica y el ICP tenia dos soluciones a 180 grados casi empatadas: la orientacion correcta la fijo Juan contra los referentes reales (muro a la izquierda, parque infantil a la derecha). baked:true le dice al visor que NO aplique ninguna rotacion (ni la del ejemplo oficial): el archivo YA esta en coordenadas del mundo. Usa config/track.json igual que scene-01: cualquier POI o fuente de sonido cae en el mismo punto fisico en ambas tecnicas.",
+      "forwardOnly": true,
+      "forwardOnlyNote": "La reconstruccion solo aguanta vistas hacia adelante: en reversa se ve mal. El visor bloquea retroceder cuando la escena activa lo pide.",
+      "pitchDownLimit": 48,
+      "pitchDownLimitNote": "Tope del picado hacia abajo (grados). Muy cerca del suelo las gaussianas se ven como brochazos: se impide meter la camara ahi."
     }
   ]
 }

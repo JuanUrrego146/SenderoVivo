@@ -1,6 +1,11 @@
 # Cabeceras para Cloudflare Pages.
 # Las escenas son inmutables: se cachean un año para que la segunda visita
-# no vuelva a descargar los 56 MB.
+# no vuelva a descargar decenas de MB.
+# CONVENCION OBLIGATORIA por culpa de este "immutable": los archivos de una
+# carpeta de escena YA PUBLICADA no se sobrescriben jamas — una version nueva
+# va en una CARPETA nueva (scene-01-v2/, scene-01-stream/, ...) y se apunta
+# desde config/scenes.json. Si se sobrescribe, los visitantes que ya la
+# tienen cacheada siguen viendo la vieja hasta un anio (docs/08 par. 8).
 /assets/scenes/*
   Cache-Control: public, max-age=31536000, immutable
 

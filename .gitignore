@@ -130,6 +130,9 @@ desktop.ini
 tmp/
 temp/
 *.log
+# Cache de autotune de Burn/CubeCL (lo deja Brush al entrenar desde la raiz);
+# sin esta linea solo quedaba ignorado de rebote porque todo termina en .log
+target/
 
 # Archivos de bloqueo de Word
 ~$*
