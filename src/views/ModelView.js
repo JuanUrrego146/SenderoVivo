@@ -1,35 +1,20 @@
-﻿export class ModelViewer {
+```js
+export class ModelView {
 
     constructor(container) {
 
         this.container = container;
 
         this.model = null;
-
     }
 
 
     async load(url) {
 
         console.log('=================================');
-        console.log('MODEL VIEWER');
-        console.log('Cargando modelo:', url);
+        console.log('MODELO 3D');
+        console.log('Cargando:', url);
         console.log('=================================');
-
-
-        /*
-         * =====================================================
-         * VALIDAR CONTENEDOR
-         * =====================================================
-         */
-
-        if (!this.container) {
-
-            throw new Error(
-                'No existe el contenedor del modelo 3D.'
-            );
-
-        }
 
 
         /*
@@ -41,15 +26,9 @@
         await this._loadModelViewer();
 
 
-        console.log(
-            'Model Viewer disponible:',
-            !!customElements.get('model-viewer')
-        );
-
-
         /*
          * =====================================================
-         * LIMPIAR
+         * LIMPIAR CONTENEDOR
          * =====================================================
          */
 
@@ -63,22 +42,19 @@
          */
 
         const model =
-            document.createElement(
-                'model-viewer'
-            );
+            document.createElement('model-viewer');
 
 
-        this.model =
-            model;
+        this.model = model;
 
 
         /*
          * =====================================================
-         * URL DEL GLB
+         * RUTA DEL MODELO
          * =====================================================
          */
 
-        const absoluteUrl =
+        const modelUrl =
             new URL(
                 url,
                 window.location.href
@@ -86,23 +62,34 @@
 
 
         console.log(
-            'URL absoluta del GLB:',
-            absoluteUrl
+            'GLB:',
+            modelUrl
         );
-
-
-        model.src =
-            absoluteUrl;
 
 
         /*
          * =====================================================
-         * ATRIBUTOS
+         * CONFIGURACIÓN
          * =====================================================
          */
 
         model.setAttribute(
+            'src',
+            modelUrl
+        );
+
+        model.setAttribute(
+            'alt',
+            'Modelo 3D de la golondrina plomiza'
+        );
+
+        model.setAttribute(
             'camera-controls',
+            ''
+        );
+
+        model.setAttribute(
+            'auto-rotate',
             ''
         );
 
@@ -117,19 +104,24 @@
         );
 
         model.setAttribute(
-            'shadow-softness',
-            '0.8'
+            'exposure',
+            '1'
         );
 
         model.setAttribute(
-            'exposure',
-            '1'
+            'loading',
+            'eager'
+        );
+
+        model.setAttribute(
+            'reveal',
+            'auto'
         );
 
 
         /*
          * =====================================================
-         * ESTILO
+         * ESTILOS
          * =====================================================
          */
 
@@ -139,16 +131,25 @@
         model.style.height =
             '100%';
 
+        model.style.minHeight =
+            '220px';
+
         model.style.display =
             'block';
 
         model.style.background =
             '#101510';
 
+        model.style.borderRadius =
+            '16px';
+
+        model.style.overflow =
+            'hidden';
+
 
         /*
          * =====================================================
-         * DEBUG LOAD
+         * EVENTO LOAD
          * =====================================================
          */
 
@@ -161,12 +162,7 @@
                 );
 
                 console.log(
-                    '✅ GLB CARGADO CORRECTAMENTE'
-                );
-
-                console.log(
-                    'Modelo:',
-                    absoluteUrl
+                    '✅ MODELO 3D VISIBLE'
                 );
 
                 console.log(
@@ -179,7 +175,7 @@
 
         /*
          * =====================================================
-         * DEBUG ERROR
+         * EVENTO ERROR
          * =====================================================
          */
 
@@ -192,16 +188,15 @@
                 );
 
                 console.error(
-                    '❌ ERROR CARGANDO GLB'
+                    '❌ ERROR CARGANDO MODELO 3D'
                 );
 
                 console.error(
                     'URL:',
-                    absoluteUrl
+                    modelUrl
                 );
 
                 console.error(
-                    'Evento:',
                     event
                 );
 
@@ -226,96 +221,20 @@
 
         /*
          * =====================================================
-         * ESPERAR CARGA
+         * ESPERAR UN MOMENTO PARA QUE RENDERICE
          * =====================================================
          */
 
         await new Promise(
-            (resolve, reject) => {
-
-                let finished =
-                    false;
-
-
-                const timeout =
-                    setTimeout(
-                        () => {
-
-                            if (finished) {
-                                return;
-                            }
-
-                            finished =
-                                true;
-
-                            reject(
-                                new Error(
-                                    'El modelo GLB tardó demasiado en cargar.'
-                                )
-                            );
-
-                        },
-                        20000
-                    );
-
-
-                model.addEventListener(
-                    'load',
-                    () => {
-
-                        if (finished) {
-                            return;
-                        }
-
-                        finished =
-                            true;
-
-                        clearTimeout(
-                            timeout
-                        );
-
-                        resolve();
-
-                    },
-                    {
-                        once: true
-                    }
-                );
-
-
-                model.addEventListener(
-                    'error',
-                    () => {
-
-                        if (finished) {
-                            return;
-                        }
-
-                        finished =
-                            true;
-
-                        clearTimeout(
-                            timeout
-                        );
-
-                        reject(
-                            new Error(
-                                `No se pudo cargar el GLB: ${absoluteUrl}`
-                            )
-                        );
-
-                    },
-                    {
-                        once: true
-                    }
-                );
-
-            }
+            resolve =>
+                requestAnimationFrame(
+                    () => resolve()
+                )
         );
 
 
         console.log(
-            '✅ Modelo 3D cargado correctamente.'
+            'Elemento <model-viewer> agregado al DOM'
         );
 
 
@@ -323,12 +242,16 @@
     }
 
 
+    /*
+     * =========================================================
+     * CARGAR LIBRERÍA MODEL-VIEWER
+     * =========================================================
+     */
+
     async _loadModelViewer() {
 
         /*
-         * =====================================================
-         * YA ESTÁ CARGADO
-         * =====================================================
+         * Si ya existe, no hacemos nada.
          */
 
         if (
@@ -338,7 +261,7 @@
         ) {
 
             console.log(
-                'Model Viewer ya estaba cargado.'
+                'Model Viewer ya disponible'
             );
 
             return;
@@ -346,9 +269,7 @@
 
 
         /*
-         * =====================================================
-         * BUSCAR SCRIPT EXISTENTE
-         * =====================================================
+         * Buscar si ya existe un script.
          */
 
         let script =
@@ -358,9 +279,7 @@
 
 
         /*
-         * =====================================================
-         * CREAR SCRIPT
-         * =====================================================
+         * Crear script si no existe.
          */
 
         if (!script) {
@@ -370,52 +289,32 @@
                     'script'
                 );
 
+
             script.type =
                 'module';
+
 
             script.src =
                 'https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js';
 
+
             script.dataset.modelViewer =
                 'true';
-
-
-            script.addEventListener(
-                'load',
-                () => {
-
-                    console.log(
-                        '✅ Script de Model Viewer cargado.'
-                    );
-
-                }
-            );
-
-
-            script.addEventListener(
-                'error',
-                (error) => {
-
-                    console.error(
-                        '❌ No se pudo cargar Model Viewer:',
-                        error
-                    );
-
-                }
-            );
 
 
             document.head.appendChild(
                 script
             );
 
+
+            console.log(
+                'Cargando librería Model Viewer...'
+            );
         }
 
 
         /*
-         * =====================================================
-         * ESPERAR DEFINICIÓN
-         * =====================================================
+         * Esperar a que el componente exista.
          */
 
         await customElements.whenDefined(
@@ -424,11 +323,16 @@
 
 
         console.log(
-            '✅ Model Viewer disponible.'
+            '✅ Model Viewer listo'
         );
-
     }
 
+
+    /*
+     * =========================================================
+     * DESTRUIR
+     * =========================================================
+     */
 
     destroy() {
 
@@ -440,7 +344,6 @@
 
             this.model =
                 null;
-
         }
 
 
@@ -450,9 +353,7 @@
 
             this.container.innerHTML =
                 '';
-
         }
-
     }
-
 }
+```

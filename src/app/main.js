@@ -23,9 +23,10 @@ import {
 import { TrailModel } from '../models/TrailModel.js';
 import { TourEngine } from '../engine/TourEngine.js';
 import { TrailRecorder } from '../engine/TrailRecorder.js';
-import { TrailMarkers } from '../engine/TrailMarkers.js';
+import { TrailArrowsView } from '../views/TrailArrowsView.js';
 import { PoiManager } from '../poi/PoiManager.js';
 import { PoiCard } from '../poi/PoiCard.js';
+import { ShellView } from '../views/ShellView.js';
 import AmbienceController from '../audio/AmbienceController.js';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
@@ -277,7 +278,10 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
             // eligen la integrada y el visor va a tirones sin razon aparente).
             powerPreference: 'high-performance'
         }
+        
     });
+    const shellView = new ShellView();
+    window.senderoShellView = shellView;
     app.setCanvasFillMode(FILLMODE_FILL_WINDOW);
     app.setCanvasResolution(RESOLUTION_AUTO);
     // En celular el render por defecto sale borroso (1 píxel de canvas por punto
@@ -506,8 +510,26 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
     tour.start();
     window.senderoTour = tour;
     // Flechas dentro de la escena, sobre el camino: se tocan para avanzar.
-    window.senderoMarkers = new TrailMarkers(app, camera, tour, { stepDistance: 3.2, groundOffset: -0.6 });
+   window.senderoMarkers = new TrailArrowsView(
+    app,
+    camera,
+    tour,
+    {
+        stepDistance: 3.2,
+        size: 1.1,
+        groundOffset: -0.6,
+        onlyVisible: true
+    }
+);
+    // Las flechas solo emiten solicitudes; TourEngine ejecuta el movimiento.
+    app.on('trail:request-walk', ({ direction }) => {
+        tour.press(direction > 0 ? 'forward' : 'back');
+    });
 
+    app.on('trail:request-stop', () => {
+        tour.release('forward');
+        tour.release('back');
+    });
     showHint(
         'Toca las <strong>flechas del camino</strong> para avanzar · también <strong>W A S D</strong><br>' +
         '<strong>R</strong> subir la vista · <strong>F</strong> bajarla · arrastra para mirar en 360°<br>' +
