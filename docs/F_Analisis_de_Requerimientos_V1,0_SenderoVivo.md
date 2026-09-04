@@ -145,7 +145,7 @@ Formato 08-IF-019
 
 ## 3.1 Justificación de la necesidad
 
-Los senderos de los Cerros Orientales de Bogotá son gratuitos y se reservan mediante la aplicación del Acueducto. El acceso está resuelto; la información para recorrerlos con criterio, no. Quien va a la Quebrada La Vieja por primera vez no sabe cuánto dura el recorrido, qué tan exigente es, hasta dónde alcanzará a llegar ni por dónde va exactamente el camino autorizado. El sendero completo son 7,3 kilómetros, más de 406 metros de desnivel y alrededor de 3 horas de caminata.
+Los senderos de los Cerros Orientales de Bogotá son gratuitos y se reservan mediante la aplicación del Acueducto. El acceso está resuelto; la información para recorrerlos con criterio, no. Quien va al sendero Santa Ana - La Aguadora por primera vez no sabe cuánto dura el recorrido, qué tan exigente es, hasta dónde alcanzará a llegar ni por dónde va exactamente el camino autorizado. El circuito del Bosque de Pinos son 3,1 kilómetros, y el desnivel y la duración no los publica ninguna fuente oficial.
 
 De esa falta de información se derivan cuatro consecuencias observables: las personas se devuelven a mitad de camino porque subieron sin saber a qué se enfrentaban; se salen del trazado autorizado dentro de una reserva natural protegida, pisando bosque altoandino que tarda décadas en recuperarse; caminan sin entender el ecosistema que atraviesan, de modo que el enorme contenido biológico del sendero pasa desapercibido; y quien no puede subir —por condición física, edad, discapacidad, tiempo o distancia— nunca llega a conocer el lugar, pese a que está a 700 metros de una estación de transporte masivo.
 
