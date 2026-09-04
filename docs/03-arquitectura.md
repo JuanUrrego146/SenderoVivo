@@ -1,6 +1,6 @@
 # Arquitectura y ámbitos: Sendero Vivo
 
-> Versión 2,0, 18/08/2026 · Responsable: Juan Urrego (antes «arquitectura»; absorbe
+> Versión 2,1, 26/08/2026 · Responsable: Juan Urrego (antes «arquitectura»; absorbe
 > «ámbitos de los tres programadores», 09).
 > Todos los diagramas están en Mermaid: GitHub los renderiza de forma nativa y una IA de código los lee como texto.
 >
@@ -8,6 +8,7 @@
 > Cada módulo del §3 está marcado como **[existe]** o **[previsto]** en la tabla de estado.
 > Un agente que importe un módulo `[previsto]` va a fallar: primero se crea, respetando la
 > firma de aquí. Las firmas de los módulos `[existe]` están verificadas contra el código real.
+> La versión 2,1 añade el §3.1 (capas MVC) y actualiza el estado de los módulos.
 
 ---
 
@@ -161,7 +162,7 @@ flowchart LR
 
 Nombres en **inglés**, según la convención del proyecto.
 
-### 3.0 Estado real de los módulos (18/08/2026)
+### 3.0 Estado real de los módulos (26/08/2026)
 
 | Módulo | Estado | Dónde / nota |
 |---|---|---|
@@ -169,14 +170,15 @@ Nombres en **inglés**, según la convención del proyecto.
 | `TrailPath` | **[existe]** | `src/engine/TrailPath.js`. Con corredor lateral (`corridorRadius`) |
 | `TrailMarkers` | **[existe]** | `src/engine/TrailMarkers.js`. Flechas 3D en el mundo, avance gradual. No estaba en el diseño original: nació en el prototipo |
 | `TrailRecorder` | **[existe]** | `src/engine/TrailRecorder.js`. Editor del trazado (`?editor=1`), exporta `track.json` |
-| `SceneLoader` | **[existe]** | `src/engine/SceneLoader.js`. Carga del SOG, nivelación con `sceneUp`, `customAabb`, espera de render estable. Sin caché multi-escena todavía |
-| Overlay de carga/error | **[existe]** | `src/ui/overlay.js` (RNF-007) + `src/ui/tokens.js` (lectura de tokens) |
+| `SceneLoader` | **[previsto]** | La carga del SOG vive hoy dentro de `src/app/main.js` |
+| Overlay de carga/error | **[existe]** | `src/ui/shell.js` (RNF-007) |
 | `CameraRig` | **disuelto** | Sus responsabilidades viven dentro de `TourEngine`. Si S4 exige separarlo, se extrae entonces |
-| `PoiManager`, `PoiCard`, `ModelViewer` | [previsto] | `src/poi/` — David. El contrato de abajo es el vigente |
+| `PoiManager`, `PoiCard`, `ModelViewer` | **[existe]** | `src/poi/PoiManager.js`, `src/poi/PoiCard.js`, `src/poi/ModelViewer.js` |
 | `TrailDataLayer`, `GpsTrack` | [previsto] | `src/data/` — David |
-| `AmbienceController`, `SpatialAudioSource`, `AudioPlayer` | [previsto] | `src/audio/` — David. Prerrequisitos ya puestos: la cámara lleva `audiolistener` y `tour:progress` publica posición y orientación |
+| `AmbienceController`, `SpatialAudioSource`, `AudioPlayer` | **[existe]** / [previsto] | `AmbienceController` en `src/audio/AmbienceController.js`; `SpatialAudioSource` y `AudioPlayer` siguen [previsto] |
 | `QualityProfile`, `LodController` | [previsto] | `src/engine/` — Alejandra |
 | `HudView` | [previsto] | `src/ui/` — Juan pinta, Eybar/Alberto diseñan. El prototipo tiene un HUD provisional dentro del hint |
+| `WorldModel` | **[huérfano]** | `src/WorldModel.js`, nadie lo importa; `main.js:249` usa su propia `loadWorldModel()`. Se elimina en SW-02 (#77) |
 
 ```mermaid
 classDiagram
@@ -366,6 +368,64 @@ classDiagram
     AmbienceController ..> QualityProfile : respeta maxSpatialAudioSources
     AmbienceController ..> TourEngine : escucha tour:progress
 ```
+
+### 3.1 Las tres capas: Modelo, Vista y Controlador
+
+El curso exige que el proyecto siga MVC. El código de hoy está organizado por
+módulo técnico (`engine/`, `poi/`, `ui/`, `audio/`), no por capa: esta subsección
+fija a qué capa pertenece cada archivo tal como está escrito ahora. El traslado de
+carpetas es trabajo de SW-02, SW-03 y SW-04; aquí solo se decide el reparto.
+
+**Las tres capas, en este proyecto:**
+
+- **MODELO** — datos y reglas del dominio. No conoce la pantalla. No recibe `app`, no crea `Entity`, `Material` ni `Texture`, no toca el DOM. Puede usar tipos matemáticos de PlayCanvas (`Vec3`) porque son aritmética, no render. Se puede probar con números sueltos, sin motor y sin navegador.
+- **VISTA** — todo lo que produce píxeles o DOM. Recibe datos ya decididos y los pinta. No decide nada: cuando el visitante actúa, publica la intención y se olvida.
+- **CONTROLADOR** — escucha intenciones, cambia el Modelo y avisa a las Vistas. No pinta.
+
+| Archivo | Capa | Por qué | Destino |
+|---|---|---|---|
+| `config/*.json` | Modelo | los datos del dominio; el código no los inventa | se queda donde está (no es código) |
+| `src/engine/TrailPath.js` | Modelo | geometría pura: recibe distancias, devuelve posiciones; `clampToTrail` es regla de dominio (RF-004) | `src/models/` (SW-02, #77) |
+| `src/engine/TourEngine.js` | Controlador | decide el avance, lee la entrada, publica `tour:progress`. El estado que guarda (`distance`, `yaw`, `pitch`, `eyeHeight`) es Modelo incrustado: se extrae como `TourState` en SW-02 | `src/controllers/` (SW-04, #81) |
+| `src/engine/TrailMarkers.js` | Mixta | flechas 3D = Vista; picking y avance = Controlador. Se parte entre SW-03 y SW-04 | flechas → `src/views/` (#79); picking y avance → `src/controllers/` (#81) |
+| `src/engine/TrailRecorder.js` | Controlador | herramienta de edición del trazado (`?editor=1`) | `src/controllers/` (SW-04, #81) |
+| `src/poi/PoiManager.js` | Mixta | decide qué POI se abre = Controlador; crea las entidades de los marcadores = Vista. Se parte entre SW-03 y SW-04 | decisión → `src/controllers/` (#81); marcadores → `src/views/` (#79) |
+| `src/poi/PoiCard.js` | Vista | la ficha en DOM. Ya se comporta como Vista: dispara `poi:request-close` y no cierra nada | `src/views/` (SW-03, #79) |
+| `src/poi/ModelViewer.js` | Vista | visor 3D dentro de la ficha | `src/views/` (SW-03, #79) |
+| `src/audio/AmbienceController.js` | Controlador | decide qué suena; no pinta | `src/controllers/` (SW-04, #81) |
+| `src/ui/shell.js` | Vista | overlay, HUD y pestañas. Hoy incumple la capa: ver la nota de deuda | `src/views/` (SW-03, #79) |
+| `src/app/main.js` | Controlador | arranque y cableado de todo | `src/controllers/` (SW-04, #81) |
+| `src/WorldModel.js` | ninguna | código muerto, ver la nota de deuda | se elimina en SW-02 (#77) |
+| `index.html` | Vista | el shell del visor | se queda donde está |
+| `styles/*.css` | Vista | `tokens.css` es la única fuente de color | se queda donde está |
+
+**Regla de comunicación.** Dos familias de eventos:
+
+- Eventos de **intención**, `*:request-*`: los dispara la Vista, los escucha el Controlador. Significan «el visitante quiere esto»; nadie garantiza que pase.
+- Eventos de **hecho**: los dispara el Controlador, los escuchan las Vistas. Significan «esto ya pasó, píntalo».
+
+Todos van por el bus de PlayCanvas: `app.fire(nombre, payload)` y `app.on(nombre, handler)`. Espacios de nombres permitidos, lista cerrada: `tour:*`, `poi:*` y, cuando existan, `scene:*` y `audio:*`.
+
+**Eventos vigentes:**
+
+| Evento | Familia | Lo dispara | Lo escucha | Payload |
+|---|---|---|---|---|
+| `tour:progress` | Hecho | `TourEngine.js:216` | `main.js:518` | `{ distance, total, distanceMeters, position, yaw, pitch }` |
+| `tour:eyeheight` | Hecho | `TourEngine.js:86` | `main.js:522` | número |
+| `poi:open` | Hecho | `PoiManager.js:1009` | `PoiCard.js:40` y `PoiManager.js:78` | el objeto `poi` |
+| `poi:close` | Hecho | `PoiManager.js:1028` | `PoiCard.js:45` y `PoiManager.js:83` | ninguno |
+| `poi:request-close` | Intención | `PoiCard.js:671` y `:692` | `main.js:393` → `poiManager.closePoi()` | ninguno |
+
+No existe `poi:selected`. El par real, ya en producción, es `poi:open` / `poi:close`.
+
+**Deuda conocida (26/08/2026):**
+
+- **`src/WorldModel.js` está huérfano y mal nombrado.** Nadie lo importa; `main.js:249` define su propia `loadWorldModel()` local. Pese al nombre, no es Modelo: crea `Entity` y la mete en la escena. Se elimina en SW-02 (#77).
+- **`src/ui/shell.js` habla por globales `window.sendero*` en vez de por eventos.** Se carga como script clásico (`index.html:433`, sin `type="module"`) y llama métodos de Controlador directamente (`window.senderoAmbience.toggle()`, `window.senderoPoiManager`, entre otros). Se resuelve en SW-04 (#81).
+- **`TrailMarkers` mezcla Vista y Controlador.** Crea las flechas (Vista) y además hace picking y mueve al visitante (Controlador). Se resuelve entre SW-03 (#79, flechas) y SW-04 (#81, picking y avance).
+- **`PoiManager` mezcla Vista y Controlador.** Decide qué POI se abre (Controlador) y crea las entidades de los marcadores (Vista). Se resuelve entre SW-04 (#81, decisión) y SW-03 (#79, marcadores).
+
+Estos cuatro incumplimientos están declarados y fechados, no descubiertos: son el trabajo de las historias siguientes.
 
 ### Notas de diseño
 
@@ -722,6 +782,8 @@ Invariantes. Una PR que rompa cualquiera de estas se rechaza sin discusión.
 13. **Ningún módulo lee la cámara para saber dónde está el visitante.** Se escucha `tour:progress`, que publica `distanceMeters`.
 14. **Ningún archivo `.js` escribe un color literal.** Todo color sale de `styles/tokens.css`.
 15. **Añadir una fuente de sonido no toca código.** Todo vive en `soundscape.json`.
+16. **Las importaciones van en una sola dirección: Vista → Controlador → Modelo.** Un Modelo nunca importa una Vista ni un Controlador. Una Vista nunca importa un Controlador. Quien importa hacia arriba está mal colocado (§3.1).
+17. **Una Vista no decide.** Si una Vista necesita que algo cambie, dispara un evento de intención (`*:request-*`) y se olvida. Decide el Controlador, que responde con un evento de hecho. Ninguna Vista llama a un método de Controlador (§3.1).
 
 ---
 

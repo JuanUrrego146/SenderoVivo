@@ -1,0 +1,820 @@
+<title>Las ocho pasadas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap">
+
+<style>
+    /* Paleta del proyecto (docs/06 §B.2 y styles/tokens.css): verdes del bosque,
+       grises con sesgo verde. Nada de rojo/naranja/amarillo: lo correcto y lo
+       incorrecto se distinguen por FORMA además de color (RNF-006). */
+    :root {
+        --papel: #EDF1EF;
+        --tarjeta: #FFFFFF;
+        --tinta: #141917;
+        --tinta-media: #4A534E;
+        --tinta-suave: #6E7873;
+        --linea: #C9D2CD;
+        --linea-suave: #DDE4E1;
+        --verde: #1F5D3A;
+        --verde-vivo: #2E8B57;
+        --verde-tenue: #DCEDE3;
+        --agua: #3C8385;
+        --sombra: 0 1px 2px rgba(20, 25, 23, .06), 0 8px 24px -12px rgba(20, 25, 23, .18);
+    }
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+            --papel: #0E1210;
+            --tarjeta: #171D1A;
+            --tinta: #E8EEEA;
+            --tinta-media: #AAB4AF;
+            --tinta-suave: #8A948F;
+            --linea: #2E3833;
+            --linea-suave: #232B27;
+            --verde: #6FCF97;
+            --verde-vivo: #6FCF97;
+            --verde-tenue: #1A2B22;
+            --agua: #4FA3A5;
+            --sombra: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -12px rgba(0, 0, 0, .6);
+        }
+    }
+    :root[data-theme="dark"] {
+        --papel: #0E1210;
+        --tarjeta: #171D1A;
+        --tinta: #E8EEEA;
+        --tinta-media: #AAB4AF;
+        --tinta-suave: #8A948F;
+        --linea: #2E3833;
+        --linea-suave: #232B27;
+        --verde: #6FCF97;
+        --verde-vivo: #6FCF97;
+        --verde-tenue: #1A2B22;
+        --agua: #4FA3A5;
+        --sombra: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -12px rgba(0, 0, 0, .6);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        background: var(--papel);
+        color: var(--tinta);
+        font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .hoja {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 56px 28px 96px;
+        display: flex;
+        flex-direction: column;
+        gap: 44px;
+    }
+
+    /* ── Encabezado ─────────────────────────────────────────── */
+    .cabecera { display: flex; flex-direction: column; gap: 14px; }
+    .eyebrow {
+        font-family: "Fira Code", ui-monospace, monospace;
+        font-size: 12px;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+        color: var(--verde);
+        font-weight: 600;
+    }
+    h1 {
+        font-size: clamp(34px, 6vw, 46px);
+        line-height: 1.05;
+        letter-spacing: -.022em;
+        font-weight: 800;
+        margin: 0;
+        text-wrap: balance;
+    }
+    .bajada {
+        font-size: 18px;
+        color: var(--tinta-media);
+        margin: 0;
+        max-width: 60ch;
+    }
+    .ficha {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 28px;
+        padding-top: 14px;
+        border-top: 1px solid var(--linea);
+        font-family: "Fira Code", ui-monospace, monospace;
+        font-size: 12.5px;
+        color: var(--tinta-suave);
+    }
+    .ficha b { color: var(--tinta-media); font-weight: 500; }
+
+    /* ── Secciones ──────────────────────────────────────────── */
+    section { display: flex; flex-direction: column; gap: 18px; }
+    h2 {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: var(--tinta-suave);
+        margin: 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--tinta);
+    }
+    h3 {
+        font-size: 19px;
+        font-weight: 700;
+        letter-spacing: -.01em;
+        margin: 0;
+        text-wrap: balance;
+    }
+    p { margin: 0; max-width: 68ch; }
+    .apunte { color: var(--tinta-media); font-size: 15px; }
+
+    /* ── Lo que cambió ──────────────────────────────────────── */
+    .cambios { display: flex; flex-direction: column; gap: 10px; }
+    .cambio {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 14px;
+        align-items: baseline;
+        background: var(--tarjeta);
+        border: 1px solid var(--linea);
+        border-radius: 3px;
+        padding: 14px 18px;
+        box-shadow: var(--sombra);
+    }
+    .cambio .num {
+        font-family: "Fira Code", ui-monospace, monospace;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--verde);
+    }
+    .cambio .txt { font-size: 15px; }
+    .antes {
+        font-family: "Fira Code", ui-monospace, monospace;
+        font-size: 13px;
+        color: var(--tinta-suave);
+        text-decoration: line-through;
+        text-decoration-thickness: 1px;
+    }
+    .ahora {
+        font-family: "Fira Code", ui-monospace, monospace;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--verde);
+    }
+
+    /* ── Tabla de ajustes ───────────────────────────────────── */
+    .envoltura-tabla { overflow-x: auto; }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14.5px;
+        background: var(--tarjeta);
+        border: 1px solid var(--linea);
+        border-radius: 3px;
+    }
+    caption {
+        caption-side: top;
+        text-align: left;
+        font-size: 15px;
+        color: var(--tinta-media);
+        padding-bottom: 12px;
+        max-width: 68ch;
+    }
+    th, td {
+        text-align: left;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--linea-suave);
+        vertical-align: top;
+    }
+    thead th {
+        font-size: 11.5px;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--tinta-suave);
+        font-weight: 600;
+        border-bottom: 1px solid var(--linea);
+        white-space: nowrap;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    td.valor {
+        font-family: "Fira Code", ui-monospace, monospace;
+        font-weight: 600;
+        color: var(--verde);
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+    }
+    td.motivo { color: var(--tinta-media); font-size: 14px; }
+    th.paso { width: 52px; }
+    td.paso {
+        font-family: "Fira Code", ui-monospace, monospace;
+        font-weight: 600;
+        color: var(--verde);
+    }
+
+    /* ── Figuras ────────────────────────────────────────────── */
+    figure {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: var(--tarjeta);
+        border: 1px solid var(--linea);
+        border-radius: 3px;
+        padding: 22px;
+        box-shadow: var(--sombra);
+    }
+    figure svg { width: 100%; height: auto; display: block; color: var(--tinta); }
+    figcaption {
+        font-size: 14px;
+        color: var(--tinta-media);
+        padding-top: 12px;
+        border-top: 1px solid var(--linea-suave);
+        max-width: 70ch;
+    }
+    figcaption b { color: var(--tinta); font-weight: 600; }
+
+    /* ── Listas de campo ────────────────────────────────────── */
+    .lista { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; }
+    .lista li {
+        display: grid;
+        grid-template-columns: 26px 1fr;
+        gap: 10px;
+        padding: 9px 0;
+        border-bottom: 1px solid var(--linea-suave);
+        font-size: 15px;
+        align-items: start;
+    }
+    .lista li:last-child { border-bottom: none; }
+    .caja {
+        width: 15px; height: 15px;
+        border: 1.5px solid var(--tinta-suave);
+        border-radius: 2px;
+        margin-top: 4px;
+    }
+    /* Pasos numerados: la numeración es real, es una secuencia de ejecución */
+    .pasos {
+        list-style: none;
+        counter-reset: paso;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .pasos li {
+        counter-increment: paso;
+        display: grid;
+        grid-template-columns: 30px 1fr;
+        gap: 14px;
+        align-items: baseline;
+        font-size: 15.5px;
+    }
+    .pasos li::before {
+        content: counter(paso);
+        font-family: "Fira Code", ui-monospace, monospace;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--verde);
+        border-bottom: 2px solid var(--verde-tenue);
+        text-align: center;
+        padding-bottom: 2px;
+    }
+    .pasos em { color: var(--verde); font-style: normal; font-weight: 600; }
+
+    .no { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; }
+    .no li {
+        display: grid;
+        grid-template-columns: 26px 1fr;
+        gap: 10px;
+        padding: 9px 0;
+        border-bottom: 1px solid var(--linea-suave);
+        font-size: 15px;
+        align-items: start;
+    }
+    .no li:last-child { border-bottom: none; }
+    .cruz {
+        font-family: "Fira Code", ui-monospace, monospace;
+        font-weight: 700;
+        color: var(--tinta-suave);
+        line-height: 1.5;
+    }
+    .no li b { font-weight: 600; }
+
+    /* ── Bloque de regla ────────────────────────────────────── */
+    .regla {
+        background: var(--verde-tenue);
+        border-left: 3px solid var(--verde-vivo);
+        border-radius: 0 3px 3px 0;
+        padding: 18px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .regla .rotulo {
+        font-family: "Fira Code", ui-monospace, monospace;
+        font-size: 11.5px;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--verde);
+    }
+    .regla p { font-size: 15.5px; }
+
+    .pie {
+        border-top: 1px solid var(--linea);
+        padding-top: 20px;
+        font-size: 13.5px;
+        color: var(--tinta-suave);
+        max-width: 70ch;
+    }
+    .pie a { color: var(--agua); }
+
+    @media (max-width: 560px) {
+        .hoja { padding: 36px 18px 72px; gap: 36px; }
+        th, td { padding: 9px 11px; }
+        figure { padding: 14px; }
+    }
+
+    @media print {
+        body { background: #fff; color: #000; }
+        .hoja { max-width: none; padding: 0; gap: 26px; }
+        figure, .cambio, table { box-shadow: none; break-inside: avoid; }
+        section { break-inside: avoid; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+    }
+</style>
+
+<div class="hoja">
+
+    <header class="cabecera">
+        <div class="eyebrow">Sendero Vivo · Protocolo de campo</div>
+        <h1>Las ocho pasadas</h1>
+        <p class="bajada">Cómo grabar la Quebrada La Vieja para que la reconstrucción 3D salga
+            limpia. Se configura una vez al llegar y no se toca nada más hasta terminar.</p>
+        <div class="ficha">
+            <span><b>Versión</b> 2 · 26 ago 2026</span>
+            <span><b>Reemplaza</b> la v1 del prototipo del parque</span>
+            <span><b>Manual completo</b> docs/05 §§8–11</span>
+        </div>
+    </header>
+
+    <section>
+        <h2>Lo que cambió respecto a la vez pasada</h2>
+        <p class="apunte">El patrón de pasadas estaba bien. Lo que falló fue la ejecución: tres
+            ajustes explican la mayor parte de las agujas y la borrosidad del escaneo del parque.</p>
+        <div class="cambios">
+            <div class="cambio">
+                <span class="num">01</span>
+                <span class="txt">Obturación: <span class="antes">1/125 s</span> →
+                    <span class="ahora">1/500 s mínimo, 1/1000 s ideal</span>. A 1/125 caminando,
+                    el detalle fino sale movido y ningún entrenamiento lo recupera después.</span>
+            </div>
+            <div class="cambio">
+                <span class="num">02</span>
+                <span class="txt">Soporte: <span class="antes">video</span> →
+                    <span class="ahora">fotos</span>. El video arrastra compresión y desenfoque;
+                    con fotos se controla el instante y se borran las movidas una por una.</span>
+            </div>
+            <div class="cambio">
+                <span class="num">03</span>
+                <span class="txt">Pasadas laterales: <span class="antes">apuntar a 90°</span> →
+                    <span class="ahora">apuntar a 45°</span>. A 90° cada tronco cruza el encuadre
+                    tan rápido que pocas fotos lo ven.</span>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Por qué funciona · el paralaje</h2>
+        <p>Esta es la idea de la que depende todo lo demás. La profundidad se reconstruye por
+            <b>triangulación</b>: hace falta ver el mismo punto desde direcciones distintas. Y eso
+            se consigue <b>trasladando</b> la cámara respecto a lo que mira, no girándola.</p>
+
+        <figure>
+            <svg viewBox="0 0 720 360" role="img" aria-label="Vista desde arriba comparando dos formas de apuntar la cámara mientras se camina por el mismo sendero. A la izquierda, la persona avanza por el eje con la cámara mirando al frente: el ángulo hacia un árbol lejano cambia solo unos 6 grados entre la primera y la última foto. A la derecha, la persona avanza igual pero con la cámara girada 45 grados hacia el costado: el ángulo hacia un tronco del borde barre unos 68 grados.">
+                <defs>
+                    <marker id="pta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+                    </marker>
+                </defs>
+
+                <text x="16" y="20" font-family="Fira Code, monospace" font-size="11" fill="currentColor" opacity=".45">VISTA DESDE ARRIBA</text>
+
+                <!-- ═══════════ Panel A: mirando al frente ═══════════ -->
+                <text x="16" y="46" font-family="Fira Code, monospace" font-size="12.5" font-weight="700" fill="currentColor" opacity=".55">✗  CÁMARA AL FRENTE</text>
+
+                <!-- bordes del sendero -->
+                <line x1="88" y1="62" x2="88" y2="318" stroke="currentColor" stroke-width="1.2" opacity=".3" stroke-dasharray="3 4"/>
+                <line x1="252" y1="62" x2="252" y2="318" stroke="currentColor" stroke-width="1.2" opacity=".3" stroke-dasharray="3 4"/>
+                <text x="80" y="332" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" fill="currentColor" text-anchor="end" opacity=".45">borde</text>
+
+                <!-- eje del sendero -->
+                <line x1="170" y1="62" x2="170" y2="318" stroke="currentColor" stroke-width="1" opacity=".5" stroke-dasharray="9 4 2 4"/>
+                <text x="178" y="332" font-family="Fira Code, monospace" font-size="10.5" fill="currentColor" opacity=".55">EJE</text>
+
+                <!-- árbol objetivo, al frente -->
+                <circle cx="190" cy="80" r="11" fill="currentColor" opacity=".14"/>
+                <circle cx="190" cy="80" r="11" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".6"/>
+                <circle cx="190" cy="80" r="2.5" fill="currentColor" opacity=".7"/>
+                <text x="208" y="77" font-family="Plus Jakarta Sans, sans-serif" font-size="11.5" fill="currentColor" opacity=".7">árbol</text>
+                <text x="208" y="90" font-family="Plus Jakarta Sans, sans-serif" font-size="11.5" fill="currentColor" opacity=".7">de adelante</text>
+
+                <!-- rayos primera y última toma -->
+                <line x1="170" y1="278" x2="188" y2="91" stroke="currentColor" stroke-width="1.2" opacity=".6" stroke-dasharray="4 3"/>
+                <line x1="170" y1="150" x2="189" y2="91" stroke="currentColor" stroke-width="1.2" opacity=".6" stroke-dasharray="4 3"/>
+
+                <!-- ── muñeco 1 (abajo) mirando arriba ── -->
+                <polygon points="170,272 190,216 150,216" fill="currentColor" opacity=".12"/>
+                <circle cx="170" cy="278" r="6.5" fill="currentColor" opacity=".85"/>
+                <line x1="161" y1="284" x2="179" y2="284" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
+                <!-- muñeco 2 -->
+                <polygon points="170,214 190,158 150,158" fill="currentColor" opacity=".12"/>
+                <circle cx="170" cy="220" r="6.5" fill="currentColor" opacity=".85"/>
+                <line x1="161" y1="226" x2="179" y2="226" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
+                <!-- muñeco 3 -->
+                <polygon points="170,144 190,88 150,88" fill="currentColor" opacity=".12"/>
+                <circle cx="170" cy="150" r="6.5" fill="currentColor" opacity=".85"/>
+                <line x1="161" y1="156" x2="179" y2="156" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
+
+                <!-- por dónde camino -->
+                <line x1="112" y1="290" x2="112" y2="160" stroke="currentColor" stroke-width="1.5" opacity=".5" marker-end="url(#pta)" stroke-dasharray="5 4"/>
+                <text x="104" y="152" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="currentColor" text-anchor="middle" opacity=".55">camino</text>
+
+                <!-- ángulo en el árbol -->
+                <path d="M 184 103 A 24 24 0 0 0 196 102" fill="none" stroke="currentColor" stroke-width="2" opacity=".85"/>
+                <text x="218" y="116" font-family="Fira Code, monospace" font-size="15" font-weight="700" fill="currentColor" opacity=".9">≈6°</text>
+                
+
+                <line x1="360" y1="56" x2="360" y2="322" stroke="currentColor" stroke-width="1" opacity=".16"/>
+
+                <!-- ═══════════ Panel B: mirando a 45° ═══════════ -->
+                <text x="392" y="46" font-family="Fira Code, monospace" font-size="12.5" font-weight="700" fill="#2E8B57">✓  CÁMARA A 45°</text>
+
+                <line x1="448" y1="62" x2="448" y2="318" stroke="currentColor" stroke-width="1.2" opacity=".3" stroke-dasharray="3 4"/>
+                <line x1="612" y1="62" x2="612" y2="318" stroke="currentColor" stroke-width="1.2" opacity=".3" stroke-dasharray="3 4"/>
+                <line x1="530" y1="62" x2="530" y2="318" stroke="currentColor" stroke-width="1" opacity=".5" stroke-dasharray="9 4 2 4"/>
+                <text x="538" y="332" font-family="Fira Code, monospace" font-size="10.5" fill="currentColor" opacity=".55">EJE</text>
+
+                <!-- tronco del borde -->
+                <circle cx="440" cy="168" r="11" fill="#2E8B57" opacity=".16"/>
+                <circle cx="440" cy="168" r="11" fill="none" stroke="#2E8B57" stroke-width="1.8"/>
+                <circle cx="440" cy="168" r="2.5" fill="#2E8B57"/>
+                <text x="424" y="152" font-family="Plus Jakarta Sans, sans-serif" font-size="11.5" fill="currentColor" text-anchor="end" opacity=".7">tronco</text>
+                <text x="424" y="165" font-family="Plus Jakarta Sans, sans-serif" font-size="11.5" fill="currentColor" text-anchor="end" opacity=".7">del borde</text>
+
+                <!-- rayos primera y última -->
+                <line x1="530" y1="278" x2="449" y2="176" stroke="#2E8B57" stroke-width="1.2" opacity=".7" stroke-dasharray="4 3"/>
+                <line x1="530" y1="150" x2="451" y2="166" stroke="#2E8B57" stroke-width="1.2" opacity=".7" stroke-dasharray="4 3"/>
+
+                <!-- ── muñecos mirando arriba-izquierda 45° ── -->
+                <polygon points="530,272 505,218 476,247" fill="#2E8B57" opacity=".15"/>
+                <circle cx="530" cy="278" r="6.5" fill="currentColor" opacity=".85"/>
+                <line x1="536" y1="272" x2="524" y2="284" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
+
+                <polygon points="530,214 505,160 476,189" fill="#2E8B57" opacity=".15"/>
+                <circle cx="530" cy="220" r="6.5" fill="currentColor" opacity=".85"/>
+                <line x1="536" y1="214" x2="524" y2="226" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
+
+                <polygon points="530,144 505,90 476,119" fill="#2E8B57" opacity=".15"/>
+                <circle cx="530" cy="150" r="6.5" fill="currentColor" opacity=".85"/>
+                <line x1="536" y1="144" x2="524" y2="156" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
+
+                <!-- camino: el mismo -->
+                <line x1="590" y1="290" x2="590" y2="160" stroke="currentColor" stroke-width="1.5" opacity=".5" marker-end="url(#pta)" stroke-dasharray="5 4"/>
+                <text x="590" y="152" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="currentColor" text-anchor="middle" opacity=".55">camino igual</text>
+
+                <!-- ángulo abierto -->
+                <path d="M 468 186 A 32 32 0 0 0 470 152" fill="none" stroke="#2E8B57" stroke-width="2.2"/>
+                <text x="414" y="210" font-family="Fira Code, monospace" font-size="15" font-weight="700" fill="#2E8B57" text-anchor="end">≈68°</text>
+                
+
+                <!-- ═══ leyenda ═══ -->
+                <circle cx="24" cy="352" r="5" fill="currentColor" opacity=".85"/>
+                <line x1="17" y1="357" x2="31" y2="357" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+                <text x="40" y="356" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="currentColor" opacity=".6">tú, visto desde arriba</text>
+
+                <polygon points="196,357 216,347 216,357" fill="currentColor" opacity=".2"/>
+                <text x="224" y="356" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="currentColor" opacity=".6">lo que ve la cámara</text>
+
+                <line x1="392" y1="353" x2="418" y2="353" stroke="currentColor" stroke-width="1.5" opacity=".5" stroke-dasharray="5 4"/>
+                <text x="426" y="356" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="currentColor" opacity=".6">por dónde caminas</text>
+
+                <line x1="566" y1="353" x2="592" y2="353" stroke="currentColor" stroke-width="1" opacity=".5" stroke-dasharray="9 4 2 4"/>
+                <text x="600" y="356" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="currentColor" opacity=".6">eje del sendero</text>
+            </svg>
+            <figcaption>El mismo recorrido, el mismo número de fotos, resultado opuesto. Mirando al
+                frente, el árbol de adelante crece de tamaño pero apenas se desplaza: <b>el ángulo
+                entre la primera y la última foto es de unos pocos grados</b> y no hay con qué
+                triangular. Mirando en diagonal, el tronco del costado se ve venir, se pasa y se
+                deja atrás: <b>el mismo punto queda visto desde direcciones muy distintas</b>. Por
+                eso las pasadas laterales son las que reconstruyen y las frontales casi no.</figcaption>
+        </figure>
+
+        <div class="regla">
+            <span class="rotulo">La regla</span>
+            <p>Las frontales sirven para que el visitante sienta que camina. Las laterales y
+                cruzadas son las que construyen la geometría. Si hay que recortar la jornada, se
+                recortan frontales, nunca laterales.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Ajustes · se configuran una vez y no se tocan</h2>
+        <p class="apunte">Al llegar, con la luz del sitio. Antes de arrancar, comprobar que ningún
+            valor cambia solo al mover la cámara.</p>
+        <div class="envoltura-tabla">
+            <table>
+                <caption>Con la Sony en manual. En celular no hay diafragma: se compensa con ISO y
+                    se usa una app que permita fijar obturación (Blackmagic Camera).</caption>
+                <thead>
+                    <tr><th>Ajuste</th><th>Valor</th><th>Por qué</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Formato</td><td class="valor">Fotos RAW</td><td class="motivo">Video 4K 60 fps solo como respaldo</td></tr>
+                    <tr><td>Obturación</td><td class="valor">1/1000 s</td><td class="motivo">Nunca por debajo de 1/500 caminando</td></tr>
+                    <tr><td>Diafragma</td><td class="valor">f/8 – f/11</td><td class="motivo">Nitidez y profundidad de campo</td></tr>
+                    <tr><td>ISO</td><td class="valor">El más bajo posible</td><td class="motivo">Fijo. Antes grano que movido: si falta luz, sube ISO, no bajes obturación</td></tr>
+                    <tr><td>Exposición</td><td class="valor">Manual, bloqueada</td><td class="motivo">El ajuste crítico. En automático la escena parpadea entre fotos</td></tr>
+                    <tr><td>Balance de blancos</td><td class="valor">Fijo ~6500 K</td><td class="motivo">Consistencia de color entre tomas</td></tr>
+                    <tr><td>Enfoque</td><td class="valor">Manual a ~2 m</td><td class="motivo">Fijado y sin volver a tocarlo</td></tr>
+                    <tr><td>Lente</td><td class="valor">16 – 50 mm eq.</td><td class="motivo">En celular, 1× principal. Nunca el 0.5×</td></tr>
+                    <tr><td>Estabilización</td><td class="valor">Apagada</td><td class="motivo">Deforma cada cuadro de manera distinta</td></tr>
+                    <tr><td>Solape</td><td class="valor">60 – 80 %</td><td class="motivo">Entre fotos contiguas de la misma pasada</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <h2>Las ocho pasadas · en planta</h2>
+        <p>Tres carriles y cuatro alturas. Cada pasada es <b>un archivo aparte</b>: si una sale
+            mal se repite sola, sin contaminar las demás. Se corta la grabación antes de girar,
+            porque los giros solo producen cuadros inservibles.</p>
+
+        <figure>
+            <svg viewBox="0 0 720 320" role="img" aria-label="Tres esquemas vistos desde arriba, uno por tipo de pasada. En las frontales caminas por el eje del sendero con la cámara apuntando hacia adelante. En las de borde caminas pegado a un borde con la cámara cruzada hacia el centro. En las diagonales caminas por el eje con la cámara girada 45 grados hacia un costado.">
+                <defs>
+                    <marker id="fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+                    </marker>
+                </defs>
+
+                <!-- ═══════ Panel 1 · FRONTALES ═══════ -->
+                <text x="12" y="20" font-family="Fira Code, monospace" font-size="12.5" font-weight="700" fill="currentColor" opacity=".8">P1 – P4 · FRONTALES</text>
+                <rect x="12" y="72" width="204" height="130" fill="currentColor" opacity=".035"/>
+                <line x1="12" y1="72" x2="216" y2="72" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
+                <line x1="12" y1="202" x2="216" y2="202" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
+                <line x1="12" y1="137" x2="216" y2="137" stroke="currentColor" stroke-width="1" opacity=".5" stroke-dasharray="9 4 2 4"/>
+                <text x="16" y="66" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="currentColor" opacity=".45">vegetación</text>
+                <text x="16" y="216" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="currentColor" opacity=".45">vegetación</text>
+                <text x="180" y="132" font-family="Fira Code, monospace" font-size="10" fill="currentColor" opacity=".55">EJE</text>
+                <!-- cono al frente -->
+                <polygon points="62,137 118,158 118,116" fill="currentColor" opacity=".14"/>
+                <!-- muñeco mirando a la derecha -->
+                <circle cx="56" cy="137" r="6.5" fill="currentColor" opacity=".9"/>
+                <line x1="50" y1="128" x2="50" y2="146" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".9"/>
+                <!-- camino -->
+                <line x1="40" y1="180" x2="150" y2="180" stroke="currentColor" stroke-width="1.5" opacity=".5" stroke-dasharray="5 4" marker-end="url(#fl)"/>
+                <text x="114" y="252" font-family="Plus Jakarta Sans, sans-serif" font-size="12" fill="currentColor" text-anchor="middle" opacity=".75">Caminas por el <tspan font-weight="700">eje</tspan>.</text>
+                <text x="114" y="270" font-family="Plus Jakarta Sans, sans-serif" font-size="12" fill="currentColor" text-anchor="middle" opacity=".75">Miras <tspan font-weight="700">adelante</tspan>.</text>
+
+                <!-- ═══════ Panel 2 · DE BORDE ═══════ -->
+                <text x="252" y="20" font-family="Fira Code, monospace" font-size="12.5" font-weight="700" fill="#2E8B57">P5 – P6 · DE BORDE</text>
+                <rect x="252" y="72" width="204" height="130" fill="currentColor" opacity=".035"/>
+                <line x1="252" y1="72" x2="456" y2="72" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
+                <line x1="252" y1="202" x2="456" y2="202" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
+                <line x1="252" y1="137" x2="456" y2="137" stroke="currentColor" stroke-width="1" opacity=".5" stroke-dasharray="9 4 2 4"/>
+                <text x="420" y="132" font-family="Fira Code, monospace" font-size="10" fill="currentColor" opacity=".55">EJE</text>
+                <!-- cono cruzado hacia abajo-derecha -->
+                <polygon points="300,96 354,150 325,179" fill="#2E8B57" opacity=".16"/>
+                <!-- muñeco pegado al borde de arriba, mirando abajo-derecha -->
+                <circle cx="296" cy="92" r="6.5" fill="currentColor" opacity=".9"/>
+                <line x1="302" y1="86" x2="290" y2="98" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".9"/>
+                <text x="270" y="76" font-family="Fira Code, monospace" font-size="11" font-weight="700" fill="#2E8B57">P5</text>
+                <!-- camino pegado al borde -->
+                <line x1="280" y1="110" x2="390" y2="110" stroke="currentColor" stroke-width="1.5" opacity=".5" stroke-dasharray="5 4" marker-end="url(#fl)"/>
+                <text x="354" y="252" font-family="Plus Jakarta Sans, sans-serif" font-size="12" fill="currentColor" text-anchor="middle" opacity=".75">Caminas pegado a un <tspan font-weight="700">borde</tspan>.</text>
+                <text x="354" y="270" font-family="Plus Jakarta Sans, sans-serif" font-size="12" fill="currentColor" text-anchor="middle" opacity=".75">Miras <tspan font-weight="700">cruzado al centro</tspan>.</text>
+                <text x="354" y="288" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="currentColor" text-anchor="middle" opacity=".5">P6 es lo mismo por el otro borde</text>
+
+                <!-- ═══════ Panel 3 · DIAGONALES ═══════ -->
+                <text x="492" y="20" font-family="Fira Code, monospace" font-size="12.5" font-weight="700" fill="#2E8B57">P7 – P8 · DIAGONALES</text>
+                <rect x="492" y="72" width="204" height="130" fill="currentColor" opacity=".035"/>
+                <line x1="492" y1="72" x2="696" y2="72" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
+                <line x1="492" y1="202" x2="696" y2="202" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
+                <line x1="492" y1="137" x2="696" y2="137" stroke="currentColor" stroke-width="1" opacity=".5" stroke-dasharray="9 4 2 4"/>
+                <text x="660" y="132" font-family="Fira Code, monospace" font-size="10" fill="currentColor" opacity=".55">EJE</text>
+                <!-- cono P7 arriba-derecha -->
+                <polygon points="542,137 596,112 567,83" fill="#2E8B57" opacity=".16"/>
+                <!-- cono P8 abajo-derecha -->
+                <polygon points="542,137 596,162 567,191" fill="#2E8B57" opacity=".16"/>
+                <!-- referencia: hacia adelante -->
+                <line x1="542" y1="137" x2="638" y2="137" stroke="currentColor" stroke-width="1" opacity=".35" stroke-dasharray="3 3"/>
+                <path d="M 604 137 A 62 62 0 0 0 586 93" fill="none" stroke="#2E8B57" stroke-width="1.6"/>
+                <text x="616" y="118" font-family="Fira Code, monospace" font-size="12" font-weight="700" fill="#2E8B57">45°</text>
+                <!-- muñeco en el eje -->
+                <circle cx="536" cy="137" r="6.5" fill="currentColor" opacity=".9"/>
+                <line x1="530" y1="128" x2="530" y2="146" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".9"/>
+                <text x="512" y="96" font-family="Fira Code, monospace" font-size="11" font-weight="700" fill="#2E8B57">P7</text>
+                <text x="512" y="186" font-family="Fira Code, monospace" font-size="11" font-weight="700" fill="#2E8B57">P8</text>
+                <text x="594" y="252" font-family="Plus Jakarta Sans, sans-serif" font-size="12" fill="currentColor" text-anchor="middle" opacity=".75">Caminas por el <tspan font-weight="700">eje</tspan>.</text>
+                <text x="594" y="270" font-family="Plus Jakarta Sans, sans-serif" font-size="12" fill="currentColor" text-anchor="middle" opacity=".75">Miras <tspan font-weight="700">45° a un costado</tspan>.</text>
+                <text x="594" y="288" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="currentColor" text-anchor="middle" opacity=".5">Una pasada por cada lado</text>
+            </svg>
+            <figcaption>El sendero visto desde arriba. <b>P1–P4</b> recorren el eje mirando al
+                frente y cubren lo que el visitante verá. <b>P5 y P6</b> van pegadas a cada borde
+                con la mirada cruzada hacia el centro. <b>P7 y P8</b> van por el eje apuntando 45°
+                a cada costado: son las que levantan la vegetación de los lados.</figcaption>
+        </figure>
+
+        <div class="envoltura-tabla">
+            <table>
+                <caption>Caminar lento, un paso por segundo, rodillas semiflexionadas y cámara con
+                    las dos manos. Un tramo de 30 m toma ~90 segundos por pasada.</caption>
+                <thead>
+                    <tr><th class="paso">#</th><th>Carril</th><th>Altura</th><th>Hacia dónde apunta</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="paso">P1</td><td>Eje · ida</td><td>Ojos</td><td class="motivo">Al frente, inclinada 10–15° abajo</td></tr>
+                    <tr><td class="paso">P2</td><td>Eje · regreso</td><td>Ojos</td><td class="motivo">Al frente. Es la vista de quien mira hacia atrás</td></tr>
+                    <tr><td class="paso">P3</td><td>Eje · ida</td><td>Cintura</td><td class="motivo">Al frente y algo abajo. Es la pasada del piso</td></tr>
+                    <tr><td class="paso">P4</td><td>Eje · regreso</td><td>Brazo en alto</td><td class="motivo">Picada ~30° hacia abajo</td></tr>
+                    <tr><td class="paso">P5</td><td>Borde izq. · ida</td><td>Ojos</td><td class="motivo">Cruzada hacia el centro y la derecha (30–45°)</td></tr>
+                    <tr><td class="paso">P6</td><td>Borde der. · regreso</td><td>Ojos</td><td class="motivo">Cruzada hacia el centro y la izquierda</td></tr>
+                    <tr><td class="paso">P7</td><td>Eje · ida</td><td>Ojos</td><td class="motivo">Diagonal ~45° a la izquierda. No a 90°</td></tr>
+                    <tr><td class="paso">P8</td><td>Eje · regreso</td><td>Ojos</td><td class="motivo">Diagonal ~45° a la derecha</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <figure>
+            <svg viewBox="0 0 720 270" role="img" aria-label="Vista de lado de la persona capturando, con las tres alturas de cámara: con el brazo estirado hacia arriba a unos 2,2 metros para la pasada P4, a la altura de los ojos a 1,6 metros para la mayoría de las pasadas, y a la altura de la cintura a 1 metro para la pasada del piso. Todo dentro de una banda de alta densidad que va del suelo a 2,6 metros.">
+                <defs>
+                    <marker id="mira" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#2E8B57"/>
+                    </marker>
+                </defs>
+
+                <text x="16" y="20" font-family="Fira Code, monospace" font-size="11" fill="currentColor" opacity=".45">VISTA DE LADO · LAS TRES ALTURAS</text>
+
+                <!-- banda de alta densidad -->
+                <rect x="96" y="50" width="576" height="160" fill="#2E8B57" opacity=".06"/>
+                <line x1="96" y1="50" x2="672" y2="50" stroke="#2E8B57" stroke-width="1.2" opacity=".5" stroke-dasharray="5 4"/>
+                <text x="668" y="44" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" fill="currentColor" text-anchor="end" opacity=".55">tope de la banda de captura</text>
+
+                <!-- suelo -->
+                <line x1="96" y1="210" x2="672" y2="210" stroke="currentColor" stroke-width="2" opacity=".55"/>
+
+                <!-- escala -->
+                <line x1="96" y1="44" x2="96" y2="216" stroke="currentColor" stroke-width="1" opacity=".35"/>
+                <line x1="90" y1="210" x2="96" y2="210" stroke="currentColor" stroke-width="1" opacity=".5"/>
+                <text x="84" y="214" font-family="Fira Code, monospace" font-size="10" fill="currentColor" text-anchor="end" opacity=".5">0</text>
+                <line x1="90" y1="149" x2="96" y2="149" stroke="currentColor" stroke-width="1" opacity=".5"/>
+                <text x="84" y="153" font-family="Fira Code, monospace" font-size="10" fill="currentColor" text-anchor="end" opacity=".5">1 m</text>
+                <line x1="90" y1="87" x2="96" y2="87" stroke="currentColor" stroke-width="1" opacity=".5"/>
+                <text x="84" y="91" font-family="Fira Code, monospace" font-size="10" fill="currentColor" text-anchor="end" opacity=".5">2 m</text>
+                <line x1="90" y1="50" x2="96" y2="50" stroke="currentColor" stroke-width="1" opacity=".5"/>
+                <text x="84" y="54" font-family="Fira Code, monospace" font-size="10" fill="currentColor" text-anchor="end" opacity=".5">2,6 m</text>
+
+                <!-- persona de lado -->
+                <circle cx="200" cy="104" r="10" fill="currentColor" opacity=".85"/>
+                <line x1="200" y1="114" x2="200" y2="166" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity=".85"/>
+                <line x1="200" y1="166" x2="188" y2="210" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity=".85"/>
+                <line x1="200" y1="166" x2="213" y2="210" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity=".85"/>
+                <!-- brazo levantado -->
+                <line x1="200" y1="126" x2="221" y2="82" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".55"/>
+
+                <!-- P4 · brazo en alto, picada 30° -->
+                <rect x="226" y="69" width="19" height="14" rx="2" fill="#2E8B57"/>
+                <line x1="248" y1="79" x2="306" y2="112" stroke="#2E8B57" stroke-width="2" marker-end="url(#mira)"/>
+                <text x="318" y="102" font-family="Fira Code, monospace" font-size="12" font-weight="700" fill="#2E8B57">P4</text>
+                <text x="344" y="102" font-family="Plus Jakarta Sans, sans-serif" font-size="12" fill="currentColor" opacity=".75">brazo estirado arriba (~2,2 m), picada 30°</text>
+
+                <!-- ojos -->
+                <rect x="226" y="105" width="19" height="14" rx="2" fill="#2E8B57"/>
+                <line x1="248" y1="112" x2="306" y2="126" stroke="#2E8B57" stroke-width="2" marker-end="url(#mira)"/>
+                <text x="318" y="140" font-family="Fira Code, monospace" font-size="12" font-weight="700" fill="#2E8B57">P1 P2 P5 P6 P7 P8</text>
+                <text x="318" y="157" font-family="Plus Jakarta Sans, sans-serif" font-size="12" fill="currentColor" opacity=".75">a la altura de los ojos (~1,6 m)</text>
+
+                <!-- P3 · cintura -->
+                <rect x="226" y="142" width="19" height="14" rx="2" fill="#2E8B57"/>
+                <line x1="248" y1="151" x2="306" y2="172" stroke="#2E8B57" stroke-width="2" marker-end="url(#mira)"/>
+                <text x="318" y="186" font-family="Fira Code, monospace" font-size="12" font-weight="700" fill="#2E8B57">P3</text>
+                <text x="344" y="186" font-family="Plus Jakarta Sans, sans-serif" font-size="12" fill="currentColor" opacity=".75">a la cintura (~1 m), es la pasada del piso</text>
+
+                <text x="200" y="234" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="currentColor" text-anchor="middle" opacity=".55">tú</text>
+                <text x="96" y="256" font-family="Plus Jakarta Sans, sans-serif" font-size="11.5" fill="currentColor" opacity=".6">Las tres alturas cubren la franja que el visitante va a mirar. Fuera de ella se captura contexto, con menos pasadas.</text>
+            </svg>
+            <figcaption>La misma persona, tres alturas de cámara. Cambiar de altura entre pasadas es
+                lo que impide que toda la escena quede vista desde un solo plano — y es gratis: no
+                cuesta equipo, cuesta agacharse.</figcaption>
+        </figure>
+
+        <p class="apunte">Si sobra tiempo: media órbita lenta de 180° a uno o dos elementos duros
+            (un tronco grueso, una piedra, la baranda). Los elementos duros son el ancla geométrica
+            de toda la escena.</p>
+    </section>
+
+    <section>
+        <h2>El ritmo · una foto cada dos pasos</h2>
+        <p>Es la duda que siempre aparece en el sendero: <b>¿cada cuánto disparo?</b> La respuesta
+            corta es cada dos pasos, más o menos cada metro. La cuenta de dónde sale, para poder
+            ajustarla ahí mismo si cambia el lente o la distancia:</p>
+
+        <div class="envoltura-tabla">
+            <table>
+                <thead>
+                    <tr><th class="paso">#</th><th>Razonamiento</th><th>Resultado</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="paso">1</td><td>Fotos seguidas deben compartir la mayor parte de lo que ven</td><td class="valor">70 % de solape</td></tr>
+                    <tr><td class="paso">2</td><td>El 1× del celular abarca ~70° a lo ancho; los troncos del borde están a ~3 m</td><td class="valor">4,2 m de ancho</td></tr>
+                    <tr><td class="paso">3</td><td>Para conservar ese solape puedo avanzar como mucho el 30 % de ese ancho</td><td class="valor">1,2 m</td></tr>
+                    <tr><td class="paso">4</td><td>Un paso mide ~0,6 m</td><td class="valor">2 pasos</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="regla">
+            <span class="rotulo">Cómo comprobarlo sin hacer cuentas</span>
+            <p>Mira la foto anterior: si no reconoces <b>al menos dos tercios</b> de lo mismo que
+                tienes delante, estás disparando muy espaciado. Con lente más cerrado (2× del
+                celular, o un 50 mm) dispara cada paso. Con el sujeto lejos, cada tres.</p>
+        </div>
+
+        <h3>Cómo se ejecuta una pasada</h3>
+        <ol class="pasos">
+            <li><b>Ubícate en tu carril.</b> El eje del sendero, o a un metro del borde — no encima de la vegetación.</li>
+            <li><b>Fija la altura</b> que le toca a esa pasada (ojos, cintura o brazo estirado) y no la cambies en toda la pasada.</li>
+            <li><b>Fija la dirección de la mirada</b> (al frente, cruzada o 45°) y tampoco la cambies. Apunta con los hombros, no con las muñecas: el cuerpo gira, el ángulo respecto al sendero se mantiene.</li>
+            <li><b>Camina lento</b>, un paso por segundo, rodillas semiflexionadas para amortiguar el rebote, codos pegados al cuerpo, cámara con las dos manos.</li>
+            <li><b>Dispara cada dos pasos.</b> Cuenta mentalmente: <em>paso, paso, clic</em>.</li>
+            <li><b>Al final del tramo deja de disparar, gírate y empieza la siguiente.</b> Nunca dispares mientras giras.</li>
+        </ol>
+
+        <div class="envoltura-tabla">
+            <table>
+                <caption>Lo que sale por cada tramo de 30 m. Los 200 m se hacen por tramos, no de
+                    corrido.</caption>
+                <thead><tr><th>Concepto</th><th>Cantidad</th></tr></thead>
+                <tbody>
+                    <tr><td>Fotos por pasada</td><td class="valor">~30</td></tr>
+                    <tr><td>Pasadas</td><td class="valor">8</td></tr>
+                    <tr><td>Fotos por tramo</td><td class="valor">~240</td></tr>
+                    <tr><td>Duración por pasada</td><td class="valor">~90 s</td></tr>
+                    <tr><td>Duración por tramo, con pausas</td><td class="valor">~20 min</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <h2>Antes de salir</h2>
+        <ul class="lista">
+            <li><span class="caja"></span><span>Día <b>nublado y sin viento</b>. El sol duro mete sombras que la reconstrucción interpreta como geometría.</span></li>
+            <li><span class="caja"></span><span>Baterías cargadas y tarjetas vacías. Ocho pasadas en RAW llenan más de lo que uno calcula.</span></li>
+            <li><span class="caja"></span><span>Lente limpio. Una huella dactilar arruina la jornada entera y no se nota hasta procesar.</span></li>
+            <li><span class="caja"></span><span>El <b>objeto de tamaño conocido</b> para dejarlo en la escena: es lo que da la escala real.</span></li>
+            <li><span class="caja"></span><span>GPS grabando el track, y grabadora para audio ambiente y cantos.</span></li>
+            <li><span class="caja"></span><span>Una foto de referencia por punto de interés, aparte de las pasadas.</span></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Qué no hacer</h2>
+        <ul class="no">
+            <li><span class="cruz">✗</span><span><b>Dejar algo en automático.</b> Exposición, foco o balance variando entre fotos es la causa número uno de escenas sucias.</span></li>
+            <li><span class="cruz">✗</span><span><b>Caminar rápido o girar grabando.</b> Se corta, se gira, se vuelve a empezar.</span></li>
+            <li><span class="cruz">✗</span><span><b>Hacer del dosel el anclaje visual.</b> Las hojas se mueven con el viento y no coinciden entre fotos. El ancla es lo que no se mueve: piso, muros, rejas, troncos.</span></li>
+            <li><span class="cruz">✗</span><span><b>Guardar las fotos movidas.</b> Más fotos no es más calidad: una foto movida empeora el resultado. Se borran en el sitio.</span></li>
+            <li><span class="cruz">✗</span><span><b>Repetir el mismo ángulo.</b> Diez fotos desde el mismo punto valen menos que dos desde puntos distintos.</span></li>
+            <li><span class="cruz">✗</span><span><b>Usar el 0.5× del celular.</b> El ultra gran angular queda fuera del rango que la reconstrucción maneja bien.</span></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Al terminar, el mismo día</h2>
+        <ul class="lista">
+            <li><span class="caja"></span><span>Descargar todo y <b>respaldarlo en dos sitios</b> antes de dormir. El material bruto no se puede volver a capturar.</span></li>
+            <li><span class="caja"></span><span>Revisar pasada por pasada y borrar las fotos movidas.</span></li>
+            <li><span class="caja"></span><span>Anotar en la bitácora: hora, clima, qué pasada salió mal y por qué.</span></li>
+            <li><span class="caja"></span><span>Si se grabó video: extraer <b>1 cuadro de cada 20</b>, no de cada 30.</span></li>
+        </ul>
+    </section>
+
+    <footer class="pie">
+        Este protocolo resume y corrige el manual del repositorio. El procedimiento completo —
+        alineación con COLMAP, entrenamiento, limpieza y publicación — está en
+        <b>docs/05-produccion-de-escenas.md</b> y <b>docs/08-de-video-a-web.md</b>.
+        Las correcciones de la versión 2 salen de comparar el escaneo del parque con guías de
+        captura de 2026 y con la escena de referencia del Fort Clatsop Trail, capturada con
+        escáner LiDAR.
+    </footer>
+
+</div>

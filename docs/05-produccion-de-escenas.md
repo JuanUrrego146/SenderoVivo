@@ -252,11 +252,18 @@ Video 4K a 60 fps con exposición, foco y balance de blancos **manuales y bloque
 cámara nativa del iPhone no permite fijar obturación e ISO en video; una app gratuita que sí
 lo permite es **Blackmagic Camera** (sugerencia operativa, no requisito del protocolo).
 
+> **Revisión del 26/08/2026 tras auditar el prototipo del parque.** Dos ajustes de esta
+> sección resultaron ser causa directa de la baja calidad y quedan corregidos abajo:
+> la **obturación de 1/125 s es demasiado lenta** para captura caminando (las guías de
+> captura 3DGS de 2026 piden **mínimo 1/500 s, idealmente 1/1000 s**), y el **video no es
+> el mejor soporte**: los fotogramas seleccionados de una cámara de fotos dan más nitidez
+> porque no arrastran compresión de video ni desenfoque de movimiento. Ver §8.3.
+
 | Ajuste | Nuestro valor | Qué recomienda PlayCanvas | Motivo |
 |---|---|---|---|
 | Resolución | 4K (2160p) | **4K mínimo**; 1080p no da detalle suficiente | — |
 | Cuadros por segundo | 60 fps | **60 fps o más** | — |
-| Obturación | 1/125 s fija (1/250 con buena luz) | **mínimo 1/125 s** a pulso | Congela el detalle a pulso |
+| Obturación | **1/500 s mínimo, 1/1000 s ideal** (corregido 26/08; antes 1/125) | **mínimo 1/500 s, ideal 1/1000 s** | A 1/125 caminando el detalle fino sale movido y el entrenamiento no puede recuperarlo |
 | ISO | Fijo, el más bajo con exposición correcta (bajo árboles, 400 es normal) | 100–400 (200–400 en día nublado) | Se prefiere grano a desenfoque: subir ISO antes que bajar obturación |
 | Exposición | Bloqueada en manual | **Bloqueada en manual**, evita parpadeo entre cuadros | Es el ajuste crítico |
 | Balance de blancos | Fijo (nublado, ~6500 K) | Fijo | Consistencia entre cuadros |
@@ -288,7 +295,41 @@ POI**, y **el objeto de tamaño conocido** dentro de la escena. Lo último es lo
 que la capa de datos (altitud, distancia, desnivel) se corresponda con la geometría
 reconstruida y no con unidades arbitrarias del entrenamiento.
 
+### 8.3 Fotos o video, y con qué cámara (revisión del 26/08/2026)
+
+Las guías de captura 3DGS coinciden en que **las fotos ganan**: el fotógrafo controla el
+instante del disparo, no hay compresión de video de por medio y se descartan las tomas
+movidas una por una. El video es más cómodo y sirve, pero paga un precio en nitidez. La
+regla que sí es transversal: **más fotos no es mejor calidad; fotos movidas hay que
+borrarlas**, no alimentarlas al entrenamiento.
+
+**Cuántas.** 120–140 imágenes bastan para una escena acotada; una escena grande al aire
+libre puede pedir hasta ~600, y muy rara vez se necesitan más de 300 útiles. Solape
+**60–80 %** entre cuadros contiguos.
+
+**Con qué cámara.** Contra la intuición, una réflex o mirrorless *vieja* puede rendir mejor
+que un celular moderno para esto, porque da lo que el celular no da fácil: control manual
+real de obturación, diafragma, ISO, enfoque y balance de blancos, sensor grande y RAW. Las
+guías recomiendan justamente réflex/mirrorless con **lente equivalente 16–50 mm** y
+**diafragma f/8–f/11** para nitidez y profundidad de campo. La **Sony del equipo (~2012)**
+cumple ese perfil: disparando fotos en manual a f/8 y 1/1000 s produce mejor material que un
+video de celular. El celular queda como cámara de apoyo y para las pasadas donde el tamaño
+importa (agachado, brazo en alto).
+
+**Condiciones.** Día **nublado** (luz pareja, sin sombras duras) y **sin viento**. Y un
+criterio de encuadre que aplica de lleno a la Quebrada: **que el dosel movido por el viento
+no sea el anclaje visual principal**; el ancla debe ser lo que no se mueve — el piso, los
+muros, las rejas, los troncos gruesos.
+
 ## 9. Las ocho pasadas
+
+> **Versión imprimible para llevar al campo:**
+> [`docs/protocolos/protocolo-de-campo-las-ocho-pasadas.pdf`](protocolos/protocolo-de-campo-las-ocho-pasadas.pdf).
+> Resume esta sección y la §8 en una hoja, con tres diagramas: por qué mirar en diagonal
+> reconstruye y mirar al frente no, los tres carriles vistos desde arriba, y las tres
+> alturas de cámara vistas de lado. Se regenera desde su `.html`; ver
+> [`docs/protocolos/LEEME.md`](protocolos/LEEME.md). **Si el PDF y este documento se
+> contradicen, manda este documento.**
 
 Caminar **lento** (un paso por segundo, rodillas semiflexionadas, codos pegados al cuerpo,
 cámara con las dos manos). En un tramo de 30 m cada pasada toma ~90 segundos. **Un clip por
@@ -313,8 +354,82 @@ cuadros borrosos inservibles.
 | P4 | Centro, regreso | Brazo en alto | Picada hacia abajo ~30 grados |
 | P5 | Borde izquierdo, ida | Ojos | Cruzada hacia el centro y la derecha (30 a 45 grados) |
 | P6 | Borde derecho, regreso | Ojos | Cruzada hacia el centro y la izquierda |
-| P7 | Centro, ida | Ojos | Lateral izquierda: vegetación y troncos de ese lado |
-| P8 | Centro, regreso | Ojos | Lateral derecha |
+| P7 | Centro, ida | Ojos | Vegetación y troncos de la **izquierda**, en diagonal ~45° hacia adelante (no a 90°: ver la nota) |
+| P8 | Centro, regreso | Ojos | Ídem hacia la **derecha**, diagonal ~45° |
+
+> **Por qué las pasadas laterales son las que reconstruyen (y las frontales no).** El
+> paralaje —lo que permite triangular la profundidad— nace de que la cámara **se traslada**
+> respecto a lo que mira, no de que gire. Caminando paralelo a la vegetación y apuntándole,
+> cada paso cambia mucho el ángulo hacia esos troncos: base amplia, triangulación buena. En
+> cambio, avanzar de frente mirando de frente es la **dirección degenerada**: lo que está
+> adelante crece de tamaño pero casi no se desplaza angularmente. Las pasadas frontales
+> (P1–P4) son necesarias para la sensación de recorrido y para cubrir lo que el visitante
+> verá, pero aportan poca geometría; las laterales y cruzadas (P5–P8) son las que sostienen
+> la reconstrucción.
+>
+> **Corrección del 26/08/2026: apuntar a 45°, no a 90°.** A 90° exactos cada tronco entra y
+> sale del encuadre demasiado rápido: pocos cuadros lo ven y se pierde solape. A ~45° se ve
+> venir, se pasa y se deja atrás, así que más cuadros lo capturan desde ángulos que
+> convergen sobre el mismo punto. Se conserva el paralaje y se gana solape.
+
+### 9.1 El ritmo: una foto cada dos pasos
+
+La duda más frecuente en campo es *cada cuánto disparo*. Sale de la cuenta del solape, y
+conviene entender de dónde viene para poder ajustarla en el sitio:
+
+1. El objetivo es **60–80 % de solape** entre fotos seguidas: cada foto tiene que compartir
+   la mayor parte de lo que ve con la anterior.
+2. Con el 1× del celular (~26 mm equivalentes) el encuadre horizontal abarca unos **70°**.
+   A los ~3 m a los que quedan los troncos del borde, eso es un ancho visible de ~4,2 m.
+3. Para conservar ~70 % de solape hay que avanzar como mucho el 30 % de ese ancho: **1,2 m**.
+4. Un paso normal mide ~0,6 m. Entonces: **una foto cada dos pasos, aproximadamente cada
+   metro.**
+
+**Cómo se ajusta si cambian las condiciones:** con lente más cerrado (2× del celular, o un
+50 mm en la Sony) el encuadre es más angosto y hay que disparar **más seguido** — cada paso.
+Si el sujeto está más lejos (una ladera al otro lado), el ancho visible crece y se puede
+disparar cada tres pasos. Regla mental: *si al mirar la foto anterior no reconozco al menos
+dos tercios de lo mismo, estoy disparando demasiado espaciado.*
+
+### 9.2 Cómo se ejecuta una pasada, en concreto
+
+Esto es lo que hace la persona que graba, en orden, sin adornos:
+
+1. **Se ubica en el carril** que le toca a esa pasada: el eje del sendero, o pegada a un
+   borde (a ~1 m del borde, no encima de la vegetación).
+2. **Fija la altura** de la cámara según la pasada (a la altura de los ojos, a la cintura, o
+   con el brazo estirado hacia arriba) y **no la cambia** durante toda la pasada.
+3. **Fija la dirección de la mirada** según la pasada (al frente, cruzada, o en diagonal a
+   45°) y **tampoco la cambia**. El cuerpo gira, la cámara mantiene su ángulo respecto al
+   sendero. Es más fácil si se apunta con los hombros, no con las muñecas.
+4. **Camina lento**, un paso por segundo, rodillas semiflexionadas para amortiguar el rebote,
+   codos pegados al cuerpo y cámara con las dos manos.
+5. **Dispara cada dos pasos** (§9.1). Cuenta mentalmente: *paso, paso, clic*.
+6. **Al llegar al final del tramo, deja de disparar, se gira y vuelve a empezar** la pasada
+   siguiente. Nunca se dispara mientras se gira.
+
+**Un archivo por pasada.** Cada pasada va a su propia carpeta o a su propio clip, nombrada
+con la convención del §11. Si una pasada sale mal se repite ella sola, sin contaminar las
+demás y sin tener que rehacer la jornada.
+
+### 9.3 Cuántas fotos salen y cómo se divide el sendero
+
+Los 200 m no se capturan de una sola vez: se dividen en **tramos de ~30 m** (§3), y cada
+tramo recibe sus ocho pasadas completas. La cuenta por tramo:
+
+| | |
+|---|---|
+| Largo del tramo | 30 m |
+| Fotos por pasada (una cada metro) | ~30 |
+| Pasadas | 8 |
+| **Fotos por tramo** | **~240** |
+| Duración por pasada (un paso por segundo) | ~90 s |
+| **Duración por tramo, con pausas** | **~20 min** |
+
+Esas ~240 fotos por tramo caen dentro de lo que recomiendan las guías de captura para
+escenas grandes al aire libre (hasta ~600 imágenes; rara vez son útiles más de 300 por
+escena). **Más fotos no es más calidad**: una foto movida resta, no suma. Se borran en el
+sitio, antes de bajar del cerro.
 
 Las ocho pasadas **materializan la banda de alta densidad del ADR-002**: desde el suelo hasta
 ≈ 1 m por encima de la altura de los ojos (≈ 2,6 m sobre el suelo), y ≈ 1 m a cada lado del
@@ -415,6 +530,98 @@ redondas en vez de hilos. Es la única receta que ha producido calidad publicabl
 **Sobre el alcance:** Brush **no tiene ningún flag espacial** — todo lo que las cámaras
 vieron queda en el PLY (el nuestro llega a ±40 unidades, cielo incluido). El alcance solo
 se pierde si la limpieza lo recorta; por eso la limpieza vigente **no usa cajas** (§12.4).
+
+### 12.3.1 Los parámetros que atacan las agujas desde el entrenamiento
+
+> Verificado el 26/08/2026 ejecutando `brush_app.exe --help` sobre nuestro propio binario
+> (v0.3.0). Los valores por defecto que aparecen abajo son los que trae la herramienta.
+
+**Por qué filtrar al final no alcanza.** Las gaussianas con forma de aguja no son basura que
+se cuela: son el resultado de que al optimizador **le sale barato** estirar una gaussiana
+para explicar una textura vista desde pocos ángulos. Filtrarlas después quita la astilla
+pero deja el hueco, porque nunca se entrenó nada bueno en su lugar. La literatura lo
+describe igual: las gaussianas alargadas se sobreajustan a las vistas de entrenamiento y
+producen los picos que se ven al mover la cámara (Spectral-GS, 2024; Mip-Splatting, CVPR
+2024). El arreglo real es que **durante** el entrenamiento salga caro ser una aguja.
+
+**Lo que Brush ya tiene, y el hallazgo importante:**
+
+| Parámetro | Por defecto | Qué hace | Lectura |
+|---|---|---|---|
+| `--scale-loss-weight` | `1e-8` | Penaliza gaussianas desproporcionadas | **Está prácticamente apagado.** Es la palanca directa contra las agujas y nunca la hemos usado |
+| `--opac-loss-weight` | `1e-9` | Penaliza gaussianas casi transparentes | También apagado. Ataca la neblina y los flotantes en origen, no con filtro |
+| `--mean-noise-weight` | `40` | Inyecta ruido en la posición de las gaussianas de baja opacidad | Ya activo. Es el mecanismo de las densificaciones tipo MCMC: en vez de acumular basura semitransparente, la sacude para que se reubique o muera |
+| `--ssim-weight` | `0.2` | Peso del término SSIM frente a L1 | Estructura sobre color plano |
+| `--lpips-loss-weight` | — | Pérdida perceptual | Sin explorar |
+
+O sea: **la mitad del arsenal anti-agujas viene de fábrica desactivado.** Eso explica por qué
+las astillas sobrevivían al entrenamiento y solo las veíamos al final.
+
+**El experimento pendiente, y cómo se mide.** No hay que adivinar si sirve: ya tenemos la
+métrica. `scripts/escenas/medir.js` calcula la **agujeza** (`max − medio` de las escalas
+logarítmicas), y la referencia de producción está anotada ahí mismo: p50 1,41 · p90 2,63 ·
+p99 3,57. El procedimiento:
+
+1. Entrenar un tramo corto con los valores por defecto y medir su agujeza.
+2. Repetir subiendo `--scale-loss-weight` **en potencias de 10** (`1e-7`, `1e-6`, `1e-5`…),
+   una corrida por valor, todo lo demás igual.
+3. Medir cada resultado con `medir.js` y anotar agujeza y número de gaussianas.
+4. Quedarse con el valor más alto que baje la agujeza **sin** empezar a borronear el detalle
+   fino: pasado cierto punto, penalizar la escala aplana la vegetación. El punto de corte se
+   ve en el visor, no en la métrica.
+5. Registrar el valor elegido en este documento como parte de la receta.
+
+Hasta no correr ese experimento, lo anterior es una hipótesis fundamentada, no un resultado
+medido. Se documenta como pendiente, no como receta.
+
+**Lo que Brush NO tiene.** No implementa el filtro anti-aliasing de Mip-Splatting (el filtro
+3D de suavizado más el filtro 2D que sustituye la dilatación), que es la otra mitad del
+arreglo descrito en la literatura. Si tras el experimento las agujas siguen molestando, el
+siguiente paso ya no es tocar parámetros sino **cambiar de entrenador** por uno con
+rasterización antialiaseada (Nerfstudio con el backend gsplat, o Postshot). Eso es un cambio
+de herramienta, con su propio costo de aprendizaje: no se hace antes de agotar lo barato.
+
+### 12.3.2 El cielo
+
+El cielo es un caso aparte y conviene entenderlo antes de pelearlo: **está infinitamente
+lejos, así que no tiene paralaje**. Por más fotos que se tomen, dos vistas separadas diez
+metros ven el cielo exactamente igual, y sin paralaje no hay triangulación posible. Lo que
+el entrenamiento produce ahí no es geometría: es una cáscara de gaussianas semitransparentes
+puestas a cierta distancia arbitraria, que es justo lo que se ve como flotantes y manchas
+cuando uno levanta la vista.
+
+Hay dos caminos y conviene elegir a conciencia:
+
+- **Reconstruirlo igual.** Requiere pasadas mirando hacia arriba (P4 ya pica hacia abajo; se
+  necesitaría su simétrica) y aceptar que quedará borroso. Sirve si lo que se quiere es el
+  dosel visto desde abajo, que **sí** tiene paralaje porque las ramas están a 10–15 m, no en
+  el infinito. **Esto es lo que de verdad nos interesa de "capturar el cielo": el dosel.**
+- **Sustituirlo en el visor.** El cielo propiamente dicho se resuelve mejor con un fondo
+  sintético en PlayCanvas que intentando reconstruirlo. Queda limpio, pesa nada y no mete
+  flotantes. Es una decisión de la capa de visor, no del entrenamiento.
+
+Recomendación: **capturar bien el dosel** (es geometría real y da la sensación de bosque) y
+**no pelear el cielo abierto**; ese se pone después en el visor.
+
+### 12.3.3 ¿COLMAP sigue siendo lo correcto?
+
+Sí, por ahora, con una salvedad. COLMAP es el estándar sobre el que se apoya prácticamente
+todo el ecosistema de splatting, y su versión 4.1.0 (2025) trajo dos cosas relevantes para
+nosotros: **ajuste de haces acelerado por GPU** y **reconstrucción nativa de panorámicas
+360**, además del ejemplo `panorama_sfm.py` que convierte una equirectangular en caras
+virtuales en perspectiva y las registra como *rig*. Eso último abre la puerta a usar una
+cámara 360 sin cambiar de pipeline.
+
+La salvedad es que nuestro cuello de botella **no ha sido COLMAP**: con 1/30 de los cuadros
+alineó 987 de 1.110 imágenes con error de reproyección de 1,01 px, que es un buen resultado.
+Lo que falló fue la captura (obturación lenta, cobertura angular pobre) y el entrenamiento
+(regularizadores apagados). Cambiar de motor de poses antes de arreglar eso sería optimizar
+la parte que ya funciona.
+
+Si en algún momento COLMAP sí se vuelve el problema — reconstrucciones partidas en varios
+modelos, o tiempos de horas que estorben la iteración — el reemplazo natural es **GLOMAP**,
+del mismo grupo, que resuelve el mismo problema de forma global y mucho más rápida. Queda
+anotado como salida, no como tarea.
 
 ### 12.4 Limpieza SIN caja de recorte (vigente desde el 19/08)
 
