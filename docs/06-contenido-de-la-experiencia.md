@@ -40,24 +40,29 @@ Tres niveles de confianza, y se marcan siempre:
 **Nada que esté en "por verificar" o "discrepancia" puede llegar a una ficha publicada sin
 resolverse.**
 
-## A.2 Qué hay realmente en la Quebrada La Vieja
+## A.2 Qué hay realmente en Santa Ana - La Aguadora
 
-La fuente primaria es la ficha oficial del **Acueducto de Bogotá** para este sendero, que
-reporta para la quebrada:
+El sendero está en la zona rural del barrio Santa Bárbara, localidad de Usaquén, dentro de la
+**Reserva Forestal Protectora Bosque Oriental de Bogotá**. El recorrido es el **circuito Bosque
+de Pinos, de 3,1 km**, que termina en el Mirador Santa Ana. Lo acompaña la **quebrada Santa
+Bárbara**.
 
-- **119 especies de aves** en 30 familias, con Thraupidae (tangaras) y Trochilidae (colibríes) entre las mejor representadas
-- **63 especies de mamíferos**
-- **8 especies de anfibios**
-- **6 especies de reptiles**
+Hay **dos fuentes primarias**, y conviene saber qué aporta cada una porque no se solapan:
 
-Los estudios sobre el conjunto de los Cerros Orientales coinciden en el orden de magnitud:
-**63 especies de mamíferos** en 8 órdenes y 18 familias, de las cuales cerca del **78 % son
-mamíferos pequeños** (28 especies de murciélagos y 21 de mamíferos no voladores) y el 22 %
-restante son medianos.
+- **La ficha oficial del Acueducto** para este sendero describe los ecosistemas y la fauna y
+  flora que se ve, pero **cita los nombres comunes sin binomio** y no publica una lista de
+  especies. Sirve para saber qué hay; no sirve para publicar una ficha con nombre científico.
+- **eBird**, para las aves, sí da la lista completa con binomios: el punto de registro
+  [`L9738611` «Club La Aguadora / Sendero Santa Ana»](https://ebird.org/hotspot/L9738611)
+  acumula **121 especies** de todos los años.
+
+**Ecosistemas presentes:** bosque altoandino, subpáramo y **bosque de pinos introducido**. Ese
+mosaico de tres ecosistemas en un circuito corto es una ventaja para el proyecto: más variedad
+visual en 200 metros de la que ofrecería un tramo homogéneo.
 
 **Lectura para el proyecto:** hay muchísimo más contenido del que cabe en 5–6 fichas. El
-catálogo de abajo no es "lo que hay": es **la lista candidata de la que se eligen los POIs**,
-y la elección definitiva se toma en la visita de reconocimiento (V1), en función de qué se ve
+catálogo de abajo no es «lo que hay»: es **la lista candidata de la que se eligen los POIs**, y
+la elección definitiva se toma en la visita de reconocimiento, en función de qué se ve
 realmente en los 200 m del tramo.
 
 ## A.3 Aves
@@ -65,36 +70,55 @@ realmente en los 200 m del tramo.
 Son el eje del proyecto: cada ave del sendero visible desde el recorrido lleva su modelo 3D,
 su ficha, su canto y su animación de aleteo (RF-029).
 
-| Nombre común | Nombre científico | Estado | Fuente | POI candidato |
-|---|---|---|---|---|
-| Colibrí chillón | *Colibri coruscans* | Verificado | Fundación Cerros de Bogotá | **Confirmado** |
-| Colibrí inca | *Coeligena bonapartei* | Verificado | Anexo Wikipedia (cerros orientales) | Sí |
-| Trogón enmascarado ("soledad") | *Trogon personatus* | Verificado | Fundación Cerros de Bogotá | Sí |
-| Tucán de montaña / terlaque | *Andigena nigrirostris* | Verificado | Fundación Cerros de Bogotá | Sí (baja probabilidad de avistamiento) |
-| Periquito de alas amarillas | *Pyrrhura calliptera* | Verificado | Fundación Cerros de Bogotá | Sí |
-| Quetzal / cogüaye | *Pharomachrus antisianus* | Verificado | Fundación Cerros de Bogotá | No (avistamiento improbable en el tramo) |
-| Pava de monte / pava andina | *Penelope obscura* vs *Penelope montagnii* | **Discrepancia** | Fundación Cerros de Bogotá indica *P. obscura* | Sí, **tras resolver el nombre** |
-| Mirla patinaranja | *Turdus fuscater* | Por verificar | Nombre de uso corriente; **no confirmado en las fuentes consultadas para este sendero** | Sí, tras verificar |
-| Copetón | *Zonotrichia capensis* | Por verificar | Nombre de uso corriente; **no confirmado en las fuentes consultadas para este sendero** | Sí, tras verificar |
-| Búho / currucutú | *Strix albitarsis* | Verificado | Anexo Wikipedia (cerros orientales) | No (nocturno) |
-| Dormilona gris | `[nombre científico por verificar]` | Por verificar | Fundación Cerros de Bogotá cita el nombre común sin binomio | No |
-| Golondrina plomiza | `[nombre científico por verificar]` | Por verificar | Fundación Cerros de Bogotá cita el nombre común sin binomio | No |
+**Todas las de esta tabla están registradas en el propio sendero**, no en los Cerros Orientales
+en general. Es la primera vez que el catálogo tiene esa precisión.
 
-### A.3.1 Las cuatro aves del catálogo base (S2b)
+| Nombre común | Nombre científico | Estado | POI candidato |
+|---|---|---|---|
+| Colibrí chillón | *Colibri coruscans* | Verificado | **Confirmado** |
+| Colibrí inca (Inca de Bogotá) | *Coeligena bonapartei* | Verificado | Sí |
+| Trogón enmascarado | *Trogon personatus* | Verificado | Sí |
+| Tángara ventriescarlata | *Anisognathus igniventris* | Verificado | Sí, **recomendada** por contraste de color |
+| Colibrí picoespada | *Ensifera ensifera* | Verificado | Sí, silueta inconfundible |
+| Tororoí compadre | *Grallaria ruficapilla* | Verificado | Sí |
+| Mirla patinaranja (Mirlo grande) | *Turdus fuscater* | Verificado | Sí |
+| Copetón (Gorrión chingolo) | *Zonotrichia capensis* | Verificado | Sí |
+| Pava andina | *Penelope montagnii* | Verificado | Sí |
+| Tucán de montaña / terlaque | *Andigena nigrirostris* | Verificado | Sí, baja probabilidad de avistamiento |
+| Golondrina ventriparda | *Orochelidon murina* | Verificado | Candidata |
+| Golondrina albiazul | *Pygochelidon cyanoleuca* | Verificado | Candidata |
+| Autillo chóliba | *Megascops choliba* | Verificado | No, nocturno |
 
-Se mantienen las cuatro comprometidas en el plan — **colibrí chillón, mirla, copetón y pava
-andina** — con esta condición añadida:
+Fuente de toda la tabla: eBird, punto `L9738611`. Lista completa e imprimible con las 121
+especies: <https://ebird.org/printableList?regionCode=L9738611&yr=all&m=>
 
-> **Mirla, copetón y pava no se modelan con nombre científico impreso hasta que Felipe lo
-> verifique contra fuente ornitológica citable** (eBird / Avibase / lista de referencia de aves
-> de Colombia). El modelo 3D puede avanzar; la ficha no se publica.
+**Dos cosas que esta lista resolvió:**
 
-La verificación es la subtarea **HU-11.2**, que ya existe en el backlog y ahora tiene esta
-lista como entrada.
+1. **La pava andina deja de tener discrepancia.** El registro del sendero es *Penelope
+   montagnii*, no *P. obscura*.
+2. **La mirla y el copetón dejan de estar «por verificar».** Estaban fuera del catálogo por
+   falta de fuente para el sendero concreto; ahora la tienen.
+
+**El periquito de alas amarillas (*Pyrrhura calliptera*) no está registrado en este sendero** y
+por eso no aparece en la tabla. El único loro del punto es la cotorrita de anteojos
+(*Forpus conspicillatus*).
+
+### A.3.1 Las cuatro aves del catálogo base
+
+Tres están cerradas y la cuarta espera decisión:
+
+1. **Colibrí chillón** · *Colibri coruscans*
+2. **Colibrí inca** · *Coeligena bonapartei*
+3. **Trogón enmascarado** · *Trogon personatus*
+4. `[por decidir]` — la recomendación es la **tángara ventriescarlata** (*Anisognathus
+   igniventris*), porque con dos colibríes y un trogón el catálogo 3D se lee monótono y su
+   vientre rojo con azul rompe esa monotonía. Alternativas igualmente verificadas: colibrí
+   picoespada o tororoí compadre.
+
+Las cuatro se modelan con nombre científico impreso desde el principio: **todas tienen fuente
+citable para este sendero**, así que ninguna ficha nace con marca de pendiente.
 
 ### A.3.2 Rangos de altitud
-
-Solo hay un rango verificado hoy:
 
 | Especie | Rango | Fuente |
 |---|---|---|
@@ -103,161 +127,98 @@ Solo hay un rango verificado hoy:
 
 ## A.4 Mamíferos
 
-| Nombre común | Nombre científico | Estado | Fuente | Nota |
-|---|---|---|---|---|
-| **Zorro perro / zorro cangrejero** | *Cerdocyon thous* | Verificado | Acueducto (**reportado en Quebrada La Vieja**), Fundación Cerros de Bogotá, El Tiempo | **El mamífero mejor documentado del sendero.** 14 registros en cámaras trampa en los Cerros Orientales |
-| Conejo sabanero | *Sylvilagus floridanus* | Verificado | Acueducto (**reportado en Quebrada La Vieja**) | |
-| Borugo / tinajo / guartinaja | *Cuniculus taczanowskii* | Verificado | Acueducto (**reportado en Quebrada La Vieja**), Fundación Cerros de Bogotá | |
-| Cusumbo andino / coatí de montaña | *Nasuella olivacea* | Verificado | Fundación Cerros de Bogotá, Anexo Wikipedia | |
-| Ardilla | *Sciurus granatensis* | Verificado | Fundación Cerros de Bogotá, Anexo Wikipedia | La más fácil de avistar de día |
-| Chucha / runcho (zarigüeya) | *Didelphis pernigra* | Verificado | Fundación Cerros de Bogotá | |
-| Runcho ratón / ratón marsupial | *Caenolestes fuliginosus obscurus* | Verificado | Registros de los Cerros Orientales, categoría **NT (casi amenazada)** | Nocturno, avistamiento improbable |
-| Comadreja | *Mustela frenata* | Por verificar | Citada como "long-tailed weasel" en el registro de cámaras trampa; binomio no confirmado en la fuente | |
-| Tigrillo | *Leopardus tigrinus* vs *Leopardus pardalis* | **Discrepancia + VU** | Fundación Cerros de Bogotá indica *L. pardalis*; los registros de los Cerros Orientales indican *L. tigrinus* (**Vulnerable**) | **No se hace POI.** Ver §A.4.1 |
-| **Curí** | *Cavia* sp. | **No confirmado** | **Ninguna de las fuentes consultadas reporta curí para este sendero.** Lo que sí reportan es el conejo sabanero (*Sylvilagus floridanus*) | Se verifica en campo antes de considerarlo |
+La ficha del Acueducto para este sendero cita la fauna que se observa, **con nombre común y sin
+binomio**. Los binomios de abajo vienen del catálogo regional de los Cerros Orientales y quedan
+`[por confirmar para este sendero]`.
 
-### A.4.1 Por qué el tigrillo no lleva ficha
+| Nombre común | Nombre científico | Estado | Nota |
+|---|---|---|---|
+| **Cusumbo andino / coatí de montaña** | *Nasuella olivacea* `[por confirmar]` | Citado por el Acueducto para este sendero | El Acueducto lo nombra explícitamente |
+| **Zarigüeya / chucha / runcho** | *Didelphis pernigra* `[por confirmar]` | Citada por el Acueducto para este sendero | |
+| **Ardilla** | *Sciurus granatensis* `[por confirmar]` | Citada por el Acueducto para este sendero | La más fácil de avistar de día |
 
-Es una especie **amenazada** (VU) y hay discrepancia de nombre científico entre fuentes.
-Publicar la ubicación aproximada de un felino amenazado en una app pública es una mala idea
-aunque el dato fuera correcto. Queda documentado aquí como parte del ecosistema y **fuera del
-catálogo de POIs**. La misma regla aplica a cualquier especie amenazada que aparezca en las
-visitas.
+**El zorro perro no consta** en la documentación de este sendero y por tanto no es candidato a
+POI. Si la visita encuentra rastro, se añade con la evidencia; sin ella, no se publica.
 
-### A.4.2 Sobre el zorro perro como POI
+### A.4.1 Sobre los mamíferos como POI
 
-Es el candidato más sólido para ampliar el catálogo más allá de las aves:
-
-- Es la única especie de mamífero mediano **reportada nominalmente para la Quebrada La Vieja** por el propio administrador del sendero.
-- Es la más registrada por cámaras trampa en los Cerros Orientales.
-- No está amenazada.
-- Es reconocible: no hay confusión posible con un perro doméstico en una ficha bien hecha, y explicar esa diferencia **es contenido útil** (hay registros de perros domésticos en las mismas cámaras).
-
-**Decisión propuesta, a confirmar en V1:** el zorro perro entra como sexto POI de fauna si el
-reconocimiento encuentra rastro, madriguera o un lugar de paso plausible dentro de los 200 m.
-Si no, se queda fuera: no se coloca un POI donde el animal no circula.
+Los tres citados son de avistamiento posible pero no garantizado. Sirven como POI **solo si la
+visita de reconocimiento encuentra rastro, madriguera o punto de paso** dentro de los 200 m.
+Una ficha de fauna anclada a un punto donde el animal no pasa nunca es una promesa que el
+recorrido no cumple.
 
 ## A.5 Anfibios y reptiles
 
-El Acueducto publica listas cerradas para este sendero. Están completas y verificadas: son el
-mejor material del catálogo.
+La ficha del Acueducto para este sendero cita la presencia de **reptiles y anfibios** sin
+detallar especies. **No hay lista con binomios**, y la regla del proyecto impide publicar una
+ficha sin fuente citable.
 
-### A.5.1 Anfibios (8 especies, todas verificadas — fuente: Acueducto)
-
-| Nombre científico | Grupo |
-|---|---|
-| *Pristimantis bogotensis* | Rana de lluvia |
-| *Pristimantis elegans* | Rana de lluvia |
-| *Dendropsophus labialis* | Rana sabanera |
-| *Hyloscirtus bogotensis* | Rana de torrente |
-| *Hyloxalus edwardsi* | Rana (la fuente lo transcribe como *Hyloxalus edwarsi*; grafía corregida `[por confirmar]`) |
-| *Hyloxalus subpunctatus* | Rana |
-| *Centrolene buckleyi* | Rana de cristal |
-| *Bolitoglossa adspersa* | Salamandra andina |
-
-> **Nombres comunes `[por verificar]`.** La fuente da los binomios sin nombre común. Para una
-> ficha en español hace falta el nombre común verificado, no una traducción inventada.
-
-**Candidata fuerte a POI:** *Dendropsophus labialis* o *Hyloscirtus bogotensis*, por estar
-asociadas al agua, y el tramo tiene cauce. La elección se hace en V1, escuchando.
-
-### A.5.2 Reptiles (6 especies, todas verificadas — fuente: Acueducto)
-
-| Nombre científico | Grupo |
-|---|---|
-| *Anadia bogotensis* | Lagartija de Bogotá |
-| *Riama striata* | Lagartija |
-| *Anolis heterodermus* | Camaleón andino |
-| *Stenocercus trachycephalus* | Lagarto collarejo |
-| *Atractus crassicaudatus* | Culebra sabanera (no venenosa) |
-| *Liophis epinephelus* | Culebra (no venenosa) |
-
-> Si entra una culebra al catálogo, la ficha **debe** decir explícitamente que no es venenosa.
-> Es información de seguridad, no un adorno.
+`[por verificar]` — Consultar el inventario de la Secretaría de Ambiente o del Jardín Botánico
+para los Cerros Orientales, sector Usaquén, y contrastarlo en la visita.
 
 ## A.6 Flora
 
-Fuente: ficha oficial del Acueducto para la Quebrada La Vieja.
+Igual que con los mamíferos: el Acueducto publica **nombres comunes sin binomio**. Los binomios
+quedan pendientes de una fuente botánica citable.
 
-### A.6.1 Vegetación principal (verificada)
+### A.6.1 Vegetación nativa citada para este sendero
 
-| Nombre común | Nombre científico | Nota |
+| Nombre común | Nombre científico | Estado |
 |---|---|---|
-| Cedro | *Cedrela montana* | La fuente lo transcribe como "Cedrelam montana"; grafía corregida `[por confirmar]` |
-| Raque | *Vallea stipularis* | |
-| Tíbar | *Escallonia paniculata* | |
-| Encenillo | *Weinmannia tomentosa* | Especie estructural del bosque altoandino |
-| Chuwacá | *Prunus buxifolia* | |
+| **Helechos** | `[por verificar]` | Citados por el Acueducto · **el helecho arborescente sigue siendo POI candidato** |
+| **Trompeto** | `[por verificar]` | Citado por el Acueducto |
+| **Aliso** | `[por verificar]` | Citado por el Acueducto |
+| **Gaque** | `[por verificar]` | Citado por el Acueducto |
+| **Frailejones pequeños** | `[por verificar]` | Citados por el Acueducto · marcan la transición a subpáramo |
+| **Uva camarona** | `[por verificar]` | Citada por el Acueducto |
 
-### A.6.2 Otras especies citadas por la fuente (nombre común, sin binomio)
+**El encenillo no consta** en la documentación de este sendero. El papel de árbol estructural del
+bosque altoandino lo ocupan aquí el **aliso**, el **gaque** y el **trompeto**.
 
-Amarillo · Cucharo · Garrocho · Clavito · Tuno esmeraldo · Cordoncillo · Arrayán · Cucubo ·
-Canelo · Uva camarona · Mortiño · Limoncillo · Gaque · Cocua · **Helecho arborescente** ·
-Chusque
+### A.6.2 Vegetación introducida presente
 
-> El **helecho arbóreo** ya es POI confirmado del proyecto. Su binomio concreto está
-> `[por verificar]`: "helecho arborescente" es un grupo, no una especie. En los Cerros suele
-> corresponder al género *Cyathea*, pero **eso hay que confirmarlo con la planta delante**, en V1.
+| Nombre común | Nombre científico | Estado |
+|---|---|---|
+| **Pino** | `[por verificar]` | El circuito atraviesa un bosque de pinos: es el rasgo que da nombre al recorrido |
+| **Eucalipto** | `[por verificar]` | Citado por el Acueducto |
+| **Urapán** | `[por verificar]` | Citado por el Acueducto |
+| **Acacia** | `[por verificar]` | Citada por el Acueducto |
 
-### A.6.3 Especies invasoras presentes (verificadas)
-
-Retamo liso · Retamo espinoso · Pino radiata · Pino pátula · Eucalipto · Acacia · Ciprés
-
-**Esto es contenido, no ruido.** Un POI que explique el retamo espinoso — por qué está ahí,
-por qué es un problema, por qué no se debe salir del camino — sirve directamente a RNF-015 y
-al propósito ambiental del proyecto. Es candidato a POI de flora.
+**El retamo espinoso no consta** en la documentación de este sendero. La vegetación introducida
+documentada aquí tiene un ángulo narrativo propio: **el bosque
+de pinos es introducido y a la vez es el rasgo que da identidad al recorrido**, lo que permite
+contar la tensión entre paisaje plantado y bosque nativo sin recurrir a una especie invasora.
 
 ## A.7 Patrimonio: los puntos de interés que no están vivos
 
-> Responsable: Alberto Alemán.
+El sendero tiene contexto histórico documentado: por el valle del Teusacá pasaban **rutas de
+intercambio muiscas** que conectaban comunidades distantes, y la ficha del Acueducto lo señala
+como parte de la historia del lugar.
 
-No todo el contenido del sendero está vivo. Hay **puertas derrumbadas, muros, monumentos,
-tramos de camino antiguo y señalización** que cuentan la historia del lugar, y verlos en
-detalle con su historia es parte del producto.
+`[por identificar en la visita]` — Qué elementos construidos hay dentro de los 200 m del tramo:
+muros, canalizaciones, señalización antigua o infraestructura del acueducto.
 
-Existe un tipo de POI propio: **`"patrimonio"`**.
-
-| Campo | Qué guarda |
-|---|---|
-| `historicalNote` | Qué es y qué pasó ahí. En español, corto |
-| `period` | Época aproximada. `[por verificar]` si no hay fuente |
-| `sourceUrl` | **Obligatorio.** La fuente citable de la afirmación histórica |
-
-**Regla igual de dura que con la biología:** un dato histórico sin fuente citable no se
-publica. Se marca `[por verificar]` y la ficha muestra lo que sí se sabe — que hay un muro,
-cómo es, dónde está — sin inventarle una historia.
-
-**Candidatos ya conocidos:** el **puente de madera** (ya es POI confirmado) y la
-**señalización del sendero**. El resto —puertas, muros, monumentos, tramos de camino— **se
-identifican en V1**: hoy no sabemos qué hay y no vamos a suponerlo.
-
-> Contexto útil para la investigación posterior: los Cerros Orientales tienen un patrimonio de
-> infraestructura de acueducto documentado, y el sendero del Río San Francisco – Chorro de
-> Padilla es el origen del primer acueducto de Bogotá. Si en la Quebrada La Vieja aparece
-> infraestructura análoga, hay dónde buscar fuente. Pero **no se afirma nada hasta verlo y
-> verificarlo**.
-
-Los marcadores de patrimonio se dibujan en gris, no en verde: ver §B.5.
+**La regla dura del patrimonio no cambia:** un dato histórico sin fuente citable no se publica.
+Si no hay fuente, la ficha describe lo que se ve y marca la historia como `[por verificar]`, sin
+inventarla. El campo `sourceUrl` es obligatorio en los POIs de tipo patrimonio.
 
 ## A.8 Fuentes consultadas
 
-Consultadas el 11/08/2026.
+- [Acueducto de Bogotá, Sendero Santa Ana - La Aguadora](https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos/santa_ana_la_aguadora) — **fuente primaria**, es el administrador del sendero. Describe ecosistemas, fauna y flora con **nombre común y sin binomio**
+- [eBird, punto `L9738611` «Club La Aguadora / Sendero Santa Ana»](https://ebird.org/hotspot/L9738611) — **fuente primaria de las aves**, 121 especies registradas con binomio. Lista imprimible: <https://ebird.org/printableList?regionCode=L9738611&yr=all&m=>
+- [Guía de aves de los Cerros Orientales, Secretaría de Ambiente](https://oab.ambientebogota.gov.co/guia-de-aves-camino-guadalupe-aguanoso/) — elaborada por Edward Martín López (SDA) y María Fernanda Barón (Jardín Botánico). Cubre explícitamente este sendero
+- [Visit Bogotá, ruta Santa Ana la Aguadora](https://visitbogota.co/es/rutas-turisticas/-ruta-turistica-santa-ana-la-aguadora-4235) — datos de acceso y recorrido
+- [Bogotá.gov.co, apertura del sendero Santa Ana La Aguadora](https://bogota.gov.co/mi-ciudad/habitat/senderos-ecologicos-de-bogota-apertura-sendero-santa-ana-la-aguadora) — datos distritales
+- [Fundación Cerros de Bogotá, Fauna](https://cerrosdebogota.org/index.php/fauna/) — catálogo regional de los Cerros Orientales, sirve de pista para binomios que luego hay que confirmar para este sendero
 
-- [Acueducto de Bogotá, Sendero Quebrada La Vieja: conoce las especies de flora y fauna](https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos/quebrada_la_vieja/Recomendaciones+para+el+ingreso+y+puntos+de+encuentro+Oculto/Conoce+las+especies+de+flora+y+fauna) — **fuente primaria**, es el administrador del sendero
-- [Fundación Cerros de Bogotá, Fauna](https://cerrosdebogota.org/index.php/fauna/)
-- [Anexo: Flora y fauna de los cerros orientales de Bogotá, Wikipedia](https://es.wikipedia.org/wiki/Anexo:Flora_y_fauna_de_los_cerros_orientales_de_Bogot%C3%A1) — fuente terciaria, se usa solo como pista para buscar en las anteriores
-- [Mongabay Latam, Cerros Orientales de Bogotá: primeros hallazgos de la investigación de un ecosistema biodiverso (2017)](https://es.mongabay.com/2017/05/cerros-orientales-bogota-primeros-hallazgos-la-investigacion-ecosistema-biodiverso/)
-- [El Tiempo, Los seis mamíferos captados en los cerros orientales de Bogotá](https://www.eltiempo.com/bogota/estos-fueron-los-seis-mamiferos-que-fueron-captados-en-los-cerros-orientales-de-bogota-827150)
-- [Bogotá.gov.co, Se identificaron 9 especies de fauna silvestre en Cerros Orientales](https://bogota.gov.co/mi-ciudad/ambiente/se-identificaron-9-especies-de-fauna-silvestre-en-cerros-orientales)
+### Fuentes pendientes de consultar (para cerrar los «por verificar»)
 
-### Fuentes pendientes de consultar (para cerrar los "por verificar")
+- **Binomios de la flora:** el Acueducto publica los nombres comunes sin nombre científico. Hay que cerrarlos con el **Jardín Botánico de Bogotá** o el **SiB Colombia**: helechos, trompeto, aliso, gaque, frailejones, uva camarona, y las cuatro introducidas.
+- **Anfibios y reptiles:** el Acueducto los cita sin especies. Buscar el inventario de la Secretaría de Ambiente o del Jardín Botánico para los Cerros Orientales, sector Usaquén.
+- **Binomios de mamíferos confirmados para este sendero:** los de cusumbo, zarigüeya y ardilla vienen del catálogo regional y hay que confirmarlos aquí.
+- **Guía de aviturismo de Bogotá (Instituto Distrital de Turismo):** nombres comunes de uso local.
 
-- **eBird / Avibase**: listado de la localidad "Quebrada La Vieja, Bogotá" para confirmar mirla, copetón y pava
-- **Lista de referencia de especies de aves de Colombia (SiB Colombia)**: para binomios y grafías oficiales
-- **Guía de aviturismo de Bogotá (Instituto Distrital de Turismo)**: nombres comunes de uso local
-
-Responsable: Felipe Acevedo. Plazo: antes de cerrar S2b (07/09/2026). Es criterio de "hecho"
-de HU-11.
+Responsable: Felipe Acevedo. Es criterio de «hecho» de ART-06.
 
 ## A.9 Qué se decide en la visita de reconocimiento (V1)
 
@@ -265,15 +226,15 @@ Este catálogo es la lista **candidata**. Lo que V1 tiene que cerrar:
 
 - [ ] Qué especies se ven u oyen realmente en los 200 m del tramo, y **dónde** circulan
 - [ ] Cuáles de esas tienen un lugar de paso identificable donde anclar el POI
-- [ ] Si el zorro perro tiene rastro o lugar de paso plausible en el tramo
+- [ ] Si el cusumbo, la zarigüeya o la ardilla tienen rastro o lugar de paso plausible en el tramo
 - [ ] Qué helecho arbóreo concreto hay, para poder verificar la especie
-- [ ] Si hay retamo o alguna invasora visible desde el trazado (candidata a POI de flora)
-- [ ] Confirmar o descartar el curí
+- [ ] Qué se ve del bosque de pinos desde el trazado, y si da para POI de flora introducida
+- [ ] Qué anfibios y reptiles se identifican, que la ficha del Acueducto cita sin especies
 - [ ] Qué elementos de patrimonio hay y dónde (§A.7)
 
 Procedimiento de la visita: [`05-produccion-de-escenas.md`](05-produccion-de-escenas.md) §2.
 Contrato de datos de los POIs: [`03-arquitectura.md`](03-arquitectura.md).
-Historias de modelado y verificación: [`04-backlog.md`](04-backlog.md) HU-11 a HU-14.
+Historias de modelado y verificación: [`04-backlog.md`](04-backlog.md), bloque ART.
 
 ---
 

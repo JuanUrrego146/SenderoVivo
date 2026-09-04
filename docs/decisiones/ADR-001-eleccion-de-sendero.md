@@ -1,7 +1,7 @@
 # ADR-001: Elección del sendero a capturar
 
-- **Estado:** **Aceptada** (ratificada; compromiso de tramo fijado en 200 m)
-- **Estado hoy (18/08/2026):** decisión en vigor. V1 (reconocimiento) pendiente para la semana del 18–24/08; gestión con la EAAB pendiente de envío; hay un prototipo publicado con una escena de práctica que ya validó el pipeline completo antes de la salida
+- **Estado:** **Aceptada** (acordada con el Acueducto; compromiso de tramo fijado en 200 m)
+- **Estado hoy:** decisión en vigor. El sendero quedó pactado con el Acueducto en reunión y el correo formal con la solicitud de permiso de ingreso ya se envió; falta la respuesta con la autorización. Hay un prototipo publicado con una escena de práctica que ya validó el pipeline completo antes de la salida
 - **Fecha:** 11/08/2026
 - **Responsable de la decisión:** Juan Urrego (PM)
 - **Participan:** todo el equipo
@@ -38,7 +38,7 @@ Ordenados por peso. Los dos primeros son técnicos y dominan la decisión, porqu
 
 ## Opciones consideradas
 
-### Opción A: Quebrada La Vieja (Chapinero) · **elegida**
+### Opción A: Quebrada La Vieja (Chapinero)
 
 Calle 71 con Avenida Circunvalar. TransMilenio a 700 m.
 
@@ -50,6 +50,8 @@ Calle 71 con Avenida Circunvalar. TransMilenio a 700 m.
 | C4 Contenido biológico | **Alto**, colibrí chillón (*Colibri coruscans*), helecho arbóreo, bosque altoandino |
 | C5 Repetición | **Alto**, cercanía y reserva por la app permiten volver con poca fricción |
 | C6 Patrimonio | Medio |
+
+**Por qué no se elige:** es la opción más fuerte en los dos criterios técnicos de mayor peso, y durante la primera evaluación fue la elegida. Se descarta por una razón externa al equipo: **el sendero disponible para el proyecto, acordado con el Acueducto, es Santa Ana – La Aguadora.** La valoración técnica de esta opción se conserva porque es la vara con la que se mide lo que se pierde.
 
 ### Opción B: Río San Francisco · Chorro de Padilla (La Candelaria / centro)
 
@@ -66,7 +68,9 @@ Calle 71 con Avenida Circunvalar. TransMilenio a 700 m.
 
 > El valor patrimonial de esta opción es real y notable. Se descarta por prioridad de criterios técnicos, no por falta de mérito.
 
-### Opción C: Santa Ana – La Aguadora (Usaquén)
+### Opción C: Santa Ana – La Aguadora (Usaquén) · **elegida**
+
+Calle 119 N° 0-10 Este, portería del Club La Aguadora, zona rural del barrio Santa Bárbara. Circuito Bosque de Pinos de 3,1 km que termina en el Mirador Santa Ana.
 
 | Criterio | Valoración |
 |---|---|
@@ -77,19 +81,25 @@ Calle 71 con Avenida Circunvalar. TransMilenio a 700 m.
 | C5 Repetición | Medio |
 | C6 Patrimonio | Medio |
 
-**Por qué no se elige:** falla justo en los dos criterios de mayor peso. Menos elementos duros significa menos ancla geométrica, y el riesgo R1 (mala reconstrucción de vegetación densa) es el principal del proyecto. Sus vistas amplias de subpáramo son atractivas, pero **están arriba**, y el alcance cerrado es el tramo de entrada.
+**Por qué se elige:** porque es el sendero acordado con el Acueducto, que es quien administra la reserva y autoriza el ingreso y la grabación. **No es una elección técnica del equipo**, y este ADR no lo disfraza de tal cosa.
+
+La valoración técnica de arriba sigue siendo válida y hay que leerla como lo que es: **una advertencia**. Menos elementos duros significa menos ancla geométrica, y el riesgo R1 (mala reconstrucción de vegetación densa) es el principal del proyecto. Elegir este sendero **sube ese riesgo**, y la mitigación deja de ser la elección del sitio para pasar a ser el protocolo de captura: más pasadas, encuadres que busquen deliberadamente los tramos con estructura construida, y una evaluación temprana del material antes de comprometer el entrenamiento largo.
+
+A favor juega que el circuito atraviesa un **bosque de pinos introducido**: los troncos rectos y regularmente espaciados son mejor ancla geométrica que el bosque altoandino cerrado, y eso compensa en parte la falta de escalones y barandas.
 
 ---
 
 ## Decisión
 
-**Se captura el tramo de entrada de la Quebrada La Vieja (Opción A).**
+**Se captura el tramo de entrada del sendero Santa Ana – La Aguadora (Opción C).**
 
-Cifras del tramo previsto, Altitud: **2.712 m** · Recorrido: **340 m** · Desnivel: **62 m** · Pendiente media: **9 %**. El tramo capturado en tres escenas es de **200 m** dentro de ese recorrido.
+El circuito Bosque de Pinos son **3,1 km**; el tramo capturado en tres escenas es de **200 m** dentro de ese recorrido. **La altitud de inicio, el desnivel y la pendiente no los publica ninguna fuente oficial para este sendero**: se miden con GPS en la visita de reconocimiento y hasta entonces quedan `[por medir en campo]`.
 
-**El motivo determinante es C1.** Escalones de piedra, barandas de madera y cauce rocoso son exactamente el tipo de superficie que el Gaussian Splatting reconstruye bien, y son la mitigación directa del riesgo más grave del proyecto: que el bosque altoandino salga con ruido y flotantes. Las otras dos opciones o no mejoran ese criterio (B) o lo empeoran (C).
+**El motivo determinante no es técnico: es el acuerdo con el Acueducto.** Es quien administra la Reserva Forestal Protectora Bosque Oriental de Bogotá y quien autoriza el ingreso y la grabación. Sin ese permiso no hay proyecto, y el permiso es para este sendero.
 
-La accesibilidad (C3) refuerza la decisión: con dos ventanas de salida reservadas y un equipo que carga material, 700 m desde TransMilenio reduce fricción real y aumenta la probabilidad de aprovechar la mañana nublada y sin viento que la captura necesita.
+**Lo que eso cuesta, dicho sin adornos:** se renuncia a la mayor densidad de elementos duros de las tres opciones, que era la mitigación directa del riesgo R1. La compensación tiene que venir del protocolo de captura y del bosque de pinos, no de la elección del sitio.
+
+**El horario aprieta y hay que planificar con él:** el ingreso es de **jueves a domingo y festivos, entre las 6:30 y las 9:30 de la mañana**. Son tres horas de ventana en cuatro días de la semana. Eso coincide con la luz suave de primera hora que la captura necesita, pero deja poco margen si un día sale con viento o sol duro.
 
 ---
 
@@ -97,19 +107,24 @@ La accesibilidad (C3) refuerza la decisión: con dos ventanas de salida reservad
 
 ### Positivas
 
-- El tramo tiene el mayor número de elementos duros de los tres candidatos: mejor punto de partida frente al riesgo R1.
-- Los POIs ya identificados (colibrí chillón, puente de madera, helecho arbóreo) pertenecen a este sendero: el trabajo de contenido de E3 puede arrancar en S2b sin esperar la decisión final.
-- Repetir la salida es barato en tiempo y en transporte, lo que hace creíble la estrategia de **dos ventanas** frente al riesgo R3 (clima).
+- **El permiso está encaminado.** El sendero está acordado con el administrador de la reserva y la solicitud formal de ingreso ya se envió, que era el bloqueo real del proyecto.
+- **El bosque de pinos ayuda a la reconstrucción.** Troncos rectos, regulares y bien espaciados dan mejor ancla geométrica que el bosque altoandino cerrado.
+- **El sendero es sitio reconocido de observación de aves**, con 121 especies registradas en eBird para el punto del recorrido. El contenido de fauna de E3 tiene material de sobra.
+- **Tres ecosistemas en un circuito corto:** bosque altoandino, subpáramo y bosque de pinos introducido. Más variedad visual en 200 m de la que ofrecía la alternativa.
 
 ### Negativas y aceptadas
 
 - **El agua del cauce no se va a reconstruir bien.** Es superficie reflectante y en movimiento, justo lo que la guía de captura desaconseja. Se acepta como limitación: la composición se apoya en roca y baranda, y **no se modela agua a mano** (principio P1).
-- **Se renuncia al valor patrimonial** del Chorro de Padilla y a **las vistas de subpáramo** de Santa Ana. Ambas cosas son contenido atractivo que este proyecto no va a tener.
+- **Se renuncia a la mayor densidad de elementos duros**, que era la mitigación directa del riesgo R1. Es la pérdida más seria de este cambio y se compensa con protocolo de captura, no con el sitio.
+- **La ventana de ingreso es estrecha:** jueves a domingo, de 6:30 a 9:30 de la mañana. Si una salida se malogra por clima, la siguiente oportunidad está a días, no a horas.
+- **Se renuncia al valor patrimonial** del Chorro de Padilla, que es contenido atractivo que este proyecto no va a tener.
 - **Un solo sendero, un solo tramo.** Está en la lista de "no lo hacemos" y no se reabre.
 
 ### Qué queda pendiente de verificar en campo
 
 - `[por medir en campo]`, Ubicación precisa de los 5–6 POIs sobre el tramo.
+- `[por medir en campo]`, Altitud de inicio, desnivel acumulado y pendiente media: ninguna fuente oficial las publica para este sendero.
+- `[por evaluar]`, Si el bosque de pinos da suficiente ancla geométrica para compensar la menor densidad de elementos duros.
 - `[por evaluar]`, Comportamiento real de la luz a primera hora bajo el dosel.
 - `[por evaluar]`, Si el cauce estorba la reconstrucción más de lo previsto, se recompone el encuadre de las pasadas.
 
@@ -125,16 +140,13 @@ Si la visita de reconocimiento contradice esta propuesta, **este ADR se actualiz
 
 ---
 
-## Actualización: 11/08/2026
+## Alcance concreto del tramo
 
-Dos precisiones posteriores a la redacción de este ADR. **No cambian la decisión de sendero**, solo la concretan:
+El tramo queda fijado en **200 m**, no en el rango de 120–200 m, y se divide en tres etapas: 0–70, 70–140 y 140–200 metros, con los cortes por ajustar a puntos naturales del sendero durante la visita de reconocimiento.
 
-1. **El sector es Claro de Luna**, dentro de la Quebrada La Vieja.
-2. **El tramo queda fijado en 200 m**, no en el rango de 120–200 m. Se divide en tres etapas: 0–70, 70–140 y 140–200 metros, con los cortes por ajustar a puntos naturales del sendero durante la visita de reconocimiento.
+El punto de partida es el tramo de entrada del circuito Bosque de Pinos, desde la portería del Club La Aguadora. La altitud de inicio, el desnivel y la pendiente de esos 200 m están `[por medir en campo]` y se cierran en la visita de reconocimiento (V1).
 
-Las cifras de **340 m de recorrido, 62 m de desnivel y 9 % de pendiente** que aparecen arriba corresponden al **tramo de referencia evaluado en esta comparación**, no al tramo comprometido de 200 m. El desnivel y la pendiente de los 200 m están `[por medir en campo]` y se cierran en la visita de reconocimiento (V1).
-
-La visita de reconocimiento pasa a tener historia propia y criterios de aceptación verificables: **HU-42**. Ver [`../05-produccion-de-escenas.md`](../05-produccion-de-escenas.md).
+La visita de reconocimiento tiene historia propia y criterios de aceptación verificables: **CAM-02**. Ver [`../05-produccion-de-escenas.md`](../05-produccion-de-escenas.md).
 
 ---
 

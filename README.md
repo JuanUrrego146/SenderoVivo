@@ -1,6 +1,6 @@
 # Sendero Vivo
 
-**Recorre 200 metros reales del sendero de la Quebrada La Vieja, sector Claro de Luna, Cerros Orientales de Bogotá, desde el navegador. Reconstruido con Gaussian Splats a partir de captura real, no modelado a mano.**
+**Recorre 200 metros reales del sendero Santa Ana - La Aguadora, Cerros Orientales de Bogotá, desde el navegador. Reconstruido con Gaussian Splats a partir de captura real, no modelado a mano.**
 
 Repositorio: [`JuanUrrego146/SenderoVivo`](https://github.com/JuanUrrego146/SenderoVivo)
 
@@ -26,8 +26,8 @@ La propuesta se sostiene en tres verbos:
 
 Y una cuarta dimensión que no es visual: **ambientación sonora binaural con audio espacial 3D**. La quebrada se oye donde la quebrada está.
 
-**Ubicación:** Quebrada La Vieja, sector **Claro de Luna**, tramo de entrada. Calle 71 con Avenida Circunvalar, Chapinero. TransMilenio a 700 m.
-**Tramo comprometido:** **200 m** en 3 escenas · Altitud de inicio 2.712 msnm `[por confirmar en campo]` · Desnivel y pendiente `[por medir en campo]`
+**Ubicación:** Sendero **Santa Ana - La Aguadora**, circuito Bosque de Pinos, tramo de entrada. Calle 119 N° 0-10 Este, portería del Club La Aguadora, zona rural del barrio Santa Bárbara, localidad de Usaquén.
+**Tramo comprometido:** **200 m** en 3 escenas, dentro del circuito de 3,1 km · Altitud de inicio, desnivel y pendiente `[por medir en campo]`
 
 ---
 
@@ -92,7 +92,7 @@ git pull origin develop
 
 Esto **no** se hace, y tampoco se propone como fase 2:
 
-- El sendero completo de 7,3 km
+- El circuito completo de 3,1 km
 - Caminar libre tipo videojuego
 - App nativa iOS/Android
 - Realidad virtual
@@ -100,7 +100,7 @@ Esto **no** se hace, y tampoco se propone como fase 2:
 - Captura con dron
 - Más de un sendero
 
-**Por qué 200 m y no el sendero completo:** en un bosque cada metro es geometría nueva, no hay superficies repetibles, y el navegador tiene un techo duro de memoria y de coste de ordenamiento por profundidad. Capturar 7,3 km produciría un archivo que ningún celular puede cargar.
+**Por qué 200 m y no el circuito completo:** en un bosque cada metro es geometría nueva, no hay superficies repetibles, y el navegador tiene un techo duro de memoria y de coste de ordenamiento por profundidad. Capturar 7,3 km produciría un archivo que ningún celular puede cargar.
 
 > **Ampliar el tramo** (etapa 4, metros 200–260) **no está comprometido.** Se decide al cerrar el Sprint 2, con datos reales de peso y rendimiento. Ver [plan de trabajo](plan/plan_de_trabajo.md) §6.
 

@@ -120,7 +120,7 @@ Cada historia lleva sus criterios de aceptación y sus subtareas repartidas por 
 **RF/RNF:** decisión de alcance · **Hito bloqueante**
 
 **Criterios de aceptación**
-- [ ] Las tres opciones (Quebrada La Vieja, Río San Francisco – Chorro de Padilla, Santa Ana – La Aguadora) están evaluadas contra los mismos criterios.
+- [ ] Las tres opciones (Santa Ana – La Aguadora, Quebrada La Vieja, Río San Francisco – Chorro de Padilla) están evaluadas contra los mismos criterios, y la elegida es **Santa Ana – La Aguadora** por acuerdo con el Acueducto.
 - [ ] Los criterios incluyen: densidad de elementos duros, accesibilidad en transporte público, condiciones de captura, valor de contenido biológico y facilidad de reserva.
 - [ ] La decisión queda escrita en `ADR-001` con alternativas descartadas y consecuencias.
 - [ ] La decisión está cerrada **antes del viernes de la semana 1**.
@@ -833,7 +833,7 @@ torcida. Receta completa: [`05-produccion-de-escenas.md`](05-produccion-de-escen
 - [ ] El track GPS capturado en campo alimenta la capa de datos.
 - [ ] El track está alineado y escalado contra la geometría reconstruida (**cierra V9**).
 - [ ] La posición del usuario en el recorrido se corresponde con un punto del track.
-- [ ] Las cifras del tramo son las reales: 2.712 m de altitud, 340 m de recorrido, 62 m de desnivel, 9 % de pendiente.
+- [ ] Las cifras del tramo son las medidas con GPS en la visita de reconocimiento: altitud de inicio, recorrido, desnivel y pendiente. Ninguna fuente oficial las publica para este sendero.
 
 **Subtareas**
 - David Beltrán, Lectura y proyección del track sobre el trazado.

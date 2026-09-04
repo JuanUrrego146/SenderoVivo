@@ -22,7 +22,7 @@ Esa simplicidad es deliberada. El proyecto tiene el riesgo concentrado en la **p
 
 ```mermaid
 flowchart TB
-    subgraph campo["1. Campo, Quebrada La Vieja"]
+    subgraph campo["1. Campo, Santa Ana - La Aguadora"]
         CAM["Celular iPhone 13<br/>Video 4K 60fps, manual"]
         GPS["Track GPS<br/>del recorrido"]
         AUD["Audio ambiente<br/>y cantos"]
@@ -619,7 +619,7 @@ Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el produ
 {
   "version": 1,
   "trail": {
-    "name": "Quebrada La Vieja, sector Claro de Luna, tramo de entrada",
+    "name": "Santa Ana - La Aguadora, circuito Bosque de Pinos, tramo de entrada",
     "totalLengthMeters": 200,
     "startAltitudeMeters": 2712,
     "elevationGainMeters": null,

@@ -12,7 +12,7 @@
 
 Los senderos de los Cerros Orientales de Bogotá son **gratuitos** y se reservan por la app del Acueducto. El acceso, en el papel, está resuelto. Lo que no está resuelto es todo lo que pasa antes y durante la caminata.
 
-Quien va a la Quebrada La Vieja por primera vez no sabe cuánto dura, qué tan duro es, hasta dónde va a alcanzar a llegar, ni por dónde va exactamente el camino autorizado. El sendero completo son **7,3 km, +406 m de desnivel y unas 3 horas**. Esas cifras existen, pero no significan nada para alguien que nunca ha subido: 406 metros de desnivel no se imaginan, se sienten.
+Quien va al sendero Santa Ana - La Aguadora por primera vez no sabe cuánto dura, qué tan duro es, hasta dónde va a alcanzar a llegar, ni por dónde va exactamente el camino autorizado. El circuito del Bosque de Pinos son **3,1 km**, y el desnivel y la duración **ni siquiera se publican**. Esa cifra existe, pero no significa nada para alguien que nunca ha subido: los metros de desnivel no se imaginan, se sienten.
 
 De ahí salen cuatro problemas concretos y observables:
 
@@ -116,7 +116,7 @@ Esta es la decisión que define el proyecto. Un modelo 3D hecho a mano es la int
 
 Esta lista es vinculante. No es una lista de "fase 2": es una lista de lo que este proyecto **no va a hacer**, y no se propone de nuevo.
 
-- El sendero completo de 7,3 km.
+- El circuito completo de 3,1 km.
 - Movimiento libre **fuera del trazado**. Las teclas WASD sí existen en el visor, pero avanzan, retroceden y se desplazan lateralmente **dentro del corredor del camino** (RF-004); lo vetado es salirse del trazado, no la tecla. El vuelo libre solo existe en el modo editor (`?editor=1`).
 - App nativa iOS o Android.
 - Realidad virtual.
@@ -124,11 +124,11 @@ Esta lista es vinculante. No es una lista de "fase 2": es una lista de lo que es
 - Captura con dron.
 - Más de un sendero.
 
-**Por qué el tramo y no el sendero completo:** en un bosque cada metro es geometría nueva, no hay superficies repetibles, no hay simplificación posible sin perder el sitio, y el navegador tiene un techo duro de memoria y de coste de ordenamiento por profundidad. Capturar 7,3 km produciría un archivo que ningún celular puede cargar. Se captura el primer tramo, justo donde el visitante decide si sigue o se devuelve, porque es exactamente el punto donde la información cambia la decisión.
+**Por qué el tramo y no el sendero completo:** en un bosque cada metro es geometría nueva, no hay superficies repetibles, no hay simplificación posible sin perder el sitio, y el navegador tiene un techo duro de memoria y de coste de ordenamiento por profundidad. Capturar los 3,1 km del circuito produciría un archivo que ningún celular puede cargar. Se captura el primer tramo, justo donde el visitante decide si sigue o se devuelve, porque es exactamente el punto donde la información cambia la decisión.
 
 ### 4.3 Ubicación
 
-**Quebrada La Vieja, sector Claro de Luna, tramo de entrada.** Calle 71 con Avenida Circunvalar, Chapinero. TransMilenio a 700 m.
+**Santa Ana - La Aguadora, circuito Bosque de Pinos, tramo de entrada.** Calle 119 N° 0-10 Este, portería del Club La Aguadora, zona rural del barrio Santa Bárbara, localidad de Usaquén.
 
 El tramo tiene escalones de piedra, barandas de madera y cauce rocoso: superficies duras, con textura y aristas definidas, que es justo lo que la reconstrucción por Gaussian Splatting resuelve bien. Es un criterio técnico, no estético.
 
@@ -137,11 +137,11 @@ El tramo tiene escalones de piedra, barandas de madera y cauce rocoso: superfici
 | Dato | Valor | Estado |
 |---|---|---|
 | Longitud | **200 m** | Compromiso firme |
-| Altitud de inicio | **2.712 msnm** | Registro GPS público · `[por confirmar en V1]` |
+| Altitud de inicio | `[por medir en la primera visita]` | Se mide con GPS en el reconocimiento |
 | Desnivel acumulado | | **`[por medir en campo]`**, se cierra en V1 |
 | Pendiente media | | **`[por medir en campo]`**, se cierra en V1 |
 
-> Las cifras de 340 m de recorrido, 62 m de desnivel y 9 % de pendiente que aparecen en versiones anteriores de estos documentos corresponden al **tramo de referencia evaluado en ADR-001**, no al tramo comprometido de 200 m. No se reutilizan como si fueran las del tramo: se miden.
+> El desnivel, la pendiente y la duración del tramo **no los publica ninguna fuente oficial** para este sendero: se miden con GPS en la visita de reconocimiento. Ninguna cifra de recorrido se da por buena sin medirla en campo.
 
 > La decisión final de sendero se cierra en la primera semana y es **hito bloqueante del Sprint 1**. Las tres opciones evaluadas y los criterios están en [ADR-001](decisiones/ADR-001-eleccion-de-sendero.md).
 

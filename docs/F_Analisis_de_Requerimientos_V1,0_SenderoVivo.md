@@ -4,7 +4,7 @@
 
 **SENDERO VIVO**
 
-*Recorrido virtual 3D de 200 m del sendero de la Quebrada La Vieja, sector Claro de Luna\
+*Recorrido virtual 3D de 200 m del sendero Santa Ana - La Aguadora, circuito Bosque de Pinos\
 Cerros Orientales de Bogotá*
 
 **Versión 1,0**
@@ -149,13 +149,13 @@ Los senderos de los Cerros Orientales de Bogotá son gratuitos y se reservan med
 
 De esa falta de información se derivan cuatro consecuencias observables: las personas se devuelven a mitad de camino porque subieron sin saber a qué se enfrentaban; se salen del trazado autorizado dentro de una reserva natural protegida, pisando bosque altoandino que tarda décadas en recuperarse; caminan sin entender el ecosistema que atraviesan, de modo que el enorme contenido biológico del sendero pasa desapercibido; y quien no puede subir —por condición física, edad, discapacidad, tiempo o distancia— nunca llega a conocer el lugar, pese a que está a 700 metros de una estación de transporte masivo.
 
-Sendero Vivo responde a este problema reconstruyendo los primeros 200 metros del sendero, en el sector Claro de Luna, mediante captura fotogramétrica con Gaussian Splatting, y haciéndolo recorrible desde el navegador, en computador y en celular, sin instalación. El tramo elegido es el de entrada, justo donde el visitante decide si continúa o se devuelve, porque es el punto en el que la información cambia efectivamente la decisión.
+Sendero Vivo responde a este problema reconstruyendo los primeros 200 metros del sendero, en el circuito Bosque de Pinos, mediante captura fotogramétrica con Gaussian Splatting, y haciéndolo recorrible desde el navegador, en computador y en celular, sin instalación. El tramo elegido es el de entrada, justo donde el visitante decide si continúa o se devuelve, porque es el punto en el que la información cambia efectivamente la decisión.
 
 La propuesta se articula en tres capacidades: reconocer el camino real y saber a qué se va; entender el ecosistema mediante fichas tridimensionales de aves y plantas ancladas a lugares reales del tramo; y medir la exigencia del recorrido con datos reales de altitud, distancia, desnivel y pendiente tomados con GPS el mismo día de la captura. El sistema está dirigido a cuatro perfiles: el visitante que planea ir, la persona que no puede subir, el interesado en la fauna y la flora del bosque altoandino, y el docente o guía que necesita material para mostrar el ecosistema.
 
 ## 3.2 Visión del proyecto
 
-Sendero Vivo permite recorrer 200 metros reales del sendero de la Quebrada La Vieja, sector Claro de Luna, desde el navegador, reconstruidos tal como son —capturados, no dibujados— para saber a qué se va, entender lo que se ve y medir lo que cuesta.
+Sendero Vivo permite recorrer 200 metros reales del sendero Santa Ana - La Aguadora, circuito Bosque de Pinos, desde el navegador, reconstruidos tal como son —capturados, no dibujados— para saber a qué se va, entender lo que se ve y medir lo que cuesta.
 
 La propuesta se articula en cuatro capacidades. Reconocer: ver el camino real, los escalones de piedra, las barandas de madera, el cauce y la pendiente; no un render ni un mapa, sino el lugar capturado. Entender: marcadores flotantes anclados a lugares reales del tramo que, al activarse, abren la ficha del ave, la planta o el elemento patrimonial, con modelo tridimensional girable y animado, nombre común y científico, narración corta, canto, altura de distribución, identificación en campo y consejos de avistamiento. Medir: altitud sobre el nivel del mar, distancia recorrida y restante, desnivel acumulado, pendiente actual y tiempo estimado hasta el siguiente punto, derivados del track GPS grabado en campo. Y oír: ambientación sonora binaural con audio espacial tridimensional, de modo que la quebrada suene donde la quebrada está y quede atrás conforme el visitante avanza.
 
@@ -869,7 +869,7 @@ Un requerimiento describe una necesidad de negocio en términos de capacidades y
 | **Nombre del Requerimiento** | Altitud sobre el nivel del mar |
 | **Descripción** | El sistema debe mostrar la altitud sobre el nivel del mar de la posición actual. |
 | **Actor** | Sistema |
-| **Reglas de negocio relacionadas** | El dato se deriva del track GPS grabado en campo; nunca se codifica de forma fija. Altitud del tramo: 2.712 msnm. |
+| **Reglas de negocio relacionadas** | El dato se deriva del track GPS grabado en campo; nunca se codifica de forma fija. La altitud del tramo se mide en la visita de reconocimiento. |
 | **Interoperabilidad con otro sistema, módulo o componente** | Capa de datos; track GPS; HUD. |
 | **Relaciones entre requerimientos** | RF-014 (Distancias), RF-015 (Desnivel y pendiente), RF-020 (Consumo del track GPS) |
 | **Casos de uso relacionados / Historias de usuario relacionados** | CUS-007 |
@@ -881,7 +881,7 @@ Un requerimiento describe una necesidad de negocio en términos de capacidades y
 | **Nombre del Requerimiento** | Distancia recorrida y restante |
 | **Descripción** | El sistema debe mostrar la distancia recorrida y la que falta. |
 | **Actor** | Sistema |
-| **Reglas de negocio relacionadas** | Ambas distancias suman la longitud total del tramo. Recorrido del tramo: 340 m. |
+| **Reglas de negocio relacionadas** | Ambas distancias suman la longitud total del tramo, que son los 200 m comprometidos. |
 | **Interoperabilidad con otro sistema, módulo o componente** | Capa de datos; track GPS; HUD. |
 | **Relaciones entre requerimientos** | RF-013 (Altitud), RF-016 (Tiempo estimado), RF-020 (Consumo del track GPS) |
 | **Casos de uso relacionados / Historias de usuario relacionados** | CUS-007 |
@@ -893,7 +893,7 @@ Un requerimiento describe una necesidad de negocio en términos de capacidades y
 | **Nombre del Requerimiento** | Desnivel acumulado y pendiente |
 | **Descripción** | El sistema debe mostrar el desnivel acumulado y la pendiente actual. |
 | **Actor** | Sistema |
-| **Reglas de negocio relacionadas** | Los valores deben ser coherentes con las cifras reales del tramo: 62 m de desnivel y 9 % de pendiente media. |
+| **Reglas de negocio relacionadas** | Los valores deben ser coherentes con las cifras reales del tramo, que se miden con GPS en la visita de reconocimiento. |
 | **Interoperabilidad con otro sistema, módulo o componente** | Capa de datos; track GPS; HUD. |
 | **Relaciones entre requerimientos** | RF-013 (Altitud), RF-014 (Distancias), RF-020 (Consumo del track GPS) |
 | **Casos de uso relacionados / Historias de usuario relacionados** | CUS-007 |
@@ -1304,7 +1304,7 @@ Un requerimiento describe una necesidad de negocio en términos de capacidades y
 
 - Alcance cerrado. El proyecto captura 200 metros en tres escenas, por etapas de 0 a 70, de 70 a 140 y de 140 a 200 metros, no el sendero completo de 7,3 kilómetros. En un bosque cada metro constituye geometría nueva, sin superficies repetibles que permitan simplificar, y el navegador impone un techo de memoria y de coste de ordenamiento por profundidad. Quedan expresamente fuera de alcance: el sendero completo, el desplazamiento libre tipo videojuego, la aplicación nativa iOS o Android, la realidad virtual, el multijugador, la captura con dron y cualquier sendero adicional.
 
-- Ubicación. Quebrada La Vieja, sector Claro de Luna, tramo de entrada. Calle 71 con Avenida Circunvalar, Chapinero, con TransMilenio a 700 metros. Longitud comprometida: 200 m. Altitud de inicio: 2.712 msnm, procedente del registro GPS público y pendiente de confirmación en campo. El desnivel acumulado y la pendiente media del tramo de 200 metros quedan marcados como pendientes de medición y se cierran en la visita de reconocimiento. Las cifras de 340 m de recorrido, 62 m de desnivel y 9 % de pendiente corresponden al tramo de referencia evaluado en el ADR-001 y no al tramo comprometido. La elección se justifica en el documento ADR-001; el criterio determinante es la densidad de elementos duros (escalones de piedra, barandas de madera y cauce rocoso), que son los que la reconstrucción por Gaussian Splatting resuelve con fiabilidad.
+- Ubicación. Sendero Santa Ana - La Aguadora, circuito Bosque de Pinos, tramo de entrada. Calle 119 N° 0-10 Este, portería del Club La Aguadora, zona rural del barrio Santa Bárbara, localidad de Usaquén. El circuito completo son 3,1 km; la longitud comprometida del recorrido virtual es de 200 m. La altitud de inicio, el desnivel acumulado y la pendiente media quedan pendientes de medición y se cierran con GPS en la visita de reconocimiento: ninguna fuente oficial publica esas cifras para este sendero. El sendero está dentro de la Reserva Forestal Protectora Bosque Oriental de Bogotá y el ingreso se reserva por la app Caminos de los Cerros Orientales. La elección se justifica en el documento ADR-001; el criterio determinante es la densidad de elementos duros (escalones de piedra, barandas de madera y cauce rocoso), que son los que la reconstrucción por Gaussian Splatting resuelve con fiabilidad.
 
 - Requerimientos con valores pendientes. El RNF-003 (peso máximo por escena en formato SOG), el RNF-012 (presupuesto de los modelos 3D) y el RNF-016 (presupuesto de audio espacial) se encuentran sin valor numérico de forma deliberada. Se fijarán con mediciones reales durante el Sprint 2, el Sprint 2b y el Sprint 4 respectivamente. Consignar una cifra estimada en este momento sería inventar un dato.
 
