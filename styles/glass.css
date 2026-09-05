@@ -66,3 +66,55 @@
 .sendero-vivo-poi-marker {
     display: none !important;
 }
+
+/* =====================================================================
+   RESPONSIVE MÓVIL — media queries puras, sin clases Tailwind responsive
+   La vista PC (#shell-header-pc, #shell-nav-pc) NO se toca en absoluto.
+   Solo se oculta en pantallas pequeñas y se muestran los equivalentes móvil.
+   ===================================================================== */
+
+/* En móvil (< 640px): ocultar elementos de PC */
+@media (max-width: 639px) {
+    #shell-header-pc   { display: none !important; }
+    #shell-nav-pc      { display: none !important; }
+    #hud-datos         { display: none !important; }  /* el HUD vive en la tarjeta Detalles */
+    #banner-progreso   { display: none !important; }  /* el progreso vive en la tarjeta Detalles */
+}
+
+/* En PC (>= 640px): ocultar elementos exclusivos de móvil */
+@media (min-width: 640px) {
+    #mobile-header       { display: none !important; }
+    #mobile-details-card { display: none !important; }
+    #shell-nav-mobile    { display: none !important; }
+}
+
+/* Botón activo en la nav móvil: igual que el activo del PC */
+.nav-m-active {
+    color: #6FCF97 !important;
+}
+
+/* Botones del menú móvil: mismo ancho, centrados, alineados horizontalmente */
+@media (max-width: 639px) {
+    #shell-nav-mobile button {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+    }
+}
+
+/* Selector modelo móvil: espejo del #tecnica de PC */
+.model-btn-m {
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    color: var(--sv-gray-200, #94a3b8);
+    background: transparent;
+}
+.model-btn-active-m {
+    background: rgba(111, 207, 151, 0.25) !important;
+    border-color: rgba(111, 207, 151, 0.6) !important;
+    color: #6FCF97 !important;
+    box-shadow: 0 0 12px rgba(111, 207, 151, 0.2);
+}

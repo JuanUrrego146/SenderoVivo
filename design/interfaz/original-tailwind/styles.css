@@ -1,3 +1,5 @@
+@import url('../../../styles/tokens.css');
+
 /* ==========================================================================
    Custom Glassmorphism Styles (Responsive Web Version)
    ========================================================================== */
@@ -21,6 +23,16 @@
     border-color: rgba(52, 211, 153, 0.6);
     color: #34d399;
     box-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
+}
+
+/* Mobile active tab button styling (Solo Móvil) */
+@media (max-width: 639px) {
+    .nav-active {
+        background: rgba(52, 211, 153, 0.22);
+        border: 1px solid rgba(52, 211, 153, 0.55);
+        color: #34d399 !important;
+        box-shadow: 0 0 16px rgba(52, 211, 153, 0.25);
+    }
 }
 
 /* Hotspot Pulse Effect */

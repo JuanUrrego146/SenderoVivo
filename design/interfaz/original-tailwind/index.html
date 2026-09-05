@@ -59,14 +59,15 @@
             <!-- Splat Vignette & Ambient Glow Overlay -->
             <div class="absolute inset-0 splat-vignette"></div>
 
-
-                <!-- CONTENEDOR SUPERIOR UNIFICADO (Sin scroll y completamente fijo) -->
-            <div class="absolute top-4 left-4 right-16 sm:right-24 z-30 flex flex-col gap-2.5 max-w-md pointer-events-none">
-                
-                <!-- App Top Header Overlay -->
+            <!-- ==========================================================================
+                 DESKTOP PC VIEW (SCREEN >= 640px) - 100% ORIGINAL SIN TOCAR NADA
+                 ========================================================================== -->
+            <!-- Contenedor Superior Unificado (PC Original) -->
+            <div class="hidden sm:flex absolute top-4 left-4 right-16 sm:right-24 z-30 flex-col gap-2.5 max-w-md pointer-events-none">
+                <!-- App Top Header Overlay (PC Original) -->
                 <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between shadow-xl pointer-events-auto">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-slate-950 font-bold text-base shadow-md">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
                             <i class="fa-solid fa-tree"></i>
                         </div>
                         <div>
@@ -78,12 +79,13 @@
                         </div>
                     </div>
                     <button onclick="openSearchModal()" ontouchstart="openSearchModal()" 
-                        class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-slate-200 hover:text-emerald-400 transition cursor-pointer touch-manipulation pointer-events-auto shadow-md">
+                        class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-slate-200 hover:text-emerald-400 transition cursor-pointer touch-manipulation pointer-events-auto shadow-md"
+                        aria-label="Buscar en el sendero">
                         <i class="fa-solid fa-magnifying-glass text-xs"></i>
                     </button>
                 </div>
 
-                <!-- BARRA DE FILTRADO ADAPTATIVA (Sin scroll, distribución fija) -->
+                <!-- Barra de Filtrado Adaptativa (PC Original - Fija y siempre visible) -->
                 <div class="glass-panel rounded-2xl p-1.5 grid grid-cols-4 gap-1 border border-slate-700/60 shadow-xl bg-slate-950/80 backdrop-blur-md pointer-events-auto w-full">
                     <button id="filter-all" onclick="filterCategory('all')" ontouchstart="filterCategory('all'); event.preventDefault();" 
                             class="glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate">
@@ -103,13 +105,9 @@
                     </button>
                 </div>
             </div>
-            </div>
 
-            <!-- DYNAMIC FLOATING GLASS HOTSPOTS CONTAINER -->
-            <div id="hotspots-overlay" class="absolute inset-0 pointer-events-none z-20"></div>
-
-            <!-- Bottom Floating Mini Banner (GPS Trail Progress - Alineado a la Izquierda) -->
-            <div class="absolute bottom-20 left-4 right-4 sm:bottom-24 sm:left-4 sm:right-auto sm:w-80 z-30">
+            <!-- Bottom Floating Mini Banner (GPS Trail Progress - PC Original) -->
+            <div class="hidden sm:block absolute sm:bottom-24 sm:left-4 sm:right-auto sm:w-80 z-30">
                 <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between text-xs shadow-2xl">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
@@ -126,7 +124,114 @@
                 </div>
             </div>
 
-            <!-- BOTTOM SHEET MODAL (Con padding inferior para evitar que el menú lo tape) -->
+            <!-- ==========================================================================
+                 MOBILE VIEW (SCREEN < 640px) - EXCLUSIVO RESPONSIVE MÓVIL
+                 ========================================================================== -->
+            <!-- Contenedor Superior Móvil (Banner Sendero Vivo + Deslizadores) -->
+            <div class="sm:hidden absolute top-4 left-4 right-4 z-30 flex flex-col gap-2 pointer-events-none">
+                <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between shadow-xl pointer-events-auto">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-slate-950 font-bold text-base shadow-md">
+                            <i class="fa-solid fa-tree"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xs font-bold text-slate-100 leading-tight">
+                                Sendero Vivo -<br><span class="text-emerald-300 font-semibold text-[11px]">Quebrada la Vieja</span>
+                            </h2>
+                        </div>
+                    </div>
+                    <!-- Botón de deslizadores para desplegar/ocultar filtros en móvil -->
+                    <button id="mobile-filter-toggle" onclick="toggleMobileFilters()" ontouchstart="toggleMobileFilters()" 
+                        class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-slate-200 hover:text-emerald-400 transition cursor-pointer touch-manipulation pointer-events-auto shadow-md"
+                        aria-label="Filtros del sendero">
+                        <i class="fa-solid fa-sliders text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Barra de filtros horizontal móvil (4 columnas en una sola fila horizontal) -->
+                <div id="filter-bar-mobile" class="hidden grid grid-cols-4 gap-1 glass-panel rounded-2xl p-1.5 border border-slate-700/60 shadow-xl bg-slate-950/80 backdrop-blur-md pointer-events-auto w-full">
+                    <button id="filter-all-m" onclick="filterCategory('all')" ontouchstart="filterCategory('all'); event.preventDefault();" 
+                            class="glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-border-all text-[10px]"></i> <span class="truncate">Todo</span>
+                    </button>
+                    <button id="filter-flora-m" onclick="filterCategory('flora')" ontouchstart="filterCategory('flora'); event.preventDefault();" 
+                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-seedling text-[10px]"></i> <span class="truncate">Flora</span>
+                    </button>
+                    <button id="filter-fauna-m" onclick="filterCategory('fauna')" ontouchstart="filterCategory('fauna'); event.preventDefault();" 
+                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-dove text-[10px]"></i> <span class="truncate">Fauna</span>
+                    </button>
+                    <button id="filter-curiosidades-m" onclick="filterCategory('curiosidades')" ontouchstart="filterCategory('curiosidades')" 
+                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
+                        <i class="fa-solid fa-lightbulb text-[10px]"></i> <span class="truncate">Datos</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- DYNAMIC FLOATING GLASS HOTSPOTS CONTAINER -->
+            <div id="hotspots-overlay" class="absolute inset-0 pointer-events-none z-20"></div>
+
+            <!-- TARJETA DESPLEGABLE "DETALLES" (Solo Móvil: inicia cerrada con botón de flecha en el lado izquierdo) -->
+            <div id="mobile-details-card" class="sm:hidden absolute bottom-20 left-4 right-4 z-30 glass-panel rounded-2xl p-2.5 shadow-xl border border-slate-700/60 pointer-events-auto transition-all duration-300">
+                <div class="flex items-center justify-between cursor-pointer select-none"
+                    onclick="toggleDetailsCard()" ontouchstart="toggleDetailsCard()">
+                    <div class="flex items-center gap-2">
+                        <button id="toggle-details-btn" type="button"
+                            class="w-6 h-6 rounded-lg glass-panel flex items-center justify-center text-emerald-400 border border-slate-700/50 shadow-sm"
+                            aria-label="Alternar información de detalles">
+                            <i id="details-arrow-icon" class="fa-solid fa-chevron-up text-[10px] transition-transform duration-300"></i>
+                        </button>
+                        <h3 class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                            Detalles
+                        </h3>
+                    </div>
+                    <span class="text-[10px] text-slate-400 font-mono">
+                        850 m • 2.712 m
+                    </span>
+                </div>
+
+                <!-- Contenido desplegable (oculto por defecto para dar máximo espacio visible al 3D) -->
+                <div id="details-content" class="hidden mt-2 pt-2 border-t border-slate-800/80">
+                    <div class="flex items-center justify-between text-[11px]">
+                        <div class="space-y-0.5 text-slate-300">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-slate-400 text-[10px]">Recorrido - Distancia:</span>
+                                <span class="font-medium text-slate-100">850 m</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-slate-400 text-[10px]">Altitud:</span>
+                                <span class="font-medium text-teal-400">2.712 m</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-slate-400 text-[10px]">Tiempo Consumido:</span>
+                                <span class="font-medium text-slate-100">35 min</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 pt-0.5">
+                                <i class="fa-solid fa-location-arrow text-emerald-400 text-[10px]"></i>
+                                <span id="discovered-counter-mobile"
+                                    class="discovered-counter-sync text-emerald-300 font-semibold text-[10px]">3 de 6 Especies Descubiertas</span>
+                            </div>
+                        </div>
+                        <!-- Selector de modelo de renderizado: COLMAP y Luma -->
+                        <div id="tecnica-mobile" class="flex flex-col gap-1 p-1 rounded-xl bg-slate-900/80 border border-slate-700/60 shadow-inner">
+                            <span class="text-[8px] uppercase tracking-wider text-slate-400 font-bold text-center px-1">Modelo 3D</span>
+                            <div class="flex flex-col gap-1">
+                                <button type="button" data-render="colmap" onclick="setRenderModel('colmap'); event.stopPropagation();" ontouchstart="setRenderModel('colmap'); event.stopPropagation();"
+                                    class="model-btn active-model px-2 py-0.5 rounded-lg text-[10px] font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 transition text-center">
+                                    COLMAP
+                                </button>
+                                <button type="button" data-render="luma" onclick="setRenderModel('luma'); event.stopPropagation();" ontouchstart="setRenderModel('luma'); event.stopPropagation();"
+                                    class="model-btn px-2 py-0.5 rounded-lg text-[10px] font-medium text-slate-400 hover:text-slate-200 border border-transparent transition text-center">
+                                    Luma
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTTOM SHEET MODAL (Común a ambas vistas) -->
             <div id="bottom-sheet" 
                 class="fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-300 ease-out max-w-lg mx-auto px-4 pb-24 pt-2 pointer-events-auto">
                 <div class="glass-panel rounded-3xl p-5 shadow-2xl relative border border-slate-700/60 bg-slate-950/90 backdrop-blur-xl max-h-[75vh] overflow-y-auto no-scrollbar">
@@ -135,7 +240,7 @@
                 </div>
             </div>
 
-            <!-- TAB PANELS OVERLAY (Ajustado con pb-28 para que no se corte contenido abajo) -->
+            <!-- TAB PANELS OVERLAY -->
             <div id="tab-panel-container" class="absolute inset-0 bg-slate-950/90 backdrop-blur-xl z-40 hidden flex-col p-4 sm:p-10 pt-20 pb-28 overflow-y-auto no-scrollbar max-w-2xl mx-auto">
                 <button onclick="closeTabPanel()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center hover:text-white shadow-lg z-50">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -144,8 +249,11 @@
             </div>
         </div>
 
-        <!-- GLASS BOTTOM NAVIGATION BAR (Ubicación segura sobre el borde inferior) -->
-        <nav class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-3 flex items-center gap-5 sm:gap-10 shadow-2xl border border-slate-700/50 pointer-events-auto">
+        <!-- ==========================================================================
+             BOTTOM NAVIGATION BARS
+             ========================================================================== -->
+        <!-- GLASS BOTTOM NAVIGATION BAR (PC ORIGINAL - 100% INTACTO) -->
+        <nav class="hidden sm:flex absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-3 items-center gap-5 sm:gap-10 shadow-2xl border border-slate-700/50 pointer-events-auto">
             <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="flex flex-col items-center gap-0.5 text-emerald-400 font-medium touch-manipulation cursor-pointer transition hover:text-emerald-300">
                 <i class="fa-solid fa-compass text-base sm:text-lg"></i>
                 <span class="text-[9px] sm:text-[10px]">Sendero</span>
@@ -161,6 +269,22 @@
             <button id="nav-quest" onclick="switchTab('quest')" ontouchstart="switchTab('quest')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
                 <i class="fa-solid fa-trophy text-base sm:text-lg"></i>
                 <span class="text-[9px] sm:text-[10px]">Logros</span>
+            </button>
+        </nav>
+
+        <!-- GLASS BOTTOM NAVIGATION BAR (SOLO MÓVIL - 4 ICONOS ESTILIZADOS) -->
+        <nav class="sm:hidden absolute bottom-3 left-4 right-4 z-40 glass-panel rounded-2xl px-3 py-2 flex items-center justify-around shadow-2xl border border-slate-700/50 pointer-events-auto">
+            <button id="nav-trail-m" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="nav-active flex items-center justify-center w-11 h-10 rounded-xl text-emerald-400 font-medium touch-manipulation cursor-pointer transition">
+                <i class="fa-solid fa-location-dot text-lg"></i>
+            </button>
+            <button id="nav-catalog-m" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')" class="flex items-center justify-center w-11 h-10 rounded-xl text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                <i class="fa-solid fa-book-open text-lg"></i>
+            </button>
+            <button id="nav-audio-m" onclick="switchTab('audio')" ontouchstart="switchTab('audio')" class="flex items-center justify-center w-11 h-10 rounded-xl text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                <i class="fa-solid fa-music text-lg"></i>
+            </button>
+            <button id="nav-quest-m" onclick="switchTab('quest')" ontouchstart="switchTab('quest')" class="flex items-center justify-center w-11 h-10 rounded-xl text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                <i class="fa-solid fa-user text-lg"></i>
             </button>
         </nav>
     </main>

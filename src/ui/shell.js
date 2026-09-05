@@ -366,54 +366,15 @@ function esperarVisor() {
         }
 
         if (!e.position) return;
-
-        if (yInicial === null) {
-            yInicial = e.position.y;
-        }
-
-        const recorridoM =
-            e.distance * METROS_POR_UNIDAD;
-
-        const desnivelM =
-            (e.position.y - yInicial) *
-            METROS_POR_UNIDAD;
-
-        const pendiente =
-            recorridoM > 1
-                ? 100 * desnivelM / recorridoM
-                : 0;
-
-        const set = (id, txt) => {
-            const el = document.getElementById(id);
-
-            if (el) {
-                el.innerText = txt;
-            }
-        };
-
-        set(
-            'hud-recorrido',
-            `${recorridoM.toFixed(0)} m`
-        );
-
-        set(
-            'hud-desnivel',
-            `${desnivelM >= 0 ? '+' : ''}${desnivelM.toFixed(1)} m`
-        );
-
-        set(
-            'hud-altitud',
-            `${(
-                ALTITUD_BASE + desnivelM
-            ).toLocaleString('es-CO', {
-                maximumFractionDigits: 0
-            })} m`
-        );
-
-        set(
-            'hud-pendiente',
-            `${Math.abs(pendiente).toFixed(0)} %`
-        );
+        if (yInicial === null) yInicial = e.position.y;
+        const recorridoM = e.distance * METROS_POR_UNIDAD;
+        const desnivelM = (e.position.y - yInicial) * METROS_POR_UNIDAD;
+        const pendiente = recorridoM > 1 ? (100 * desnivelM / recorridoM) : 0;
+        const set = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
+        set('hud-recorrido', `${recorridoM.toFixed(0)} m`);
+        set('hud-desnivel', `${desnivelM >= 0 ? '+' : ''}${desnivelM.toFixed(1)} m`);
+        set('hud-altitud', `${(ALTITUD_BASE + desnivelM).toLocaleString('es-CO', { maximumFractionDigits: 0 })} m`);
+        set('hud-pendiente', `${Math.abs(pendiente).toFixed(0)} %`);
     });
 }
 
@@ -700,22 +661,12 @@ function markAsDiscovered(id) {
 
 
 function updateDiscoveredProgress() {
-    const elem =
-        document.getElementById('discovered-counter');
-
-    if (!elem) return;
-
-    const count =
-        trailData.filter(x => x.discovered).length;
-
-    elem.innerText =
-        `${count} de ${trailData.length} puntos vistos`;
+    const elem = document.getElementById('discovered-counter');
+    if (elem) {
+        const count = trailData.filter(x => x.discovered).length;
+        elem.innerText = `${count} de ${trailData.length} puntos vistos`;
+    }
 }
-
-
-/* ==========================================================================
-   PESTAÑAS
-   ========================================================================== */
 
 function switchTab(tab) {
     closeBottomSheet();
@@ -728,23 +679,23 @@ function switchTab(tab) {
 
     if (!panel || !content) return;
 
-    [
-        'trail',
-        'catalog',
-        'audio',
-        'quest'
-    ].forEach(t => {
-        const btn =
-            document.getElementById(`nav-${t}`);
-
-        if (!btn) return;
-
-        if (t === tab) {
-            btn.className =
-                'flex flex-col items-center gap-0.5 text-emerald-400 font-medium touch-manipulation cursor-pointer transition hover:text-emerald-300';
-        } else {
-            btn.className =
-                'flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer';
+    ['trail', 'catalog', 'audio', 'quest'].forEach(t => {
+        const btn = document.getElementById(`nav-${t}`);
+        if (btn) {
+            if (t === tab) {
+                btn.className = 'flex flex-col items-center gap-0.5 text-emerald-400 font-medium touch-manipulation cursor-pointer transition hover:text-emerald-300';
+            } else {
+                btn.className = 'flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer';
+            }
+        }
+        // Móvil nav
+        const btnM = document.getElementById(`nav-${t}-m`);
+        if (btnM) {
+            if (t === tab) {
+                btnM.className = 'nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition';
+            } else {
+                btnM.className = 'nav-m-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer';
+            }
         }
     });
 
@@ -873,8 +824,8 @@ function switchTab(tab) {
             <div class="space-y-2">
 
                 ${trailData
-                    .filter(x => x.category === 'fauna')
-                    .map(item => `
+                .filter(x => x.category === 'fauna')
+                .map(item => `
                         <div
                             onclick="sonarEspecie('${item.id}')"
                             class="glass-panel p-3 rounded-xl flex items-center justify-between cursor-pointer hover:bg-slate-800/60 touch-manipulation"
@@ -904,7 +855,7 @@ function switchTab(tab) {
 
                         </div>
                     `)
-                    .join('')}
+                .join('')}
 
             </div>
         `;
@@ -975,27 +926,24 @@ function switchTab(tab) {
                         <div class="flex items-center gap-3">
 
                             <div
-                                class="w-8 h-8 rounded-lg ${
-                                    item.discovered
-                                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                                        : 'bg-slate-800 text-slate-600'
-                                } flex items-center justify-center text-xs"
+                                class="w-8 h-8 rounded-lg ${item.discovered
+                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                : 'bg-slate-800 text-slate-600'
+            } flex items-center justify-center text-xs"
                             >
-                                <i class="fa-solid ${
-                                    item.discovered
-                                        ? 'fa-check'
-                                        : 'fa-eye-slash'
-                                }"></i>
+                                <i class="fa-solid ${item.discovered
+                ? 'fa-check'
+                : 'fa-eye-slash'
+            }"></i>
                             </div>
 
                             <div>
 
                                 <h5
-                                    class="text-xs font-bold ${
-                                        item.discovered
-                                            ? 'text-slate-100'
-                                            : 'text-slate-500'
-                                    }"
+                                    class="text-xs font-bold ${item.discovered
+                ? 'text-slate-100'
+                : 'text-slate-500'
+            }"
                                 >
                                     ${item.name}
                                 </h5>
@@ -1009,11 +957,10 @@ function switchTab(tab) {
                         </div>
 
                         <span
-                            class="text-[10px] font-bold ${
-                                item.discovered
-                                    ? 'text-emerald-400'
-                                    : 'text-slate-600'
-                            }"
+                            class="text-[10px] font-bold ${item.discovered
+                ? 'text-emerald-400'
+                : 'text-slate-600'
+            }"
                         >
                             ${item.discovered ? 'Visto' : 'Pendiente'}
                         </span>
@@ -1038,7 +985,6 @@ function closeTabPanel() {
 
     switchTab('trail');
 }
-
 
 /* ==========================================================================
    SINTETIZADOR
@@ -1503,6 +1449,11 @@ window.sonarEspecie = sonarEspecie;
 window.sonarNarracion = sonarNarracion;
 
 window.verModelo3D = verModelo3D;
+// Funciones exclusivas móvil
+window.toggleMobileFilters = toggleMobileFilters;
+window.toggleDetailsCard = toggleDetailsCard;
+window.filterCategoryMobile = filterCategoryMobile;
+window.setRenderModelMobile = setRenderModelMobile;
 
 
 /* ==========================================================================

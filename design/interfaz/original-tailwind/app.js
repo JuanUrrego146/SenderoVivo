@@ -439,15 +439,61 @@ function resetCamera() {
     closeBottomSheet();
 }
 
+function toggleMobileFilters() {
+    const filterBar = document.getElementById('filter-bar-mobile');
+    if (filterBar) {
+        const isHidden = filterBar.classList.toggle('hidden');
+        if (!isHidden) {
+            filterBar.classList.add('grid');
+        }
+    }
+}
+
+function toggleDetailsCard() {
+    const content = document.getElementById('details-content');
+    const arrow = document.getElementById('details-arrow-icon');
+    if (!content) return;
+    const isHidden = content.classList.toggle('hidden');
+    if (arrow) {
+        if (isHidden) {
+            arrow.classList.remove('rotate-180');
+        } else {
+            arrow.classList.add('rotate-180');
+        }
+    }
+}
+
+let activeRenderModel = 'colmap';
+function setRenderModel(model) {
+    activeRenderModel = model;
+    document.querySelectorAll('[data-render]').forEach(btn => {
+        if (btn.dataset.render === model) {
+            btn.className = 'model-btn active-model px-2 py-0.5 rounded-lg text-[10px] font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 transition text-center';
+        } else {
+            btn.className = 'model-btn px-2 py-0.5 rounded-lg text-[10px] font-medium text-slate-400 hover:text-slate-200 border border-transparent transition text-center';
+        }
+    });
+}
+
 function filterCategory(cat) {
     currentFilter = cat;
     ['all', 'flora', 'fauna', 'curiosidades'].forEach(c => {
+        // PC buttons (exact original classes)
         const btn = document.getElementById(`filter-${c}`);
         if (btn) {
             if (c === cat) {
-                btn.className = 'glass-pill glass-pill-active px-3 py-1 rounded-full text-[11px] font-semibold whitespace-nowrap transition flex items-center gap-1.5 touch-manipulation cursor-pointer';
+                btn.className = 'glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate';
             } else {
-                btn.className = 'glass-pill px-3 py-1 rounded-full text-[11px] font-semibold text-slate-300 whitespace-nowrap transition flex items-center gap-1.5 hover:text-emerald-300 touch-manipulation cursor-pointer';
+                btn.className = 'glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate';
+            }
+        }
+        // Mobile buttons
+        const btnMobile = document.getElementById(`filter-${c}-m`);
+        if (btnMobile) {
+            if (c === cat) {
+                btnMobile.className = 'glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate';
+            } else {
+                btnMobile.className = 'glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate';
             }
         }
     });
@@ -473,11 +519,12 @@ function markAsDiscovered(id) {
 }
 
 function updateDiscoveredProgress() {
-    const elem = document.getElementById('discovered-counter');
-    if (elem) {
-        const count = trailData.filter(x => x.discovered).length;
-        elem.innerText = `${count} de ${trailData.length} Especies Descubiertas`;
-    }
+    const count = trailData.filter(x => x.discovered).length;
+    const text = `${count} de ${trailData.length} Especies Descubiertas`;
+    const elems = document.querySelectorAll('#discovered-counter, #discovered-counter-mobile, .discovered-counter-sync');
+    elems.forEach(elem => {
+        elem.innerText = text;
+    });
 }
 
 /* ==========================================================================
@@ -491,12 +538,22 @@ function switchTab(tab) {
     if (!panel || !content) return;
 
     ['trail', 'catalog', 'audio', 'quest'].forEach(t => {
+        // PC Navigation (Exact original styling)
         const btn = document.getElementById(`nav-${t}`);
         if (btn) {
             if (t === tab) {
-                btn.className = 'flex flex-col items-center gap-1 text-emerald-400 font-medium touch-manipulation cursor-pointer';
+                btn.className = 'flex flex-col items-center gap-0.5 text-emerald-400 font-medium touch-manipulation cursor-pointer transition hover:text-emerald-300';
             } else {
-                btn.className = 'flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer';
+                btn.className = 'flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer';
+            }
+        }
+        // Mobile Navigation
+        const btnMobile = document.getElementById(`nav-${t}-m`);
+        if (btnMobile) {
+            if (t === tab) {
+                btnMobile.className = 'nav-active flex items-center justify-center w-11 h-10 rounded-xl text-emerald-400 font-medium touch-manipulation cursor-pointer transition';
+            } else {
+                btnMobile.className = 'flex items-center justify-center w-11 h-10 rounded-xl text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer';
             }
         }
     });
