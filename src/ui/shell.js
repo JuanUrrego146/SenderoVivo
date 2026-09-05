@@ -371,10 +371,21 @@ function esperarVisor() {
         const desnivelM = (e.position.y - yInicial) * METROS_POR_UNIDAD;
         const pendiente = recorridoM > 1 ? (100 * desnivelM / recorridoM) : 0;
         const set = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
-        set('hud-recorrido', `${recorridoM.toFixed(0)} m`);
-        set('hud-desnivel', `${desnivelM >= 0 ? '+' : ''}${desnivelM.toFixed(1)} m`);
-        set('hud-altitud', `${(ALTITUD_BASE + desnivelM).toLocaleString('es-CO', { maximumFractionDigits: 0 })} m`);
-        set('hud-pendiente', `${Math.abs(pendiente).toFixed(0)} %`);
+        const altitudTxt = `${(ALTITUD_BASE + desnivelM).toLocaleString('es-CO', { maximumFractionDigits: 0 })} m`;
+        const recorridoTxt = `${recorridoM.toFixed(0)} m`;
+        const desnivelTxt = `${desnivelM >= 0 ? '+' : ''}${desnivelM.toFixed(1)} m`;
+        const pendienteTxt = `${Math.abs(pendiente).toFixed(0)} %`;
+        // PC HUD (originales)
+        set('hud-recorrido', recorridoTxt);
+        set('hud-desnivel', desnivelTxt);
+        set('hud-altitud', altitudTxt);
+        set('hud-pendiente', pendienteTxt);
+        // Móvil HUD (tarjeta Detalles)
+        set('hud-recorrido-m', recorridoTxt);
+        set('hud-desnivel-m', desnivelTxt);
+        set('hud-altitud-m', altitudTxt);
+        set('hud-pendiente-m', pendienteTxt);
+        set('hud-datos-mobile', `${altitudTxt} · ${recorridoTxt}`);
     });
 }
 
@@ -619,14 +630,27 @@ function filterCategory(cat) {
         const btn =
             document.getElementById(`filter-${c}`);
 
-        if (!btn) return;
+        if (btn) {
+            if (c === cat) {
+                btn.className =
+                    'glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate';
+            } else {
+                btn.className =
+                    'glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate';
+            }
+        }
 
-        if (c === cat) {
-            btn.className =
-                'glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate';
-        } else {
-            btn.className =
-                'glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate';
+        const btnM =
+            document.getElementById(`filter-${c}-m`);
+
+        if (btnM) {
+            if (c === cat) {
+                btnM.className =
+                    'glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate';
+            } else {
+                btnM.className =
+                    'glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate';
+            }
         }
     });
 
@@ -661,10 +685,14 @@ function markAsDiscovered(id) {
 
 
 function updateDiscoveredProgress() {
+    const count = trailData.filter(x => x.discovered).length;
     const elem = document.getElementById('discovered-counter');
     if (elem) {
-        const count = trailData.filter(x => x.discovered).length;
         elem.innerText = `${count} de ${trailData.length} puntos vistos`;
+    }
+    const elemMobile = document.getElementById('discovered-counter-mobile');
+    if (elemMobile) {
+        elemMobile.innerText = `${count} de ${trailData.length} puntos vistos`;
     }
 }
 
@@ -984,6 +1012,90 @@ function closeTabPanel() {
     }
 
     switchTab('trail');
+}
+
+/* ==========================================================================
+   FUNCIONES EXCLUSIVAS MÓVIL — sin interferencia con la vista de PC
+   ========================================================================== */
+
+/** Despliega / oculta la barra de filtros en móvil */
+function toggleMobileFilters() {
+    const filterBar = document.getElementById('filter-bar-mobile');
+    if (!filterBar) return;
+    const isHidden = filterBar.classList.toggle('hidden');
+    if (!isHidden) {
+        filterBar.classList.add('grid');
+    }
+}
+
+/** Abre / cierra la tarjeta de Detalles móvil con animación de flecha */
+function toggleDetailsCard() {
+    const content = document.getElementById('details-content');
+    const arrow = document.getElementById('details-arrow-icon');
+    if (!content) return;
+    const isHidden = content.classList.toggle('hidden');
+    if (arrow) {
+        if (isHidden) {
+            arrow.classList.remove('rotate-180');
+        } else {
+            arrow.classList.add('rotate-180');
+        }
+    }
+}
+
+/** Filtra categoría desde los botones móviles (sin pisar la lógica PC) */
+function filterCategoryMobile(cat) {
+    filterCategory(cat); // actualiza tanto PC como móvil
+}
+
+/** Conmuta el modelo de renderizado desde la tarjeta móvil */
+function setRenderModelMobile(model) {
+    // Dispara el mismo cambio que el switch PC de #tecnica
+    const btnPc = document.querySelector(`#tecnica [data-render="${model}"]`);
+    if (btnPc) {
+        btnPc.click();
+    } else {
+        const params = new URLSearchParams(window.location.search);
+        params.set('render', model);
+        params.delete('sog');
+        window.location.search = params.toString();
+    }
+    // Actualiza aspecto de botones móviles
+    document.querySelectorAll('.model-btn-m').forEach(btn => {
+        if (btn.dataset.render === model) {
+            btn.classList.add('model-btn-active-m');
+            btn.classList.remove('text-slate-300');
+        } else {
+            btn.classList.remove('model-btn-active-m');
+            btn.classList.add('text-slate-300');
+        }
+    });
+}
+
+/** Sincroniza el mini-HUD de la tarjeta Detalles móvil con los datos reales del recorrido */
+function syncHudMobile(altitud, recorrido, desnivel) {
+    const a = document.getElementById('hud-altitud-m');
+    const r = document.getElementById('hud-recorrido-m');
+    const d = document.getElementById('hud-desnivel-m');
+    const s = document.getElementById('hud-datos-mobile');
+    if (a) a.innerText = altitud;
+    if (r) r.innerText = recorrido;
+    if (d) d.innerText = desnivel;
+    if (s) s.innerText = `${altitud} · ${recorrido}`;
+}
+
+function initRenderModelMobile() {
+    const params = new URLSearchParams(window.location.search);
+    const active = params.get('render') || 'colmap';
+    document.querySelectorAll('.model-btn-m').forEach(btn => {
+        if (btn.dataset.render === active) {
+            btn.classList.add('model-btn-active-m');
+            btn.classList.remove('text-slate-300');
+        } else {
+            btn.classList.remove('model-btn-active-m');
+            btn.classList.add('text-slate-300');
+        }
+    });
 }
 
 /* ==========================================================================
@@ -1477,5 +1589,6 @@ cargarCatalogo()
     })
     .finally(() => {
         updateDiscoveredProgress();
+        initRenderModelMobile();
         esperarVisor();
     });
