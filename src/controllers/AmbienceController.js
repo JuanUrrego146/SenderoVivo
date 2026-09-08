@@ -3,6 +3,8 @@
 // - Uses an HTMLAudioElement for the ambient stereo bed (non-positional)
 // - Exposes load(), play(), stop(), toggle(), isPlaying()
 
+import { Soundscape } from '../models/Soundscape.js';
+
 export default class AmbienceController {
     constructor(app, soundscapePath = 'config/soundscape.json') {
         this.app = app; // kept for potential future use
@@ -15,12 +17,11 @@ export default class AmbienceController {
 
     async load() {
         // Only fetch the config and record the URL/note. Do NOT create audio or AudioContext here.
-        const res = await fetch(this.soundscapePath);
-        if (!res.ok) throw new Error(`Failed to fetch ${this.soundscapePath}: ${res.status}`);
-        const cfg = await res.json();
+        this.soundscape = new Soundscape(this.soundscapePath);
+        const cfg = await this.soundscape.load();
 
-        this.ambienceUrl = cfg?.ambienceUrl || null;
-        this.ambienceNote = cfg?.ambienceNote || '';
+        this.ambienceUrl = this.soundscape.getAmbienceUrl();
+        this.ambienceNote = this.soundscape.ambienceNote || '';
         this.loaded = true;
         return cfg;
     }

@@ -1,6 +1,5 @@
 ﻿import { Entity } from 'playcanvas';
-
-const POIS_CONFIG_URL = 'config/pois.json';
+import { PoiCatalog } from '../models/PoiCatalog.js';
 
 export class PoiManager {
 
@@ -84,11 +83,6 @@ export class PoiManager {
             'poi:close',
             this._onPoiClose
         );
-
-
-        console.log(
-            'PoiManager listo'
-        );
     }
 
 
@@ -99,11 +93,6 @@ export class PoiManager {
      */
 
     _onPoiOpen(poi) {
-
-        console.log(
-            'PoiManager: ficha abierta',
-            poi?.id
-        );
 
         this.poiCardOpen = true;
 
@@ -118,10 +107,6 @@ export class PoiManager {
      */
 
     _onPoiClose() {
-
-        console.log(
-            'PoiManager: ficha cerrada'
-        );
 
         this.poiCardOpen = false;
 
@@ -192,25 +177,9 @@ export class PoiManager {
 
     async load() {
 
-        const response =
-            await fetch(
-                POIS_CONFIG_URL
-            );
+        this.catalog = new PoiCatalog();
 
-        if (!response.ok) {
-
-            throw new Error(
-                `No se pudo leer ${POIS_CONFIG_URL}`
-            );
-        }
-
-        const config =
-            await response.json();
-
-        this.pois =
-            Array.isArray(config.pois)
-                ? config.pois
-                : [];
+        this.pois = await this.catalog.load();
 
 
         /*
@@ -247,12 +216,6 @@ export class PoiManager {
 
             }
         );
-
-
-        console.log(
-            'POIs cargados:',
-            this.markers
-        );
     }
 
 
@@ -285,11 +248,6 @@ export class PoiManager {
             typeof poi.anchor.y === 'number' &&
             typeof poi.anchor.z === 'number'
         ) {
-
-            console.log(
-                `POI ${poi.id} usando anchor:`,
-                poi.anchor
-            );
 
             return {
                 x: poi.anchor.x,
@@ -339,12 +297,6 @@ export class PoiManager {
                 trail.positionAt(
                     distance
                 );
-
-
-            console.log(
-                `POI ${poi.id} usando distanceMeters:`,
-                distance
-            );
 
 
             return {
@@ -590,12 +542,6 @@ export class PoiManager {
                 }
 
 
-                console.log(
-                    'POI seleccionado:',
-                    poi
-                );
-
-
                 this.openPoi(
                     poi
                 );
@@ -671,49 +617,6 @@ export class PoiManager {
          * DEBUG
          * =====================================================
          */
-
-        console.log(
-            '================================'
-        );
-
-        console.log(
-            `POI ${index + 1}:`,
-            poi.commonName
-        );
-
-        console.log(
-            'ID:',
-            poi.id
-        );
-
-        console.log(
-            'Anchor:',
-            poi.anchor
-        );
-
-        console.log(
-            'Distancia:',
-            poi.distanceMeters
-        );
-
-        console.log(
-            'World position:',
-            marker.anchorPosition
-        );
-
-        console.log(
-            'Modelo:',
-            poi.modelUrl
-        );
-
-        console.log(
-            'Animación:',
-            poi.idleAnimation
-        );
-
-        console.log(
-            '================================'
-        );
     }
 
 
@@ -951,12 +854,6 @@ export class PoiManager {
 
         event.preventDefault();
         event.stopPropagation();
-
-
-        console.log(
-            'POI seleccionado:',
-            closest.poiData
-        );
 
 
         this.openPoi(
