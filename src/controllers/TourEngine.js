@@ -42,6 +42,10 @@ export class TourEngine {
         // trazado) viven en TourState (src/models/TourState.js).
         this.state = new TourState({ eyeHeight: options.eyeHeight ?? 0 });
 
+        // Opcional: fuente real de distanceMeters (src/models/GpsTrack.js). Sin
+        // el o sin puntos GPS todavia, distanceMeters se queda en null.
+        this.gpsTrack = options.gpsTrack ?? null;
+
         this._input = { forward: 0, strafe: 0, fast: false };
         /** Desplazamiento lateral actual dentro del corredor. */
         this.lateral = 0;
@@ -220,11 +224,18 @@ export class TourEngine {
 
     _emitProgress() {
         const pos = this.camera.getPosition();
+        // distanceMeters sigue en null porque config/track.json no trae puntos GPS
+        // todavia: sin ellos, GpsTrack.distanceTraveled() cae a un respaldo que suma
+        // unidades del motor, y publicarlas con etiqueta de metros seria dato
+        // inventado (invariante 10). Se llena solo cuando V1 traiga el GPS real.
+        const distanceMeters =
+            (!this.gpsTrack || this.gpsTrack.points.length === 0)
+                ? null
+                : this.gpsTrack.distanceTraveled(this.state.distance);
         this.app.fire('tour:progress', {
             distance: this.state.distance,
             total: this.trailPath.totalLength(),
-            // distanceMeters lo completará TrailDataLayer cuando exista la escala real.
-            distanceMeters: null,
+            distanceMeters,
             // Posición y orientación para quien las necesite: audio espacial, POIs por
             // cercanía, HUD. Se publican aquí para que ningún otro módulo tenga que leer
             // la cámara, que es lo que prohíbe el invariante 13.

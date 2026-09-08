@@ -21,6 +21,7 @@ import {
     Vec3
 } from 'playcanvas';
 import { TrailModel } from '../models/TrailModel.js';
+import { GpsTrack } from '../models/GpsTrack.js';
 import { SceneCatalog } from '../models/SceneCatalog.js';
 import { TourEngine } from './TourEngine.js';
 import { TrailRecorder } from './TrailRecorder.js';
@@ -456,13 +457,15 @@ function enableFreeFlight(camera) {
 async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
     try {
         const response = await fetch(trackUrl);
-        if (!response.ok) return new TrailModel([]);
+        if (!response.ok) return { trail: new TrailModel([]), gpsTrack: new GpsTrack({}) };
         const cfg = await response.json();
         const path = new TrailModel(cfg.sceneWaypoints || [],cfg.corridorRadius ?? 1.5);
         path.eyeHeight = cfg.eyeHeight ?? 0;
-        return path;
+        // Mismo cfg ya leido y parseado: un solo fetch de track.json, dos modelos.
+        const gpsTrack = new GpsTrack(cfg);
+        return { trail: path, gpsTrack };
     } catch {
-        return new TrailModel([]);
+        return { trail: new TrailModel([]), gpsTrack: new GpsTrack({}) };
     }
 }
 
@@ -470,7 +473,7 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
     // Metadatos de la escena activa (config/scenes.json): restricciones y trazado propio.
     const { forwardOnly = false, eyeHeight: sceneEyeHeight, trackUrl: sceneTrackUrl, pitchDownLimit } = sceneOpts;
     const isEditor = new URLSearchParams(window.location.search).has('editor');
-    const trail = await loadTrail(sceneTrackUrl ?? TRACK_CONFIG_URL);
+    const { trail, gpsTrack } = await loadTrail(sceneTrackUrl ?? TRACK_CONFIG_URL);
 
     if (isEditor) {
         enableFreeFlight(camera);
@@ -507,7 +510,8 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
         // Algunas reconstrucciones solo aguantan vistas hacia adelante (config/scenes.json).
         forwardOnly,
         // Tope del picado hacia abajo: evita meter la camara donde el splat se ve mal.
-        pitchDownLimit
+        pitchDownLimit,
+        gpsTrack
     });
     tour.start();
     window.senderoTour = tour;
