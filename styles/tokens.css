@@ -1,57 +1,103 @@
 /*
- * Tokens de color de Sendero Vivo: LA ÚNICA fuente de color de la aplicación.
- * Definidos en docs/06-contenido-de-la-experiencia.md §B.2, con contrastes
- * WCAG ya calculados. Si hace falta un color nuevo, se añade AQUÍ primero
- * y se le calcula el contraste antes de usarlo.
+ * Tokens de color de Sendero Vivo — "Atlas Botánico Vivo"
+ * Paleta: Royal Plum, Mandarina, Celadón, Deep Teal
  *
  * Dueños: Eybar Viasus y Alberto Alemán. Los demás consumen, no definen.
  */
 :root {
-    /* Paleta documentada (docs/06 §B.2) */
-    --sv-black-900: #0E1210;   /* fondo base de ficha y HUD */
-    --sv-gray-800:  #1B211E;   /* superficie elevada: panel, tarjeta */
-    --sv-gray-600:  #3A423E;   /* bordes, separadores, deshabilitado */
-    --sv-gray-400:  #6E7873;   /* texto secundario SOLO sobre fondo claro */
-    --sv-gray-200:  #B9C1BC;   /* texto secundario sobre fondo oscuro */
-    --sv-gray-050:  #EDF1EF;   /* texto principal sobre oscuro; fondo modo claro */
-    --sv-green-700: #1F5D3A;   /* verde bosque: énfasis sobre fondo claro */
-    --sv-green-500: #2E8B57;   /* verde señal: marcador, estado activo (NUNCA texto sobre claro) */
-    --sv-green-300: #6FCF97;   /* acento sobre oscuro: nombre científico, enlaces */
-    --sv-water-400: #4FA3A5;   /* acento único del agua: HUD de datos */
+    /* ── Paleta Central "Atlas Botánico" ── */
 
-    /* Derivados de superficie (composiciones de la paleta, no colores nuevos) */
-    --sv-gray-100:  var(--sv-gray-050);          /* alias: no existe gray-100 en la paleta */
-    --sv-scrim-550: rgba(14, 18, 16, 0.55);      /* velo sobre black-900 */
-    --sv-scrim-720: rgba(14, 18, 16, 0.72);
-    --sv-scrim-850: rgba(14, 18, 16, 0.85);      /* velo oscuro: medallón de hotspot */
-    --sv-glass-bg:     rgba(27, 33, 30, 0.55);   /* gray-800 translúcido (paneles vidrio) */
-    --sv-glass-border: rgba(237, 241, 239, 0.14);/* gray-050 translúcido */
-    --sv-green-300-25: rgba(111, 207, 151, 0.25);/* green-300 translúcido (estado activo) */
-    --sv-green-300-60: rgba(111, 207, 151, 0.6);
-    --sv-green-300-30: rgba(111, 207, 151, 0.3);
-    --sv-green-300-40: rgba(111, 207, 151, 0.4);
+    /* Teal profundo: fondos y atmósfera de bosque */
+    --sv-teal-deep:       #182B27;
+    --sv-teal-surface:    #233F39;
+    --sv-teal-mid:        #397367;
+
+    /* Celadón: acento fresco, estados activos, flora */
+    --sv-celadon:         #A9FBC3;
+    --sv-celadon-dim:     #7AC99A;
+
+    /* Oliva vibrante: badges botánicos, indicadores */
+    --sv-olive-vibrant:   #B9CE43;
+
+    /* Ciruela: contrapunto dramático, fauna, fichas especiales */
+    --sv-plum-deep:       #481434;
+    --sv-plum-accent:     #731963;
+
+    /* Mandarina: CTA, advertencias, puntos de acción */
+    --sv-tangerine:       #F76828;
+    --sv-tangerine-hover: #FF7E42;
+    --sv-tangerine-glow:  rgba(247, 104, 40, 0.25);
+
+    /* Neutros de lectura */
+    --sv-text-primary:    #F5F8F6;
+    --sv-text-muted:      #A5B7B1;
+    --sv-text-dim:        #6B8078;
+
+    /* ── Superficies y Delineados (Sin verde: Acentos Mandarina y Ciruela) ── */
+    --sv-surface-panel:   rgba(24, 43, 39, 0.88);
+    --sv-surface-solid:   rgba(20, 36, 33, 0.96);
+    --sv-surface-border:  rgba(115, 25, 99, 0.35);
+    --sv-border-orange:   rgba(247, 104, 40, 0.38);
+    --sv-border-plum:     rgba(115, 25, 99, 0.45);
+    --sv-hover-border:    var(--sv-tangerine);
+    --sv-hover-glow:      rgba(247, 104, 40, 0.30);
+    --sv-surface-shadow:  0 8px 32px rgba(10, 20, 18, 0.45);
+    --sv-scrim:           rgba(20, 36, 33, 0.60);
+    --sv-scrim-heavy:     rgba(14, 26, 23, 0.88);
+
+    /* ── Derivados funcionales (Activos en Naranja / Ciruela) ── */
+    --sv-pill-active-bg:    rgba(247, 104, 40, 0.20);
+    --sv-pill-active-border: rgba(247, 104, 40, 0.70);
+    --sv-pill-active-color:  var(--sv-tangerine-hover);
+    --sv-plum-pill-bg:      rgba(115, 25, 99, 0.28);
+    --sv-plum-pill-border:  rgba(115, 25, 99, 0.75);
+    --sv-tangerine-pill-bg: rgba(247, 104, 40, 0.20);
+    --sv-tangerine-pill-border: rgba(247, 104, 40, 0.65);
 }
 
 /* ------------------------------------------------------------------
  * Compatibilidad con la interfaz de Eybar (design/interfaz/), que llego
- * nombrando la paleta de Tailwind. Se mapea a la paleta DOCUMENTADA:
+ * nombrando la paleta de Tailwind. Se mapea a la paleta nueva:
  * los nombres se conservan para no romper su codigo, los valores son
- * los del proyecto (docs/06 B.2). El ambar/cielo/rosa de Tailwind no
+ * los del proyecto. El ambar/cielo/rosa de Tailwind no
  * existen en la identidad: se mapean a los acentos legitimos.
  * ------------------------------------------------------------------ */
 :root {
-    --sv-gray-950: var(--sv-black-900);
-    --sv-gray-900: var(--sv-black-900);
-    --sv-gray-700: var(--sv-gray-600);
-    --sv-gray-300: var(--sv-gray-200);
-    --sv-emerald-400: var(--sv-green-300);
-    --sv-emerald-500: var(--sv-green-500);
-    --sv-emerald-600: var(--sv-green-500);
-    --sv-emerald-900: var(--sv-green-700);
-    --sv-emerald-950: var(--sv-green-700);
-    --sv-teal-400: var(--sv-water-400);
-    --sv-amber-400: var(--sv-green-500);
-    --sv-sky-400: var(--sv-water-400);
-    --sv-pink-400: var(--sv-green-300);
-}
+    --sv-black-900: var(--sv-teal-deep);
+    --sv-gray-950:  var(--sv-teal-deep);
+    --sv-gray-900:  var(--sv-teal-deep);
+    --sv-gray-800:  var(--sv-teal-surface);
+    --sv-gray-700:  var(--sv-teal-mid);
+    --sv-gray-600:  var(--sv-teal-mid);
+    --sv-gray-400:  var(--sv-text-dim);
+    --sv-gray-300:  var(--sv-text-muted);
+    --sv-gray-200:  var(--sv-text-muted);
+    --sv-gray-100:  var(--sv-text-primary);
+    --sv-gray-050:  var(--sv-text-primary);
 
+    --sv-green-700:    var(--sv-teal-mid);
+    --sv-green-500:    var(--sv-plum-accent);
+    --sv-green-300:    var(--sv-tangerine);
+    --sv-water-400:    var(--sv-plum-accent);
+
+    --sv-emerald-400:  var(--sv-tangerine);
+    --sv-emerald-500:  var(--sv-plum-accent);
+    --sv-emerald-600:  var(--sv-plum-deep);
+    --sv-emerald-900:  var(--sv-teal-mid);
+    --sv-emerald-950:  var(--sv-teal-mid);
+    --sv-teal-400:     var(--sv-tangerine);
+    --sv-amber-400:    var(--sv-tangerine);
+    --sv-sky-400:      var(--sv-teal-mid);
+    --sv-pink-400:     var(--sv-plum-accent);
+
+    /* Derivados de superficie (backward compat: delineados sin verde) */
+    --sv-scrim-550:        var(--sv-scrim);
+    --sv-scrim-720:        rgba(24, 43, 39, 0.72);
+    --sv-scrim-850:        var(--sv-scrim-heavy);
+    --sv-glass-bg:         var(--sv-surface-panel);
+    --sv-glass-border:     var(--sv-surface-border);
+    --sv-green-300-25:     var(--sv-pill-active-bg);
+    --sv-green-300-60:     var(--sv-pill-active-border);
+    --sv-green-300-30:     rgba(247, 104, 40, 0.30);
+    --sv-green-300-40:     rgba(115, 25, 99, 0.40);
+}

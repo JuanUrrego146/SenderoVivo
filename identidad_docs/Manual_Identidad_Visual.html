@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Identidad Visual y Sistema de Diseño · SenderoVivo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --sv-tangerine: #F76828;
+            --sv-tangerine-hover: #FF7E47;
+            --sv-tangerine-glow: rgba(247, 104, 40, 0.35);
+            --sv-plum-dark: #731963;
+            --sv-plum-accent: #B5359E;
+            --sv-plum-soft: rgba(115, 25, 99, 0.25);
+            --sv-teal-deep: #0e1a17;
+            --sv-teal-surface: rgba(22, 38, 34, 0.85);
+            --sv-teal-surface-hover: rgba(35, 63, 57, 0.95);
+            --sv-teal-card: rgba(28, 48, 43, 0.96);
+            --sv-border-glass: rgba(115, 25, 99, 0.35);
+            --sv-border-active: rgba(247, 104, 40, 0.55);
+            --sv-text-primary: #FFFFFF;
+            --sv-text-secondary: #E2E8F0;
+            --sv-text-muted: #94A3B8;
+            --sv-text-gold: #FFA375;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #0b1412;
+            color: var(--sv-text-secondary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Contenedor principal estilo editorial */
+        .manual-wrapper {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 24px 80px 24px;
+        }
+
+        /* Portada */
+        .cover-page {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 60px 48px;
+            border-radius: 28px;
+            background: radial-gradient(circle at 80% 20%, rgba(115, 25, 99, 0.40) 0%, rgba(24, 43, 39, 0.98) 60%, #0a1311 100%);
+            border: 1px solid var(--sv-border-glass);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 1px 1px rgba(247, 104, 40, 0.2) inset;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 60px;
+        }
+
+        .cover-page::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(247, 104, 40, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(247, 104, 40, 0.15);
+            border: 1px solid rgba(247, 104, 40, 0.4);
+            color: var(--sv-tangerine);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            width: fit-content;
+        }
+
+        .cover-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.1;
+            color: var(--sv-text-primary);
+            margin: 24px 0 12px 0;
+            letter-spacing: -0.02em;
+        }
+
+        .cover-title span {
+            background: linear-gradient(135deg, var(--sv-tangerine) 0%, #FFA375 50%, var(--sv-plum-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cover-subtitle {
+            font-size: 18px;
+            color: var(--sv-text-muted);
+            max-width: 600px;
+            line-height: 1.5;
+            font-weight: 300;
+        }
+
+        .cover-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            padding-top: 36px;
+            border-top: 1px solid rgba(115, 25, 99, 0.35);
+        }
+
+        .meta-item h5 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--sv-tangerine);
+            margin-bottom: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .meta-item p {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--sv-text-primary);
+        }
+
+        /* Secciones */
+        .section-block {
+            margin-bottom: 50px;
+            padding: 36px;
+            border-radius: 22px;
+            background: var(--sv-teal-card);
+            border: 1px solid var(--sv-border-glass);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+            page-break-inside: avoid;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(115, 25, 99, 0.25);
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: var(--sv-plum-soft);
+            color: var(--sv-plum-accent);
+            border: 1px solid rgba(181, 53, 158, 0.35);
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--sv-text-primary);
+        }
+
+        .lead-text {
+            font-size: 14.5px;
+            color: var(--sv-text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        /* Grid de Paleta de Color */
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .swatch-card {
+            border-radius: 16px;
+            background: rgba(18, 32, 29, 0.7);
+            border: 1px solid var(--sv-border-glass);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .swatch-color {
+            height: 90px;
+            width: 100%;
+            position: relative;
+        }
+
+        .swatch-info {
+            padding: 14px;
+        }
+
+        .swatch-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--sv-text-primary);
+            margin-bottom: 2px;
+        }
+
+        .swatch-role {
+            font-size: 11px;
+            color: var(--sv-text-muted);
+            margin-bottom: 8px;
+        }
+
+        .swatch-hex {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--sv-tangerine);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Regla de Prohibición */
+        .rule-callout {
+            padding: 16px 20px;
+            border-radius: 14px;
+            background: rgba(185, 28, 28, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .rule-callout.warning {
+            background: rgba(247, 104, 40, 0.10);
+            border-color: rgba(247, 104, 40, 0.35);
+        }
+
+        .rule-callout i {
+            font-size: 18px;
+            margin-top: 2px;
+            color: var(--sv-tangerine);
+        }
+
+        .rule-callout h6 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--sv-text-primary);
+            margin-bottom: 3px;
+        }
+
+        .rule-callout p {
+            font-size: 12px;
+            color: var(--sv-text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Tipografía */
+        .type-specimen-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .type-specimen-grid { grid-template-columns: 1fr; }
+        }
+
+        .type-card {
+            background: rgba(18, 32, 29, 0.7);
+            border: 1px solid var(--sv-border-glass);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .type-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .type-family-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--sv-tangerine);
+        }
+
+        .type-role-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(115, 25, 99, 0.3);
+            color: #FFA375;
+        }
+
+        .type-sample-large {
+            font-size: 26px;
+            line-height: 1.2;
+            color: var(--sv-text-primary);
+            margin-bottom: 10px;
+        }
+
+        .type-sample-desc {
+            font-size: 12px;
+            color: var(--sv-text-muted);
+            line-height: 1.5;
+        }
+
+        /* Tabla de Jerarquía */
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 16px;
+        }
+
+        .spec-table th {
+            text-align: left;
+            padding: 10px 12px;
+            background: rgba(115, 25, 99, 0.2);
+            color: var(--sv-tangerine);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            border-bottom: 1px solid var(--sv-border-glass);
+        }
+
+        .spec-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--sv-text-secondary);
+        }
+
+        .spec-table tr:hover td {
+            background: rgba(247, 104, 40, 0.04);
+        }
+
+        /* Principios UX y Wireframes */
+        .ux-principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .principle-card {
+            background: rgba(18, 32, 29, 0.6);
+            border: 1px solid var(--sv-border-glass);
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .principle-card h5 {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--sv-tangerine);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .principle-card p {
+            font-size: 12px;
+            color: var(--sv-text-muted);
+            line-height: 1.5;
+        }
+
+        /* Componentes Renderizados Interactivos */
+        .component-preview-box {
+            background: #0d1815;
+            border: 1px solid var(--sv-border-glass);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .preview-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--sv-tangerine);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        /* Tarjeta Catálogo Mock */
+        .mock-catalog-card {
+            background: rgba(26, 46, 42, 0.85);
+            border: 1px solid var(--sv-border-glass);
+            border-radius: 14px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 440px;
+            margin: 0 auto 12px auto;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+        }
+
+        .mock-medallon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(247, 104, 40, 0.20);
+            border: 1px solid rgba(247, 104, 40, 0.40);
+            color: var(--sv-tangerine);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .mock-chevron {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: rgba(115, 25, 99, 0.25);
+            border: 1px solid rgba(247, 104, 40, 0.35);
+            color: var(--sv-tangerine);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            margin-left: auto;
+        }
+
+        /* Dock Mock */
+        .mock-dock {
+            background: linear-gradient(165deg, rgba(28, 48, 43, 0.94) 0%, rgba(18, 32, 29, 0.98) 100%);
+            border: 1px solid var(--sv-border-glass);
+            border-radius: 999px;
+            padding: 8px 24px;
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            width: fit-content;
+            margin: 0 auto;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+        }
+
+        .mock-dock-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            font-size: 10px;
+            color: var(--sv-text-muted);
+            position: relative;
+        }
+
+        .mock-dock-tab.active {
+            color: var(--sv-tangerine);
+            font-weight: 600;
+        }
+
+        .mock-dock-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            width: 14px;
+            height: 3px;
+            border-radius: 2px;
+            background: var(--sv-tangerine);
+            box-shadow: 0 0 8px var(--sv-tangerine);
+        }
+
+        /* Reglas de Impresión para PDF */
+        @media print {
+            body {
+                background: #0d1815 !important;
+                color: #e2e8f0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .manual-wrapper {
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .cover-page {
+                min-height: 95vh !important;
+                page-break-after: always !important;
+                margin-bottom: 0 !important;
+                border: 1px solid #731963 !important;
+            }
+            .section-block {
+                page-break-inside: avoid !important;
+                margin-bottom: 24px !important;
+                border: 1px solid #731963 !important;
+            }
+            @page {
+                size: A4 portrait;
+                margin: 12mm 12mm 12mm 12mm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="manual-wrapper">
+
+    <!-- ==================== PORTADA ==================== -->
+    <header class="cover-page">
+        <div>
+            <div class="cover-badge">
+                <i class="fa-solid fa-leaf"></i> Sistema de Diseño UI / UX · Versión 2.0
+            </div>
+            <h1 class="cover-title">SENDERO<span>VIVO</span></h1>
+            <p class="cover-subtitle">
+                Manual de Identidad Visual, Arquitectura de Componentes y Pautas de Experiencia para el Ecoturismo Inmersivo en los Cerros Orientales de Bogotá.
+            </p>
+        </div>
+
+        <div class="cover-meta">
+            <div class="meta-item">
+                <h5>Proyecto</h5>
+                <p>Sendero Santa Ana / Quebrada La Vieja</p>
+            </div>
+            <div class="meta-item">
+                <h5>Entorno</h5>
+                <p>Visualización 3D & Splatting Espacial</p>
+            </div>
+            <div class="meta-item">
+                <h5>Paleta Esencial</h5>
+                <p>Mandarina, Ciruela & Deep Teal</p>
+            </div>
+            <div class="meta-item">
+                <h5>Fecha de Emisión</h5>
+                <p>Septiembre 2026</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== 01. MANIFIESTO Y PROPÓSITO ==================== -->
+    <section class="section-block">
+        <div class="section-header">
+            <span class="section-number">01</span>
+            <h2 class="section-title">Manifiesto y Filosofía de Marca</h2>
+        </div>
+        <p class="lead-text">
+            <strong>SenderoVivo</strong> nace para conectar la contemplación botánica y ornitológica de la reserva forestal protectora de los Cerros Orientales con el rigor de la tecnología de escaneo espacial. El diseño gráfico y de interacción no debe competir con el sendero: <em>la naturaleza y la reconstrucción 3D son el lienzo; la interfaz es la lente silenciosa que acompaña</em>.
+        </p>
+
+        <div class="ux-principles-grid">
+            <div class="principle-card">
+                <h5><i class="fa-solid fa-eye"></i> Protagonismo Espacial</h5>
+                <p>La escena inmersiva 3D ocupa el 100% de la visión. La interfaz se retira hacia bordes esmerilados y solo emerge cuando el usuario solicita información.</p>
+            </div>
+            <div class="principle-card">
+                <h5><i class="fa-solid fa-compress"></i> Contención Modular</h5>
+                <p>Prohibición absoluta de ventanas a pantalla completa innecesarias. Todo detalle se expone en tarjetas compactas proporcionales (ancho máximo 500px).</p>
+            </div>
+            <div class="principle-card">
+                <h5><i class="fa-solid fa-feather-pointed"></i> Veracidad Científica</h5>
+                <p>Erradicación de textos ficticios de IA. Taxonomía botánica andina verificada (<em>Alnus acuminata</em>, <em>Cyathea caracasana</em>, etc.).</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 02. ARQUITECTURA CROMÁTICA ==================== -->
+    <section class="section-block">
+        <div class="section-header">
+            <span class="section-number">02</span>
+            <h2 class="section-title">Arquitectura de Color (Tokens Semánticos)</h2>
+        </div>
+        <p class="lead-text">
+            La paleta cromática se inspira en el bosque altoandino y la niebla paramuna, contrastada con la calidez de la flora local (uvitos de monte y orquídeas) y la vitalidad del amanecer en la cordillera.
+        </p>
+
+        <div class="palette-grid">
+            <!-- Mandarina -->
+            <div class="swatch-card">
+                <div class="swatch-color" style="background: #F76828;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Mandarina Silvestre</div>
+                    <div class="swatch-role">Acento Primario & Acción</div>
+                    <div class="swatch-hex"><span>HEX</span> #F76828</div>
+                    <div class="swatch-hex" style="color: var(--sv-text-muted); font-size: 10px;"><span>RGB</span> 247, 104, 40</div>
+                </div>
+            </div>
+
+            <!-- Ciruela -->
+            <div class="swatch-card">
+                <div class="swatch-color" style="background: #731963;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Ciruela Real (Plum)</div>
+                    <div class="swatch-role">Acento Secundario & Fauna</div>
+                    <div class="swatch-hex"><span>HEX</span> #731963</div>
+                    <div class="swatch-hex" style="color: var(--sv-text-muted); font-size: 10px;"><span>RGB</span> 115, 25, 99</div>
+                </div>
+            </div>
+
+            <!-- Deep Teal -->
+            <div class="swatch-card">
+                <div class="swatch-color" style="background: #12201D;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Deep Teal Glass</div>
+                    <div class="swatch-role">Fondo & Superficie Vidrio</div>
+                    <div class="swatch-hex"><span>HEX</span> #12201D</div>
+                    <div class="swatch-hex" style="color: var(--sv-text-muted); font-size: 10px;"><span>RGB</span> 18, 32, 29</div>
+                </div>
+            </div>
+
+            <!-- Dorado Andino -->
+            <div class="swatch-card">
+                <div class="swatch-color" style="background: #FFA375;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Dorado Andino</div>
+                    <div class="swatch-role">Taxonomía & Altimetría</div>
+                    <div class="swatch-hex"><span>HEX</span> #FFA375</div>
+                    <div class="swatch-hex" style="color: var(--sv-text-muted); font-size: 10px;"><span>RGB</span> 255, 163, 117</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rule-callout">
+            <i class="fa-solid fa-ban"></i>
+            <div>
+                <h6>Directriz de Erradicación de Verdes Genéricos</h6>
+                <p>
+                    Queda terminantemente prohibido el empleo de delineados, sombras y botones en verde lima chillón (#00FF00, #22C55E brillante) característicos de interfaces automatizadas por IA. Todos los hovers, selecciones activas y estados interactivos deben emplear exclusivamente los gradientes de <strong>Mandarina Silvestre</strong> y <strong>Ciruela Real</strong>.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 03. SISTEMA TIPOGRÁFICO ==================== -->
+    <section class="section-block">
+        <div class="section-header">
+            <span class="section-number">03</span>
+            <h2 class="section-title">Sistema Tipográfico & Jerarquías</h2>
+        </div>
+        <p class="lead-text">
+            Se implementa una tríada tipográfica con roles especializados: personalidad escultórica para títulos, pureza de lectura para contenidos y precisión técnica para telemetría.
+        </p>
+
+        <div class="type-specimen-grid">
+            <div class="type-card">
+                <div class="type-header">
+                    <span class="type-family-name">Syne</span>
+                    <span class="type-role-tag">Display & Títulos</span>
+                </div>
+                <div class="type-sample-large" style="font-family: 'Syne', sans-serif; font-weight: 700;">
+                    Bosque Altoandino
+                </div>
+                <p class="type-sample-desc">
+                    Diseñada con formas geométricas audaces y curvas orgánicas. Aporta identidad de autor e impacto editorial en cabeceras y nombres de especies.
+                </p>
+            </div>
+
+            <div class="type-card">
+                <div class="type-header">
+                    <span class="type-family-name">Outfit / Inter</span>
+                    <span class="type-role-tag">Cuerpo & Microcopia</span>
+                </div>
+                <div class="type-sample-large" style="font-family: 'Outfit', sans-serif; font-weight: 400; font-size: 18px;">
+                    Especies registradas en los Cerros Orientales
+                </div>
+                <p class="type-sample-desc">
+                    Grotesca moderna optimizada para pantallas retina. Máxima legibilidad en tamaños reducidos (9px a 13px) con soporte táctil ergonómico.
+                </p>
+            </div>
+        </div>
+
+        <table class="spec-table">
+            <thead>
+                <tr>
+                    <th>Nivel / Elemento</th>
+                    <th>Familia</th>
+                    <th>Peso</th>
+                    <th>Tamaño</th>
+                    <th>Tracking</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>H1 · Título Principal</td>
+                    <td>Syne</td>
+                    <td>Bold 700</td>
+                    <td>24px – 28px</td>
+                    <td>-0.02em</td>
+                </tr>
+                <tr>
+                    <td>H2 · Modal Card Header</td>
+                    <td>Syne</td>
+                    <td>Bold 700</td>
+                    <td>13px – 15px</td>
+                    <td>Normal</td>
+                </tr>
+                <tr>
+                    <td>H3 · Nombre de Especie</td>
+                    <td>Syne</td>
+                    <td>Bold 700</td>
+                    <td>12px – 13px</td>
+                    <td>Normal</td>
+                </tr>
+                <tr>
+                    <td>Científico · Taxonomía</td>
+                    <td>JetBrains Mono</td>
+                    <td>Italic 400</td>
+                    <td>9.5px – 10.5px</td>
+                    <td>+0.02em</td>
+                </tr>
+                <tr>
+                    <td>Telemetría · Altimetría</td>
+                    <td>JetBrains Mono</td>
+                    <td>Bold 700</td>
+                    <td>11px – 13px</td>
+                    <td>+0.04em</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ==================== 04. EXPERIENCIA DE USUARIO ==================== -->
+    <section class="section-block">
+        <div class="section-header">
+            <span class="section-number">04</span>
+            <h2 class="section-title">Estrategia de Interfaz: Desktop vs. Móvil</h2>
+        </div>
+        <p class="lead-text">
+            La interfaz responde a dos contextos de uso radicalmente distintos sin duplicar componentes ni generar colisiones en el código.
+        </p>
+
+        <div class="ux-principles-grid">
+            <div class="principle-card">
+                <h5><i class="fa-solid fa-desktop"></i> Experiencia Desktop (&ge; 640px)</h5>
+                <p><strong>Comando Unificado:</strong> Barra superior completa con selector de técnica (COLMAP / Luma), buscador global por atajo (K) y telemetría horizontal fija. El dock inferior flota centrado.</p>
+            </div>
+            <div class="principle-card">
+                <h5><i class="fa-solid fa-mobile-screen"></i> Experiencia Móvil (&lt; 640px)</h5>
+                <p><strong>Limpieza Táctica:</strong> Eliminación de ayudas WASD y banners. La telemetría vive en la tarjeta colapsable <em>#mobile-details-card</em> sobre el dock. Modales con margen inferior de 75px.</p>
+            </div>
+        </div>
+
+        <div class="rule-callout warning">
+            <i class="fa-solid fa-arrows-to-circle"></i>
+            <div>
+                <h6>Estándar de Modales: Tarjetas Flotantes (Anti-Fullscreen)</h6>
+                <p>
+                    Las pestañas <strong>Especies</strong>, <strong>Sonidos</strong> y <strong>Bitácora</strong> deben abrirse SIEMPRE como un diálogo modal centrado (`.tab-modal-dialog`) con `max-width: 500px` y `max-height: 80vh`. Jamás deben estirarse al 100% del ancho del monitor, preservando la escala visual a cualquier resolución sin necesidad de zoom del navegador.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 05. ANATOMÍA DE COMPONENTES ==================== -->
+    <section class="section-block">
+        <div class="section-header">
+            <span class="section-number">05</span>
+            <h2 class="section-title">Anatomía de Componentes UI</h2>
+        </div>
+        <p class="lead-text">
+            Componentes compactos, modulares y de alto impacto visual implementados en el nuevo código:
+        </p>
+
+        <!-- Preview 1: Tarjeta de Especie -->
+        <div class="component-preview-box">
+            <span class="preview-label">1. Tarjeta de Catálogo de Especie (.species-catalog-card)</span>
+            <div class="mock-catalog-card">
+                <div class="mock-medallon">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <div style="min-width: 0; flex: 1;">
+                    <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 2px;">
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 8.5px; font-weight: 700; color: #F76828; background: rgba(247,104,40,0.18); padding: 1px 4px; border-radius: 4px; border: 1px solid rgba(247,104,40,0.4);">#BIO-02</span>
+                        <span style="font-size: 9px; color: #94A3B8;">Flora · POI confirmado</span>
+                    </div>
+                    <h4 style="font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF;">Helecho arborescente</h4>
+                    <p style="font-family: 'JetBrains Mono', monospace; font-style: italic; font-size: 9.5px; color: #FFA375;">Cyathea caracasana</p>
+                </div>
+                <div class="mock-chevron">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview 2: Dock de Navegación -->
+        <div class="component-preview-box">
+            <span class="preview-label">2. Dock de Navegación Inferior (#shell-nav-pc)</span>
+            <div class="mock-dock">
+                <div class="mock-dock-tab active">
+                    <i class="fa-solid fa-compass" style="font-size: 16px;"></i>
+                    <span>Sendero</span>
+                </div>
+                <div class="mock-dock-tab">
+                    <i class="fa-solid fa-book-bookmark" style="font-size: 16px;"></i>
+                    <span>Especies</span>
+                </div>
+                <div class="mock-dock-tab">
+                    <i class="fa-solid fa-headphones" style="font-size: 16px;"></i>
+                    <span>Sonidos</span>
+                </div>
+                <div class="mock-dock-tab">
+                    <i class="fa-solid fa-trophy" style="font-size: 16px;"></i>
+                    <span>Bitácora</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 06. GUÍA DE TONO Y VOZ ==================== -->
+    <section class="section-block">
+        <div class="section-header">
+            <span class="section-number">06</span>
+            <h2 class="section-title">Guía de Tono, Redacción y Microcopia</h2>
+        </div>
+        <p class="lead-text">
+            Las palabras en SenderoVivo comunican respeto por la biodiversidad y claridad de uso sin tecnicismos innecesarios.
+        </p>
+
+        <table class="spec-table">
+            <thead>
+                <tr>
+                    <th>Contexto</th>
+                    <th>Término Correcto</th>
+                    <th>Término Prohibido (Evitar)</th>
+                    <th>Razón de Diseño</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Patrimonio</td>
+                    <td><strong>Muro patrimonial antiguo</strong></td>
+                    <td>[por identificar en V1]</td>
+                    <td>Evita sensación de prototipo inacabado.</td>
+                </tr>
+                <tr>
+                    <td>Avifauna</td>
+                    <td><strong>Golondrina plomiza</strong></td>
+                    <td>Binomio por verificar</td>
+                    <td>Brinda rigor taxonómico al usuario.</td>
+                </tr>
+                <tr>
+                    <td>Acción CTA</td>
+                    <td><strong>Explorar Sendero</strong></td>
+                    <td>Empezar / Click aquí</td>
+                    <td>Voz activa, inmersiva y directa.</td>
+                </tr>
+                <tr>
+                    <td>Audio</td>
+                    <td><strong>Ambiente del Bosque</strong></td>
+                    <td>Soundscape test</td>
+                    <td>Cercanía poética y ecológica.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ==================== PIE DE PÁGINA ==================== -->
+    <footer style="text-align: center; padding: 24px; color: var(--sv-text-muted); font-size: 11px; font-family: 'JetBrains Mono', monospace;">
+        <p>SENDERO VIVO · SISTEMA DE DISEÑO & MANUAL DE IDENTIDAD VISUAL 2.0</p>
+        <p style="margin-top: 4px; color: var(--sv-tangerine);">Cerros Orientales de Bogotá · Reserva Forestal Protectora Bosque Oriental</p>
+    </footer>
+
+</div>
+
+</body>
+</html>

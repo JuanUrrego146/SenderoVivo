@@ -1,4 +1,4 @@
-﻿import { ModelViewer } from './ModelViewer.js';
+import { ModelViewer } from './ModelViewer.js';
 
 
 export class PoiCard {
@@ -341,40 +341,40 @@ export class PoiCard {
             'relative';
 
         card.style.width =
-            '420px';
+            '440px';
 
         card.style.maxWidth =
-            '90vw';
+            '92vw';
 
         card.style.maxHeight =
-            '85vh';
+            '88vh';
 
         card.style.overflowY =
             'auto';
 
         card.style.background =
-            '#18251d';
+            'linear-gradient(165deg, rgba(35, 63, 57, 0.96) 0%, rgba(24, 43, 39, 0.98) 100%)';
 
         card.style.color =
-            'white';
+            'var(--sv-text-primary, #F5F8F6)';
 
         card.style.borderRadius =
-            '24px';
+            '28px';
 
         card.style.padding =
-            '30px';
+            '26px';
 
         card.style.boxSizing =
             'border-box';
 
         card.style.fontFamily =
-            'Arial, sans-serif';
+            "'Quicksand', system-ui, sans-serif";
 
         card.style.boxShadow =
-            '0 20px 60px rgba(0,0,0,0.6)';
+            '0 24px 70px rgba(8, 18, 15, 0.75), 0 0 0 1px rgba(169, 251, 195, 0.20) inset';
 
         card.style.border =
-            '1px solid rgba(111,207,151,0.5)';
+            '1px solid rgba(169, 251, 195, 0.25)';
 
         card.style.zIndex =
             '2147483647';
@@ -414,20 +414,26 @@ export class PoiCard {
                 type="button"
                 style="
                     position:absolute;
-                    top:12px;
-                    right:15px;
-                    width:38px;
-                    height:38px;
-                    border:none;
+                    top:14px;
+                    right:14px;
+                    width:36px;
+                    height:36px;
+                    border:1px solid rgba(169,251,195,0.25);
                     border-radius:50%;
-                    background:rgba(255,255,255,0.12);
-                    color:white;
-                    font-size:26px;
+                    background:rgba(24,43,39,0.85);
+                    color:var(--sv-text-muted, #A5B7B1);
+                    font-size:22px;
                     cursor:pointer;
                     z-index:10;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    transition:all 0.2s;
                 "
+                onmouseenter="this.style.color='var(--sv-celadon, #A9FBC3)'; this.style.borderColor='var(--sv-celadon, #A9FBC3)';"
+                onmouseleave="this.style.color='var(--sv-text-muted, #A5B7B1)'; this.style.borderColor='rgba(169,251,195,0.25)';"
             >
-                ×
+                ✕
             </button>
 
 
@@ -439,11 +445,12 @@ export class PoiCard {
                 id="poi-model"
                 style="
                     width:100%;
-                    height:220px;
-                    margin-bottom:15px;
-                    border-radius:16px;
+                    height:230px;
+                    margin-bottom:18px;
+                    border-radius:20px;
                     overflow:hidden;
-                    background:#101510;
+                    background:radial-gradient(circle at 50% 50%, rgba(57,115,103,0.3) 0%, rgba(14,26,23,0.9) 100%);
+                    border:1px solid rgba(169,251,195,0.18);
                     position:relative;
                 "
             >
@@ -456,12 +463,13 @@ export class PoiCard {
                         display:flex;
                         align-items:center;
                         justify-content:center;
-                        color:#6fcf97;
-                        font-size:14px;
+                        color:var(--sv-celadon, #A9FBC3);
+                        font-size:13px;
+                        font-weight:600;
                         z-index:2;
                     "
                 >
-                    Cargando modelo 3D...
+                    <i class="fa-solid fa-cube fa-spin mr-2"></i> Cargando modelo 3D...
                 </div>
 
             </div>
@@ -471,28 +479,34 @@ export class PoiCard {
             <!-- NOMBRE -->
             <!-- ========================================= -->
 
-            <h2
-                style="
-                    margin:0;
-                    text-align:center;
-                    font-size:30px;
-                    color:#6fcf97;
-                "
-            >
-                ${commonName}
-            </h2>
+            <div style="text-align:center; margin-bottom:16px;">
+                <span style="display:inline-block; font-size:10px; text-transform:uppercase; font-weight:700; letter-spacing:0.06em; padding:3px 10px; border-radius:999px; background:rgba(169,251,195,0.12); border:1px solid rgba(169,251,195,0.30); color:var(--sv-celadon, #A9FBC3); margin-bottom:6px;">
+                    Modelo 3D Interactivo
+                </span>
+                <h2
+                    style="
+                        margin:0;
+                        font-family:'Syne', sans-serif;
+                        font-size:24px;
+                        font-weight:700;
+                        color:var(--sv-text-primary, #F5F8F6);
+                    "
+                >
+                    ${commonName}
+                </h2>
 
-
-            <p
-                style="
-                    text-align:center;
-                    margin-top:8px;
-                    color:#bdbdbd;
-                    font-style:italic;
-                "
-            >
-                ${scientificName}
-            </p>
+                <p
+                    style="
+                        margin:4px 0 0 0;
+                        color:var(--sv-celadon, #A9FBC3);
+                        font-style:italic;
+                        font-family:monospace;
+                        font-size:12px;
+                    "
+                >
+                    ${scientificName}
+                </p>
+            </div>
 
 
             <!-- ========================================= -->
@@ -501,27 +515,27 @@ export class PoiCard {
 
             <div
                 style="
-                    margin-top:25px;
-                    padding:15px;
-                    background:rgba(255,255,255,0.07);
-                    border-radius:14px;
+                    margin-bottom:16px;
+                    padding:12px 16px;
+                    background:rgba(24,43,39,0.70);
+                    border:1px solid rgba(169,251,195,0.12);
+                    border-radius:16px;
+                    display:grid;
+                    grid-template-columns:1fr 1fr;
+                    gap:8px;
+                    font-size:12px;
                 "
             >
 
-                <p style="margin:6px 0;">
-                    <strong>🦜 Tipo:</strong>
-                    Fauna
-                </p>
+                <div>
+                    <span style="display:block; font-size:10px; color:var(--sv-text-dim, #6B8078); text-transform:uppercase; font-weight:600;">Altitud</span>
+                    <strong style="color:var(--sv-text-primary, #F5F8F6);">${altitude}</strong>
+                </div>
 
-                <p style="margin:6px 0;">
-                    <strong>⛰️ Altitud:</strong>
-                    ${altitude}
-                </p>
-
-                <p style="margin:6px 0;">
-                    <strong>📍 Lugar:</strong>
-                    Cerros Orientales de Bogotá
-                </p>
+                <div>
+                    <span style="display:block; font-size:10px; color:var(--sv-text-dim, #6B8078); text-transform:uppercase; font-weight:600;">Ubicación</span>
+                    <strong style="color:var(--sv-text-primary, #F5F8F6);">Cerros Orientales</strong>
+                </div>
 
             </div>
 
@@ -530,38 +544,15 @@ export class PoiCard {
             <!-- DESCRIPCIÓN -->
             <!-- ========================================= -->
 
-            <h3
-                style="
-                    margin-top:25px;
-                    color:#6fcf97;
-                "
-            >
-                Sobre esta especie
-            </h3>
-
-
             <p
                 style="
+                    font-size:13px;
                     line-height:1.6;
-                    color:#e5e5e5;
+                    color:var(--sv-text-muted, #A5B7B1);
+                    margin:0 0 16px 0;
                 "
             >
-                La golondrina plomiza
-                (<em>${scientificName}</em>)
-                es una especie de ave que habita
-                diferentes ecosistemas de montaña.
-            </p>
-
-
-            <p
-                style="
-                    line-height:1.6;
-                    color:#e5e5e5;
-                "
-            >
-                Su presencia forma parte de la
-                biodiversidad que podemos encontrar
-                en los Cerros Orientales de Bogotá.
+                La golondrina plomiza (<em>${scientificName}</em>) habita los estratos abiertos y bordes de bosque altoandino. Puedes interactuar arrastrando el modelo 3D arriba para rotarlo en cualquier eje.
             </p>
 
 
@@ -572,9 +563,7 @@ export class PoiCard {
             <div
                 style="
                     display:flex;
-                    flex-direction:column;
-                    gap:10px;
-                    margin-top:25px;
+                    gap:8px;
                 "
             >
 
@@ -582,14 +571,17 @@ export class PoiCard {
                     id="poi-canto"
                     type="button"
                     style="
-                        padding:14px;
+                        flex:1;
+                        padding:12px;
                         border:none;
-                        border-radius:12px;
-                        background:#6fcf97;
-                        color:#102016;
-                        font-weight:bold;
-                        font-size:15px;
+                        border-radius:14px;
+                        background:var(--sv-tangerine, #F76828);
+                        color:#fff;
+                        font-weight:700;
+                        font-size:13px;
                         cursor:pointer;
+                        box-shadow:0 4px 14px var(--sv-tangerine-glow, rgba(247,104,40,0.25));
+                        transition:all 0.2s;
                     "
                 >
                     🔊 Escuchar canto
@@ -600,17 +592,19 @@ export class PoiCard {
                     id="poi-narracion"
                     type="button"
                     style="
-                        padding:14px;
-                        border:1px solid #6fcf97;
-                        border-radius:12px;
-                        background:transparent;
-                        color:#6fcf97;
-                        font-weight:bold;
-                        font-size:15px;
+                        flex:1;
+                        padding:12px;
+                        border:1px solid rgba(169,251,195,0.30);
+                        border-radius:14px;
+                        background:rgba(35,63,57,0.70);
+                        color:var(--sv-text-primary, #F5F8F6);
+                        font-weight:700;
+                        font-size:13px;
                         cursor:pointer;
+                        transition:all 0.2s;
                     "
                 >
-                    🎧 Escuchar narración
+                    🎧 Narración
                 </button>
 
             </div>

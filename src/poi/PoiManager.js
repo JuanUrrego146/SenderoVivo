@@ -1,4 +1,4 @@
-﻿import { Entity } from 'playcanvas';
+import { Entity } from 'playcanvas';
 
 const POIS_CONFIG_URL = 'config/pois.json';
 
@@ -468,7 +468,7 @@ export class PoiManager {
             'rgba(24, 37, 29, 0.88)';
 
         button.style.color =
-            '#6fcf97';
+            'var(--sv-celadon, #A9FBC3)';
 
         button.style.fontSize =
             '23px';
