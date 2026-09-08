@@ -11,6 +11,7 @@
  * demás módulos escuchan ese evento en vez de leer la cámara.
  */
 import { Vec3 } from 'playcanvas';
+import { TourState } from '../models/TourState.js';
 
 const RAD = Math.PI / 180;
 
@@ -28,7 +29,6 @@ export class TourEngine {
 
         this.speed = options.speed ?? 1.2;          // unidades por segundo
         this.fastMultiplier = options.fastMultiplier ?? 3;
-        this.eyeHeight = options.eyeHeight ?? 0;    // desplazamiento vertical sobre el trazado
         this.lookSensitivity = options.lookSensitivity ?? 0.2;
         this.pitchLimit = options.pitchLimit ?? 85;
         this.smoothing = options.smoothing ?? 12;
@@ -38,9 +38,9 @@ export class TourEngine {
         // como brochazos, y algunas escenas piden no dejar meter la camara ahi.
         this.pitchDownLimit = options.pitchDownLimit ?? this.pitchLimit;
 
-        this.distance = 0;
-        this.yaw = 0;
-        this.pitch = 0;
+        // distance, yaw, pitch y eyeHeight (desplazamiento vertical sobre el
+        // trazado) viven en TourState (src/models/TourState.js).
+        this.state = new TourState({ eyeHeight: options.eyeHeight ?? 0 });
 
         this._input = { forward: 0, strafe: 0, fast: false };
         /** Desplazamiento lateral actual dentro del corredor. */
@@ -61,10 +61,10 @@ export class TourEngine {
 
         // Orientación inicial: mirando hacia donde avanza el sendero.
         this.trailPath.directionAt(0, this._dir);
-        this.yaw = Math.atan2(-this._dir.x, -this._dir.z) / RAD;
+        this.state.yaw = Math.atan2(-this._dir.x, -this._dir.z) / RAD;
 
-        this.trailPath.positionAt(this.distance, this._currentPos);
-        this._currentPos.y += this.eyeHeight;
+        this.trailPath.positionAt(this.state.distance, this._currentPos);
+        this._currentPos.y += this.state.eyeHeight;
         this.camera.setPosition(this._currentPos);
 
         this._bindInput();
@@ -82,20 +82,27 @@ export class TourEngine {
 
     /** Ajusta la altura de los ojos y lo publica para el HUD. */
     setEyeHeight(value) {
-        this.eyeHeight = Math.round(value * 100) / 100;
-        this.app.fire('tour:eyeheight', this.eyeHeight);
+        this.state.eyeHeight = Math.round(value * 100) / 100;
+        this.app.fire('tour:eyeheight', this.state.eyeHeight);
     }
 
-    /** Guarda el estado para restaurarlo al cerrar una ficha (RF-018). */
+    /**
+     * Guarda el estado para restaurarlo al cerrar una ficha (RF-018).
+     * Solo distance/yaw/pitch, igual que antes de pasar por TourState: eyeHeight
+     * no viaja aqui porque PoiManager no detiene el tour al abrir una ficha, y
+     * los atajos de teclado que la cambian (r/f) siguen activos con la ficha
+     * abierta. Restaurarla tambien seria un cambio de comportamiento nuevo.
+     */
     saveState() {
-        return { distance: this.distance, yaw: this.yaw, pitch: this.pitch };
+        const { distance, yaw, pitch } = this.state.getState();
+        return { distance, yaw, pitch };
     }
 
     restoreState(state) {
         if (!state) return;
-        this.distance = state.distance;
-        this.yaw = state.yaw;
-        this.pitch = state.pitch;
+        this.state.distance = state.distance;
+        this.state.yaw = state.yaw;
+        this.state.pitch = state.pitch;
     }
 
     _bindInput() {
@@ -110,8 +117,8 @@ export class TourEngine {
             if (e.shiftKey) this._input.fast = true;
             // Calibrar la altura de los ojos en vivo: la escala de cada escena
             // es distinta y hay que verla para acertar.
-            if (k === 'r') this.setEyeHeight(this.eyeHeight + 0.15);
-            if (k === 'f') this.setEyeHeight(this.eyeHeight - 0.15);
+            if (k === 'r') this.setEyeHeight(this.state.eyeHeight + 0.15);
+            if (k === 'f') this.setEyeHeight(this.state.eyeHeight - 0.15);
         };
         this._keyUp = (e) => {
             const k = e.key.toLowerCase();
@@ -123,9 +130,9 @@ export class TourEngine {
         this._pointerUp = () => { this._looking = false; };
         this._pointerMove = (e) => {
             if (!this._looking) return;
-            this.yaw -= e.movementX * this.lookSensitivity;
-            this.pitch -= e.movementY * this.lookSensitivity;
-            this.pitch = Math.max(-this.pitchDownLimit, Math.min(this.pitchLimit, this.pitch));
+            this.state.yaw -= e.movementX * this.lookSensitivity;
+            this.state.pitch -= e.movementY * this.lookSensitivity;
+            this.state.pitch = Math.max(-this.pitchDownLimit, Math.min(this.pitchLimit, this.state.pitch));
         };
         // Táctil: un dedo mira, dos dedos avanzan.
         this._touchStart = (e) => {
@@ -136,9 +143,9 @@ export class TourEngine {
             if (!this._looking || e.touches.length !== 1) return;
             const t = e.touches[0];
             if (this._lastTouch) {
-                this.yaw -= (t.clientX - this._lastTouch.clientX) * this.lookSensitivity;
-                this.pitch -= (t.clientY - this._lastTouch.clientY) * this.lookSensitivity;
-                this.pitch = Math.max(-this.pitchDownLimit, Math.min(this.pitchLimit, this.pitch));
+                this.state.yaw -= (t.clientX - this._lastTouch.clientX) * this.lookSensitivity;
+                this.state.pitch -= (t.clientY - this._lastTouch.clientY) * this.lookSensitivity;
+                this.state.pitch = Math.max(-this.pitchDownLimit, Math.min(this.pitchLimit, this.state.pitch));
             }
             this._lastTouch = { clientX: t.clientX, clientY: t.clientY };
         };
@@ -171,9 +178,9 @@ export class TourEngine {
         if (this.forwardOnly && this._input.forward < 0) this._input.forward = 0;
         if (this._input.forward !== 0) {
             const speed = this.speed * (this._input.fast ? this.fastMultiplier : 1);
-            this.distance += this._input.forward * speed * dt;
+            this.state.distance += this._input.forward * speed * dt;
             // El recorte a los extremos lo hace positionAt: no se sale del tramo.
-            this.distance = Math.max(0, Math.min(this.distance, this.trailPath.totalLength()));
+            this.state.distance = Math.max(0, Math.min(this.state.distance, this.trailPath.totalLength()));
             this._emitProgress();
         }
         if (this._input.strafe !== 0) {
@@ -183,19 +190,19 @@ export class TourEngine {
         }
 
         // La posición SIEMPRE sale del trazado más el margen lateral permitido: es RF-004.
-        this.trailPath.positionAt(this.distance, this._targetPos);
+        this.trailPath.positionAt(this.state.distance, this._targetPos);
         if (this.lateral !== 0) {
-            this.trailPath.directionAt(this.distance, this._dir);
+            this.trailPath.directionAt(this.state.distance, this._dir);
             // Perpendicular horizontal al avance.
             this._targetPos.x += -this._dir.z * this.lateral;
             this._targetPos.z += this._dir.x * this.lateral;
         }
-        this._targetPos.y += this.eyeHeight;
+        this._targetPos.y += this.state.eyeHeight;
 
         const t = Math.min(1, this.smoothing * dt);
         this._currentPos.lerp(this._currentPos, this._targetPos, t);
         this.camera.setPosition(this._currentPos);
-        this.camera.setEulerAngles(this.pitch, this.yaw, 0);
+        this.camera.setEulerAngles(this.state.pitch, this.state.yaw, 0);
     }
 
     /** Control desde los botones en pantalla: 'forward'|'back'|'left'|'right'. */
@@ -214,7 +221,7 @@ export class TourEngine {
     _emitProgress() {
         const pos = this.camera.getPosition();
         this.app.fire('tour:progress', {
-            distance: this.distance,
+            distance: this.state.distance,
             total: this.trailPath.totalLength(),
             // distanceMeters lo completará TrailDataLayer cuando exista la escala real.
             distanceMeters: null,
@@ -222,8 +229,8 @@ export class TourEngine {
             // cercanía, HUD. Se publican aquí para que ningún otro módulo tenga que leer
             // la cámara, que es lo que prohíbe el invariante 13.
             position: { x: pos.x, y: pos.y, z: pos.z },
-            yaw: this.yaw,
-            pitch: this.pitch
+            yaw: this.state.yaw,
+            pitch: this.state.pitch
         });
     }
 }
