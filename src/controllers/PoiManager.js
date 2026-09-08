@@ -1,6 +1,5 @@
 ﻿import { Entity } from 'playcanvas';
-
-const POIS_CONFIG_URL = 'config/pois.json';
+import { PoiCatalog } from '../models/PoiCatalog.js';
 
 export class PoiManager {
 
@@ -192,25 +191,9 @@ export class PoiManager {
 
     async load() {
 
-        const response =
-            await fetch(
-                POIS_CONFIG_URL
-            );
+        this.catalog = new PoiCatalog();
 
-        if (!response.ok) {
-
-            throw new Error(
-                `No se pudo leer ${POIS_CONFIG_URL}`
-            );
-        }
-
-        const config =
-            await response.json();
-
-        this.pois =
-            Array.isArray(config.pois)
-                ? config.pois
-                : [];
+        this.pois = await this.catalog.load();
 
 
         /*
