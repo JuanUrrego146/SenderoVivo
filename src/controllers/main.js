@@ -21,13 +21,13 @@ import {
     Vec3
 } from 'playcanvas';
 import { TrailModel } from '../models/TrailModel.js';
-import { TourEngine } from '../engine/TourEngine.js';
-import { TrailRecorder } from '../engine/TrailRecorder.js';
+import { TourEngine } from './TourEngine.js';
+import { TrailRecorder } from './TrailRecorder.js';
 import { TrailArrowsView } from '../views/TrailArrowsView.js';
-import { PoiManager } from '../poi/PoiManager.js';
+import { PoiManager } from './PoiManager.js';
 import { PoiCard } from '../poi/PoiCard.js';
 import { ShellView } from '../views/ShellView.js';
-import AmbienceController from '../audio/AmbienceController.js';
+import AmbienceController from './AmbienceController.js';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
 const SCENES_CONFIG_URL = 'config/scenes.json';

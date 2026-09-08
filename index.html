@@ -251,7 +251,7 @@
                HUD y en la Bitácora), el HUD baja pegado a la navegación, y el
                switch se encoge y baja bajo el bloque de encabezado+filtros.
                El visor además elige la escena liviana (Luma) y sube la nitidez
-               del render: eso se decide en src/app/main.js.
+               del render: eso se decide en src/controllers/main.js.
                OJO: este bloque va al FINAL de la hoja a propósito — debe ganar
                la cascada a las reglas base de #tecnica de más arriba. */
             @media (max-width: 640px) {
@@ -561,7 +561,7 @@
             <strong>W A S D</strong> caminar · <strong>Q E</strong> bajar y subir · <strong>Shift</strong> más rápido ·
             arrastrar para mirar · rueda para acercar
         </p>
-        <script type="module" src="src/app/main.js"></script>
+        <script type="module" src="src/controllers/main.js"></script>
         <script src="src/ui/shell.js" defer></script>
     </body>
 </html>
