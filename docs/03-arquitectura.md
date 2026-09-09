@@ -727,6 +727,21 @@ Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el produ
 
 > `ambienceUrl` es el lecho continuo: estéreo, **no posicional**. Cada entrada de `sources` es una fuente puntual espacializada con HRTF, grabada **en mono**. Las posiciones salen del mapa sonoro levantado en V1. `config/soundscape.json` **ya existe** como esqueleto con `sources` vacío. Diseño completo en [`06-contenido-de-la-experiencia.md`](06-contenido-de-la-experiencia.md) §C.
 
+### Perfil automático de calidad
+
+`src/models/QualityProfile.js` expone `detectFromDevice()`. El visor lo calcula al
+arrancar, sin ofrecer un selector al visitante, y publica el resultado en
+`window.senderoQualityProfile` para los módulos que lo necesitan:
+
+| Dispositivo | `splatBudget` | `antialias` | `maxPixelRatio` | `maxSpatialAudioSources` |
+|---|---:|---|---:|---:|
+| Móvil (hasta 640 px) | 1.000.000 | `false` | máximo 2 | 2 |
+| Escritorio | 3.500.000 | `false` | densidad del dispositivo | 4 |
+
+El antialiasing permanece desactivado porque multiplica el coste de relleno del
+Gaussian Splatting. `maxSpatialAudioSources` limita las fuentes posicionales HRTF
+simultáneas; SW-18 debe leerlo del perfil y no duplicar la detección de dispositivo.
+
 ### `track.json` (trazado del recorrido + track GPS)
 
 Forma real vigente (el prototipo ya lo consume):
