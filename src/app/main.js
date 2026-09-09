@@ -267,6 +267,7 @@ async function loadWorldModel(app, { url, position = new Vec3(0, 0, 0), rotation
 }
 
 async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
+    let poiDiagnosticsVisible = false;
     const canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
 
@@ -397,8 +398,25 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
         app.on('poi:request-close', () => poiManager.closePoi());
         try {
             await poiManager.load();
+            if (poiManager.diagnostics.length) {
+                poiDiagnosticsVisible = true;
+                const errors = poiManager.diagnostics.filter(issue => issue.severity === 'error');
+                const warnings = poiManager.diagnostics.filter(issue => issue.severity === 'warning');
+                const lines = [...errors, ...warnings].map(issue =>
+                    `<li><strong>${issue.poiId}</strong> · <code>${issue.field}</code>: ${issue.message}</li>`
+                ).join('');
+                showOverlay(`
+                    <h1>Revisa config/pois.json</h1>
+                    <p>${errors.length ? 'Hay POIs que no se cargaron por errores de validación.' : 'El catálogo cargó, pero hay referencias pendientes.'}</p>
+                    <ul>${lines}</ul>
+                    <p><button id="continue">Continuar</button></p>
+                `);
+                document.getElementById('continue').addEventListener('click', () => {
+                    overlay.hidden = true;
+                });
+            }
         } catch (error) {
-            console.warn('No se pudieron cargar los POIs:', error);
+            showError(error.message);
         }
     }
     // Ambientacion sonora (AmbienceController de David). Se instancia y se deja
@@ -430,6 +448,7 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
         await new Promise(r => setTimeout(r, 1500));
     }
     setLoadingProgress(100, 'Listo');
+    if (poiDiagnosticsVisible || document.getElementById('continue')) return;
     overlay.classList.add('desvanecer');
     setTimeout(() => { overlay.hidden = true; overlay.classList.remove('desvanecer'); }, 420);
 }

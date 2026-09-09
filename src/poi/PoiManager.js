@@ -1,4 +1,5 @@
 ﻿import { Entity } from 'playcanvas';
+import { PoiCatalog } from '../models/PoiCatalog.js';
 
 const POIS_CONFIG_URL = 'config/pois.json';
 
@@ -11,6 +12,7 @@ export class PoiManager {
         this.tour = tour;
 
         this.pois = [];
+        this.diagnostics = [];
         this.markers = [];
 
         this.selectedPoi = null;
@@ -192,25 +194,9 @@ export class PoiManager {
 
     async load() {
 
-        const response =
-            await fetch(
-                POIS_CONFIG_URL
-            );
-
-        if (!response.ok) {
-
-            throw new Error(
-                `No se pudo leer ${POIS_CONFIG_URL}`
-            );
-        }
-
-        const config =
-            await response.json();
-
-        this.pois =
-            Array.isArray(config.pois)
-                ? config.pois
-                : [];
+        const catalog = new PoiCatalog(POIS_CONFIG_URL);
+        this.pois = await catalog.load();
+        this.diagnostics = catalog.diagnostics;
 
 
         /*

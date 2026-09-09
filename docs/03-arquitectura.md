@@ -617,15 +617,16 @@ Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el produ
 
 ```json
 {
-  "version": 1,
+    "version": 2,
   "trail": {
     "name": "Santa Ana - La Aguadora, circuito Bosque de Pinos, tramo de entrada",
     "totalLengthMeters": 200,
     "startAltitudeMeters": 2712,
     "elevationGainMeters": null,
+            "scientificName": "Colibri coruscans",
     "averageSlopePercent": null
   },
-  "scenes": [
+            "trailAnchor": { "d": 1.3, "lat": -0.9, "alt": 1.1 },
     {
       "id": "scene-01",
       "order": 1,
@@ -673,15 +674,25 @@ Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el produ
       "fieldIdTips": "[por completar]",
       "sightingTips": "[por completar tras V1]"
     },
+        {
+            "id": "poi-helecho",
+            "type": "flora",
+            "commonName": "Helecho arborescente",
+            "scientificName": "[por verificar]",
+            "sceneId": "scene-01",
+            "anchor": { "x": 0, "y": 0, "z": 0 },
+            "trailAnchor": { "d": 2.4, "lat": 1, "alt": 0.8 }
+        },
     {
       "id": "poi-muro-antiguo",
       "type": "patrimonio",
       "commonName": "[por identificar en V1]",
+            "scientificName": "Punto patrimonial",
       "sceneId": "scene-02",
       "anchor": { "x": 0, "y": 0, "z": 0 },
-      "distanceMeters": 0,
+            "trailAnchor": { "d": 6, "lat": -0.8, "alt": 0.7 },
       "modelUrl": "assets/models/muro-antiguo.glb",
-      "historicalNote": "[por verificar]",
+            "historicalNote": "[por verificar]",
       "period": "[por verificar]",
       "sourceUrl": ""
     }
@@ -689,8 +700,8 @@ Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el produ
 }
 ```
 
-> `anchor` y `distanceMeters` quedan en `[por medir en campo]` hasta que existan las escenas reconstruidas y el track alineado.
-> `type` admite `"fauna"`, `"flora"`, `"elemento"` y `"patrimonio"`. Los campos son por tipo: `idleAnimation`, `birdCallUrl` y `sightingTips` solo en `fauna`; `historicalNote`, `period` y `sourceUrl` solo en `patrimonio`, y **`sourceUrl` es obligatorio si la nota histórica afirma algo**.
+> `anchor` y `trailAnchor` quedan en `[por medir en campo]` hasta que existan las escenas reconstruidas y el track alineado.
+> `type` admite `"fauna"`, `"flora"` y `"patrimonio"`. Todo POI necesita `id`, `commonName`, `sceneId`, `anchor` y `trailAnchor` con números; fauna añade `scientificName`, `modelUrl`, `altitudeRange`, `fieldIdTips` y `sightingTips`; flora añade `scientificName`; patrimonio añade `historicalNote`, `period` y `sourceUrl`. Si `historicalNote` afirma un dato, `sourceUrl` no puede quedar vacío. El catálogo comprueba además que `modelUrl`, `narrationUrl` y `birdCallUrl` apunten a archivos existentes y muestra el POI y campo problemáticos en pantalla.
 
 ### `soundscape.json`
 
