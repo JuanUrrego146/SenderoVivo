@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Quicksand:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
         <style>
             /* Tokens de color en styles/tokens.css — Atlas Botánico Vivo */
 
@@ -256,73 +256,62 @@
             </div>
         </div>
 
-        <!-- ============ LOBBY DE SELECCIÓN DE SENDEROS (VENTANA INICIAL) ============ -->
-        <div id="trail-lobby" class="lobby-hidden">
-            <div class="lobby-container">
-                <div class="lobby-hero-card">
-                    <div class="lobby-hero-banner">
-                        <div class="flex items-center justify-between gap-2 flex-wrap mb-1">
-                            <div class="lobby-brand-badge">
-                                <i class="fa-solid fa-mountain-sun"></i>
-                                <span>Sendero Vivo · Bosque Altoandino</span>
-                            </div>
-                            <div class="lobby-trail-chip">
-                                <i class="fa-solid fa-sparkles"></i>
-                                <span>Sendero Principal</span>
-                            </div>
-                        </div>
-                        <h1 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-2 font-syne tracking-tight">
-                            Sendero Santa Ana · Quebrada La Vieja
-                        </h1>
-                        <p class="text-xs sm:text-sm leading-relaxed max-w-xl" style="color: var(--sv-text-muted);">
-                            Inmersión 3D por la reserva forestal de los Cerros Orientales de Bogotá. Descubre especies nativas de flora y fauna, escucha paisajes sonoros reales y explora modelos 3D anclados al entorno.
-                        </p>
-                    </div>
+        <!-- ============ VENTANA INICIAL A PANTALLA COMPLETA (HERO START SCREEN) ============ -->
+        <div id="trail-lobby" role="dialog" aria-modal="true" aria-label="Pantalla de inicio Sendero Vivo">
+            <div class="hero-screen-overlay"></div>
 
-                    <div class="lobby-stats-grid">
-                        <div class="lobby-stat-box">
-                            <span class="lobby-stat-label"><i class="fa-solid fa-route" style="color: var(--sv-celadon);"></i> Distancia</span>
-                            <span class="lobby-stat-val">1.8 km</span>
-                        </div>
-                        <div class="lobby-stat-box">
-                            <span class="lobby-stat-label"><i class="fa-solid fa-clock" style="color: var(--sv-tangerine);"></i> Tiempo</span>
-                            <span class="lobby-stat-val">45–60 min</span>
-                        </div>
-                        <div class="lobby-stat-box">
-                            <span class="lobby-stat-label"><i class="fa-solid fa-chart-line" style="color: var(--sv-celadon);"></i> Desnivel</span>
-                            <span class="lobby-stat-val">+180 m</span>
-                        </div>
-                        <div class="lobby-stat-box">
-                            <span class="lobby-stat-label"><i class="fa-solid fa-mountain" style="color: var(--sv-olive-vibrant);"></i> Altitud</span>
-                            <span class="lobby-stat-val">2.712 m</span>
-                        </div>
-                    </div>
+            <!-- Botón discreto para cerrar si se reabre desde el visor en recorrido -->
+            <button id="btn-hero-close" class="hero-close-trigger" onclick="closeTrailLobby()" title="Volver al visor" aria-label="Cerrar ventana inicial">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
 
-                    <div class="lobby-species-strip">
-                        <span class="text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5" style="color: var(--sv-text-dim);">
-                            <i class="fa-solid fa-binoculars" style="color: var(--sv-celadon);"></i> Puntos destacados del recorrido:
-                        </span>
-                        <div class="lobby-species-tags">
-                            <span class="lobby-species-pill"><i class="fa-solid fa-dove" style="color: var(--sv-celadon);"></i> Colibrí chillón</span>
-                            <span class="lobby-species-pill"><i class="fa-solid fa-seedling" style="color: var(--sv-celadon);"></i> Helecho arborescente</span>
-                            <span class="lobby-species-pill"><i class="fa-solid fa-tree" style="color: var(--sv-celadon);"></i> Aliso nativo</span>
-                            <span class="lobby-species-pill"><i class="fa-solid fa-feather-pointed" style="color: var(--sv-plum-accent);"></i> Golondrina plomiza (3D)</span>
-                            <span class="lobby-species-pill"><i class="fa-solid fa-archway" style="color: var(--sv-tangerine);"></i> Puente de piedra</span>
-                        </div>
-                    </div>
+            <!-- Barra Superior: Ubicación y Tecnología 3DGS -->
+            <header class="hero-top-bar">
+                <div class="hero-pill-location">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Quebrada La Vieja</span>
+                </div>
+                <div class="hero-pill-tech">
+                    <span>200m Escaneados en 3DGS</span>
+                </div>
+            </header>
 
-                    <div class="lobby-actions">
-                        <button id="btn-start-exploration" onclick="startTrailExploration()" class="lobby-btn-primary">
-                            <i class="fa-solid fa-compass text-lg"></i>
-                            <span>Iniciar Exploración 360°</span>
-                        </button>
-                        <button onclick="openOnboarding(true)" class="lobby-btn-secondary">
-                            <i class="fa-solid fa-circle-question"></i>
-                            <span>¿Cómo funciona?</span>
-                        </button>
+            <!-- Bloque Central Izquierdo: Título y Acciones -->
+            <main class="hero-main-content">
+                <h1 class="hero-brand-title">
+                    <span class="hero-brand-sendero">Sendero</span>
+                    <span class="hero-brand-vivo">Vivo</span>
+                </h1>
+                <p class="hero-brand-tagline">Naturaleza que nos conecta</p>
+
+                <div class="hero-cta-group">
+                    <button id="btn-hero-explore" class="hero-btn-primary" type="button" onclick="startTrailExploration(false)" aria-label="Explorar el sendero">
+                        <span>Explorar el sendero</span>
+                        <span class="hero-arrow">→</span>
+                    </button>
+                    <button id="btn-hero-3d" class="hero-btn-secondary" type="button" onclick="startTrailExploration(true)" aria-label="Ver recorrido en vivo 3D">
+                        <i class="fa-solid fa-shoe-prints"></i>
+                        <span>Ver recorrido en vivo 3D</span>
+                    </button>
+                </div>
+            </main>
+
+            <!-- Barra Inferior / Footer: Estadísticas y Lema -->
+            <footer class="hero-bottom-footer">
+                <div class="hero-bottom-divider"></div>
+                <div class="hero-footer-content">
+                    <div class="hero-footer-stats">
+                        <span class="hero-stat-highlight">7,3 km</span>
+                        <span class="hero-stat-sep">·</span>
+                        <span class="hero-stat-highlight">+406 m desnivel</span>
+                        <span class="hero-stat-sep">·</span>
+                        <span class="hero-stat-time">3 horas</span>
+                    </div>
+                    <div class="hero-footer-slogan">
+                        Buenos senderos, mejores personas
                     </div>
                 </div>
-            </div>
+            </footer>
         </div>
 
         <!-- ============ ONBOARDING DE PRIMERA VEZ (TUTORIAL SIN SONIDO) ============ -->

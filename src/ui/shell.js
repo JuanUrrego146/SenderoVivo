@@ -1652,6 +1652,7 @@ function openTrailLobby() {
     closeSearchModal();
     const lobby = document.getElementById('trail-lobby');
     if (lobby) {
+        lobby.classList.add('reopened');
         lobby.classList.remove('lobby-hidden');
     }
 }
@@ -1660,15 +1661,49 @@ function closeTrailLobby() {
     const lobby = document.getElementById('trail-lobby');
     if (lobby) {
         lobby.classList.add('lobby-hidden');
+        lobby.classList.remove('reopened');
     }
 }
 
-function startTrailExploration() {
-    closeTrailLobby();
-    const obCompleted = localStorage.getItem('sv_onboarding_completed');
-    if (!obCompleted) {
-        openOnboarding(false);
+let isTrailTransitioning = false;
+
+function startTrailExploration(is3DMode = false) {
+    if (isTrailTransitioning) return;
+    const lobby = document.getElementById('trail-lobby');
+    if (!lobby || lobby.classList.contains('lobby-hidden')) return;
+
+    isTrailTransitioning = true;
+    lobby.classList.add('hero-transitioning-out');
+
+    // Despertar contexto de audio si el navegador lo requería por gesto de usuario (RNF-008)
+    if (window.senderoAmbience && typeof window.senderoAmbience.resume === 'function') {
+        window.senderoAmbience.resume().catch(() => {});
     }
+
+    // Iniciar el motor del recorrido si está disponible
+    if (window.senderoTour) {
+        if (typeof window.senderoTour.start === 'function') {
+            window.senderoTour.start();
+        }
+        if (is3DMode && typeof window.senderoTour.press === 'function') {
+            window.senderoTour.press('forward');
+            setTimeout(() => {
+                if (window.senderoTour && typeof window.senderoTour.release === 'function') {
+                    window.senderoTour.release('forward');
+                }
+            }, 800);
+        }
+    }
+
+    // Marcar visita para fluidez inmediata
+    localStorage.setItem('sv_onboarding_completed', 'true');
+
+    // Transición cinematográfica: desvanecimiento suave y revelado del entorno
+    setTimeout(() => {
+        closeTrailLobby();
+        lobby.classList.remove('hero-transitioning-out');
+        isTrailTransitioning = false;
+    }, 780);
 }
 
 /* ==========================================================================
@@ -1783,10 +1818,30 @@ function finishOnboarding() {
 }
 
 function initLobby() {
-    // Al cargar la página, mostramos el Lobby inicial si es la primera visita
     const lobby = document.getElementById('trail-lobby');
     if (lobby) {
         lobby.classList.remove('lobby-hidden');
+    }
+
+    const btnExplore = document.getElementById('btn-hero-explore');
+    const btn3D = document.getElementById('btn-hero-3d');
+
+    if (btnExplore) {
+        const handleExplore = (e) => {
+            if (e.type === 'touchend') e.preventDefault();
+            startTrailExploration(false);
+        };
+        btnExplore.addEventListener('click', handleExplore);
+        btnExplore.addEventListener('touchend', handleExplore, { passive: false });
+    }
+
+    if (btn3D) {
+        const handle3D = (e) => {
+            if (e.type === 'touchend') e.preventDefault();
+            startTrailExploration(true);
+        };
+        btn3D.addEventListener('click', handle3D);
+        btn3D.addEventListener('touchend', handle3D, { passive: false });
     }
 }
 
