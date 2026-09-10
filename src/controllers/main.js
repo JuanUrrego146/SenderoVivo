@@ -21,13 +21,15 @@ import {
     Vec3
 } from 'playcanvas';
 import { TrailModel } from '../models/TrailModel.js';
-import { TourEngine } from '../engine/TourEngine.js';
-import { TrailRecorder } from '../engine/TrailRecorder.js';
+import { GpsTrack } from '../models/GpsTrack.js';
+import { SceneCatalog } from '../models/SceneCatalog.js';
+import { TourEngine } from './TourEngine.js';
+import { TrailRecorder } from './TrailRecorder.js';
 import { TrailArrowsView } from '../views/TrailArrowsView.js';
-import { PoiManager } from '../poi/PoiManager.js';
+import { PoiManager } from './PoiManager.js';
 import { PoiCard } from '../poi/PoiCard.js';
 import { ShellView } from '../views/ShellView.js';
-import AmbienceController from '../audio/AmbienceController.js';
+import AmbienceController from './AmbienceController.js';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
 const SCENES_CONFIG_URL = 'config/scenes.json';
@@ -150,63 +152,64 @@ function setUpTechSwitch(active) {
 }
 
 async function resolveSceneUrl() {
+    // Una sola instancia, un solo fetch de config/scenes.json para todo el
+    // arranque: las tres consultas de abajo (render, sog, por defecto) leen
+    // de aqui en vez de volver a pedir el archivo cada una.
+    const catalog = new SceneCatalog(SCENES_CONFIG_URL);
+    let scenesLoadError = null;
+    try {
+        await catalog.load();
+    } catch (err) {
+        scenesLoadError = err;
+    }
+
     const params = new URLSearchParams(window.location.search);
     // ?render=luma conmuta a la técnica alterna registrada en config/scenes.json.
     // Ambas técnicas comparten coordenadas y trazado: solo cambia la reconstrucción.
     const render = params.get('render');
-    if (render) {
-        const response = await fetch(SCENES_CONFIG_URL);
-        if (response.ok) {
-            const config = await response.json();
-            const match = (config.scenes || []).find(s => s.render === render);
-            if (match && match.sogUrl) {
-                // En celular, si la escena declara una variante podada
-                // (movilSogUrl), se usa: misma escena y mismo marco, menos
-                // gaussianas — la completa revienta el presupuesto del telefono.
-                // En escritorio, si declara lodUrl (SOG en streaming con niveles
-                // de detalle), se prefiere: el motor carga por chunks segun lo
-                // que la camara ve y baja el detalle solo con la distancia.
-                const esMovil = window.matchMedia('(max-width: 640px)').matches;
-                const urlElegida = esMovil
-                    ? (match.movilSogUrl || match.sogUrl)
-                    : (match.lodUrl || match.sogUrl);
-                return {
-                    url: urlElegida, stream: !esMovil && !!match.lodUrl,
-                    isOverride: false, renderTech: render,
-                    sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
-                    eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
-                    pitchDownLimit: match.pitchDownLimit, baked: !!match.baked
-                };
-            }
+    if (render && !scenesLoadError) {
+        const match = catalog.getAll().find(s => s.render === render);
+        if (match && match.sogUrl) {
+            // En celular, si la escena declara una variante podada
+            // (movilSogUrl), se usa: misma escena y mismo marco, menos
+            // gaussianas — la completa revienta el presupuesto del telefono.
+            // En escritorio, si declara lodUrl (SOG en streaming con niveles
+            // de detalle), se prefiere: el motor carga por chunks segun lo
+            // que la camara ve y baja el detalle solo con la distancia.
+            const esMovil = window.matchMedia('(max-width: 640px)').matches;
+            const urlElegida = esMovil
+                ? (match.movilSogUrl || match.sogUrl)
+                : (match.lodUrl || match.sogUrl);
+            return {
+                url: urlElegida, stream: !esMovil && !!match.lodUrl,
+                isOverride: false, renderTech: render,
+                sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
+                eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
+                pitchDownLimit: match.pitchDownLimit, baked: !!match.baked
+            };
         }
     }
     const override = params.get('sog');
     if (override) {
         // Si la URL pedida coincide con una escena registrada, se usan su
         // nivelación y sus restricciones; si no, se carga tal cual (muestras remotas).
-        try {
-            const response = await fetch(SCENES_CONFIG_URL);
-            if (response.ok) {
-                const config = await response.json();
-                const match = (config.scenes || []).find(s => s.sogUrl === override);
-                if (match) {
-                    return {
-                        url: override, isOverride: true,
-                        sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
-                        eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
-                        pitchDownLimit: match.pitchDownLimit, baked: !!match.baked
-                    };
-                }
+        if (!scenesLoadError) {
+            const match = catalog.getAll().find(s => s.sogUrl === override);
+            if (match) {
+                return {
+                    url: override, isOverride: true,
+                    sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
+                    eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
+                    pitchDownLimit: match.pitchDownLimit, baked: !!match.baked
+                };
             }
-        } catch { /* sin config no hay metadatos, pero la escena igual se abre */ }
+        }
         return { url: override, isOverride: true };
     }
-    const response = await fetch(SCENES_CONFIG_URL);
-    if (!response.ok) {
-        throw new Error(`No se pudo leer <code>${SCENES_CONFIG_URL}</code> (HTTP ${response.status}).`);
+    if (scenesLoadError) {
+        throw new Error(`No se pudo leer <code>${SCENES_CONFIG_URL}</code>.`);
     }
-    const config = await response.json();
-    const scenes = Array.isArray(config.scenes) ? [...config.scenes].sort((a, b) => a.order - b.order) : [];
+    const scenes = [...catalog.getAll()].sort((a, b) => a.order - b.order);
     if (!scenes.length || !scenes[0].sogUrl) {
         throw new Error(`<code>${SCENES_CONFIG_URL}</code> no define ninguna escena con <code>sogUrl</code>.`);
     }
@@ -454,13 +457,15 @@ function enableFreeFlight(camera) {
 async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
     try {
         const response = await fetch(trackUrl);
-        if (!response.ok) return new TrailModel([]);
+        if (!response.ok) return { trail: new TrailModel([]), gpsTrack: new GpsTrack({}) };
         const cfg = await response.json();
         const path = new TrailModel(cfg.sceneWaypoints || [],cfg.corridorRadius ?? 1.5);
         path.eyeHeight = cfg.eyeHeight ?? 0;
-        return path;
+        // Mismo cfg ya leido y parseado: un solo fetch de track.json, dos modelos.
+        const gpsTrack = new GpsTrack(cfg);
+        return { trail: path, gpsTrack };
     } catch {
-        return new TrailModel([]);
+        return { trail: new TrailModel([]), gpsTrack: new GpsTrack({}) };
     }
 }
 
@@ -468,7 +473,7 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
     // Metadatos de la escena activa (config/scenes.json): restricciones y trazado propio.
     const { forwardOnly = false, eyeHeight: sceneEyeHeight, trackUrl: sceneTrackUrl, pitchDownLimit } = sceneOpts;
     const isEditor = new URLSearchParams(window.location.search).has('editor');
-    const trail = await loadTrail(sceneTrackUrl ?? TRACK_CONFIG_URL);
+    const { trail, gpsTrack } = await loadTrail(sceneTrackUrl ?? TRACK_CONFIG_URL);
 
     if (isEditor) {
         enableFreeFlight(camera);
@@ -505,7 +510,8 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
         // Algunas reconstrucciones solo aguantan vistas hacia adelante (config/scenes.json).
         forwardOnly,
         // Tope del picado hacia abajo: evita meter la camara donde el splat se ve mal.
-        pitchDownLimit
+        pitchDownLimit,
+        gpsTrack
     });
     tour.start();
     window.senderoTour = tour;

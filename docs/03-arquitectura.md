@@ -784,10 +784,11 @@ Invariantes. Una PR que rompa cualquiera de estas se rechaza sin discusión.
 15. **Añadir una fuente de sonido no toca código.** Todo vive en `soundscape.json`.
 16. **Las importaciones van en una sola dirección: Vista → Controlador → Modelo.** Un Modelo nunca importa una Vista ni un Controlador. Una Vista nunca importa un Controlador. Quien importa hacia arriba está mal colocado (§3.1).
 17. **Una Vista no decide.** Si una Vista necesita que algo cambie, dispara un evento de intención (`*:request-*`) y se olvida. Decide el Controlador, que responde con un evento de hecho. Ninguna Vista llama a un método de Controlador (§3.1).
+18. **`Vec3` es el único import de PlayCanvas permitido en `src/models/`.** Es un tipo aritmético, no render. Cualquier otro (`Entity`, `Material`, `Texture`, `app`) está prohibido y se comprueba con `grep -l playcanvas src/models/*.js`, que solo puede devolver `TrailModel.js`.
 
 ---
 
-## 9. Estructura de carpetas (real al 19/08/2026)
+## 9. Estructura de carpetas (real al 07/09/2026)
 
 ```
 SenderoVivo/
@@ -825,16 +826,16 @@ SenderoVivo/
 │   ├── setup_repo.sh           DEPRECADO (13/08): bootstrap ya ejecutado; historia
 │   └── sync-github.mjs         DEPRECADO (13/08)
 ├── src/
-│   ├── app/                    Juan:      main.js (orquestación)
-│   ├── engine/                 Alejandra: TourEngine, TrailPath, TrailMarkers,
-│   │                                      TrailRecorder, SceneLoader [existen]
-│   │                                      QualityProfile, LodController [previstos]
-│   ├── poi/                    David:     PoiManager, PoiCard, ModelViewer [previstos]
-│   ├── data/                   David:     TrailDataLayer, GpsTrack [previstos]
-│   ├── audio/                  David:     AmbienceController, SpatialAudioSource,
-│   │                                      AudioPlayer [previstos]
-│   └── ui/                     Juan:      overlay.js, tokens.js [existen] · HudView [previsto]
-│                                          (diseño de Eybar + Alberto)
+│   ├── controllers/             Juan:      main.js (orquestación), TourEngine, TrailRecorder,
+│   │                                       PoiManager, AmbienceController — capa de
+│   │                                       orquestación (SW-04, #81)
+│   ├── engine/                  Alejandra: TrailPath, TrailMarkers, SceneLoader [existen]
+│   │                                       QualityProfile, LodController [previstos]
+│   ├── poi/                     David:     PoiCard, ModelViewer [previstos]
+│   ├── data/                    David:     TrailDataLayer, GpsTrack [previstos]
+│   ├── audio/                   David:     SpatialAudioSource, AudioPlayer [previstos]
+│   └── ui/                      Juan:      overlay.js, tokens.js [existen] · HudView [previsto]
+│                                           (diseño de Eybar + Alberto)
 ├── styles/                     Eybar + Alberto: tokens.css (única fuente de color), app.css
 ├── config/
 │   ├── scenes.json
