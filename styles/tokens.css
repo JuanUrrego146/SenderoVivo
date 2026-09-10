@@ -1,66 +1,71 @@
 /*
- * Tokens de color de Sendero Vivo — "Atlas Botánico Vivo"
- * Paleta: Royal Plum, Mandarina, Celadón, Deep Teal
+ * Tokens de color de Sendero Vivo — "Atlas Azul Celeste"
+ * Identidad unificada 100% en gama Azul: Sky Blue, Deep Navy, Cyan, Celeste
  *
- * Dueños: Eybar Viasus y Alberto Alemán. Los demás consumen, no definen.
+ * Sin rastros de verde, naranja ni morado.
  */
 :root {
-    /* ── Paleta Central "Atlas Botánico" ── */
+    /* ── Tipografía Oficial ── */
+    --sv-font-display:     'Playfair Display', serif;
+    --sv-font-title:       'Syne', sans-serif;
+    --sv-font-body:        'Quicksand', system-ui, -apple-system, sans-serif;
+    --sv-font-handwriting: 'Caveat', cursive;
 
-    /* Teal profundo: fondos y atmósfera de bosque */
-    --sv-teal-deep:       #182B27;
-    --sv-teal-surface:    #233F39;
-    --sv-teal-mid:        #397367;
+    /* ── Fondos de atmósfera Azul Noche / Midnight ── */
+    --sv-teal-deep:       #0b1622; /* Fondo nocturno azul profundo */
+    --sv-teal-surface:    #122334; /* Superficie azul petróleo */
+    --sv-teal-mid:        #1b3650; /* Azul medio de contraste */
 
-    /* Celadón: acento fresco, estados activos, flora */
-    --sv-celadon:         #A9FBC3;
-    --sv-celadon-dim:     #7AC99A;
+    /* ── Gama Principal de Acentos: Azul Celeste & Cielo ── */
+    --sv-sky-dark:        #024e7a; /* Azul marino */
+    --sv-sky-deep:        #0284c7; /* Azul océano */
+    --sv-sky:             #0ea5e9; /* Azul celeste base */
+    --sv-sky-hover:       #38bdf8; /* Azul celeste eléctrico / vibrante */
+    --sv-sky-light:       #7dd3fc; /* Azul celeste pastel / hielo */
+    --sv-sky-glow:        rgba(56, 189, 248, 0.35);
+    --sv-sky-surface:     rgba(14, 165, 233, 0.16);
+    --sv-sky-border:      rgba(56, 189, 248, 0.40);
 
-    /* Oliva vibrante: badges botánicos, indicadores */
-    --sv-olive-vibrant:   #B9CE43;
-
-    /* Ciruela: contrapunto dramático, fauna, fichas especiales */
-    --sv-plum-deep:       #481434;
-    --sv-plum-accent:     #731963;
-
-    /* Mandarina: CTA, advertencias, puntos de acción */
-    --sv-tangerine:       #F76828;
-    --sv-tangerine-hover: #FF7E42;
-    --sv-tangerine-glow:  rgba(247, 104, 40, 0.25);
+    /* ── Redirección de variables legadas a la gama Azul (Garantía 0% verde/naranja/morado) ── */
+    --sv-celadon:         var(--sv-sky-light);
+    --sv-celadon-dim:     var(--sv-sky-hover);
+    --sv-olive-vibrant:   var(--sv-sky-hover);
+    --sv-plum-deep:       var(--sv-sky-dark);
+    --sv-plum-accent:     var(--sv-sky-deep);
+    --sv-tangerine:       var(--sv-sky);
+    --sv-tangerine-hover: var(--sv-sky-hover);
+    --sv-tangerine-glow:  var(--sv-sky-glow);
 
     /* Neutros de lectura */
-    --sv-text-primary:    #F5F8F6;
-    --sv-text-muted:      #A5B7B1;
-    --sv-text-dim:        #6B8078;
+    --sv-text-primary:    #f0f9ff;
+    --sv-text-muted:      #94a3b8;
+    --sv-text-dim:        #64748b;
 
-    /* ── Superficies y Delineados (Sin verde: Acentos Mandarina y Ciruela) ── */
-    --sv-surface-panel:   rgba(24, 43, 39, 0.88);
-    --sv-surface-solid:   rgba(20, 36, 33, 0.96);
-    --sv-surface-border:  rgba(115, 25, 99, 0.35);
-    --sv-border-orange:   rgba(247, 104, 40, 0.38);
-    --sv-border-plum:     rgba(115, 25, 99, 0.45);
-    --sv-hover-border:    var(--sv-tangerine);
-    --sv-hover-glow:      rgba(247, 104, 40, 0.30);
-    --sv-surface-shadow:  0 8px 32px rgba(10, 20, 18, 0.45);
-    --sv-scrim:           rgba(20, 36, 33, 0.60);
-    --sv-scrim-heavy:     rgba(14, 26, 23, 0.88);
+    /* ── Superficies y Delineados ── */
+    --sv-surface-panel:   rgba(14, 28, 44, 0.88);
+    --sv-surface-solid:   rgba(11, 22, 34, 0.96);
+    --sv-surface-border:  rgba(56, 189, 248, 0.28);
+    --sv-border-orange:   var(--sv-sky-border);
+    --sv-border-plum:     var(--sv-sky-border);
+    --sv-hover-border:    var(--sv-sky-hover);
+    --sv-hover-glow:      var(--sv-sky-glow);
+    --sv-active-color:    var(--sv-sky-hover);
+    --sv-surface-shadow:  0 8px 32px rgba(2, 12, 22, 0.55);
+    --sv-scrim:           rgba(11, 22, 34, 0.65);
+    --sv-scrim-heavy:     rgba(7, 15, 24, 0.90);
 
-    /* ── Derivados funcionales (Activos en Naranja / Ciruela) ── */
-    --sv-pill-active-bg:    rgba(247, 104, 40, 0.20);
-    --sv-pill-active-border: rgba(247, 104, 40, 0.70);
-    --sv-pill-active-color:  var(--sv-tangerine-hover);
-    --sv-plum-pill-bg:      rgba(115, 25, 99, 0.28);
-    --sv-plum-pill-border:  rgba(115, 25, 99, 0.75);
-    --sv-tangerine-pill-bg: rgba(247, 104, 40, 0.20);
-    --sv-tangerine-pill-border: rgba(247, 104, 40, 0.65);
+    /* ── Derivados funcionales activos ── */
+    --sv-pill-active-bg:     var(--sv-sky-surface);
+    --sv-pill-active-border: var(--sv-sky-border);
+    --sv-pill-active-color:  var(--sv-sky-hover);
+    --sv-plum-pill-bg:       var(--sv-sky-surface);
+    --sv-plum-pill-border:   var(--sv-sky-border);
+    --sv-tangerine-pill-bg:  var(--sv-sky-surface);
+    --sv-tangerine-pill-border: var(--sv-sky-border);
 }
 
 /* ------------------------------------------------------------------
- * Compatibilidad con la interfaz de Eybar (design/interfaz/), que llego
- * nombrando la paleta de Tailwind. Se mapea a la paleta nueva:
- * los nombres se conservan para no romper su codigo, los valores son
- * los del proyecto. El ambar/cielo/rosa de Tailwind no
- * existen en la identidad: se mapean a los acentos legitimos.
+ * Compatibilidad unificada en AZUL (Sobrescribe cualquier alias Tailwind)
  * ------------------------------------------------------------------ */
 :root {
     --sv-black-900: var(--sv-teal-deep);
@@ -75,29 +80,29 @@
     --sv-gray-100:  var(--sv-text-primary);
     --sv-gray-050:  var(--sv-text-primary);
 
-    --sv-green-700:    var(--sv-teal-mid);
-    --sv-green-500:    var(--sv-plum-accent);
-    --sv-green-300:    var(--sv-tangerine);
-    --sv-water-400:    var(--sv-plum-accent);
+    --sv-green-700:    var(--sv-sky-dark);
+    --sv-green-500:    var(--sv-sky);
+    --sv-green-300:    var(--sv-sky-hover);
+    --sv-water-400:    var(--sv-sky-hover);
 
-    --sv-emerald-400:  var(--sv-tangerine);
-    --sv-emerald-500:  var(--sv-plum-accent);
-    --sv-emerald-600:  var(--sv-plum-deep);
-    --sv-emerald-900:  var(--sv-teal-mid);
-    --sv-emerald-950:  var(--sv-teal-mid);
-    --sv-teal-400:     var(--sv-tangerine);
-    --sv-amber-400:    var(--sv-tangerine);
-    --sv-sky-400:      var(--sv-teal-mid);
-    --sv-pink-400:     var(--sv-plum-accent);
+    --sv-emerald-400:  var(--sv-sky-hover);
+    --sv-emerald-500:  var(--sv-sky);
+    --sv-emerald-600:  var(--sv-sky-deep);
+    --sv-emerald-900:  var(--sv-sky-dark);
+    --sv-emerald-950:  var(--sv-teal-deep);
+    --sv-teal-400:     var(--sv-sky-hover);
+    --sv-amber-400:    var(--sv-sky-hover);
+    --sv-sky-400:      var(--sv-sky-hover);
+    --sv-pink-400:     var(--sv-sky);
 
-    /* Derivados de superficie (backward compat: delineados sin verde) */
+    /* Derivados de superficie */
     --sv-scrim-550:        var(--sv-scrim);
-    --sv-scrim-720:        rgba(24, 43, 39, 0.72);
+    --sv-scrim-720:        rgba(14, 28, 44, 0.72);
     --sv-scrim-850:        var(--sv-scrim-heavy);
     --sv-glass-bg:         var(--sv-surface-panel);
     --sv-glass-border:     var(--sv-surface-border);
-    --sv-green-300-25:     var(--sv-pill-active-bg);
-    --sv-green-300-60:     var(--sv-pill-active-border);
-    --sv-green-300-30:     rgba(247, 104, 40, 0.30);
-    --sv-green-300-40:     rgba(115, 25, 99, 0.40);
+    --sv-green-300-25:     var(--sv-sky-surface);
+    --sv-green-300-60:     var(--sv-sky-border);
+    --sv-green-300-30:     var(--sv-sky-surface);
+    --sv-green-300-40:     var(--sv-sky-surface);
 }

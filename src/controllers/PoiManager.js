@@ -420,7 +420,7 @@ export class PoiManager {
             'rgba(24, 37, 29, 0.88)';
 
         button.style.color =
-            'var(--sv-celadon, #A9FBC3)';
+            'var(--sv-sky-hover, #38bdf8)';
 
         button.style.fontSize =
             '23px';

@@ -71,13 +71,19 @@ function limpiarAltitud(id, alt) {
 }
 
 function desdeContrato(poi) {
-    const cat = poi.category || poi.type || 'curiosidades';
-    let catColor = colorDeToken(poi.colorToken);
-    if (!catColor || poi.colorToken === '--sv-green-300' || catColor === '#6fcf97' || catColor === '#A9FBC3') {
-        if (cat === 'fauna') catColor = '#9B2789'; // Royal Plum
-        else if (cat === 'flora') catColor = '#F76828'; // Mandarina
-        else catColor = '#FF8A50'; // Sunset Orange
+    let cat = poi.category || poi.type || 'patrimonio';
+    if (poi.id === 'poi-pino') {
+        cat = 'flora';
+    } else if (poi.id === 'poi-puente-madera' || poi.id === 'poi-muro-antiguo') {
+        cat = 'patrimonio';
+    } else if (cat === 'curiosidades') {
+        cat = poi.type === 'flora' ? 'flora' : 'patrimonio';
     }
+
+    let catColor = '#38bdf8'; // Sky blue
+    if (cat === 'fauna') catColor = '#38bdf8';
+    else if (cat === 'flora') catColor = '#0ea5e9';
+    else catColor = '#0284c7';
 
     return {
         id: poi.id,
@@ -293,15 +299,9 @@ function updateHotspotsOverlay() {
         const world = anclas[item.id];
 
         /*
-         * Filtro de categoría.
+         * Comprobación de ancla válida en mundo 3D.
          */
-        if (
-            !world ||
-            (
-                currentFilter !== 'all' &&
-                item.category !== currentFilter
-            )
-        ) {
+        if (!world) {
             el.style.display = 'none';
             continue;
         }
@@ -440,10 +440,9 @@ function esperarVisor() {
    ========================================================================== */
 
 function medallonHTML(item, tam = 'w-10 h-10') {
-    const isPlum = item.category === 'fauna';
-    const bg = isPlum ? 'rgba(115, 25, 99, 0.28)' : 'rgba(247, 104, 40, 0.20)';
-    const border = isPlum ? 'rgba(181, 53, 158, 0.45)' : 'rgba(247, 104, 40, 0.40)';
-    const color = isPlum ? '#F0A0E0' : 'var(--sv-tangerine)';
+    const bg = 'var(--sv-sky-surface)';
+    const border = 'var(--sv-sky-border)';
+    const color = 'var(--sv-sky-hover)';
 
     return `
         <div
@@ -481,7 +480,7 @@ function accionesMediaHTML(item) {
                 class="${claseBoton}"
                 style="${estiloBoton}"
             >
-                <i class="fa-solid fa-volume-high" style="color: var(--sv-celadon);"></i>
+                <i class="fa-solid fa-volume-high" style="color: var(--sv-sky-hover);"></i>
                 Escuchar canto
             </button>
         `);
@@ -508,7 +507,7 @@ function accionesMediaHTML(item) {
                 class="${claseBoton}"
                 style="${estiloBoton}"
             >
-                <i class="fa-solid fa-headphones" style="color: var(--sv-celadon);"></i>
+                <i class="fa-solid fa-headphones" style="color: var(--sv-sky-hover);"></i>
                 Narración
             </button>
         `);
@@ -524,7 +523,7 @@ function accionesMediaHTML(item) {
                 class="${claseBoton}"
                 style="${estiloBoton}"
             >
-                <i class="fa-solid fa-cube" style="color: var(--sv-tangerine);"></i>
+                <i class="fa-solid fa-cube" style="color: var(--sv-sky-hover);"></i>
                 Ver en 3D
             </button>
         `);
@@ -557,6 +556,15 @@ function selectHotspot(id) {
     const item = trailData.find(x => x.id === id);
 
     if (!item) return;
+
+    // Cerrar el panel de catálogo o pestañas si estaba desplegado
+    const tabContainer = document.getElementById('tab-panel-container');
+    if (tabContainer && !tabContainer.classList.contains('hidden')) {
+        tabContainer.classList.add('hidden');
+        tabContainer.classList.remove('flex');
+    }
+    // Cerrar álbum de biodiversidad si estaba abierto
+    closeBiodiversityAlbum();
 
     /*
      * Feedback sonoro de selección.
@@ -614,7 +622,7 @@ function selectHotspot(id) {
                         ${item.name}
                     </h3>
 
-                    <p class="text-[11px] italic font-mono" style="color: #FFA375;">
+                    <p class="text-[11px] italic font-mono" style="color: var(--sv-sky-light);">
                         ${item.scientific}
                     </p>
 
@@ -626,8 +634,8 @@ function selectHotspot(id) {
             </p>
 
             ${item.sightingTips && !item.sightingTips.includes('[por completar') ? `
-                <div class="rounded-2xl p-3 mb-2.5" style="background: rgba(115, 25, 99, 0.15); border: 1px solid rgba(115, 25, 99, 0.35);">
-                    <h4 class="text-[11px] font-bold flex items-center gap-1.5 mb-1" style="color: var(--sv-tangerine);">
+                <div class="rounded-2xl p-3 mb-2.5" style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border);">
+                    <h4 class="text-[11px] font-bold flex items-center gap-1.5 mb-1" style="color: var(--sv-sky-hover);">
                         <i class="fa-solid fa-binoculars"></i>
                         Consejos de avistamiento
                     </h4>
@@ -639,7 +647,7 @@ function selectHotspot(id) {
 
             ${item.curiosity ? `
                 <div class="rounded-2xl p-3 mb-3.5" style="background: rgba(24, 43, 39, 0.95); border: 1px solid var(--sv-surface-border);">
-                    <h4 class="text-[11px] font-bold flex items-center gap-1.5 mb-1" style="color: var(--sv-tangerine);">
+                    <h4 class="text-[11px] font-bold flex items-center gap-1.5 mb-1" style="color: var(--sv-sky-hover);">
                         <i class="fa-solid fa-lightbulb"></i>
                         ¿Sabías que?
                     </h4>
@@ -656,7 +664,7 @@ function selectHotspot(id) {
                 <button
                     onclick="markAsDiscovered('${item.id}')"
                     class="flex-1 py-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-2 shadow-lg touch-manipulation cursor-pointer hover:scale-[1.01]"
-                    style="background: linear-gradient(135deg, var(--sv-tangerine), #e05214); color: #fff; box-shadow: 0 4px 14px var(--sv-tangerine-glow);"
+                    style="background: linear-gradient(135deg, var(--sv-sky), var(--sv-sky-deep)); color: #fff; box-shadow: 0 4px 14px var(--sv-sky-glow);"
                 >
                     <i class="fa-solid ${item.discovered ? 'fa-circle-check' : 'fa-check'}"></i>
                     ${item.discovered ? 'Especie Registrada en Bitácora' : 'Marcar como Visto'}
@@ -767,11 +775,8 @@ function updateDiscoveredProgress() {
 }
 
 function switchTab(tab) {
-    closeBottomSheet();
-
     const panel = document.getElementById('tab-panel-container');
     const content = document.getElementById('tab-panel-content');
-    const modalIconWrap = document.getElementById('tab-modal-icon-wrap');
     const modalIcon = document.getElementById('tab-modal-icon');
     const modalTitle = document.getElementById('tab-modal-title');
     const modalSub = document.getElementById('tab-modal-subtitle');
@@ -780,12 +785,12 @@ function switchTab(tab) {
 
     if (!panel || !content) return;
 
-    ['trail', 'catalog', 'audio', 'quest'].forEach(t => {
+    ['trail', 'catalog', 'quest'].forEach(t => {
         const btn = document.getElementById(`nav-${t}`);
         if (btn) {
             if (t === tab) {
                 btn.className = 'active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition';
-                btn.style.color = 'var(--sv-tangerine)';
+                btn.style.color = 'var(--sv-sky-hover)';
             } else {
                 btn.className = 'flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
                 btn.style.color = 'var(--sv-text-dim)';
@@ -796,7 +801,7 @@ function switchTab(tab) {
         if (btnM) {
             if (t === tab) {
                 btnM.className = 'nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition';
-                btnM.style.color = 'var(--sv-tangerine)';
+                btnM.style.color = 'var(--sv-sky-hover)';
             } else {
                 btnM.className = 'nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
                 btnM.style.color = 'var(--sv-text-dim)';
@@ -847,94 +852,6 @@ function switchTab(tab) {
     }
 
     /* ----------------------------------------------------------------------
-       AUDIO / SOUNDSCAPE
-       ---------------------------------------------------------------------- */
-    else if (tab === 'audio') {
-        if (modalIcon) modalIcon.className = 'fa-solid fa-headphones';
-        if (modalTitle) modalTitle.innerText = 'Paisaje Sonoro y Bioacústica';
-        if (modalSub) modalSub.innerText = 'Inmersión acústica · Quebrada La Vieja';
-        if (modalBadge) {
-            modalBadge.innerText = 'Sonidos activos';
-            modalBadge.style.display = 'inline-block';
-        }
-        if (filterBar) filterBar.style.display = 'none';
-
-        content.innerHTML = `
-            <p class="text-[10.5px] mb-2" style="color: var(--sv-text-muted);">
-                Inmersión acústica en el dosel y cantos de avifauna registrada en los Cerros Orientales.
-            </p>
-
-            <div class="glass-panel rounded-xl p-2.5 mb-2.5" style="border-color: var(--sv-border-plum); background: linear-gradient(165deg, rgba(35, 63, 57, 0.9) 0%, rgba(24, 43, 39, 0.95) 100%);">
-                <div class="flex items-center justify-between gap-2">
-                    <div class="flex items-center gap-2 min-w-0">
-                        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm shadow-md flex-shrink-0" style="background: rgba(115, 25, 99, 0.25); border: 1px solid rgba(115, 25, 99, 0.45); color: var(--sv-tangerine);">
-                            <i class="fa-solid fa-tree"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <h5 class="text-xs font-bold font-syne truncate" style="color: var(--sv-text-primary);">
-                                Ambiente del Bosque
-                            </h5>
-                            <div class="flex items-center gap-1.5 mt-0.5">
-                                <div class="sound-equalizer">
-                                    <div class="eq-bar"></div>
-                                    <div class="eq-bar"></div>
-                                    <div class="eq-bar"></div>
-                                    <div class="eq-bar"></div>
-                                </div>
-                                <span id="ambiente-estado" class="text-[9.5px] font-semibold font-mono" style="color: var(--sv-tangerine);">
-                                    ${ambienteEstadoTexto()}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button
-                        id="ambiente-toggle"
-                        onclick="alternarAmbiente()"
-                        class="shrink-0 py-1.5 px-3 rounded-lg text-[11px] font-bold transition flex items-center gap-1.5 cursor-pointer touch-manipulation shadow-md"
-                        style="background: var(--sv-tangerine); color: #fff;"
-                    >
-                        ${ambienteBotonTexto()}
-                    </button>
-                </div>
-            </div>
-
-            <h3 class="text-[10.5px] font-bold tracking-wider uppercase mb-1.5 flex items-center gap-1.5" style="color: var(--sv-text-muted);">
-                <i class="fa-solid fa-dove text-[10px]" style="color: var(--sv-tangerine);"></i> Bioacústica por especie
-            </h3>
-
-            <div class="space-y-1.5">
-                ${trailData
-                .filter(x => x.category === 'fauna')
-                .map(item => `
-                    <div
-                        onclick="sonarEspecie('${item.id}')"
-                        class="species-catalog-card"
-                    >
-                        <div class="flex items-center gap-2 min-w-0 flex-1">
-                            <div class="w-7 h-7 rounded-lg flex items-center justify-center text-xs flex-shrink-0" style="background: rgba(115, 25, 99, 0.30); border: 1px solid rgba(181, 53, 158, 0.45); color: #F0A0E0;">
-                                <i class="fa-solid fa-play text-[10px]"></i>
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <h5 class="text-xs font-bold font-syne truncate" style="color: var(--sv-text-primary);">
-                                    ${item.name}
-                                </h5>
-                                <span class="text-[9.5px] font-mono italic truncate block" style="color: #FFA375;">
-                                    ${item.scientific}
-                                </span>
-                            </div>
-                        </div>
-
-                        <span class="text-[9.5px] font-bold font-mono px-2 py-0.5 rounded-full flex-shrink-0" style="background: rgba(16, 30, 27, 0.8); color: var(--sv-tangerine); border: 1px solid var(--sv-border-plum);">
-                            ${item.birdCallUrl ? 'Grabado' : 'Sintetizador'}
-                        </span>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-    }
-
-    /* ----------------------------------------------------------------------
        QUEST / BITÁCORA DE EXPEDICIÓN
        ---------------------------------------------------------------------- */
     else if (tab === 'quest') {
@@ -957,7 +874,7 @@ function switchTab(tab) {
                     <span class="text-xs font-bold" style="color: var(--sv-text-primary);">
                         Especies y Puntos Registrados
                     </span>
-                    <span class="text-xs font-bold font-syne" style="color: var(--sv-tangerine);">
+                    <span class="text-xs font-bold font-syne" style="color: var(--sv-sky-hover);">
                         ${discoveredCount} de ${totalCount}
                     </span>
                 </div>
@@ -965,7 +882,7 @@ function switchTab(tab) {
                 <div class="w-full rounded-full h-2 overflow-hidden mb-1.5" style="background: rgba(16, 30, 27, 0.8); border: 1px solid var(--sv-border-plum);">
                     <div
                         class="h-full transition-all duration-700"
-                        style="width: ${progressPercent}%; background: linear-gradient(90deg, var(--sv-plum-accent) 0%, var(--sv-tangerine) 100%); box-shadow: 0 0 8px rgba(247, 104, 40, 0.45);"
+                        style="width: ${progressPercent}%; background: linear-gradient(90deg, var(--sv-sky-deep) 0%, var(--sv-sky-hover) 100%); box-shadow: 0 0 8px var(--sv-sky-glow);"
                     ></div>
                 </div>
 
@@ -976,21 +893,21 @@ function switchTab(tab) {
             </div>
 
             <h3 class="text-[10.5px] font-bold tracking-wider uppercase mb-1.5 flex items-center gap-1.5" style="color: var(--sv-text-muted);">
-                <i class="fa-solid fa-list-check text-[10px]" style="color: var(--sv-tangerine);"></i> Registro de avistamientos
+                <i class="fa-solid fa-list-check text-[10px]" style="color: var(--sv-sky-hover);"></i> Registro de avistamientos
             </h3>
 
             <div class="space-y-1.5">
                 ${trailData.map(item => `
                     <div
-                        onclick="selectHotspot('${item.id}'); closeTabPanel();"
+                        onclick="selectHotspot('${item.id}');"
                         class="species-catalog-card"
-                        style="${item.discovered ? 'border-color: var(--sv-border-orange);' : ''}"
+                        style="${item.discovered ? 'border-color: var(--sv-sky-border);' : ''}"
                     >
                         <div class="flex items-center gap-2 flex-1 min-w-0">
                             <div
                                 class="w-7 h-7 rounded-lg flex items-center justify-center text-xs shadow-md flex-shrink-0"
                                 style="${item.discovered
-                                    ? 'background: rgba(247, 104, 40, 0.25); color: var(--sv-tangerine); border: 1px solid var(--sv-tangerine);'
+                                    ? 'background: var(--sv-sky-surface); color: var(--sv-sky-hover); border: 1px solid var(--sv-sky-hover);'
                                     : 'background: var(--sv-teal-surface); color: var(--sv-text-dim); border: 1px solid var(--sv-border-plum);'
                                 }"
                             >
@@ -1010,7 +927,7 @@ function switchTab(tab) {
                         <span
                             class="text-[9.5px] font-bold font-mono px-2 py-0.5 rounded-full flex-shrink-0"
                             style="${item.discovered
-                                ? 'background: rgba(247, 104, 40, 0.20); color: var(--sv-tangerine); border: 1px solid rgba(247, 104, 40, 0.45);'
+                                ? 'background: var(--sv-sky-surface); color: var(--sv-sky-hover); border: 1px solid var(--sv-sky-border);'
                                 : 'background: rgba(35, 63, 57, 0.5); color: var(--sv-text-dim); border: 1px solid var(--sv-border-plum);'
                             }"
                         >
@@ -1045,13 +962,13 @@ function renderCatalogCards(category = 'all') {
 
     content.innerHTML = filtered.map((item, idx) => {
         const isPlum = item.category === 'fauna';
-        const badgeBg = isPlum ? 'rgba(115, 25, 99, 0.28)' : 'rgba(247, 104, 40, 0.18)';
-        const badgeColor = isPlum ? '#F0A0E0' : 'var(--sv-tangerine)';
-        const badgeBorder = isPlum ? 'rgba(181, 53, 158, 0.45)' : 'rgba(247, 104, 40, 0.40)';
+        const badgeBg = 'var(--sv-sky-surface)';
+        const badgeColor = 'var(--sv-sky-hover)';
+        const badgeBorder = 'var(--sv-sky-border)';
 
         return `
             <div
-                onclick="selectHotspot('${item.id}'); closeTabPanel();"
+                onclick="selectHotspot('${item.id}');"
                 class="species-catalog-card"
             >
                 ${medallonHTML(item, 'w-9 h-9')}
@@ -1070,7 +987,7 @@ function renderCatalogCards(category = 'all') {
                         ${item.name}
                     </h4>
 
-                    <p class="text-[9.5px] italic font-mono truncate" style="color: #FFA375;">
+                    <p class="text-[9.5px] italic font-mono truncate" style="color: var(--sv-sky-light);">
                         ${item.scientific}
                     </p>
                 </div>
@@ -1106,7 +1023,22 @@ function closeTabPanel() {
         panel.classList.remove('flex');
     }
 
-    switchTab('trail');
+    ['trail', 'catalog', 'quest'].forEach(t => {
+        const btn = document.getElementById(`nav-${t}`);
+        if (btn) {
+            btn.className = (t === 'trail')
+                ? 'active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition'
+                : 'flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
+            btn.style.color = (t === 'trail') ? 'var(--sv-sky-hover)' : 'var(--sv-text-dim)';
+        }
+        const btnM = document.getElementById(`nav-${t}-m`);
+        if (btnM) {
+            btnM.className = (t === 'trail')
+                ? 'nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition'
+                : 'nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
+            btnM.style.color = (t === 'trail') ? 'var(--sv-sky-hover)' : 'var(--sv-text-dim)';
+        }
+    });
 }
 
 /* ==========================================================================
@@ -1157,6 +1089,9 @@ function filterCategoryMobile(cat) {
 
 /** Conmuta el modelo de renderizado desde la tarjeta móvil */
 function setRenderModelMobile(model) {
+    try {
+        sessionStorage.setItem('sv_exploring', 'true');
+    } catch (e) {}
     // Dispara el mismo cambio que el switch PC de #tecnica
     const btnPc = document.querySelector(`#tecnica [data-render="${model}"]`);
     if (btnPc) {
@@ -1547,100 +1482,253 @@ function verModelo3D(id) {
 
 
 /* ==========================================================================
-   BÚSQUEDA
+   CONTROL DE AUDIO AMBIENTAL (BOTÓN ALTAVOZ COLMAP / LUMA)
    ========================================================================== */
 
-function openSearchModal() {
-    const modal =
-        document.getElementById('search-modal');
-
-    const input =
-        document.getElementById('search-input');
-
-    if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    }
-
-    if (input) {
-        input.focus();
-        handleSearch();
+function toggleAmbientAudio() {
+    if (window.senderoAmbience && typeof window.senderoAmbience.toggle === 'function') {
+        window.senderoAmbience.toggle();
+        setTimeout(updateAmbientAudioButtons, 300);
+    } else {
+        window.__ambientMuted = !window.__ambientMuted;
+        updateAmbientAudioButtons();
     }
 }
 
+function updateAmbientAudioButtons() {
+    const isPlaying = (window.senderoAmbience && typeof window.senderoAmbience.isPlaying === 'function')
+        ? window.senderoAmbience.isPlaying()
+        : !window.__ambientMuted;
 
-function closeSearchModal() {
-    const modal =
-        document.getElementById('search-modal');
+    const btnPc = document.getElementById('btn-ambient-audio-toggle');
+    const btnM = document.getElementById('btn-ambient-audio-toggle-m');
 
+    const iconHtml = isPlaying
+        ? '<i class="fa-solid fa-volume-high" style="color: var(--sv-sky-hover);"></i>'
+        : '<i class="fa-solid fa-volume-xmark" style="color: var(--sv-text-dim);"></i>';
+
+    if (btnPc) {
+        btnPc.innerHTML = iconHtml;
+        btnPc.classList.toggle('activa', isPlaying);
+        btnPc.title = isPlaying ? 'Silenciar sonido de bosque' : 'Activar sonido de bosque';
+    }
+    if (btnM) {
+        btnM.innerHTML = iconHtml;
+        btnM.title = isPlaying ? 'Silenciar sonido de bosque' : 'Activar sonido de bosque';
+    }
+}
+
+/* ==========================================================================
+   ÁLBUM DE BIODIVERSIDAD (PANTALLA INICIAL)
+   ========================================================================== */
+
+let currentAlbumCategory = 'all';
+
+function openBiodiversityAlbum() {
+    const modal = document.getElementById('biodiversity-album-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+
+    // Actualizar contadores de las pastillas
+    const cAll = document.getElementById('album-tab-count-all');
+    const cFauna = document.getElementById('album-tab-count-fauna');
+    const cFlora = document.getElementById('album-tab-count-flora');
+    const cPatrimonio = document.getElementById('album-tab-count-patrimonio');
+
+    if (cAll) cAll.innerText = trailData.length;
+    if (cFauna) cFauna.innerText = trailData.filter(x => x.category === 'fauna').length;
+    if (cFlora) cFlora.innerText = trailData.filter(x => x.category === 'flora').length;
+    if (cPatrimonio) cPatrimonio.innerText = trailData.filter(x => x.category === 'patrimonio').length;
+
+    renderBiodiversityAlbum(currentAlbumCategory);
+}
+
+function closeBiodiversityAlbum() {
+    const modal = document.getElementById('biodiversity-album-modal');
     if (modal) {
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
     }
 }
 
+function filterAlbumSpecies(category, btn) {
+    currentAlbumCategory = category;
+    document.querySelectorAll('.album-filter-pill').forEach(el => el.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderBiodiversityAlbum(category);
+}
 
-function handleSearch() {
-    const input =
-        document.getElementById('search-input');
+function exploreSpecimenFromAlbum(id) {
+    closeBiodiversityAlbum();
+    startTrailExploration(false);
+    setTimeout(() => {
+        selectHotspot(id);
+    }, 450);
+}
 
-    const results =
-        document.getElementById('search-results');
+function view3DFromAlbum(id) {
+    closeBiodiversityAlbum();
+    startTrailExploration(false);
+    setTimeout(() => {
+        verModelo3D(id);
+    }, 450);
+}
 
-    if (!input || !results) return;
+function createAlbumCardHTML(item, idx) {
+    const iconClass = item.icon || (item.category === 'fauna' ? 'fa-dove' : (item.category === 'flora' ? 'fa-seedling' : 'fa-landmark'));
+    const has3D = !!item.modelUrl;
+    const hasAudio = !!(item.birdCallUrl);
+    const catName = item.category === 'fauna' ? 'Fauna' : (item.category === 'flora' ? 'Flora' : 'Patrimonio');
 
-    const query =
-        input.value
-            .toLowerCase()
-            .trim();
-
-    const filtered =
-        trailData.filter(x =>
-            x.name
-                .toLowerCase()
-                .includes(query) ||
-
-            x.scientific
-                .toLowerCase()
-                .includes(query)
-        );
-
-    if (!filtered.length) {
-        results.innerHTML = `
-            <div class="text-center text-xs py-4" style="color: var(--sv-text-dim);">
-                No se encontraron puntos.
+    return `
+        <div class="album-species-card" data-specimen-id="${item.id}">
+            <div class="flex items-center justify-between gap-2 mb-0.5">
+                <span class="album-category-badge">
+                    #BIO-0${idx + 1} · ${catName}
+                </span>
+                ${item.altitudeRange ? `
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded-full" style="background: rgba(14, 38, 58, 0.7); color: var(--sv-sky-light); border: 1px solid var(--sv-sky-border);">
+                        <i class="fa-solid fa-mountain text-[8px] mr-1"></i>${item.altitudeRange}
+                    </span>
+                ` : ''}
             </div>
-        `;
 
-        return;
-    }
-
-    results.innerHTML =
-        filtered.map(item => `
-            <div
-                onclick="selectHotspot('${item.id}'); closeSearchModal();"
-                class="p-2.5 rounded-xl flex items-center justify-between cursor-pointer touch-manipulation"
-                style="background: var(--sv-teal-deep); border: 1px solid var(--sv-surface-border);"
-            >
-
-                <div>
-
-                    <h4 class="text-xs font-bold" style="color: var(--sv-text-primary);">
-                        ${item.name}
-                    </h4>
-
-                    <p class="text-[10px] font-mono" style="color: var(--sv-text-dim);">
-                        ${item.scientific}
-                    </p>
-
+            <div class="album-species-header">
+                <div class="album-species-thumb">
+                    <i class="fa-solid ${iconClass}"></i>
                 </div>
-
-                <i class="fa-solid fa-arrow-right text-xs" style="color: var(--sv-celadon);"></i>
-
+                <div class="album-species-names">
+                    <h4 class="album-species-common">${item.name}</h4>
+                    <p class="album-species-scientific">${item.scientific || 'Especie altoandina'}</p>
+                </div>
             </div>
-        `).join('');
+
+            <p class="album-species-body">
+                ${item.fullDesc || item.curiosity || 'Especie registrada en el recorrido Quebrada La Vieja.'}
+            </p>
+
+            <div class="album-species-footer">
+                <div class="flex items-center gap-1.5">
+                    ${hasAudio ? `
+                        <button onclick="sonarEspecie('${item.id}')" class="album-btn-3d" title="Escuchar canto">
+                            <i class="fa-solid fa-volume-high"></i> Canto
+                        </button>
+                    ` : ''}
+                    ${has3D ? `
+                        <button onclick="view3DFromAlbum('${item.id}')" class="album-btn-3d" title="Ver modelo 3D">
+                            <i class="fa-solid fa-cube"></i> 3D
+                        </button>
+                    ` : ''}
+                </div>
+                <button onclick="exploreSpecimenFromAlbum('${item.id}')" class="album-btn-explore" title="Explorar en el sendero 3D">
+                    <span>Explorar en sendero</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    `;
 }
 
+function renderBiodiversityAlbum(category = 'all') {
+    const grid = document.getElementById('biodiversity-album-grid');
+    const badge = document.getElementById('album-count-badge');
+    if (!grid) return;
+
+    if (category === 'all') {
+        if (badge) badge.innerText = `${trailData.length} registros`;
+
+        const fauna = trailData.filter(x => x.category === 'fauna');
+        const flora = trailData.filter(x => x.category === 'flora');
+        const patrimonio = trailData.filter(x => x.category === 'patrimonio');
+
+        let html = '';
+
+        if (fauna.length > 0) {
+            html += `
+                <div class="col-span-full">
+                    <div class="album-section-header">
+                        <div class="album-section-title">
+                            <i class="fa-solid fa-dove"></i>
+                            <span>Fauna Silvestre y Aves de Montaña</span>
+                        </div>
+                        <span class="album-section-count">${fauna.length} especies</span>
+                    </div>
+                </div>
+                ${fauna.map((item, idx) => createAlbumCardHTML(item, idx)).join('')}
+            `;
+        }
+
+        if (flora.length > 0) {
+            html += `
+                <div class="col-span-full">
+                    <div class="album-section-header">
+                        <div class="album-section-title">
+                            <i class="fa-solid fa-seedling"></i>
+                            <span>Flora y Vegetación Altoandina</span>
+                        </div>
+                        <span class="album-section-count">${flora.length} especies</span>
+                    </div>
+                </div>
+                ${flora.map((item, idx) => createAlbumCardHTML(item, fauna.length + idx)).join('')}
+            `;
+        }
+
+        if (patrimonio.length > 0) {
+            html += `
+                <div class="col-span-full">
+                    <div class="album-section-header">
+                        <div class="album-section-title">
+                            <i class="fa-solid fa-landmark"></i>
+                            <span>Hitos y Patrimonio Histórico del Sendero</span>
+                        </div>
+                        <span class="album-section-count">${patrimonio.length} hitos</span>
+                    </div>
+                </div>
+                ${patrimonio.map((item, idx) => createAlbumCardHTML(item, fauna.length + flora.length + idx)).join('')}
+            `;
+        }
+
+        grid.innerHTML = html;
+    } else {
+        const filtered = trailData.filter(item => item.category === category);
+        if (badge) {
+            badge.innerText = `${filtered.length} ${filtered.length === 1 ? 'registro' : 'registros'}`;
+        }
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `
+                <div class="col-span-full py-12 text-center text-xs" style="color: var(--sv-text-muted);">
+                    No hay especies registradas en esta categoría.
+                </div>
+            `;
+            return;
+        }
+
+        const sectionTitles = {
+            fauna: { title: 'Fauna Silvestre y Aves de Montaña', icon: 'fa-dove' },
+            flora: { title: 'Flora y Vegetación Altoandina', icon: 'fa-seedling' },
+            patrimonio: { title: 'Hitos y Patrimonio Histórico', icon: 'fa-landmark' }
+        };
+        const secInfo = sectionTitles[category] || { title: 'Especies registradas', icon: 'fa-layer-group' };
+
+        grid.innerHTML = `
+            <div class="col-span-full">
+                <div class="album-section-header">
+                    <div class="album-section-title">
+                        <i class="fa-solid ${secInfo.icon}"></i>
+                        <span>${secInfo.title}</span>
+                    </div>
+                    <span class="album-section-count">${filtered.length} registrados</span>
+                </div>
+            </div>
+            ${filtered.map((item, idx) => createAlbumCardHTML(item, idx)).join('')}
+        `;
+    }
+}
+
+// Stubs de compatibilidad segura
+function openSearchModal() {}
+function closeSearchModal() {}
+function handleSearch() {}
 
 /* ==========================================================================
    LOBBY DE SELECCIÓN DE SENDEROS (VENTANA INICIAL)
@@ -1649,7 +1737,7 @@ function handleSearch() {
 function openTrailLobby() {
     closeBottomSheet();
     closeTabPanel();
-    closeSearchModal();
+    closeBiodiversityAlbum();
     const lobby = document.getElementById('trail-lobby');
     if (lobby) {
         lobby.classList.add('reopened');
@@ -1671,6 +1759,10 @@ function startTrailExploration(is3DMode = false) {
     if (isTrailTransitioning) return;
     const lobby = document.getElementById('trail-lobby');
     if (!lobby || lobby.classList.contains('lobby-hidden')) return;
+
+    try {
+        sessionStorage.setItem('sv_exploring', 'true');
+    } catch (e) {}
 
     isTrailTransitioning = true;
     lobby.classList.add('hero-transitioning-out');
@@ -1714,19 +1806,19 @@ let currentOnboardingStep = 0;
 const ONBOARDING_STEPS = [
     {
         icon: 'fa-arrows-up-down-left-right',
-        color: 'var(--sv-celadon)',
+        color: 'var(--sv-sky-hover)',
         title: 'Explora el Entorno 360°',
         desc: 'Arrastra con tu dedo en el celular o con el ratón en la pantalla para girar la vista en cualquier dirección y contemplar los estratos del bosque.'
     },
     {
         icon: 'fa-person-walking',
-        color: 'var(--sv-tangerine)',
+        color: 'var(--sv-sky-light)',
         title: 'Camina por el Sendero',
         desc: 'Toca las flechas luminosas situadas sobre el camino para avanzar y retroceder paso a paso a lo largo del trazado real.'
     },
     {
         icon: 'fa-cube',
-        color: 'var(--sv-plum-accent)',
+        color: 'var(--sv-sky)',
         title: 'Descubre Especies y 3D',
         desc: 'Toca los medallones flotantes para consultar la ficha botánica, escuchar cantos de aves y examinar modelos 3D interactivos.'
     }
@@ -1819,12 +1911,24 @@ function finishOnboarding() {
 
 function initLobby() {
     const lobby = document.getElementById('trail-lobby');
-    if (lobby) {
-        lobby.classList.remove('lobby-hidden');
+    const isExploring = sessionStorage.getItem('sv_exploring') === 'true';
+
+    if (isExploring) {
+        if (lobby) {
+            lobby.classList.add('lobby-hidden');
+        }
+        if (window.senderoTour && typeof window.senderoTour.start === 'function') {
+            window.senderoTour.start();
+        }
+    } else {
+        if (lobby) {
+            lobby.classList.remove('lobby-hidden');
+        }
     }
 
     const btnExplore = document.getElementById('btn-hero-explore');
     const btn3D = document.getElementById('btn-hero-3d');
+    const btnBiodiversity = document.getElementById('btn-hero-biodiversity');
 
     if (btnExplore) {
         const handleExplore = (e) => {
@@ -1842,6 +1946,15 @@ function initLobby() {
         };
         btn3D.addEventListener('click', handle3D);
         btn3D.addEventListener('touchend', handle3D, { passive: false });
+    }
+
+    if (btnBiodiversity) {
+        const handleBio = (e) => {
+            if (e.type === 'touchend') e.preventDefault();
+            openBiodiversityAlbum();
+        };
+        btnBiodiversity.addEventListener('click', handleBio);
+        btnBiodiversity.addEventListener('touchend', handleBio, { passive: false });
     }
 }
 
@@ -1864,6 +1977,15 @@ window.closeTabPanel = closeTabPanel;
 window.openSearchModal = openSearchModal;
 window.closeSearchModal = closeSearchModal;
 window.handleSearch = handleSearch;
+
+// Biodiversidad y Audio Ambiental
+window.openBiodiversityAlbum = openBiodiversityAlbum;
+window.closeBiodiversityAlbum = closeBiodiversityAlbum;
+window.filterAlbumSpecies = filterAlbumSpecies;
+window.renderBiodiversityAlbum = renderBiodiversityAlbum;
+window.exploreSpecimenFromAlbum = exploreSpecimenFromAlbum;
+window.view3DFromAlbum = view3DFromAlbum;
+window.toggleAmbientAudio = toggleAmbientAudio;
 
 window.playSpeciesSound = playSpeciesSound;
 window.alternarAmbiente = alternarAmbiente;
@@ -1917,11 +2039,8 @@ cargarCatalogo()
 
         // Atajos de teclado para la expedición
         window.addEventListener('keydown', (e) => {
-            if ((e.key === 'k' || e.key === 'K') && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
-                e.preventDefault();
-                openSearchModal();
-            } else if (e.key === 'Escape') {
-                closeSearchModal();
+            if (e.key === 'Escape') {
+                closeBiodiversityAlbum();
                 closeBottomSheet();
                 closeTabPanel();
             }

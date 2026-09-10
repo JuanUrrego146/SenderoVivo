@@ -60,7 +60,7 @@
                 color: var(--sv-text-muted);
             }
             #overlay-content p:last-child { margin-bottom: 0; }
-            #overlay-content a { color: var(--sv-celadon); }
+            #overlay-content a { color: var(--sv-sky-hover); }
             #overlay-content code {
                 padding: 1px 5px;
                 background: var(--sv-teal-deep);
@@ -71,7 +71,7 @@
             }
             #overlay-content button {
                 padding: 10px 20px;
-                background: var(--sv-tangerine);
+                background: linear-gradient(135deg, var(--sv-sky), var(--sv-sky-deep));
                 border: none;
                 border-radius: 12px;
                 color: #fff;
@@ -80,14 +80,14 @@
                 cursor: pointer;
                 transition: background 0.2s;
             }
-            #overlay-content button:hover { background: var(--sv-tangerine-hover); }
+            #overlay-content button:hover { background: var(--sv-sky-hover); }
 
             .spinner {
                 width: 28px;
                 height: 28px;
                 margin-bottom: 16px;
                 border: 3px solid var(--sv-teal-mid);
-                border-top-color: var(--sv-celadon);
+                border-top-color: var(--sv-sky-hover);
                 border-radius: 50%;
                 animation: spin 0.9s linear infinite;
             }
@@ -112,7 +112,7 @@
                 color: var(--sv-text-muted);
                 box-shadow: var(--sv-surface-shadow);
             }
-            #hint strong { color: var(--sv-celadon); }
+            #hint strong { color: var(--sv-sky-hover); }
 
             /* Barra de progreso de la carga */
             .barra {
@@ -125,7 +125,7 @@
             .barra-fill {
                 height: 100%;
                 width: 2%;
-                background: linear-gradient(90deg, var(--sv-plum-accent), var(--sv-tangerine));
+                background: linear-gradient(90deg, var(--sv-sky-deep), var(--sv-sky-hover));
                 border-radius: 3px;
                 transition: width 0.35s ease;
             }
@@ -143,7 +143,7 @@
 
             /* Reset local con especificidad CERO (:where): apaga el estilo de botón del
                navegador sin pisar las clases de utilidad del cascarón */
-            :where(#shell, #bottom-sheet, #tab-panel-container, #search-modal) :where(button) {
+            :where(#shell, #bottom-sheet, #tab-panel-container) :where(button) {
                 background: none;
                 border: none;
                 margin: 0;
@@ -161,11 +161,10 @@
                 transition: transform 0.3s ease-out, visibility 0s linear 0.3s;
             }
 
-            /* El foco de teclado se ve (RNF-006) — Mandarina */
+            /* El foco de teclado se ve (RNF-006) — Azul Celeste */
             #shell button:focus-visible, #bottom-sheet button:focus-visible,
-            #tab-panel-container button:focus-visible, #search-modal button:focus-visible,
-            #tecnica button:focus-visible {
-                outline: 2px solid var(--sv-tangerine);
+            #tab-panel-container button:focus-visible, #tecnica button:focus-visible {
+                outline: 2px solid var(--sv-sky-hover);
                 outline-offset: 2px;
             }
 
@@ -208,7 +207,7 @@
             #tecnica button.activa {
                 background: var(--sv-pill-active-bg);
                 border-color: var(--sv-pill-active-border);
-                color: var(--sv-celadon);
+                color: var(--sv-sky-hover);
             }
             #tecnica button small {
                 display: block;
@@ -293,6 +292,10 @@
                         <i class="fa-solid fa-shoe-prints"></i>
                         <span>Ver recorrido en vivo 3D</span>
                     </button>
+                    <button id="btn-hero-biodiversity" class="hero-btn-secondary" type="button" onclick="openBiodiversityAlbum()" aria-label="Ver álbum de biodiversidad">
+                        <i class="fa-solid fa-leaf"></i>
+                        <span>Biodiversidad</span>
+                    </button>
                 </div>
             </main>
 
@@ -312,6 +315,63 @@
                     </div>
                 </div>
             </footer>
+        </div>
+
+        <!-- ============ ÁLBUM DE BIODIVERSIDAD (PANTALLA INICIAL) ============ -->
+        <div id="biodiversity-album-modal" class="hidden fixed inset-0 z-[10005] flex items-center justify-center p-3 sm:p-6" style="background: rgba(6, 16, 26, 0.90); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);" onclick="if(event.target===this) closeBiodiversityAlbum();">
+            <div class="biodiversity-modal-card glass-panel w-full max-w-5xl max-h-[92vh] flex flex-col rounded-3xl overflow-hidden shadow-2xl pointer-events-auto" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-sky-border);">
+                <!-- Cabecera del Álbum -->
+                <div class="p-5 sm:p-6 border-b flex items-center justify-between gap-4" style="border-color: rgba(56, 189, 248, 0.20);">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-xl" style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border); color: var(--sv-sky-hover);">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-base sm:text-xl font-bold font-syne" style="color: var(--sv-text-primary);">Atlas de Biodiversidad y Patrimonio</h2>
+                            <p class="text-xs" style="color: var(--sv-text-muted);">Especies y elementos registrados · Quebrada La Vieja</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-xs px-3 py-1 rounded-full font-mono font-bold" style="background: var(--sv-sky-surface); color: var(--sv-sky-light); border: 1px solid var(--sv-sky-border);" id="album-count-badge">8 registros</span>
+                        <button onclick="closeBiodiversityAlbum()" class="tab-modal-close-btn" title="Cerrar álbum">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filtros de categoría dentro del Álbum -->
+                <div class="px-5 py-3 border-b flex items-center gap-2 overflow-x-auto no-scrollbar" style="border-color: rgba(56, 189, 248, 0.15);">
+                    <button class="album-filter-pill active" onclick="filterAlbumSpecies('all', this)">
+                        <i class="fa-solid fa-layer-group text-xs"></i> Todas (<span id="album-tab-count-all">8</span>)
+                    </button>
+                    <button class="album-filter-pill" onclick="filterAlbumSpecies('fauna', this)">
+                        <i class="fa-solid fa-dove text-xs"></i> Fauna Silvestre (<span id="album-tab-count-fauna">3</span>)
+                    </button>
+                    <button class="album-filter-pill" onclick="filterAlbumSpecies('flora', this)">
+                        <i class="fa-solid fa-seedling text-xs"></i> Flora Altoandina (<span id="album-tab-count-flora">3</span>)
+                    </button>
+                    <button class="album-filter-pill" onclick="filterAlbumSpecies('patrimonio', this)">
+                        <i class="fa-solid fa-landmark text-xs"></i> Patrimonio (<span id="album-tab-count-patrimonio">2</span>)
+                    </button>
+                </div>
+
+                <!-- Contenedor con scroll de especies -->
+                <div id="biodiversity-album-grid" class="p-5 sm:p-6 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 no-scrollbar">
+                    <!-- Inyectado dinámicamente -->
+                </div>
+
+                <!-- Barra inferior / Footer con ayuda de navegación -->
+                <div class="px-5 py-3 border-t flex items-center justify-between gap-4 text-xs" style="border-color: rgba(56, 189, 248, 0.15); background: rgba(10, 22, 34, 0.65);">
+                    <span class="text-[11px] truncate flex items-center gap-1.5" style="color: var(--sv-text-muted);">
+                        <i class="fa-solid fa-compass text-[11px]" style="color: var(--sv-sky-hover);"></i>
+                        Haz clic en <strong>Explorar en sendero</strong> para teletransportarte en 3D a cualquier punto
+                    </span>
+                    <button onclick="closeBiodiversityAlbum()" class="text-xs px-3.5 py-1.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer transition hover:scale-105 flex-shrink-0" style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border); color: var(--sv-sky-light);">
+                        <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                        Volver al inicio
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- ============ ONBOARDING DE PRIMERA VEZ (TUTORIAL SIN SONIDO) ============ -->
@@ -361,45 +421,21 @@
                     <div class="expedition-live-pill" title="Altitud de estación actual">
                         <span class="live-pulse-dot"></span>
                         <span style="font-size: 11px; font-weight: 600; color: var(--sv-text-muted);">
-                            <i class="fa-solid fa-mountain text-[10px]" style="color: var(--sv-celadon);"></i> <strong id="hud-altitud-top" style="color: var(--sv-text-primary); font-family: 'Syne', sans-serif;">2.712 m</strong>
+                            <i class="fa-solid fa-mountain text-[10px]" style="color: var(--sv-sky-hover);"></i> <strong id="hud-altitud-top" style="color: var(--sv-text-primary); font-family: 'Syne', sans-serif;">2.712 m</strong>
                         </span>
                     </div>
                 </div>
 
-                <div class="command-bar-center">
-                    <nav class="category-dock" aria-label="Filtros de especies">
-                        <button id="filter-all" onclick="filterCategory('all')" ontouchstart="filterCategory('all'); event.preventDefault();" class="category-pill active" data-cat="all">
-                            <i class="fa-solid fa-compass text-xs"></i>
-                            <span>Todo</span>
-                        </button>
-                        <button id="filter-flora" onclick="filterCategory('flora')" ontouchstart="filterCategory('flora'); event.preventDefault();" class="category-pill" data-cat="flora">
-                            <i class="fa-solid fa-seedling text-xs"></i>
-                            <span>Flora</span>
-                        </button>
-                        <button id="filter-fauna" onclick="filterCategory('fauna')" ontouchstart="filterCategory('fauna'); event.preventDefault();" class="category-pill" data-cat="fauna">
-                            <i class="fa-solid fa-dove text-xs"></i>
-                            <span>Fauna</span>
-                        </button>
-                        <button id="filter-curiosidades" onclick="filterCategory('curiosidades')" ontouchstart="filterCategory('curiosidades')" class="category-pill" data-cat="curiosidades">
-                            <i class="fa-solid fa-lightbulb text-xs"></i>
-                            <span>Datos</span>
-                        </button>
-                    </nav>
-                </div>
-
                 <div class="command-bar-right">
-                    <button class="quick-search-pill" onclick="openSearchModal()" ontouchstart="openSearchModal()" title="Buscar en el sendero (K)">
-                        <i class="fa-solid fa-magnifying-glass text-xs" style="color: var(--sv-celadon);"></i>
-                        <span>Buscar especie...</span>
-                        <kbd class="search-shortcut">K</kbd>
-                    </button>
-
-                    <div class="render-toggle-deck" title="Conmutador de técnica de renderizado">
+                    <div class="render-toggle-deck" title="Conmutador de técnica de renderizado y sonido ambiental">
                         <button type="button" data-render="colmap" onclick="setRenderModelMobile('colmap')" class="render-btn activa" title="Mayor fidelidad visual">
                             COLMAP
                         </button>
                         <button type="button" data-render="luma" onclick="setRenderModelMobile('luma')" class="render-btn" title="Carga ultraliviana">
                             Luma
+                        </button>
+                        <button id="btn-ambient-audio-toggle" type="button" class="render-btn" onclick="toggleAmbientAudio()" title="Activar / Silenciar sonido de bosque" aria-label="Sonido ambiental">
+                            <i class="fa-solid fa-volume-high"></i>
                         </button>
                     </div>
 
@@ -427,8 +463,8 @@
                         </div>
                     </button>
                     <div class="mobile-top-controls">
-                        <button onclick="openSearchModal()" class="mobile-action-icon" aria-label="Buscar especies" title="Buscar">
-                            <i class="fa-solid fa-magnifying-glass"></i>
+                        <button id="btn-ambient-audio-toggle-m" onclick="toggleAmbientAudio()" class="mobile-action-icon" aria-label="Sonido ambiental" title="Activar / Silenciar sonido de bosque">
+                            <i class="fa-solid fa-volume-high"></i>
                         </button>
                         <button onclick="openTrailLobby()" class="mobile-action-icon" aria-label="Información del sendero" title="Ficha técnica">
                             <i class="fa-solid fa-circle-info"></i>
@@ -455,11 +491,11 @@
 
                         <div class="telemetry-metrics-pills">
                             <div class="telemetry-mini-pill" title="Desnivel acumulado">
-                                <i class="fa-solid fa-arrow-trend-up" style="color: var(--sv-tangerine);"></i>
+                                <i class="fa-solid fa-arrow-trend-up" style="color: var(--sv-sky-hover);"></i>
                                 <span id="hud-desnivel">+0 m</span>
                             </div>
                             <div class="telemetry-mini-pill" title="Pendiente media">
-                                <i class="fa-solid fa-percent" style="color: var(--sv-olive-vibrant);"></i>
+                                <i class="fa-solid fa-percent" style="color: var(--sv-sky-hover);"></i>
                                 <span id="hud-pendiente">0 %</span>
                             </div>
                         </div>
@@ -468,7 +504,7 @@
                     <div class="telemetry-progress-track">
                         <div class="telemetry-progress-header">
                             <span id="progreso-pct" style="color: var(--sv-text-muted);">Progreso del sendero · 0%</span>
-                            <span id="hud-recorrido" style="color: var(--sv-tangerine); font-family: 'Syne', sans-serif;">0 m</span>
+                            <span id="hud-recorrido" style="color: var(--sv-sky-hover); font-family: 'Syne', sans-serif;">0 m</span>
                         </div>
                         <div class="telemetry-bar-bg">
                             <div id="carga-barra-hud" class="telemetry-bar-fill"></div>
@@ -477,8 +513,8 @@
 
                     <div class="telemetry-footer-row">
                         <div class="telemetry-poi-count">
-                            <i class="fa-solid fa-binoculars" style="color: var(--sv-tangerine); font-size: 11px;"></i>
-                            <span id="discovered-counter">0 de 6 especies vistas</span>
+                            <i class="fa-solid fa-binoculars" style="color: var(--sv-sky-hover); font-size: 11px;"></i>
+                            <span id="discovered-counter">0 de 8 especies vistas</span>
                         </div>
                         <button onclick="switchTab('quest')" class="telemetry-btn-bitacora">
                             <i class="fa-solid fa-book-bookmark"></i> Bitácora
@@ -492,46 +528,42 @@
                 <div class="flex items-center justify-between px-3 py-2.5 cursor-pointer select-none"
                     onclick="toggleDetailsCard()" ontouchstart="toggleDetailsCard(); event.preventDefault();">
                     <div class="flex items-center gap-2">
-                        <i id="details-arrow-icon" class="fa-solid fa-chevron-up text-xs transition-transform duration-300" style="color: var(--sv-tangerine);"></i>
+                        <i id="details-arrow-icon" class="fa-solid fa-chevron-up text-xs transition-transform duration-300" style="color: var(--sv-sky-hover);"></i>
                         <span class="text-xs font-bold" style="color: var(--sv-text-primary);">Detalles del sendero</span>
                     </div>
-                    <span id="hud-datos-mobile" class="text-[10px] font-mono font-semibold" style="color: var(--sv-tangerine);">2.712 m · 0 m</span>
+                    <span id="hud-datos-mobile" class="text-[10px] font-mono font-semibold" style="color: var(--sv-sky-hover);">2.712 m · 0 m</span>
                 </div>
                 <div id="details-content" class="hidden" style="border-top: 1px solid var(--sv-surface-border);">
                     <div class="grid grid-cols-4 gap-1 px-3 py-2" style="font-variant-numeric: tabular-nums;">
                         <div class="text-center">
                             <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Altitud</div>
-                            <div class="text-[13px] font-semibold" style="color: var(--sv-tangerine);" id="hud-altitud-m">2.712 m</div>
+                            <div class="text-[13px] font-semibold" style="color: var(--sv-sky-hover);" id="hud-altitud-m">2.712 m</div>
                         </div>
                         <div class="text-center">
                             <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Recorrido</div>
-                            <div class="text-[13px] font-semibold" style="color: var(--sv-tangerine);" id="hud-recorrido-m">0 m</div>
+                            <div class="text-[13px] font-semibold" style="color: var(--sv-sky-hover);" id="hud-recorrido-m">0 m</div>
                         </div>
                         <div class="text-center">
                             <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Desnivel</div>
-                            <div class="text-[13px] font-semibold" style="color: var(--sv-tangerine);" id="hud-desnivel-m">+0 m</div>
+                            <div class="text-[13px] font-semibold" style="color: var(--sv-sky-hover);" id="hud-desnivel-m">+0 m</div>
                         </div>
                         <div class="text-center">
                             <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Pendiente</div>
-                            <div class="text-[13px] font-semibold" style="color: var(--sv-tangerine);" id="hud-pendiente-m">0 %</div>
+                            <div class="text-[13px] font-semibold" style="color: var(--sv-sky-hover);" id="hud-pendiente-m">0 %</div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Nav PC -->
-            <nav id="shell-nav-pc" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-3 flex items-center gap-5 sm:gap-10 shadow-2xl pointer-events-auto">
-                <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition" style="color: var(--sv-tangerine);">
+            <nav id="shell-nav-pc" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-3 flex items-center gap-6 sm:gap-12 shadow-2xl pointer-events-auto">
+                <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition" style="color: var(--sv-sky-hover);">
                     <i class="fa-solid fa-compass text-base sm:text-lg"></i>
                     <span class="text-[9px] sm:text-[10px]">Sendero</span>
                 </button>
                 <button id="nav-catalog" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')" class="flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
                     <i class="fa-solid fa-book-bookmark text-base sm:text-lg"></i>
                     <span class="text-[9px] sm:text-[10px]">Especies</span>
-                </button>
-                <button id="nav-audio" onclick="switchTab('audio')" ontouchstart="switchTab('audio')" class="flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
-                    <i class="fa-solid fa-headphones text-base sm:text-lg"></i>
-                    <span class="text-[9px] sm:text-[10px]">Sonidos</span>
                 </button>
                 <button id="nav-quest" onclick="switchTab('quest')" ontouchstart="switchTab('quest')" class="flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
                     <i class="fa-solid fa-trophy text-base sm:text-lg"></i>
@@ -542,7 +574,7 @@
             <!-- Nav móvil -->
             <nav id="shell-nav-mobile" class="absolute bottom-3 left-4 right-4 z-40 glass-panel rounded-full px-4 py-2 flex items-center justify-around shadow-2xl pointer-events-auto">
                 <button id="nav-trail-m" onclick="switchTab('trail')" ontouchstart="switchTab('trail')"
-                    class="nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition" style="color: var(--sv-tangerine);">
+                    class="nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition" style="color: var(--sv-sky-hover);">
                     <i class="fa-solid fa-compass text-base"></i>
                     <span class="text-[9px]">Sendero</span>
                 </button>
@@ -550,11 +582,6 @@
                     class="nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
                     <i class="fa-solid fa-book-bookmark text-base"></i>
                     <span class="text-[9px]">Especies</span>
-                </button>
-                <button id="nav-audio-m" onclick="switchTab('audio')" ontouchstart="switchTab('audio')"
-                    class="nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
-                    <i class="fa-solid fa-headphones text-base"></i>
-                    <span class="text-[9px]">Sonidos</span>
                 </button>
                 <button id="nav-quest-m" onclick="switchTab('quest')" ontouchstart="switchTab('quest')"
                     class="nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
@@ -566,7 +593,7 @@
 
         <div id="bottom-sheet"
             class="fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-300 ease-out max-w-lg mx-auto px-4 pb-24 pt-2 pointer-events-auto">
-            <div class="glass-panel rounded-3xl p-5 shadow-2xl relative backdrop-blur-xl max-h-[75vh] overflow-y-auto no-scrollbar" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-border-plum);">
+            <div class="glass-panel rounded-3xl p-5 shadow-2xl relative backdrop-blur-xl max-h-[75vh] overflow-y-auto no-scrollbar" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-sky-border);">
                 <div id="sheet-content"></div>
             </div>
         </div>
@@ -578,7 +605,7 @@
                 <div class="tab-modal-header">
                     <div class="flex items-center gap-2.5 min-w-0">
                         <div id="tab-modal-icon-wrap" class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
-                             style="background: rgba(247, 104, 40, 0.18); border: 1px solid rgba(247, 104, 40, 0.40); color: var(--sv-tangerine);">
+                             style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border); color: var(--sv-sky-hover);">
                             <i id="tab-modal-icon" class="fa-solid fa-book-bookmark"></i>
                         </div>
                         <div class="min-w-0">
@@ -592,7 +619,7 @@
                     </div>
                     <div class="flex items-center gap-2 flex-shrink-0">
                         <span id="tab-modal-badge" class="text-[10px] font-bold font-mono px-2.5 py-0.5 rounded-full hidden sm:inline-block"
-                              style="background: rgba(115, 25, 99, 0.25); color: #E8A4DB; border: 1px solid rgba(115, 25, 99, 0.45);">
+                              style="background: var(--sv-sky-surface); color: var(--sv-sky-light); border: 1px solid var(--sv-sky-border);">
                             6 especies
                         </span>
                         <button onclick="closeTabPanel()" class="tab-modal-close-btn" title="Cerrar ventana">
@@ -608,21 +635,6 @@
 
                 <!-- Cuerpo desplazable: SOLO las tarjetas hacen scroll -->
                 <div id="tab-panel-content" class="tab-modal-body no-scrollbar"></div>
-            </div>
-        </div>
-
-        <div id="search-modal" class="fixed inset-0 backdrop-blur-md z-50 hidden items-center justify-center p-4" style="background: rgba(14, 26, 23, 0.80);">
-            <div class="glass-panel w-full max-w-md rounded-3xl p-5 shadow-2xl" style="border: 1px solid var(--sv-border-plum);">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-bold flex items-center gap-2" style="color: var(--sv-text-primary);">
-                        <i class="fa-solid fa-magnifying-glass" style="color: var(--sv-tangerine);"></i> Buscar en el sendero
-                    </h3>
-                    <button onclick="closeSearchModal()" style="color: var(--sv-text-dim);" class="hover:text-white transition">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-                <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Ej. Colibrí, Helecho, Puente..." class="w-full rounded-xl px-4 py-3 text-xs focus:outline-none mb-4" style="background: var(--sv-teal-deep); border: 1px solid var(--sv-border-plum); color: var(--sv-text-primary);" onfocus="this.style.borderColor='var(--sv-tangerine)'" onblur="this.style.borderColor='var(--sv-border-plum)'">
-                <div id="search-results" class="space-y-2 max-h-60 overflow-y-auto no-scrollbar"></div>
             </div>
         </div>
         <!-- ============ FIN DEL CASCARÓN ============ -->

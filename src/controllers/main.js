@@ -144,6 +144,9 @@ function setUpTechSwitch(active) {
             // Siempre explicito: sin parametro la resolucion es automatica
             // (escritorio -> COLMAP, celular -> Luma liviana), asi que borrar
             // ?render en celular convertia el boton COLMAP en un no-op.
+            try {
+                sessionStorage.setItem('sv_exploring', 'true');
+            } catch (e) {}
             params.set('render', btn.dataset.render);
             params.delete('sog');
             window.location.search = params.toString();

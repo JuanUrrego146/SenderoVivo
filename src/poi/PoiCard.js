@@ -430,8 +430,8 @@ export class PoiCard {
                     justify-content:center;
                     transition:all 0.2s;
                 "
-                onmouseenter="this.style.color='var(--sv-celadon, #A9FBC3)'; this.style.borderColor='var(--sv-celadon, #A9FBC3)';"
-                onmouseleave="this.style.color='var(--sv-text-muted, #A5B7B1)'; this.style.borderColor='rgba(169,251,195,0.25)';"
+                onmouseenter="this.style.color='var(--sv-sky-hover)'; this.style.borderColor='var(--sv-sky-hover)';"
+                onmouseleave="this.style.color='var(--sv-text-muted, #A5B7B1)'; this.style.borderColor='rgba(56,189,248,0.25)';"
             >
                 ✕
             </button>
@@ -449,8 +449,8 @@ export class PoiCard {
                     margin-bottom:18px;
                     border-radius:20px;
                     overflow:hidden;
-                    background:radial-gradient(circle at 50% 50%, rgba(57,115,103,0.3) 0%, rgba(14,26,23,0.9) 100%);
-                    border:1px solid rgba(169,251,195,0.18);
+                    background:radial-gradient(circle at 50% 50%, rgba(14,38,58,0.6) 0%, rgba(8,18,28,0.95) 100%);
+                    border:1px solid rgba(56,189,248,0.20);
                     position:relative;
                 "
             >
@@ -463,7 +463,7 @@ export class PoiCard {
                         display:flex;
                         align-items:center;
                         justify-content:center;
-                        color:var(--sv-celadon, #A9FBC3);
+                        color:var(--sv-sky-hover);
                         font-size:13px;
                         font-weight:600;
                         z-index:2;
@@ -480,7 +480,7 @@ export class PoiCard {
             <!-- ========================================= -->
 
             <div style="text-align:center; margin-bottom:16px;">
-                <span style="display:inline-block; font-size:10px; text-transform:uppercase; font-weight:700; letter-spacing:0.06em; padding:3px 10px; border-radius:999px; background:rgba(169,251,195,0.12); border:1px solid rgba(169,251,195,0.30); color:var(--sv-celadon, #A9FBC3); margin-bottom:6px;">
+                <span style="display:inline-block; font-size:10px; text-transform:uppercase; font-weight:700; letter-spacing:0.06em; padding:3px 10px; border-radius:999px; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.30); color:var(--sv-sky-hover); margin-bottom:6px;">
                     Modelo 3D Interactivo
                 </span>
                 <h2
@@ -498,7 +498,7 @@ export class PoiCard {
                 <p
                     style="
                         margin:4px 0 0 0;
-                        color:var(--sv-celadon, #A9FBC3);
+                        color:var(--sv-sky-hover);
                         font-style:italic;
                         font-family:monospace;
                         font-size:12px;
@@ -575,12 +575,12 @@ export class PoiCard {
                         padding:12px;
                         border:none;
                         border-radius:14px;
-                        background:var(--sv-tangerine, #F76828);
+                        background:linear-gradient(135deg, var(--sv-sky, #0ea5e9), var(--sv-sky-deep, #0284c7));
                         color:#fff;
                         font-weight:700;
                         font-size:13px;
                         cursor:pointer;
-                        box-shadow:0 4px 14px var(--sv-tangerine-glow, rgba(247,104,40,0.25));
+                        box-shadow:0 4px 14px var(--sv-sky-glow, rgba(56,189,248,0.35));
                         transition:all 0.2s;
                     "
                 >
@@ -594,10 +594,10 @@ export class PoiCard {
                     style="
                         flex:1;
                         padding:12px;
-                        border:1px solid rgba(169,251,195,0.30);
+                        border:1px solid rgba(56,189,248,0.40);
                         border-radius:14px;
-                        background:rgba(35,63,57,0.70);
-                        color:var(--sv-text-primary, #F5F8F6);
+                        background:rgba(14,28,44,0.70);
+                        color:var(--sv-sky-light, #7dd3fc);
                         font-weight:700;
                         font-size:13px;
                         cursor:pointer;
