@@ -149,3 +149,8 @@ AGENTS.md
 .cursorrules
 .github/copilot-instructions.md
 .aider*
+.agents/
+.gemini/
+skills-lock.json
+test.pdf
+

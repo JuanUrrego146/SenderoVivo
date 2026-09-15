@@ -3,23 +3,28 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Sendero Vivo — Prototipo</title>
+        <title>Sendero Vivo · Expedición Inmersiva Cerros Orientales</title>
         <link rel="stylesheet" href="styles/tokens.css">
         <link rel="stylesheet" href="styles/tailwind.css">
         <link rel="stylesheet" href="styles/glass.css">
         <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Quicksand:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
         <style>
-            /* Los tokens de color viven en styles/tokens.css (dueños: Eybar y Alberto),
-               enlazado arriba; la paleta está documentada en docs/06-contenido-de-la-experiencia.md §B.2. */
+            /* Tokens de color en styles/tokens.css — Atlas Botánico Vivo */
 
             body {
                 margin: 0;
                 overflow: hidden;
-                background: var(--sv-black-900);
-                font-family: system-ui, sans-serif;
+                background: var(--sv-teal-deep);
+                font-family: 'Quicksand', system-ui, sans-serif;
+                font-weight: 500;
+            }
+
+            /* Headings usan Syne */
+            h1, h2, h3, h4, h5, h6 {
+                font-family: 'Syne', 'Quicksand', system-ui, sans-serif;
             }
 
             #overlay {
@@ -30,62 +35,65 @@
                 align-items: center;
                 justify-content: center;
                 padding: 16px;
-                background: var(--sv-black-900);
+                background: var(--sv-teal-deep);
             }
             #overlay[hidden] { display: none; }
 
             #overlay-content {
                 max-width: 480px;
                 padding: 24px;
-                background: var(--sv-gray-800);
-                border: 1px solid var(--sv-gray-600);
-                border-radius: 8px;
+                background: var(--sv-teal-surface);
+                border: 1px solid var(--sv-teal-mid);
+                border-radius: 16px;
             }
             #overlay-content h1 {
                 margin: 0 0 12px;
                 font-size: 22px;
-                font-weight: 600;
-                color: var(--sv-gray-050);
+                font-weight: 700;
+                color: var(--sv-text-primary);
+                font-family: 'Syne', system-ui, sans-serif;
             }
             #overlay-content p {
                 margin: 0 0 12px;
                 font-size: 16px;
-                line-height: 1.5;
-                color: var(--sv-gray-200);
+                line-height: 1.6;
+                color: var(--sv-text-muted);
             }
             #overlay-content p:last-child { margin-bottom: 0; }
-            #overlay-content a { color: var(--sv-green-300); }
+            #overlay-content a { color: var(--sv-sky-hover); }
             #overlay-content code {
                 padding: 1px 5px;
-                background: var(--sv-black-900);
-                border-radius: 4px;
-                color: var(--sv-gray-050);
+                background: var(--sv-teal-deep);
+                border-radius: 6px;
+                color: var(--sv-text-primary);
                 font-size: 15px;
                 overflow-wrap: anywhere;
             }
             #overlay-content button {
                 padding: 10px 20px;
-                background: var(--sv-gray-800);
-                border: 1px solid var(--sv-gray-600);
-                border-radius: 6px;
-                color: var(--sv-gray-050);
+                background: linear-gradient(135deg, var(--sv-sky), var(--sv-sky-deep));
+                border: none;
+                border-radius: 12px;
+                color: #fff;
                 font-size: 16px;
+                font-weight: 600;
                 cursor: pointer;
+                transition: background 0.2s;
             }
-            #overlay-content button:hover { border-color: var(--sv-green-500); }
+            #overlay-content button:hover { background: var(--sv-sky-hover); }
 
             .spinner {
                 width: 28px;
                 height: 28px;
                 margin-bottom: 16px;
-                border: 3px solid var(--sv-gray-600);
-                border-top-color: var(--sv-green-500);
+                border: 3px solid var(--sv-teal-mid);
+                border-top-color: var(--sv-sky-hover);
                 border-radius: 50%;
                 animation: spin 0.9s linear infinite;
             }
             @keyframes spin { to { transform: rotate(360deg); } }
 
-            /* La ayuda habla el mismo idioma de vidrio que el resto del cascarón */
+            /* Ayuda de controles (teclado) */
             #hint {
                 position: fixed;
                 right: 16px;
@@ -94,36 +102,36 @@
                 max-width: 360px;
                 margin: 0;
                 padding: 10px 14px;
-                background: var(--sv-glass-bg, rgba(15, 23, 42, 0.68));
-                backdrop-filter: blur(12px);
-                -webkit-backdrop-filter: blur(12px);
-                border: 1px solid var(--sv-glass-border, rgba(255, 255, 255, 0.12));
+                background: var(--sv-surface-panel);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                border: 1px solid var(--sv-surface-border);
                 border-radius: 16px;
                 font-size: 13px;
                 line-height: 1.55;
-                color: var(--sv-gray-200);
-                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+                color: var(--sv-text-muted);
+                box-shadow: var(--sv-surface-shadow);
             }
-            #hint strong { color: var(--sv-green-300); }
+            #hint strong { color: var(--sv-sky-hover); }
 
             /* Barra de progreso de la carga */
             .barra {
                 height: 6px;
                 margin: 14px 0 10px;
-                background: var(--sv-black-900);
+                background: var(--sv-teal-deep);
                 border-radius: 3px;
                 overflow: hidden;
             }
             .barra-fill {
                 height: 100%;
                 width: 2%;
-                background: linear-gradient(90deg, var(--sv-green-700), var(--sv-green-300));
+                background: linear-gradient(90deg, var(--sv-sky-deep), var(--sv-sky-hover));
                 border-radius: 3px;
                 transition: width 0.35s ease;
             }
             #overlay-content .nota {
                 font-size: 13px;
-                color: var(--sv-gray-400);
+                color: var(--sv-text-dim);
             }
             #overlay.desvanecer {
                 opacity: 0;
@@ -131,36 +139,11 @@
                 pointer-events: none;
             }
 
-            /* El encabezado de vidrio del cascarón reemplaza al distintivo suelto */
-            #prototipo { display: none; }
-            #prototipo-oculto {
-                position: fixed;
-                top: 14px;
-                left: 16px;
-                z-index: 12;
-                padding: 6px 12px;
-                background: rgba(31, 93, 58, 0.9);
-                border: 1px solid var(--sv-green-300);
-                border-radius: 999px;
-                color: var(--sv-gray-050);
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-            }
-            #prototipo span {
-                font-weight: 400;
-                letter-spacing: 0;
-                text-transform: none;
-                color: var(--sv-gray-200);
-            }
-
-
             #hint[hidden] { display: none; }
 
             /* Reset local con especificidad CERO (:where): apaga el estilo de botón del
                navegador sin pisar las clases de utilidad del cascarón */
-            :where(#shell, #bottom-sheet, #tab-panel-container, #search-modal) :where(button) {
+            :where(#shell, #bottom-sheet, #tab-panel-container) :where(button) {
                 background: none;
                 border: none;
                 margin: 0;
@@ -178,22 +161,10 @@
                 transition: transform 0.3s ease-out, visibility 0s linear 0.3s;
             }
 
-            /* Botón de cerrar del panel: flota arriba a la derecha de la tarjeta,
-               y acompaña el scroll para estar siempre a mano */
-            .sticky-cerrar {
-                position: sticky;
-                top: 0;
-                float: right;
-                margin-left: 12px;
-                margin-bottom: 4px;
-                z-index: 5;
-            }
-
-            /* El foco de teclado se ve (RNF-006) */
+            /* El foco de teclado se ve (RNF-006) — Azul Celeste */
             #shell button:focus-visible, #bottom-sheet button:focus-visible,
-            #tab-panel-container button:focus-visible, #search-modal button:focus-visible,
-            #tecnica button:focus-visible {
-                outline: 2px solid var(--sv-green-300);
+            #tab-panel-container button:focus-visible, #tecnica button:focus-visible {
+                outline: 2px solid var(--sv-sky-hover);
                 outline-offset: 2px;
             }
 
@@ -212,30 +183,31 @@
                 display: flex;
                 gap: 4px;
                 padding: 5px;
-                border: 1px solid var(--sv-glass-border, rgba(255, 255, 255, 0.12));
+                border: 1px solid var(--sv-surface-border);
                 border-radius: 999px;
-                background: var(--sv-glass-bg, rgba(15, 23, 42, 0.68));
-                backdrop-filter: blur(12px);
-                -webkit-backdrop-filter: blur(12px);
+                background: var(--sv-surface-panel);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
                 font-size: 12px;
-                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+                box-shadow: var(--sv-surface-shadow);
             }
             #tecnica button {
                 appearance: none;
                 border: 1px solid transparent;
                 border-radius: 999px;
                 background: transparent;
-                color: var(--sv-gray-200);
+                color: var(--sv-text-muted);
                 padding: 6px 13px;
                 font: inherit;
                 font-weight: 600;
                 letter-spacing: 0.04em;
                 cursor: pointer;
+                transition: all 0.2s;
             }
             #tecnica button.activa {
-                background: var(--sv-green-300-25, rgba(111, 207, 151, 0.25));
-                border-color: var(--sv-green-300-60, rgba(111, 207, 151, 0.6));
-                color: var(--sv-green-300);
+                background: var(--sv-pill-active-bg);
+                border-color: var(--sv-pill-active-border);
+                color: var(--sv-sky-hover);
             }
             #tecnica button small {
                 display: block;
@@ -282,237 +254,629 @@
                 <h1>Preparando el visor…</h1>
             </div>
         </div>
-        <div id="prototipo">Prototipo <span>· escaneo de prueba, no es el sendero</span></div>
+
+        <!-- ============ VENTANA INICIAL A PANTALLA COMPLETA (HERO START SCREEN) ============ -->
+        <div id="trail-lobby" role="dialog" aria-modal="true" aria-label="Pantalla de inicio Sendero Vivo">
+            <div class="hero-screen-overlay"></div>
+
+            <!-- Botón discreto para cerrar si se reabre desde el visor en recorrido -->
+            <button id="btn-hero-close" class="hero-close-trigger" onclick="closeTrailLobby()" title="Volver al visor" aria-label="Cerrar ventana inicial">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Barra Superior: Ubicación y Tecnología 3DGS -->
+            <header class="hero-top-bar">
+                <div class="hero-pill-location">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Quebrada La Vieja</span>
+                </div>
+                <div class="hero-pill-tech">
+                    <span>200m Escaneados en 3DGS</span>
+                </div>
+            </header>
+
+            <!-- Bloque Central Izquierdo: Título y Acciones -->
+            <main class="hero-main-content">
+                <h1 class="hero-brand-title">
+                    <span class="hero-brand-sendero">Sendero</span>
+                    <span class="hero-brand-vivo">Vivo</span>
+                </h1>
+                <p class="hero-brand-tagline">Naturaleza que nos conecta</p>
+
+                <div class="hero-cta-group">
+                    <button id="btn-hero-explore" class="hero-btn-primary" type="button" onclick="startTrailExploration(false)" aria-label="Explorar el sendero">
+                        <span>Explorar el sendero</span>
+                        <span class="hero-arrow">→</span>
+                    </button>
+                    <button id="btn-hero-visit" class="hero-btn-secondary" type="button" onclick="openPrepararVisita()" aria-label="Preparar visita al sendero">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                        <span>Preparar Visita</span>
+                    </button>
+                    <button id="btn-hero-biodiversity" class="hero-btn-secondary" type="button" onclick="openBiodiversityAlbum()" aria-label="Ver álbum de biodiversidad">
+                        <i class="fa-solid fa-leaf"></i>
+                        <span>Biodiversidad</span>
+                    </button>
+                </div>
+            </main>
+
+            <!-- Barra Inferior / Footer: Estadísticas y Lema -->
+            <footer class="hero-bottom-footer">
+                <div class="hero-bottom-divider"></div>
+                <div class="hero-footer-content">
+                    <div class="hero-footer-stats">
+                        <span class="hero-stat-highlight">7,3 km</span>
+                        <span class="hero-stat-sep">·</span>
+                        <span class="hero-stat-highlight">+406 m desnivel</span>
+                        <span class="hero-stat-sep">·</span>
+                        <span class="hero-stat-time">3 horas</span>
+                    </div>
+                    <div class="hero-footer-slogan">
+                        Buenos senderos, mejores personas
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <div id="preparar-visita-modal" class="hidden" onclick="if(event.target===this) closePrepararVisita();">
+            <div class="preparar-visita-modal-card glass-panel pointer-events-auto">
+                
+                <!-- Cabecera de la Ficha Técnica (Réplica exacta de Referencia Image 2) -->
+                <div class="preparar-header-row">
+                    <div class="min-w-0 pr-8 md:pr-0">
+                        <span class="text-[10px] sm:text-[11px] font-bold font-mono tracking-wider uppercase block mb-1" style="color: var(--sv-text-dim);">
+                            FICHA TÉCNICA DEL SENDERO · <span style="color: var(--sv-sky-hover);">EAAB Cerros Orientales</span>
+                        </span>
+                        <h2 id="preparar-trail-title" class="text-xl sm:text-3xl font-extrabold font-syne truncate" style="color: var(--sv-text-primary); letter-spacing: -0.02em;">
+                            Quebrada La Vieja
+                        </h2>
+                        <p id="preparar-trail-sub" class="text-xs sm:text-[13px] mt-1 flex items-center truncate" style="color: var(--sv-text-muted);">
+                            <i class="fa-solid fa-location-dot mr-1.5" style="color: var(--sv-sky-hover);"></i>
+                            Cerros Orientales de Bogotá · Localidad de Chapinero (Cl. 71)
+                        </p>
+                    </div>
+
+                    <!-- Selector de Sendero + Botón Cerrar -->
+                    <div class="flex items-center gap-3 self-stretch sm:self-auto justify-between sm:justify-end flex-wrap">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-semibold hidden lg:inline" style="color: var(--sv-text-muted);">
+                                Cambiar sendero:
+                            </span>
+                            <div class="flex items-center gap-1.5 p-1 rounded-2xl" style="background: rgba(10, 22, 34, 0.85); border: 1px solid rgba(56, 189, 248, 0.25);">
+                                <button type="button" data-trail="quebrada-la-vieja" onclick="switchPrepararTrail('quebrada-la-vieja')" class="trail-select-pill active text-xs font-semibold px-3.5 py-1.5 rounded-xl cursor-pointer transition text-center">
+                                    Quebrada La Vieja
+                                </button>
+                                <button type="button" data-trail="santa-ana" onclick="switchPrepararTrail('santa-ana')" class="trail-select-pill text-xs font-semibold px-3.5 py-1.5 rounded-xl cursor-pointer transition text-center">
+                                    Santa Ana - La Aguadora
+                                </button>
+                            </div>
+                        </div>
+
+                        <button onclick="closePrepararVisita()" class="tab-modal-close-btn flex-shrink-0" title="Cerrar ventana" aria-label="Cerrar ventana">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cuerpo del Modal (Desplazable con scroll suave y sin necesidad de zoom) -->
+                <div class="preparar-scroll-container">
+
+                    <!-- Fila 1: Métricas Principales (3 Columnas: Distancia, Desnivel, Tiempo) -->
+                    <div class="preparar-metrics-grid">
+                        <div class="trail-metric-card">
+                            <div class="trail-metric-icon">
+                                <i class="fa-solid fa-shoe-prints"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <span class="text-[9.5px] sm:text-[11px] font-bold font-mono tracking-wider uppercase block truncate" style="color: var(--sv-text-dim);">
+                                    DISTANCIA
+                                </span>
+                                <span id="preparar-stat-distance" class="text-base sm:text-2xl font-bold font-syne block truncate" style="color: var(--sv-text-primary);">
+                                    → 7,3 km
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="trail-metric-card">
+                            <div class="trail-metric-icon icon-fauna">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <span class="text-[9.5px] sm:text-[11px] font-bold font-mono tracking-wider uppercase block truncate" style="color: var(--sv-text-dim);">
+                                    DESNIVEL +
+                                </span>
+                                <span id="preparar-stat-elevation" class="text-base sm:text-2xl font-bold font-syne block truncate" style="color: var(--sv-text-primary);">
+                                    ▲ +406 m
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="trail-metric-card">
+                            <div class="trail-metric-icon icon-flora">
+                                <i class="fa-regular fa-clock"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <span class="text-[9.5px] sm:text-[11px] font-bold font-mono tracking-wider uppercase block truncate" style="color: var(--sv-text-dim);">
+                                    TIEMPO APROX.
+                                </span>
+                                <span id="preparar-stat-time" class="text-base sm:text-2xl font-bold font-syne block truncate" style="color: var(--sv-text-primary);">
+                                    ⏱ 3 h
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fila 2: Cuadrícula de 2 Columnas (Réplica visual exacta de Image 2) -->
+                    <div class="preparar-content-grid">
+
+                        <!-- Columna Izquierda: Ecosistema + Mapa Interactivo del Recorrido -->
+                        <div class="flex flex-col gap-4 sm:gap-5">
+                            
+                            <!-- 1. Tarjeta Ecosistema con Imagen y Descripción -->
+                            <div class="ecosystem-banner-card">
+                                <div id="preparar-eco-banner" class="ecosystem-banner" style="background-image: url('assets/quebrada-cascada.webp');">
+                                    <div class="ecosystem-banner-overlay"></div>
+                                    <div class="absolute bottom-3 left-4 right-4 z-10">
+                                        <span id="preparar-eco-tag" class="inline-block text-[10px] sm:text-xs font-bold font-syne px-3 py-1 rounded-full shadow-md" style="background: rgba(16, 185, 129, 0.35); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.5);">
+                                            Ecosistema de Niebla y Nacimiento Hídrico
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="p-4 sm:p-5" style="background: rgba(10, 22, 36, 0.75);">
+                                    <p id="preparar-eco-desc" class="text-xs sm:text-[13.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted); font-family: 'Quicksand', sans-serif;">
+                                        El sendero más emblemático de los Cerros Orientales de Bogotá. Asciende a lo largo del cañón de la quebrada entre helechos gigantes, orquídeas silvestres y bosques de niebla hasta alcanzar la cascada y el mirador con vista panorámica a la sabana.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 2. Tarjeta Mapa Interactivo del Recorrido -->
+                            <div class="preparar-map-card p-4 sm:p-5">
+                                <div class="flex items-center justify-between gap-2 mb-1.5">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-sm flex-shrink-0" style="background: var(--sv-sky-surface); color: var(--sv-sky-hover); border: 1px solid var(--sv-sky-border);">
+                                            <i class="fa-solid fa-compass"></i>
+                                        </div>
+                                        <h3 class="text-sm sm:text-base font-bold font-syne" style="color: var(--sv-text-primary);">
+                                            Mapa Interactivo del Recorrido
+                                        </h3>
+                                    </div>
+                                    <span class="text-[11px] font-bold font-mono px-2.5 py-1 rounded-lg flex items-center gap-1.5" style="background: rgba(56, 189, 248, 0.12); color: var(--sv-sky-light); border: 1px solid rgba(56, 189, 248, 0.25);">
+                                        Norte <i class="fa-solid fa-arrow-up text-[10px]"></i>
+                                    </span>
+                                </div>
+                                <p class="text-xs sm:text-[12.5px] mb-3.5" style="color: var(--sv-text-muted);">
+                                    Toca los hitos numerados para conocer detalles y recomendaciones
+                                </p>
+
+                                <!-- Visual del mapa con orientación Norte -->
+                                <div id="preparar-map-img" class="preparar-map-visual mb-3.5" style="background-image: url('assets/hero-bg.webp');">
+                                    <div class="preparar-map-overlay"></div>
+                                    <div class="absolute top-3 left-3 z-10">
+                                        <span class="text-[10px] sm:text-[10.5px] font-bold font-mono uppercase px-2.5 py-1 rounded-md flex items-center gap-1.5" style="background: rgba(10, 20, 32, 0.85); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); backdrop-filter: blur(4px);">
+                                            <i class="fa-solid fa-location-crosshairs text-[10px]"></i>
+                                            ORIENTACIÓN N
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Hitos interactivos del recorrido -->
+                                <div id="preparar-map-hitos" class="flex items-center gap-2 flex-wrap">
+                                    <!-- Generados dinámicamente por switchPrepararTrail -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Columna Derecha: Requisitos de Seguridad (Antes de comenzar) -->
+                        <div class="checklist-card-group p-4 sm:p-6 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between gap-3 mb-1.5">
+                                    <h3 class="text-base sm:text-lg font-bold font-syne" style="color: var(--sv-text-primary);">
+                                        Antes de comenzar
+                                    </h3>
+                                    <span id="checklist-counter-badge" class="text-xs font-mono font-bold px-3 py-1 rounded-full transition-all flex-shrink-0" style="background: var(--sv-sky-surface); color: var(--sv-sky-light); border: 1px solid var(--sv-sky-border);">
+                                        0/4 listo
+                                    </span>
+                                </div>
+                                <p class="text-xs sm:text-[12.5px] mb-4 sm:mb-5" style="color: var(--sv-text-muted);">
+                                    Requisitos de seguridad y elementos esenciales
+                                </p>
+
+                                <!-- Lista interactiva de 4 requisitos -->
+                                <div class="flex flex-col gap-3">
+                                    <!-- Ítem 0 -->
+                                    <div id="checklist-item-0" onclick="toggleChecklistItem(0)" class="checklist-item-card">
+                                        <div id="checklist-icon-0" class="checklist-checkbox"></div>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
+                                                <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">
+                                                    Agua (Mínimo 1 Litro)
+                                                </h4>
+                                                <span class="checklist-badge-obligatorio">OBLIGATORIO</span>
+                                            </div>
+                                            <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">
+                                                Llevar termo o cantimplora recargable. En los cerros está prohibido el plástico de un solo uso.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ítem 1 -->
+                                    <div id="checklist-item-1" onclick="toggleChecklistItem(1)" class="checklist-item-card">
+                                        <div id="checklist-icon-1" class="checklist-checkbox"></div>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
+                                                <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">
+                                                    Calzado cómodo y con agarre
+                                                </h4>
+                                                <span class="checklist-badge-obligatorio">OBLIGATORIO</span>
+                                            </div>
+                                            <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">
+                                                Botas de trekking o calzado deportivo con labrado para evitar resbalones sobre piedras húmedas y barro.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ítem 2 -->
+                                    <div id="checklist-item-2" onclick="toggleChecklistItem(2)" class="checklist-item-card">
+                                        <div id="checklist-icon-2" class="checklist-checkbox"></div>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
+                                                <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">
+                                                    Reserva Acueducto de Bogotá
+                                                </h4>
+                                                <span class="checklist-badge-obligatorio">OBLIGATORIO</span>
+                                            </div>
+                                            <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">
+                                                Reserva confirmada en el portal o app "Caminos de los Cerros" de la EAAB. Código QR listo en pantalla.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ítem 3 -->
+                                    <div id="checklist-item-3" onclick="toggleChecklistItem(3)" class="checklist-item-card">
+                                        <div id="checklist-icon-3" class="checklist-checkbox"></div>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
+                                                <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">
+                                                    Chaqueta cortaviento o impermeable
+                                                </h4>
+                                                <span class="checklist-badge-obligatorio">OBLIGATORIO</span>
+                                            </div>
+                                            <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">
+                                                La temperatura desciende bruscamente arriba de 3.000 m con niebla y brisa andina.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Plataforma EAAB y Horario Oficial -->
+                            <div class="mt-5 pt-4 border-t space-y-3" style="border-color: rgba(56, 189, 248, 0.16);">
+                                <a href="https://caminos.eaab.gov.co/" target="_blank" rel="noopener noreferrer" class="eaab-platform-link">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0" style="background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.45);">
+                                            <i class="fa-regular fa-file-lines"></i>
+                                        </div>
+                                        <div>
+                                            <span class="text-xs sm:text-[13.5px] font-bold font-syne block" style="color: var(--sv-text-primary);">
+                                                Plataforma EAAB Caminos de los Cerros
+                                            </span>
+                                            <span class="text-[11px] sm:text-xs" style="color: var(--sv-text-muted);">
+                                                Gestiona tu código de ingreso y reserva tu cupo gratuito
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 text-xs font-bold flex-shrink-0" style="color: var(--sv-sky-hover);">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-[12px]"></i>
+                                    </div>
+                                </a>
+
+                                <div class="flex items-center gap-2 text-[11.5px] sm:text-xs px-1" style="color: var(--sv-text-muted);">
+                                    <i class="fa-regular fa-calendar-check" style="color: var(--sv-fauna-hover);"></i>
+                                    <span><strong>Martes a Domingo:</strong> 5:45 a.m. a 10:00 a.m. (Ingreso hasta las 8:30 a.m.)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer del Modal (Responsivo Mobile y Desktop) -->
+                <div class="p-4 sm:p-5 border-t flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs flex-shrink-0" style="border-color: rgba(56, 189, 248, 0.18); background: rgba(10, 22, 34, 0.92);">
+                    <div class="text-[11px] sm:text-xs flex items-center gap-2" style="color: var(--sv-text-muted);">
+                        <i class="fa-solid fa-shield-halved text-xs" style="color: var(--sv-sky-hover);"></i>
+                        <span>Todo listo para vivir la expedición de manera responsable y segura.</span>
+                    </div>
+                    <div class="flex items-center gap-2.5 w-full sm:w-auto">
+                        <button type="button" onclick="closePrepararVisita()" class="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl font-bold cursor-pointer transition hover:bg-slate-800 text-center text-xs sm:text-sm" style="background: rgba(14, 28, 44, 0.85); border: 1px solid rgba(56, 189, 248, 0.25); color: var(--sv-text-muted);">
+                            Volver al inicio
+                        </button>
+                        <button type="button" onclick="launchExplorationFromVisit()" class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 cursor-pointer transition hover:scale-105 text-xs sm:text-sm" style="background: linear-gradient(135deg, #0284c7 0%, #034671 100%); border: 1px solid #38bdf8; color: #ffffff; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);">
+                            <span>Iniciar Exploración 3D</span>
+                            <i class="fa-solid fa-arrow-right text-[11px]"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ ÁLBUM DE BIODIVERSIDAD (PANTALLA INICIAL) ============ -->
+        <div id="biodiversity-album-modal" class="hidden fixed inset-0 z-[10005] flex items-center justify-center p-3 sm:p-6" style="background: rgba(6, 16, 26, 0.90); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);" onclick="if(event.target===this) closeBiodiversityAlbum();">
+            <div class="biodiversity-modal-card glass-panel w-full max-w-5xl max-h-[92vh] flex flex-col rounded-3xl overflow-hidden shadow-2xl pointer-events-auto" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-sky-border);">
+                <!-- Cabecera del Álbum -->
+                <div class="p-5 sm:p-6 border-b flex items-center justify-between gap-4" style="border-color: rgba(56, 189, 248, 0.20);">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-xl" style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border); color: var(--sv-sky-hover);">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-base sm:text-xl font-bold font-syne" style="color: var(--sv-text-primary);">Atlas de Biodiversidad y Patrimonio</h2>
+                            <p class="text-xs" style="color: var(--sv-text-muted);">Especies y elementos registrados · Quebrada La Vieja</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-xs px-3 py-1 rounded-full font-mono font-bold" style="background: var(--sv-sky-surface); color: var(--sv-sky-light); border: 1px solid var(--sv-sky-border);" id="album-count-badge">8 registros</span>
+                        <button onclick="closeBiodiversityAlbum()" class="tab-modal-close-btn" title="Cerrar álbum">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filtros de categoría dentro del Álbum -->
+                <div class="px-5 py-3 border-b flex items-center gap-2 overflow-x-auto no-scrollbar" style="border-color: rgba(56, 189, 248, 0.15);">
+                    <button class="album-filter-pill active" onclick="filterAlbumSpecies('all', this)">
+                        <i class="fa-solid fa-layer-group text-xs"></i> Todas (<span id="album-tab-count-all">8</span>)
+                    </button>
+                    <button class="album-filter-pill" onclick="filterAlbumSpecies('fauna', this)">
+                        <i class="fa-solid fa-dove text-xs"></i> Fauna Silvestre (<span id="album-tab-count-fauna">3</span>)
+                    </button>
+                    <button class="album-filter-pill" onclick="filterAlbumSpecies('flora', this)">
+                        <i class="fa-solid fa-seedling text-xs"></i> Flora Altoandina (<span id="album-tab-count-flora">3</span>)
+                    </button>
+                    <button class="album-filter-pill" onclick="filterAlbumSpecies('patrimonio', this)">
+                        <i class="fa-solid fa-landmark text-xs"></i> Patrimonio (<span id="album-tab-count-patrimonio">2</span>)
+                    </button>
+                </div>
+
+                <!-- Contenedor con scroll de especies -->
+                <div id="biodiversity-album-grid" class="p-5 sm:p-6 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 no-scrollbar">
+                    <!-- Inyectado dinámicamente -->
+                </div>
+
+                <!-- Barra inferior / Footer con ayuda de navegación -->
+                <div class="px-5 py-3 border-t flex items-center justify-between gap-4 text-xs" style="border-color: rgba(56, 189, 248, 0.15); background: rgba(10, 22, 34, 0.65);">
+                    <span class="text-[11px] truncate flex items-center gap-1.5" style="color: var(--sv-text-muted);">
+                        <i class="fa-solid fa-compass text-[11px]" style="color: var(--sv-sky-hover);"></i>
+                        Haz clic en <strong>Explorar en sendero</strong> para teletransportarte en 3D a cualquier punto
+                    </span>
+                    <button onclick="closeBiodiversityAlbum()" class="text-xs px-3.5 py-1.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer transition hover:scale-105 flex-shrink-0" style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border); color: var(--sv-sky-light);">
+                        <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                        Volver al inicio
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ ONBOARDING DE PRIMERA VEZ (TUTORIAL SIN SONIDO) ============ -->
+        <div id="onboarding-guide" class="onboarding-hidden">
+            <div class="onboarding-card">
+                <div class="onboarding-header">
+                    <div class="onboarding-steps-indicator">
+                        <div class="onboarding-dot active" id="ob-dot-0"></div>
+                        <div class="onboarding-dot" id="ob-dot-1"></div>
+                        <div class="onboarding-dot" id="ob-dot-2"></div>
+                    </div>
+                    <button onclick="skipOnboarding()" class="onboarding-skip-btn">
+                        Saltar tutorial <i class="fa-solid fa-xmark ml-1"></i>
+                    </button>
+                </div>
+
+                <div id="onboarding-step-container" class="onboarding-step-content">
+                    <!-- Contenido inyectado dinámicamente -->
+                </div>
+
+                <div class="onboarding-footer">
+                    <button id="ob-btn-prev" onclick="prevOnboardingStep()" class="onboarding-nav-btn onboarding-btn-prev" style="visibility: hidden;">
+                        <i class="fa-solid fa-arrow-left"></i> Anterior
+                    </button>
+                    <button id="ob-btn-next" onclick="nextOnboardingStep()" class="onboarding-nav-btn onboarding-btn-next">
+                        Siguiente <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <!-- ============ CASCARÓN DE INTERFAZ (diseño de Eybar Viasus) ============ -->
         <div id="shell" class="fixed inset-0 z-20 pointer-events-none font-sans">
 
-            <!-- PC header + filtros (100% original) -->
-            <div id="shell-header-pc" class="absolute top-4 left-4 right-16 sm:right-24 z-30 flex flex-col gap-2.5 max-w-md pointer-events-none">
-                <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between shadow-xl pointer-events-auto">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-slate-950 font-bold text-base shadow-md">
-                            <i class="fa-solid fa-tree"></i>
+            <!-- ============ BARRA DE COMANDO SUPERIOR (HORIZON COMMAND BAR - PC) ============ -->
+            <header id="expedition-top-bar">
+                <div class="command-bar-left">
+                    <button class="expedition-badge-trigger" onclick="openTrailLobby()" title="Ficha técnica del sendero y detalles">
+                        <div class="expedition-badge-icon">
+                            <i class="fa-solid fa-mountain-sun"></i>
                         </div>
-                        <div>
-                            <h2 class="text-xs sm:text-sm font-bold text-slate-100 leading-tight">Sendero Vivo · Santa Ana - La Aguadora</h2>
-                            <p class="text-[10px] sm:text-[11px] text-emerald-300 font-medium flex items-center gap-1.5">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                                Prototipo · escaneo de prueba, no es el sendero
-                            </p>
+                        <div class="expedition-title-group">
+                            <span class="expedition-brand-sup">Cerros Orientales · Bogotá</span>
+                            <h2 class="expedition-trail-name">Sendero Santa Ana · La Vieja</h2>
                         </div>
+                    </button>
+                    <div class="expedition-live-pill" title="Altitud de estación actual">
+                        <span class="live-pulse-dot"></span>
+                        <span style="font-size: 11px; font-weight: 600; color: var(--sv-text-muted);">
+                            <i class="fa-solid fa-mountain text-[10px]" style="color: var(--sv-sky-hover);"></i> <strong id="hud-altitud-top" style="color: var(--sv-text-primary); font-family: 'Syne', sans-serif;">2.712 m</strong>
+                        </span>
                     </div>
-                    <button onclick="openSearchModal()" ontouchstart="openSearchModal()"
-                        class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-slate-200 hover:text-emerald-400 transition cursor-pointer touch-manipulation pointer-events-auto shadow-md">
-                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                    </button>
                 </div>
 
-                <div class="glass-panel rounded-2xl p-1.5 grid grid-cols-4 gap-1 border border-slate-700/60 shadow-xl bg-slate-950/80 backdrop-blur-md pointer-events-auto w-full">
-                    <button id="filter-all" onclick="filterCategory('all')" ontouchstart="filterCategory('all'); event.preventDefault();"
-                            class="glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate">
-                        <i class="fa-solid fa-border-all text-[10px]"></i> <span class="truncate">Todo</span>
-                    </button>
-                    <button id="filter-flora" onclick="filterCategory('flora')" ontouchstart="filterCategory('flora'); event.preventDefault();"
-                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
-                        <i class="fa-solid fa-seedling text-[10px]"></i> <span class="truncate">Flora</span>
-                    </button>
-                    <button id="filter-fauna" onclick="filterCategory('fauna')" ontouchstart="filterCategory('fauna'); event.preventDefault();"
-                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
-                        <i class="fa-solid fa-dove text-[10px]"></i> <span class="truncate">Fauna</span>
-                    </button>
-                    <button id="filter-curiosidades" onclick="filterCategory('curiosidades')" ontouchstart="filterCategory('curiosidades')"
-                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
-                        <i class="fa-solid fa-lightbulb text-[10px]"></i> <span class="truncate">Datos</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Header móvil + filtros desplegables -->
-            <div id="mobile-header" class="absolute top-4 left-4 right-4 z-30 flex flex-col gap-2 pointer-events-none">
-                <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between shadow-xl pointer-events-auto">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-slate-950 font-bold text-base shadow-md">
-                            <i class="fa-solid fa-tree"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-xs font-bold text-slate-100 leading-tight">
-                                Sendero Vivo ·<br><span class="text-emerald-300 font-semibold text-[11px]">Quebrada La Vieja</span>
-                            </h2>
-                        </div>
+                <div class="command-bar-right">
+                    <div class="render-toggle-deck" title="Conmutador de técnica de renderizado y sonido ambiental">
+                        <button type="button" data-render="colmap" onclick="setRenderModelMobile('colmap')" class="render-btn activa" title="Mayor fidelidad visual">
+                            COLMAP
+                        </button>
+                        <button type="button" data-render="luma" onclick="setRenderModelMobile('luma')" class="render-btn" title="Carga ultraliviana">
+                            Luma
+                        </button>
+                        <button id="btn-ambient-audio-toggle" type="button" class="render-btn" onclick="toggleAmbientAudio()" title="Activar / Silenciar sonido de bosque" aria-label="Sonido ambiental">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
                     </div>
-                    <button id="mobile-filter-toggle" onclick="toggleMobileFilters()" ontouchstart="toggleMobileFilters()"
-                        class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-slate-200 hover:text-emerald-400 transition cursor-pointer touch-manipulation pointer-events-auto shadow-md"
-                        aria-label="Filtros del sendero">
-                        <i class="fa-solid fa-sliders text-xs"></i>
-                    </button>
-                </div>
+                    <script>
+                        (function() {
+                            try {
+                                var p = new URLSearchParams(window.location.search);
+                                var r = p.get('render') || (window.matchMedia && window.matchMedia('(max-width: 640px)').matches ? 'luma' : 'colmap');
+                                var btns = document.querySelectorAll('.render-toggle-deck .render-btn[data-render]');
+                                btns.forEach(function(b) {
+                                    b.classList.toggle('activa', b.dataset.render === r);
+                                });
+                            } catch(e) {}
+                        })();
+                    </script>
 
-                <!-- Barra filtros móvil: 4 columnas horizontales, desplegable -->
-                <div id="filter-bar-mobile" class="hidden grid grid-cols-4 gap-1 glass-panel rounded-2xl p-1.5 border border-slate-700/60 shadow-xl bg-slate-950/80 backdrop-blur-md pointer-events-auto w-full">
-                    <button id="filter-all-m" onclick="filterCategoryMobile('all')" ontouchstart="filterCategoryMobile('all'); event.preventDefault();"
-                            class="glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate">
-                        <i class="fa-solid fa-border-all text-[10px]"></i> <span class="truncate">Todo</span>
-                    </button>
-                    <button id="filter-flora-m" onclick="filterCategoryMobile('flora')" ontouchstart="filterCategoryMobile('flora'); event.preventDefault();"
-                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
-                        <i class="fa-solid fa-seedling text-[10px]"></i> <span class="truncate">Flora</span>
-                    </button>
-                    <button id="filter-fauna-m" onclick="filterCategoryMobile('fauna')" ontouchstart="filterCategoryMobile('fauna'); event.preventDefault();"
-                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
-                        <i class="fa-solid fa-dove text-[10px]"></i> <span class="truncate">Fauna</span>
-                    </button>
-                    <button id="filter-curiosidades-m" onclick="filterCategoryMobile('curiosidades')" ontouchstart="filterCategoryMobile('curiosidades')"
-                            class="glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate">
-                        <i class="fa-solid fa-lightbulb text-[10px]"></i> <span class="truncate">Datos</span>
-                    </button>
+                    <div class="command-actions-cluster">
+                        <button onclick="openTrailLobby()" class="command-icon-btn" title="Ficha del sendero">
+                            <i class="fa-solid fa-mountain-sun"></i>
+                        </button>
+                        <button onclick="openOnboarding(true)" class="command-icon-btn" title="Tutorial de interacción">
+                            <i class="fa-solid fa-circle-question"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </header>
+
+            <!-- ============ BARRA SUPERIOR MÓVIL (MINIMALISTA) ============ -->
+            <header id="mobile-top-bar">
+                <div class="mobile-top-main">
+                    <button class="mobile-brand-pill" onclick="openTrailLobby()" title="Información del sendero">
+                        <div class="mobile-brand-icon">
+                            <i class="fa-solid fa-mountain-sun"></i>
+                        </div>
+                        <div class="mobile-brand-titles">
+                            <span class="mobile-brand-title">Sendero Santa Ana</span>
+                            <span class="mobile-brand-sub">2.712 m · Cerros Orientales</span>
+                        </div>
+                    </button>
+                    <div class="mobile-top-controls">
+                        <button id="btn-ambient-audio-toggle-m" onclick="toggleAmbientAudio()" class="mobile-action-icon" aria-label="Sonido ambiental" title="Activar / Silenciar sonido de bosque">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                        <button onclick="openTrailLobby()" class="mobile-action-icon" aria-label="Información del sendero" title="Ficha técnica">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
 
             <div id="hotspots-overlay" class="absolute inset-0 pointer-events-none z-20"></div>
 
-            <!-- HUD de datos del recorrido (docs/06 B: cifras tabulares, acento del agua) -->
-            <div id="hud-datos" class="absolute bottom-40 left-4 right-4 sm:bottom-44 sm:left-4 sm:right-auto sm:w-80 z-30 pointer-events-none">
-                <div class="glass-panel rounded-2xl p-2 grid grid-cols-4 gap-1 shadow-2xl" style="font-variant-numeric: tabular-nums;">
-                    <div class="text-center px-1">
-                        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Altitud</div>
-                        <div class="text-[13px] font-semibold text-teal-400" id="hud-altitud">—</div>
+            <!-- ============ TELEMETRÍA DE EXPEDICIÓN (HUD UNIFICADO PC) ============ -->
+            <div id="expedition-telemetry-hud">
+                <div class="telemetry-card">
+                    <div class="telemetry-top-row">
+                        <div class="telemetry-alt-chip">
+                            <div class="telemetry-alt-icon">
+                                <i class="fa-solid fa-mountain"></i>
+                            </div>
+                            <div class="telemetry-alt-numbers">
+                                <span class="telemetry-alt-title">Altitud</span>
+                                <span class="telemetry-alt-val" id="hud-altitud">2.712 m</span>
+                            </div>
+                        </div>
+
+                        <div class="telemetry-metrics-pills">
+                            <div class="telemetry-mini-pill" title="Desnivel acumulado">
+                                <i class="fa-solid fa-arrow-trend-up" style="color: var(--sv-sky-hover);"></i>
+                                <span id="hud-desnivel">+0 m</span>
+                            </div>
+                            <div class="telemetry-mini-pill" title="Pendiente media">
+                                <i class="fa-solid fa-percent" style="color: var(--sv-sky-hover);"></i>
+                                <span id="hud-pendiente">0 %</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-center px-1">
-                        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Recorrido</div>
-                        <div class="text-[13px] font-semibold text-teal-400" id="hud-recorrido">0 m</div>
+
+                    <div class="telemetry-progress-track">
+                        <div class="telemetry-progress-header">
+                            <span id="progreso-pct" style="color: var(--sv-text-muted);">Progreso del sendero · 0%</span>
+                            <span id="hud-recorrido" style="color: var(--sv-sky-hover); font-family: 'Syne', sans-serif;">0 m</span>
+                        </div>
+                        <div class="telemetry-bar-bg">
+                            <div id="carga-barra-hud" class="telemetry-bar-fill"></div>
+                        </div>
                     </div>
-                    <div class="text-center px-1">
-                        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Desnivel</div>
-                        <div class="text-[13px] font-semibold text-teal-400" id="hud-desnivel">+0 m</div>
-                    </div>
-                    <div class="text-center px-1">
-                        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Pendiente</div>
-                        <div class="text-[13px] font-semibold text-teal-400" id="hud-pendiente">0 %</div>
+
+                    <div class="telemetry-footer-row">
+                        <div class="telemetry-poi-count">
+                            <i class="fa-solid fa-binoculars" style="color: var(--sv-sky-hover); font-size: 11px;"></i>
+                            <span id="discovered-counter">0 de 8 especies vistas</span>
+                        </div>
+                        <button onclick="switchTab('quest')" class="telemetry-btn-bitacora">
+                            <i class="fa-solid fa-book-bookmark"></i> Bitácora
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div id="banner-progreso" class="absolute bottom-20 left-4 right-4 sm:bottom-24 sm:left-4 sm:right-auto sm:w-80 z-30 pointer-events-auto">
-                <div class="glass-panel rounded-2xl p-3 px-4 flex items-center justify-between text-xs shadow-2xl">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                            <i class="fa-solid fa-location-arrow text-xs"></i>
-                        </div>
-                        <div>
-                            <span id="progreso-pct" class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Progreso sendero · 0 %</span>
-                            <span class="text-xs font-semibold text-slate-200" id="discovered-counter">0 de 6 puntos vistos</span>
-                        </div>
-                    </div>
-                    <button onclick="switchTab('quest')" class="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold hover:bg-emerald-500/30 transition">
-                        Bitácora
-                    </button>
-                </div>
-            </div>
-
-            <!-- Tarjeta Detalles móvil -->
-            <div id="mobile-details-card" class="absolute bottom-20 left-4 right-4 z-30 glass-panel rounded-2xl shadow-xl border border-slate-700/60 pointer-events-auto">
-
-                <!-- Cabecera clicable: siempre visible -->
-                <div class="flex items-center justify-between px-3 py-2 cursor-pointer select-none"
+            <!-- Tarjeta Detalles móvil (Compacta, desplegable) -->
+            <div id="mobile-details-card" class="absolute bottom-20 left-4 right-4 z-30 glass-panel rounded-2xl shadow-xl pointer-events-auto">
+                <div class="flex items-center justify-between px-3 py-2.5 cursor-pointer select-none"
                     onclick="toggleDetailsCard()" ontouchstart="toggleDetailsCard(); event.preventDefault();">
                     <div class="flex items-center gap-2">
-                        <i id="details-arrow-icon" class="fa-solid fa-chevron-down text-emerald-400 text-xs transition-transform duration-300"></i>
-                        <span class="text-xs font-bold text-slate-100">Información del recorrido</span>
+                        <i id="details-arrow-icon" class="fa-solid fa-chevron-up text-xs transition-transform duration-300" style="color: var(--sv-sky-hover);"></i>
+                        <span class="text-xs font-bold" style="color: var(--sv-text-primary);">Detalles del sendero</span>
                     </div>
-                    <span id="hud-datos-mobile" class="text-[10px] text-teal-400 font-mono font-semibold">2.712 m · 0 m</span>
+                    <span id="hud-datos-mobile" class="text-[10px] font-mono font-semibold" style="color: var(--sv-sky-hover);">2.712 m · 0 m</span>
                 </div>
-
-                <!-- Contenido desplegable: cerrado por defecto -->
-                <div id="details-content" class="hidden border-t border-slate-800/60">
-
-                    <!-- HUD grid igual al PC: 4 columnas -->
+                <div id="details-content" class="hidden" style="border-top: 1px solid var(--sv-surface-border);">
                     <div class="grid grid-cols-4 gap-1 px-3 py-2" style="font-variant-numeric: tabular-nums;">
                         <div class="text-center">
-                            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Altitud</div>
-                            <div class="text-[13px] font-semibold text-teal-400" id="hud-altitud-m">2.712 m</div>
+                            <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Altitud</div>
+                            <div class="text-[13px] font-semibold" style="color: var(--sv-sky-hover);" id="hud-altitud-m">2.712 m</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Recorrido</div>
-                            <div class="text-[13px] font-semibold text-teal-400" id="hud-recorrido-m">0 m</div>
+                            <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Recorrido</div>
+                            <div class="text-[13px] font-semibold" style="color: var(--sv-sky-hover);" id="hud-recorrido-m">0 m</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Desnivel</div>
-                            <div class="text-[13px] font-semibold text-teal-400" id="hud-desnivel-m">+0 m</div>
+                            <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Desnivel</div>
+                            <div class="text-[13px] font-semibold" style="color: var(--sv-sky-hover);" id="hud-desnivel-m">+0 m</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Pendiente</div>
-                            <div class="text-[13px] font-semibold text-teal-400" id="hud-pendiente-m">0 %</div>
+                            <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Pendiente</div>
+                            <div class="text-[13px] font-semibold" style="color: var(--sv-sky-hover);" id="hud-pendiente-m">0 %</div>
                         </div>
                     </div>
-
-                    <!-- Fila inferior: puntos vistos + selector modelo -->
-                    <div class="flex items-center justify-between px-3 pb-2 border-t border-slate-800/60 pt-2">
-                        <div class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-location-arrow text-emerald-400 text-[10px]"></i>
-                            <span id="discovered-counter-mobile" class="text-[11px] font-semibold text-slate-200">0 de 6 puntos vistos</span>
-                        </div>
-                        <!-- Selector COLMAP / Luma igual al #tecnica del PC -->
-                        <div id="tecnica-mobile" class="flex gap-1 p-1 rounded-full border border-slate-700/60 bg-slate-900/80 backdrop-blur" style="backdrop-filter: blur(12px);">
-                            <button type="button" data-render="colmap"
-                                onclick="setRenderModelMobile('colmap'); event.stopPropagation();"
-                                ontouchstart="setRenderModelMobile('colmap'); event.stopPropagation();"
-                                class="model-btn-m model-btn-active-m px-3 py-1 rounded-full text-[11px] font-bold transition"
-                                style="letter-spacing:0.04em;">
-                                COLMAP<small class="block text-[9px] font-normal opacity-75" style="letter-spacing:0;">más resolución</small>
-                            </button>
-                            <button type="button" data-render="luma"
-                                onclick="setRenderModelMobile('luma'); event.stopPropagation();"
-                                ontouchstart="setRenderModelMobile('luma'); event.stopPropagation();"
-                                class="model-btn-m px-3 py-1 rounded-full text-[11px] font-semibold text-slate-300 hover:text-slate-100 transition"
-                                style="letter-spacing:0.04em;">
-                                Luma<small class="block text-[9px] font-normal opacity-75" style="letter-spacing:0;">más liviana</small>
-                            </button>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
-            <!-- Nav PC (100% original) -->
-            <nav id="shell-nav-pc" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-3 flex items-center gap-5 sm:gap-10 shadow-2xl border border-slate-700/50 pointer-events-auto">
-                <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="flex flex-col items-center gap-0.5 text-emerald-400 font-medium touch-manipulation cursor-pointer transition hover:text-emerald-300">
+            <!-- Nav PC -->
+            <nav id="shell-nav-pc" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-3 flex items-center gap-6 sm:gap-12 shadow-2xl pointer-events-auto">
+                <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition" style="color: var(--sv-sky-hover);">
                     <i class="fa-solid fa-compass text-base sm:text-lg"></i>
                     <span class="text-[9px] sm:text-[10px]">Sendero</span>
                 </button>
-                <button id="nav-catalog" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                <button id="nav-catalog" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')" class="flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
                     <i class="fa-solid fa-book-bookmark text-base sm:text-lg"></i>
                     <span class="text-[9px] sm:text-[10px]">Especies</span>
                 </button>
-                <button id="nav-audio" onclick="switchTab('audio')" ontouchstart="switchTab('audio')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
-                    <i class="fa-solid fa-headphones text-base sm:text-lg"></i>
-                    <span class="text-[9px] sm:text-[10px]">Sonidos</span>
-                </button>
-                <button id="nav-quest" onclick="switchTab('quest')" ontouchstart="switchTab('quest')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                <button id="nav-quest" onclick="switchTab('quest')" ontouchstart="switchTab('quest')" class="flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
                     <i class="fa-solid fa-trophy text-base sm:text-lg"></i>
                     <span class="text-[9px] sm:text-[10px]">Bitácora</span>
                 </button>
             </nav>
 
-            <!-- Nav móvil: misma estética que PC, con ícono + etiqueta -->
-            <nav id="shell-nav-mobile" class="absolute bottom-3 left-4 right-4 z-40 glass-panel rounded-full px-4 py-2 flex items-center justify-around shadow-2xl border border-slate-700/50 pointer-events-auto">
+            <!-- Nav móvil -->
+            <nav id="shell-nav-mobile" class="absolute bottom-3 left-4 right-4 z-40 glass-panel rounded-full px-4 py-2 flex items-center justify-around shadow-2xl pointer-events-auto">
                 <button id="nav-trail-m" onclick="switchTab('trail')" ontouchstart="switchTab('trail')"
-                    class="nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition">
+                    class="nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition" style="color: var(--sv-sky-hover);">
                     <i class="fa-solid fa-compass text-base"></i>
                     <span class="text-[9px]">Sendero</span>
                 </button>
                 <button id="nav-catalog-m" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')"
-                    class="nav-m-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                    class="nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
                     <i class="fa-solid fa-book-bookmark text-base"></i>
                     <span class="text-[9px]">Especies</span>
                 </button>
-                <button id="nav-audio-m" onclick="switchTab('audio')" ontouchstart="switchTab('audio')"
-                    class="nav-m-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
-                    <i class="fa-solid fa-headphones text-base"></i>
-                    <span class="text-[9px]">Sonidos</span>
-                </button>
                 <button id="nav-quest-m" onclick="switchTab('quest')" ontouchstart="switchTab('quest')"
-                    class="nav-m-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer">
+                    class="nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
                     <i class="fa-solid fa-trophy text-base"></i>
                     <span class="text-[9px]">Bitácora</span>
                 </button>
@@ -521,34 +885,48 @@
 
         <div id="bottom-sheet"
             class="fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-300 ease-out max-w-lg mx-auto px-4 pb-24 pt-2 pointer-events-auto">
-            <div class="glass-panel rounded-3xl p-5 shadow-2xl relative border border-slate-700/60 bg-slate-950/90 backdrop-blur-xl max-h-[75vh] overflow-y-auto no-scrollbar">
+            <div class="glass-panel rounded-3xl p-5 shadow-2xl relative backdrop-blur-xl max-h-[75vh] overflow-y-auto no-scrollbar" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-sky-border);">
                 <div id="sheet-content"></div>
             </div>
         </div>
 
-        <!-- Panel de pestañas: tarjeta flotante centrada; la escena se ve alrededor -->
-        <div id="tab-panel-container" class="fixed inset-0 z-40 hidden items-center justify-center p-3 sm:p-8"
-             style="background: rgba(14, 18, 16, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);">
-            <div class="glass-panel rounded-3xl w-full max-w-lg max-h-[78vh] overflow-y-auto no-scrollbar p-5 relative">
-                <button onclick="closeTabPanel()" class="sticky-cerrar w-9 h-9 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center hover:text-white shadow-lg">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <div id="tab-panel-content" class="w-full"></div>
-            </div>
-        </div>
-
-        <div id="search-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
-            <div class="glass-panel w-full max-w-md rounded-3xl p-5 border border-slate-700 shadow-2xl">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">
-                        <i class="fa-solid fa-magnifying-glass text-emerald-400"></i> Buscar en el sendero
-                    </h3>
-                    <button onclick="closeSearchModal()" class="text-slate-400 hover:text-white">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
+        <!-- Panel de pestañas: Tarjeta modal compacta centrada con cabecera fija y cuerpo desplazable -->
+        <div id="tab-panel-container" class="hidden" onclick="if (event.target === this) closeTabPanel();">
+            <div class="tab-modal-dialog pointer-events-auto">
+                <!-- Cabecera fija compacta -->
+                <div class="tab-modal-header">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div id="tab-modal-icon-wrap" class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
+                             style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border); color: var(--sv-sky-hover);">
+                            <i id="tab-modal-icon" class="fa-solid fa-book-bookmark"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <h2 id="tab-modal-title" class="text-xs sm:text-sm font-bold font-syne truncate" style="color: var(--sv-text-primary);">
+                                Guía de Especies del Sendero
+                            </h2>
+                            <p id="tab-modal-subtitle" class="text-[10px] truncate" style="color: var(--sv-text-muted);">
+                                Biodiversidad registrada · Cerros Orientales
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <span id="tab-modal-badge" class="text-[10px] font-bold font-mono px-2.5 py-0.5 rounded-full hidden sm:inline-block"
+                              style="background: var(--sv-sky-surface); color: var(--sv-sky-light); border: 1px solid var(--sv-sky-border);">
+                            6 especies
+                        </span>
+                        <button onclick="closeTabPanel()" class="tab-modal-close-btn" title="Cerrar ventana">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </div>
                 </div>
-                <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Ej. Colibrí, Helecho, Puente..." class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-emerald-400 mb-4">
-                <div id="search-results" class="space-y-2 max-h-60 overflow-y-auto no-scrollbar"></div>
+
+                <!-- Barra de filtros integrada en el modal -->
+                <div id="tab-modal-filter-bar">
+                    <!-- Filtros dinámicos -->
+                </div>
+
+                <!-- Cuerpo desplazable: SOLO las tarjetas hacen scroll -->
+                <div id="tab-panel-content" class="tab-modal-body no-scrollbar"></div>
             </div>
         </div>
         <!-- ============ FIN DEL CASCARÓN ============ -->

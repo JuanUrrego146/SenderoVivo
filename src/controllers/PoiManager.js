@@ -1,4 +1,4 @@
-﻿import { Entity } from 'playcanvas';
+import { Entity } from 'playcanvas';
 import { PoiCatalog } from '../models/PoiCatalog.js';
 
 export class PoiManager {
@@ -420,7 +420,7 @@ export class PoiManager {
             'rgba(24, 37, 29, 0.88)';
 
         button.style.color =
-            '#6fcf97';
+            'var(--sv-sky-hover, #38bdf8)';
 
         button.style.fontSize =
             '23px';

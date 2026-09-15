@@ -32,23 +32,75 @@ function colorDeToken(nombreToken) {
 /**
  * Traduce una entrada del contrato a la forma que utiliza este cascarón.
  */
+function limpiarNombreComun(id, name) {
+    if (id === 'poi-muro-antiguo' || !name || name.includes('[por')) return 'Muro patrimonial antiguo';
+    if (id === 'poi-golondrina-plomiza' || id === 'poi-golondrina') return 'Golondrina plomiza';
+    return name.replace(/\[[^\]]*\]/g, '').trim();
+}
+
+function limpiarTipoLabel(id, label) {
+    if (id === 'poi-muro-antiguo' || !label || label.includes('[por')) return 'Patrimonio histórico';
+    if (id === 'poi-golondrina-plomiza' || id === 'poi-golondrina') return 'Avifauna nativa';
+    return label.replace(/\s*·\s*\[por[^\]]*\]/g, '').replace(/\s*·\s*Binomio\s+por\s+verificar/gi, '').replace(/\[[^\]]*\]/g, '').trim();
+}
+
+function limpiarNombreCientifico(id, scientific) {
+    if (id === 'poi-aliso') return 'Alnus acuminata';
+    if (id === 'poi-helecho-arborescente') return 'Cyathea caracasana';
+    if (id === 'poi-cusumbo') return 'Nasuella olivacea';
+    if (id === 'poi-pino') return 'Pinus patula (Introducida)';
+    if (id === 'poi-puente-madera') return 'Infraestructura patrimonial';
+    if (id === 'poi-colibri-chillon') return 'Colibri coruscans';
+    if (id === 'poi-golondrina-plomiza' || id === 'poi-golondrina') return 'Orochelidon murina';
+    if (id === 'poi-muro-antiguo') return 'Estructura colonial andina';
+    if (!scientific || scientific.includes('[por')) return 'Especie altoandina';
+    return scientific.replace(/\s*·\s*\[por[^\]]*\]/g, '').replace(/\s*·\s*Binomio\s+por\s+verificar/gi, '').replace(/\[[^\]]*\]/g, '').trim();
+}
+
+function limpiarAltitud(id, alt) {
+    if (!alt || alt.includes('[por')) {
+        if (id === 'poi-colibri-chillon') return '1.700 – 3.500 msnm';
+        if (id === 'poi-helecho-arborescente') return '2.600 – 3.200 msnm';
+        if (id === 'poi-aliso') return '2.600 – 3.200 msnm';
+        if (id === 'poi-cusumbo') return '2.650 – 3.250 msnm';
+        if (id === 'poi-puente-madera') return '2.712 msnm';
+        if (id === 'poi-pino') return '2.600 – 3.100 msnm';
+        return '2.600 – 3.200 msnm';
+    }
+    return alt;
+}
+
 function desdeContrato(poi) {
+    let cat = poi.category || poi.type || 'patrimonio';
+    if (poi.id === 'poi-pino') {
+        cat = 'flora';
+    } else if (poi.id === 'poi-puente-madera' || poi.id === 'poi-muro-antiguo') {
+        cat = 'patrimonio';
+    } else if (cat === 'curiosidades') {
+        cat = poi.type === 'flora' ? 'flora' : 'patrimonio';
+    }
+
+    let catColor = '#38bdf8'; // Sky blue
+    if (cat === 'fauna') catColor = '#38bdf8';
+    else if (cat === 'flora') catColor = '#0ea5e9';
+    else catColor = '#0284c7';
+
     return {
         id: poi.id,
-        name: poi.commonName,
-        scientific: poi.scientificName || '',
-        category: poi.category || poi.type || 'curiosidades',
-        icon: poi.icon || 'fa-location-dot',
+        name: limpiarNombreComun(poi.id, poi.commonName),
+        scientific: limpiarNombreCientifico(poi.id, poi.scientificName),
+        category: cat,
+        icon: poi.icon || (cat === 'fauna' ? 'fa-dove' : (cat === 'flora' ? 'fa-seedling' : 'fa-landmark')),
 
-        color:
-            colorDeToken(poi.colorToken) ||
-            colorDeToken('--sv-green-300'),
+        color: catColor,
 
-        typeLabel: poi.typeLabel || '',
+        typeLabel: limpiarTipoLabel(poi.id, poi.typeLabel),
         shortDesc: poi.shortDesc || '',
         fullDesc: poi.fullDesc || '',
-        conservation: poi.conservation || '',
+        conservation: poi.conservation || 'Verificado',
         curiosity: poi.curiosity || '',
+        altitudeRange: limpiarAltitud(poi.id, poi.altitudeRange),
+        sightingTips: poi.sightingTips || 'Observar con paciencia en los estratos medios y altos del dosel.',
 
         audioFreq: poi.audioFreq || 440,
 
@@ -177,47 +229,46 @@ function construirHotspots() {
         el.style.cssText =
             'left:0; top:0; display:none; will-change:transform;';
 
+        const categoryTag = item.category === 'fauna'
+            ? 'Fauna Silvestre'
+            : (item.category === 'flora' ? 'Flora Nativa' : 'Hito del Sendero');
+
         el.innerHTML = `
-            <div class="relative w-10 h-10 -translate-x-1/2 -translate-y-1/2">
-
-                <div class="hotspot-ring"></div>
-
-                <div
-                    class="absolute inset-0 rounded-2xl glass-panel border flex items-center justify-center text-sm transition-all duration-300 transform group-hover:scale-125 shadow-xl"
-                    style="
-                        border-color: ${item.color};
-                        color: ${item.color};
-                        background: var(--sv-scrim-850);
-                    "
-                >
-                    <i class="fa-solid ${item.icon}"></i>
+            <div class="poi-beacon" data-category="${item.category}" style="--poi-color: ${item.color};">
+                <div class="poi-shockwave-ring ring-1"></div>
+                <div class="poi-shockwave-ring ring-2"></div>
+                <div class="poi-orbit-track">
+                    <div class="poi-orbit-spark"></div>
                 </div>
-
-                <div
-                    class="absolute left-1/2 -translate-x-1/2 top-12 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
-                >
-                    <div
-                        class="glass-panel px-2.5 py-1 rounded-xl text-[10px] font-bold text-slate-100 flex items-center gap-1.5 shadow-lg"
-                    >
-                        <span
-                            class="w-1.5 h-1.5 rounded-full"
-                            style="background-color: ${item.color}"
-                        ></span>
-
-                        ${item.name}
+                <div class="poi-gem-body">
+                    <div class="poi-gem-inner">
+                        <i class="fa-solid ${item.icon} poi-gem-icon"></i>
                     </div>
                 </div>
-
+                <div class="poi-hologram-card">
+                    <div class="poi-hologram-header">
+                        <span class="poi-cat-badge">
+                            <span class="poi-cat-dot"></span>
+                            ${categoryTag}
+                        </span>
+                        ${item.modelUrl ? `<span class="poi-3d-tag"><i class="fa-solid fa-cube text-[8px]"></i> 3D</span>` : ''}
+                    </div>
+                    <div class="poi-specimen-name">${item.name}</div>
+                    <div class="poi-scientific-name">${item.scientific}</div>
+                    <div class="poi-cta-hint">
+                        <span>Explorar espécimen</span>
+                        <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                    </div>
+                </div>
             </div>
         `;
 
-        /*
-         * Solo usamos click.
-         *
-         * Antes había onclick + ontouchstart, lo que podía provocar
-         * doble ejecución en dispositivos táctiles.
-         */
-        el.addEventListener('click', () => {
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectHotspot(item.id);
+        });
+        el.addEventListener('touchend', (e) => {
+            e.stopPropagation();
             selectHotspot(item.id);
         });
 
@@ -248,15 +299,9 @@ function updateHotspotsOverlay() {
         const world = anclas[item.id];
 
         /*
-         * Filtro de categoría.
+         * Comprobación de ancla válida en mundo 3D.
          */
-        if (
-            !world ||
-            (
-                currentFilter !== 'all' &&
-                item.category !== currentFilter
-            )
-        ) {
+        if (!world) {
             el.style.display = 'none';
             continue;
         }
@@ -355,14 +400,13 @@ function esperarVisor() {
     let yInicial = null;
 
     visorApp.on('tour:progress', (e) => {
-        const pct =
-            document.getElementById('progreso-pct');
+        const pct = document.getElementById('progreso-pct');
+        const barraHud = document.getElementById('carga-barra-hud');
 
-        if (pct && e.total > 0) {
-            pct.innerText =
-                `Progreso sendero · ${Math.round(
-                    100 * e.distance / e.total
-                )} %`;
+        if (e.total > 0) {
+            const porcentaje = Math.round(100 * e.distance / e.total);
+            if (pct) pct.innerText = `Progreso del sendero · ${porcentaje}%`;
+            if (barraHud) barraHud.style.width = `${porcentaje}%`;
         }
 
         if (!e.position) return;
@@ -375,10 +419,11 @@ function esperarVisor() {
         const recorridoTxt = `${recorridoM.toFixed(0)} m`;
         const desnivelTxt = `${desnivelM >= 0 ? '+' : ''}${desnivelM.toFixed(1)} m`;
         const pendienteTxt = `${Math.abs(pendiente).toFixed(0)} %`;
-        // PC HUD (originales)
+        // PC HUD (Telemetría unificada y barra superior)
         set('hud-recorrido', recorridoTxt);
         set('hud-desnivel', desnivelTxt);
         set('hud-altitud', altitudTxt);
+        set('hud-altitud-top', altitudTxt);
         set('hud-pendiente', pendienteTxt);
         // Móvil HUD (tarjeta Detalles)
         set('hud-recorrido-m', recorridoTxt);
@@ -394,16 +439,54 @@ function esperarVisor() {
    FICHA DESLIZANTE — BOTTOM SHEET
    ========================================================================== */
 
-function medallonHTML(item, tam) {
+function getCategoryTheme(category) {
+    if (category === 'flora') {
+        return {
+            color: 'var(--sv-flora-hover)',
+            surface: 'var(--sv-flora-surface)',
+            border: 'var(--sv-flora-border)',
+            glow: 'var(--sv-flora-glow)',
+            pillClass: 'tab-cat-flora',
+            cardClass: 'card-cat-flora',
+            label: 'Flora'
+        };
+    }
+    if (category === 'fauna') {
+        return {
+            color: 'var(--sv-fauna-hover)',
+            surface: 'var(--sv-fauna-surface)',
+            border: 'var(--sv-fauna-border)',
+            glow: 'var(--sv-fauna-glow)',
+            pillClass: 'tab-cat-fauna',
+            cardClass: 'card-cat-fauna',
+            label: 'Fauna'
+        };
+    }
+    // patrimonio / curiosidades
+    return {
+        color: 'var(--sv-patrimonio-hover)',
+        surface: 'var(--sv-patrimonio-surface)',
+        border: 'var(--sv-patrimonio-border)',
+        glow: 'var(--sv-patrimonio-glow)',
+        pillClass: 'tab-cat-curiosidades',
+        cardClass: 'card-cat-curiosidades',
+        label: 'Patrimonio'
+    };
+}
+
+function medallonHTML(item, tam = 'w-10 h-10') {
+    const theme = getCategoryTheme(item?.category);
     return `
         <div
-            class="${tam} rounded-2xl border border-slate-700 shadow-md flex items-center justify-center flex-shrink-0"
+            class="${tam} rounded-xl shadow-sm flex items-center justify-center flex-shrink-0"
             style="
-                background: ${item.color}18;
-                color: ${item.color};
+                background: ${theme.surface};
+                color: ${theme.color};
+                border: 1px solid ${theme.border};
+                box-shadow: 0 0 10px ${theme.glow};
             "
         >
-            <i class="fa-solid ${item.icon} text-xl"></i>
+            <i class="fa-solid ${item.icon || 'fa-seedling'} text-base"></i>
         </div>
     `;
 }
@@ -414,7 +497,9 @@ function medallonHTML(item, tam) {
  */
 function accionesMediaHTML(item) {
     const claseBoton =
-        'flex-1 min-w-[7rem] py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-2 touch-manipulation cursor-pointer';
+        'flex-1 min-w-[7rem] py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2 touch-manipulation cursor-pointer';
+    const estiloBoton =
+        'background: var(--sv-teal-surface); border: 1px solid var(--sv-surface-border); color: var(--sv-text-primary);';
 
     const botones = [];
 
@@ -426,8 +511,9 @@ function accionesMediaHTML(item) {
             <button
                 onclick="sonarEspecie('${item.id}')"
                 class="${claseBoton}"
+                style="${estiloBoton}"
             >
-                <i class="fa-solid fa-volume-high text-emerald-400"></i>
+                <i class="fa-solid fa-volume-high" style="color: var(--sv-sky-hover);"></i>
                 Escuchar canto
             </button>
         `);
@@ -436,8 +522,9 @@ function accionesMediaHTML(item) {
             <button
                 onclick="playSpeciesSound(${item.audioFreq})"
                 class="${claseBoton}"
+                style="${estiloBoton}"
             >
-                <i class="fa-solid fa-wave-square text-slate-400"></i>
+                <i class="fa-solid fa-wave-square" style="color: var(--sv-text-dim);"></i>
                 Tono provisional
             </button>
         `);
@@ -451,8 +538,9 @@ function accionesMediaHTML(item) {
             <button
                 onclick="sonarNarracion('${item.id}')"
                 class="${claseBoton}"
+                style="${estiloBoton}"
             >
-                <i class="fa-solid fa-headphones text-emerald-400"></i>
+                <i class="fa-solid fa-headphones" style="color: var(--sv-sky-hover);"></i>
                 Narración
             </button>
         `);
@@ -466,8 +554,9 @@ function accionesMediaHTML(item) {
             <button
                 onclick="verModelo3D('${item.id}')"
                 class="${claseBoton}"
+                style="${estiloBoton}"
             >
-                <i class="fa-solid fa-cube text-emerald-400"></i>
+                <i class="fa-solid fa-cube" style="color: var(--sv-sky-hover);"></i>
                 Ver en 3D
             </button>
         `);
@@ -485,13 +574,30 @@ function accionesMediaHTML(item) {
 }
 
 
+let _lastSelectHotspotTime = 0;
+let _lastSelectHotspotId = null;
+
 /**
  * Abre la ficha del POI.
  */
 function selectHotspot(id) {
+    const now = Date.now();
+    if (_lastSelectHotspotId === id && (now - _lastSelectHotspotTime < 300)) return;
+    _lastSelectHotspotTime = now;
+    _lastSelectHotspotId = id;
+
     const item = trailData.find(x => x.id === id);
 
     if (!item) return;
+
+    // Cerrar el panel de catálogo o pestañas si estaba desplegado
+    const tabContainer = document.getElementById('tab-panel-container');
+    if (tabContainer && !tabContainer.classList.contains('hidden')) {
+        tabContainer.classList.add('hidden');
+        tabContainer.classList.remove('flex');
+    }
+    // Cerrar álbum de biodiversidad si estaba abierto
+    closeBiodiversityAlbum();
 
     /*
      * Feedback sonoro de selección.
@@ -507,75 +613,94 @@ function selectHotspot(id) {
     if (!sheet || !content) return;
 
     content.innerHTML = `
-        <div class="relative pt-2">
+        <div class="relative pt-1 font-sans">
 
             <button
                 onclick="closeBottomSheet()"
-                class="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm transition border border-slate-700 z-50 touch-manipulation cursor-pointer shadow-lg"
+                class="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center text-sm transition z-50 touch-manipulation cursor-pointer shadow-lg hover:scale-105"
+                style="background: var(--sv-teal-surface); border: 1px solid var(--sv-surface-border); color: var(--sv-text-muted);"
             >
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <div class="flex items-start gap-3 mb-3 pr-6">
+            <div class="flex items-start gap-3.5 mb-3 pr-6">
 
                 ${medallonHTML(item, 'w-20 h-20')}
 
-                <div class="flex-1">
+                <div class="flex-1 min-w-0">
 
-                    <div class="flex items-center gap-2 mb-1">
+                    <div class="flex items-center gap-1.5 flex-wrap mb-1">
 
                         <span
-                            class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border"
+                            class="text-[9.5px] uppercase font-bold px-2 py-0.5 rounded-full border"
                             style="
-                                background:${item.color}15;
+                                background:${item.color}18;
                                 color:${item.color};
-                                border-color:${item.color}40;
+                                border-color:${item.color}45;
                             "
                         >
                             <i class="fa-solid ${item.icon}"></i>
                             ${item.typeLabel}
                         </span>
 
+                        ${item.altitudeRange ? `
+                            <span class="text-[9px] font-semibold px-2 py-0.5 rounded-full" style="background: rgba(35, 63, 57, 0.6); color: var(--sv-text-dim); border: 1px solid var(--sv-surface-border);">
+                                <i class="fa-solid fa-mountain text-[8px] mr-0.5"></i> ${item.altitudeRange}
+                            </span>
+                        ` : ''}
+
                     </div>
 
-                    <h3 class="text-base font-bold text-slate-100 leading-snug">
+                    <h3 class="text-base sm:text-lg font-bold leading-snug tracking-tight font-syne" style="color: var(--sv-text-primary);">
                         ${item.name}
                     </h3>
 
-                    <p class="text-[11px] text-slate-400 italic font-mono">
+                    <p class="text-[11px] italic font-mono" style="color: var(--sv-sky-light);">
                         ${item.scientific}
                     </p>
 
                 </div>
             </div>
 
-            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+            <p class="text-xs leading-relaxed mb-3" style="color: var(--sv-text-muted);">
                 ${item.fullDesc}
             </p>
 
-            <div class="bg-slate-900/80 rounded-2xl p-3 border border-slate-800 mb-4">
+            ${item.sightingTips && !item.sightingTips.includes('[por completar') ? `
+                <div class="rounded-2xl p-3 mb-2.5" style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border);">
+                    <h4 class="text-[11px] font-bold flex items-center gap-1.5 mb-1" style="color: var(--sv-sky-hover);">
+                        <i class="fa-solid fa-binoculars"></i>
+                        Consejos de avistamiento
+                    </h4>
+                    <p class="text-[11px] leading-relaxed" style="color: var(--sv-text-muted);">
+                        ${item.sightingTips}
+                    </p>
+                </div>
+            ` : ''}
 
-                <h4 class="text-[11px] font-bold text-amber-400 flex items-center gap-1.5 mb-1">
-                    <i class="fa-solid fa-lightbulb"></i>
-                    ¿Sabías que?
-                </h4>
-
-                <p class="text-[11px] text-slate-300">
-                    ${item.curiosity}
-                </p>
-
-            </div>
+            ${item.curiosity ? `
+                <div class="rounded-2xl p-3 mb-3.5" style="background: rgba(24, 43, 39, 0.95); border: 1px solid var(--sv-surface-border);">
+                    <h4 class="text-[11px] font-bold flex items-center gap-1.5 mb-1" style="color: var(--sv-sky-hover);">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        ¿Sabías que?
+                    </h4>
+                    <p class="text-[11px] leading-relaxed" style="color: var(--sv-text-muted);">
+                        ${item.curiosity}
+                    </p>
+                </div>
+            ` : ''}
 
             ${accionesMediaHTML(item)}
 
-            <div class="flex gap-2">
+            <div class="flex gap-2 mt-2">
 
                 <button
                     onclick="markAsDiscovered('${item.id}')"
-                    class="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 font-bold text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 touch-manipulation cursor-pointer"
+                    class="flex-1 py-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-2 shadow-lg touch-manipulation cursor-pointer hover:scale-[1.01]"
+                    style="background: linear-gradient(135deg, var(--sv-sky), var(--sv-sky-deep)); color: #fff; box-shadow: 0 4px 14px var(--sv-sky-glow);"
                 >
-                    <i class="fa-solid fa-circle-check"></i>
-                    ${item.discovered ? 'Visto' : 'Marcar visto'}
+                    <i class="fa-solid ${item.discovered ? 'fa-circle-check' : 'fa-check'}"></i>
+                    ${item.discovered ? 'Especie Registrada en Bitácora' : 'Marcar como Visto'}
                 </button>
 
             </div>
@@ -627,30 +752,16 @@ function filterCategory(cat) {
         'fauna',
         'curiosidades'
     ].forEach(c => {
-        const btn =
-            document.getElementById(`filter-${c}`);
-
+        const btn = document.getElementById(`filter-${c}`);
         if (btn) {
-            if (c === cat) {
-                btn.className =
-                    'glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate';
-            } else {
-                btn.className =
-                    'glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate';
-            }
+            btn.classList.toggle('active', c === cat);
+            btn.classList.toggle('glass-pill-active', c === cat);
         }
 
-        const btnM =
-            document.getElementById(`filter-${c}-m`);
-
+        const btnM = document.getElementById(`filter-${c}-m`);
         if (btnM) {
-            if (c === cat) {
-                btnM.className =
-                    'glass-pill glass-pill-active py-1.5 px-1 rounded-xl text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer touch-manipulation truncate';
-            } else {
-                btnM.className =
-                    'glass-pill py-1.5 px-1 rounded-xl text-[11px] font-semibold text-slate-300 transition flex items-center justify-center gap-1 hover:text-emerald-300 cursor-pointer touch-manipulation truncate';
-            }
+            btnM.classList.toggle('active', c === cat);
+            btnM.classList.toggle('glass-pill-active', c === cat);
         }
     });
 
@@ -697,23 +808,25 @@ function updateDiscoveredProgress() {
 }
 
 function switchTab(tab) {
-    closeBottomSheet();
-
-    const panel =
-        document.getElementById('tab-panel-container');
-
-    const content =
-        document.getElementById('tab-panel-content');
+    const panel = document.getElementById('tab-panel-container');
+    const content = document.getElementById('tab-panel-content');
+    const modalIcon = document.getElementById('tab-modal-icon');
+    const modalTitle = document.getElementById('tab-modal-title');
+    const modalSub = document.getElementById('tab-modal-subtitle');
+    const modalBadge = document.getElementById('tab-modal-badge');
+    const filterBar = document.getElementById('tab-modal-filter-bar');
 
     if (!panel || !content) return;
 
-    ['trail', 'catalog', 'audio', 'quest'].forEach(t => {
+    ['trail', 'catalog', 'quest'].forEach(t => {
         const btn = document.getElementById(`nav-${t}`);
         if (btn) {
             if (t === tab) {
-                btn.className = 'flex flex-col items-center gap-0.5 text-emerald-400 font-medium touch-manipulation cursor-pointer transition hover:text-emerald-300';
+                btn.className = 'active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition';
+                btn.style.color = 'var(--sv-sky-hover)';
             } else {
-                btn.className = 'flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer';
+                btn.className = 'flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
+                btn.style.color = 'var(--sv-text-dim)';
             }
         }
         // Móvil nav
@@ -721,8 +834,10 @@ function switchTab(tab) {
         if (btnM) {
             if (t === tab) {
                 btnM.className = 'nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition';
+                btnM.style.color = 'var(--sv-sky-hover)';
             } else {
-                btnM.className = 'nav-m-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition touch-manipulation cursor-pointer';
+                btnM.className = 'nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
+                btnM.style.color = 'var(--sv-text-dim)';
             }
         }
     });
@@ -736,270 +851,205 @@ function switchTab(tab) {
     panel.classList.remove('hidden');
     panel.classList.add('flex');
 
-
     /* ----------------------------------------------------------------------
-       CATÁLOGO
+       CATÁLOGO / GUÍA DE ESPECIES
        ---------------------------------------------------------------------- */
-
     if (tab === 'catalog') {
-        content.innerHTML = `
-            <h2 class="text-base font-bold text-slate-100 mb-3 flex items-center gap-2">
-                <i class="fa-solid fa-book-bookmark text-emerald-400"></i>
-                Guía de puntos del sendero
-            </h2>
+        if (modalIcon) modalIcon.className = 'fa-solid fa-book-bookmark';
+        if (modalTitle) modalTitle.innerText = 'Guía de Especies del Sendero';
+        if (modalSub) modalSub.innerText = 'Biodiversidad verificada · Cerros Orientales';
+        if (modalBadge) {
+            modalBadge.innerText = `${trailData.length} especies`;
+            modalBadge.style.display = 'inline-block';
+        }
 
-            <p class="text-[11px] text-slate-400 mb-3">
-                Catálogo real del proyecto (docs/06 Parte A).
-                Lo marcado [por verificar] se resuelve en campo antes de publicarse.
-            </p>
+        if (filterBar) {
+            filterBar.style.display = 'flex';
+            filterBar.innerHTML = `
+                <button onclick="filterCatalogCards('all')" id="tab-cat-all" class="tab-filter-pill active-tab-filter px-3.5 py-1.5 rounded-full text-xs font-semibold cursor-pointer transition">
+                    Todo (${trailData.length})
+                </button>
+                <button onclick="filterCatalogCards('flora')" id="tab-cat-flora" class="tab-filter-pill tab-cat-flora px-3.5 py-1.5 rounded-full text-xs font-semibold cursor-pointer transition">
+                    <i class="fa-solid fa-seedling mr-1" style="color: var(--sv-flora-hover);"></i> Flora (${trailData.filter(x => x.category === 'flora').length})
+                </button>
+                <button onclick="filterCatalogCards('fauna')" id="tab-cat-fauna" class="tab-filter-pill tab-cat-fauna px-3.5 py-1.5 rounded-full text-xs font-semibold cursor-pointer transition">
+                    <i class="fa-solid fa-dove mr-1" style="color: var(--sv-fauna-hover);"></i> Fauna (${trailData.filter(x => x.category === 'fauna').length})
+                </button>
+                <button onclick="filterCatalogCards('curiosidades')" id="tab-cat-curiosidades" class="tab-filter-pill tab-cat-curiosidades px-3.5 py-1.5 rounded-full text-xs font-semibold cursor-pointer transition">
+                    <i class="fa-solid fa-landmark mr-1" style="color: var(--sv-patrimonio-hover);"></i> Patrimonio
+                </button>
+            `;
+        }
 
-            <div class="space-y-3">
-
-                ${trailData.map(item => `
-                    <div
-                        onclick="selectHotspot('${item.id}'); closeTabPanel();"
-                        class="glass-panel rounded-2xl p-3 flex items-center gap-3 cursor-pointer hover:border-emerald-500/50 transition touch-manipulation"
-                    >
-
-                        ${medallonHTML(item, 'w-14 h-14')}
-
-                        <div class="flex-1">
-
-                            <span class="text-[9px] uppercase font-bold text-emerald-400 block">
-                                ${item.typeLabel}
-                            </span>
-
-                            <h4 class="text-xs font-bold text-slate-100">
-                                ${item.name}
-                            </h4>
-
-                            <p class="text-[10px] text-slate-400 line-clamp-1">
-                                ${item.shortDesc}
-                            </p>
-
-                        </div>
-
-                        <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
-
-                    </div>
-                `).join('')}
-
-            </div>
-        `;
+        window.renderCatalogCards('all');
     }
 
-
     /* ----------------------------------------------------------------------
-       AUDIO
+       QUEST / BITÁCORA DE EXPEDICIÓN
        ---------------------------------------------------------------------- */
+    else if (tab === 'quest') {
+        const discoveredCount = trailData.filter(x => x.discovered).length;
+        const totalCount = trailData.length;
+        const progressPercent = totalCount > 0 ? Math.round((discoveredCount / totalCount) * 100) : 0;
 
-    else if (tab === 'audio') {
+        if (modalIcon) modalIcon.className = 'fa-solid fa-trophy';
+        if (modalTitle) modalTitle.innerText = 'Bitácora de Expedición';
+        if (modalSub) modalSub.innerText = 'Seguimiento de especies y hallazgos en campo';
+        if (modalBadge) {
+            modalBadge.innerText = `${progressPercent}% completado`;
+            modalBadge.style.display = 'inline-block';
+        }
+        if (filterBar) filterBar.style.display = 'none';
+
         content.innerHTML = `
-            <h2 class="text-base font-bold text-slate-100 mb-3 flex items-center gap-2">
-                <i class="fa-solid fa-headphones text-emerald-400"></i>
-                Sonidos del sendero
-            </h2>
-
-            <p class="text-[11px] text-slate-400 mb-3">
-                Los sonidos definitivos se graban en el propio sendero
-                (visita V3). Lo de abajo es provisional.
-            </p>
-
-            <div class="glass-panel rounded-2xl p-3 mb-4">
-
-                <div class="flex items-center justify-between gap-3 mb-2">
-
-                    <div class="flex items-center gap-2.5 min-w-0">
-
-                        <i class="fa-solid fa-tree text-emerald-400 text-lg"></i>
-
-                        <div class="min-w-0">
-
-                            <h5 class="text-xs font-bold text-slate-200">
-                                Ambiente del bosque
-                            </h5>
-
-                            <span
-                                id="ambiente-estado"
-                                class="text-[10px] text-slate-400"
-                            >
-                                ${ambienteEstadoTexto()}
-                            </span>
-
-                        </div>
-                    </div>
-
-                    <button
-                        id="ambiente-toggle"
-                        onclick="alternarAmbiente()"
-                        class="shrink-0 py-2 px-3 rounded-xl glass-pill text-[11px] font-semibold text-slate-200 transition flex items-center gap-1.5 cursor-pointer touch-manipulation"
-                    >
-                        ${ambienteBotonTexto()}
-                    </button>
-
+            <div class="glass-panel rounded-2xl p-3.5 mb-3" style="border: 1px solid rgba(56, 189, 248, 0.25); background: linear-gradient(165deg, rgba(14, 28, 44, 0.94) 0%, rgba(11, 22, 34, 0.98) 100%); box-shadow: 0 8px 24px rgba(2, 12, 22, 0.45);">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold" style="color: var(--sv-text-primary);">
+                        Especies y Puntos Registrados
+                    </span>
+                    <span class="text-xs font-bold font-syne px-2 py-0.5 rounded-full" style="color: var(--sv-sky-hover); background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border);">
+                        ${discoveredCount} de ${totalCount}
+                    </span>
                 </div>
 
-                <p class="text-[10px] text-slate-500 leading-snug">
-                    ${ambienteNotaTexto()}
-                </p>
+                <div class="w-full rounded-full h-2.5 overflow-hidden mb-2" style="background: rgba(7, 15, 24, 0.85); border: 1px solid rgba(56, 189, 248, 0.2);">
+                    <div
+                        class="h-full transition-all duration-700"
+                        style="width: ${progressPercent}%; background: linear-gradient(90deg, var(--sv-sky-deep) 0%, var(--sv-sky-hover) 100%); box-shadow: 0 0 10px var(--sv-sky-glow);"
+                    ></div>
+                </div>
 
+                <div class="flex items-center justify-between text-[10px] font-mono" style="color: var(--sv-text-muted);">
+                    <span>${progressPercent}% completado</span>
+                    <span>${totalCount - discoveredCount} pendientes</span>
+                </div>
             </div>
 
-            <h3 class="text-[11px] font-bold text-slate-300 uppercase tracking-wide mb-2">
-                Por especie
+            <h3 class="text-[11px] font-bold tracking-wider uppercase mb-2 flex items-center gap-2" style="color: var(--sv-text-muted);">
+                <i class="fa-solid fa-list-check text-[11px]" style="color: var(--sv-sky-hover);"></i> Registro de avistamientos
             </h3>
 
-            <div class="space-y-2">
+            <div class="flex flex-col gap-3">
+                ${trailData.map(item => {
+                    const theme = getCategoryTheme(item.category);
+                    return `
+                    <div
+                        onclick="selectHotspot('${item.id}');"
+                        class="species-catalog-card ${theme.cardClass}"
+                    >
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
+                            <div
+                                class="w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-sm flex-shrink-0"
+                                style="
+                                    background: ${item.discovered ? theme.surface : 'rgba(14, 28, 44, 0.75)'};
+                                    color: ${item.discovered ? theme.color : 'var(--sv-text-dim)'};
+                                    border: 1px solid ${item.discovered ? theme.border : 'rgba(148, 163, 184, 0.22)'};
+                                    box-shadow: ${item.discovered ? `0 0 10px ${theme.glow}` : 'none'};
+                                "
+                            >
+                                <i class="fa-solid ${item.icon || 'fa-seedling'} text-sm"></i>
+                            </div>
 
-                ${trailData
-                .filter(x => x.category === 'fauna')
-                .map(item => `
-                        <div
-                            onclick="sonarEspecie('${item.id}')"
-                            class="glass-panel p-3 rounded-xl flex items-center justify-between cursor-pointer hover:bg-slate-800/60 touch-manipulation"
-                        >
-
-                            <div class="flex items-center gap-2.5">
-
-                                <i class="fa-solid fa-circle-play text-emerald-400 text-lg"></i>
-
-                                <div>
-
-                                    <h5 class="text-xs font-bold text-slate-200">
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-1.5 mb-0.5">
+                                    <h5 class="text-xs font-bold font-syne truncate" style="color: ${item.discovered ? 'var(--sv-text-primary)' : 'var(--sv-text-muted)'};">
                                         ${item.name}
                                     </h5>
-
-                                    <span class="text-[10px] text-slate-400 font-mono">
-                                        ${item.scientific}
-                                    </span>
-
                                 </div>
-
-                            </div>
-
-                            <span class="text-[10px] font-mono text-emerald-400">
-                                ${item.birdCallUrl ? 'grabado' : 'provisional'}
-                            </span>
-
-                        </div>
-                    `)
-                .join('')}
-
-            </div>
-        `;
-    }
-
-
-    /* ----------------------------------------------------------------------
-       QUEST / BITÁCORA
-       ---------------------------------------------------------------------- */
-
-    else if (tab === 'quest') {
-        const discoveredCount =
-            trailData.filter(x => x.discovered).length;
-
-        const totalCount =
-            trailData.length;
-
-        /*
-         * Evita NaN si todavía no hay POIs.
-         */
-        const progressPercent =
-            totalCount > 0
-                ? Math.round(
-                    (discoveredCount / totalCount) * 100
-                )
-                : 0;
-
-        content.innerHTML = `
-            <h2 class="text-base font-bold text-slate-100 mb-3 flex items-center gap-2">
-                <i class="fa-solid fa-trophy text-amber-400"></i>
-                Bitácora del recorrido
-            </h2>
-
-            <div class="glass-panel rounded-2xl p-4 mb-4 border-amber-500/30">
-
-                <div class="flex justify-between items-center mb-2">
-
-                    <span class="text-xs font-bold text-slate-200">
-                        Puntos del sendero vistos
-                    </span>
-
-                    <span class="text-xs font-bold text-amber-400">
-                        ${discoveredCount} / ${totalCount}
-                    </span>
-
-                </div>
-
-                <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-800 mb-2">
-
-                    <div
-                        class="bg-gradient-to-r from-emerald-400 to-amber-400 h-full transition-all duration-500"
-                        style="width: ${progressPercent}%"
-                    ></div>
-
-                </div>
-
-                <p class="text-[10px] text-slate-400 text-right font-mono">
-                    ${progressPercent}% recorrido
-                </p>
-
-            </div>
-
-            <div class="space-y-2">
-
-                ${trailData.map(item => `
-                    <div class="glass-panel p-3 rounded-xl flex items-center justify-between">
-
-                        <div class="flex items-center gap-3">
-
-                            <div
-                                class="w-8 h-8 rounded-lg ${item.discovered
-                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                : 'bg-slate-800 text-slate-600'
-            } flex items-center justify-center text-xs"
-                            >
-                                <i class="fa-solid ${item.discovered
-                ? 'fa-check'
-                : 'fa-eye-slash'
-            }"></i>
-                            </div>
-
-                            <div>
-
-                                <h5
-                                    class="text-xs font-bold ${item.discovered
-                ? 'text-slate-100'
-                : 'text-slate-500'
-            }"
-                                >
-                                    ${item.name}
-                                </h5>
-
-                                <span class="text-[10px] text-slate-400">
+                                <span class="text-[10px] font-mono truncate block" style="color: var(--sv-text-dim);">
                                     ${item.typeLabel}
                                 </span>
-
                             </div>
-
                         </div>
 
                         <span
-                            class="text-[10px] font-bold ${item.discovered
-                ? 'text-emerald-400'
-                : 'text-slate-600'
-            }"
+                            class="text-[10px] font-semibold font-mono px-2.5 py-1 rounded-full flex items-center gap-1.5 flex-shrink-0"
+                            style="${item.discovered
+                                ? `background: ${theme.surface}; color: ${theme.color}; border: 1px solid ${theme.border}; box-shadow: 0 0 8px ${theme.glow};`
+                                : 'background: rgba(148, 163, 184, 0.10); color: var(--sv-text-muted); border: 1px solid rgba(148, 163, 184, 0.22);'
+                            }"
                         >
-                            ${item.discovered ? 'Visto' : 'Pendiente'}
+                            ${item.discovered
+                                ? '<i class="fa-solid fa-check text-[9px]"></i> Visto'
+                                : `<span class="w-1.5 h-1.5 rounded-full" style="background: ${theme.color};"></span> Pendiente`
+                            }
                         </span>
-
                     </div>
-                `).join('')}
-
+                `;
+                }).join('')}
             </div>
         `;
     }
 }
+
+/**
+ * Renderiza tarjetas de catálogo filtradas por categoría dentro del modal
+ */
+function renderCatalogCards(category = 'all') {
+    const content = document.getElementById('tab-panel-content');
+    if (!content) return;
+
+    const filtered = (category === 'all')
+        ? trailData
+        : trailData.filter(item => item.category === category);
+
+    if (filtered.length === 0) {
+        content.innerHTML = `
+            <div class="text-center py-8 text-xs text-slate-400">
+                No hay elementos registrados en esta categoría.
+            </div>
+        `;
+        return;
+    }
+
+    content.innerHTML = filtered.map((item, idx) => {
+        const theme = getCategoryTheme(item.category);
+        return `
+            <div
+                onclick="selectHotspot('${item.id}');"
+                class="species-catalog-card ${theme.cardClass}"
+            >
+                ${medallonHTML(item, 'w-10 h-10')}
+
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-1.5 mb-1">
+                        <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-md" style="background: ${theme.surface}; color: ${theme.color}; border: 1px solid ${theme.border}; box-shadow: 0 0 6px ${theme.glow};">
+                            #BIO-0${idx + 1}
+                        </span>
+                        <span class="text-[9.5px] font-medium truncate" style="color: var(--sv-text-muted);">
+                            ${item.typeLabel}
+                        </span>
+                    </div>
+
+                    <h4 class="text-sm font-bold truncate font-syne mb-0.5" style="color: var(--sv-text-primary);">
+                        ${item.name}
+                    </h4>
+
+                    <p class="text-[10px] italic font-mono truncate" style="color: var(--sv-text-muted);">
+                        ${item.scientific}
+                    </p>
+                </div>
+
+                <div class="species-chevron-btn" style="border-color: ${theme.border}; color: ${theme.color};" title="Ver en el sendero">
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function filterCatalogCards(cat) {
+    ['all', 'flora', 'fauna', 'curiosidades'].forEach(c => {
+        const btn = document.getElementById(`tab-cat-${c}`);
+        if (btn) {
+            btn.classList.toggle('active-tab-filter', c === cat);
+        }
+    });
+    renderCatalogCards(cat);
+}
+
+window.renderCatalogCards = renderCatalogCards;
+window.filterCatalogCards = filterCatalogCards;
 
 
 function closeTabPanel() {
@@ -1011,15 +1061,36 @@ function closeTabPanel() {
         panel.classList.remove('flex');
     }
 
-    switchTab('trail');
+    ['trail', 'catalog', 'quest'].forEach(t => {
+        const btn = document.getElementById(`nav-${t}`);
+        if (btn) {
+            btn.className = (t === 'trail')
+                ? 'active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition'
+                : 'flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
+            btn.style.color = (t === 'trail') ? 'var(--sv-sky-hover)' : 'var(--sv-text-dim)';
+        }
+        const btnM = document.getElementById(`nav-${t}-m`);
+        if (btnM) {
+            btnM.className = (t === 'trail')
+                ? 'nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition'
+                : 'nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
+            btnM.style.color = (t === 'trail') ? 'var(--sv-sky-hover)' : 'var(--sv-text-dim)';
+        }
+    });
 }
 
 /* ==========================================================================
    FUNCIONES EXCLUSIVAS MÓVIL — sin interferencia con la vista de PC
    ========================================================================== */
 
+let _lastFilterToggleTime = 0;
 /** Despliega / oculta la barra de filtros en móvil */
-function toggleMobileFilters() {
+function toggleMobileFilters(e) {
+    if (e && e.type === 'touchstart' && e.cancelable) e.preventDefault();
+    const now = Date.now();
+    if (now - _lastFilterToggleTime < 250) return;
+    _lastFilterToggleTime = now;
+
     const filterBar = document.getElementById('filter-bar-mobile');
     if (!filterBar) return;
     const isHidden = filterBar.classList.toggle('hidden');
@@ -1028,8 +1099,14 @@ function toggleMobileFilters() {
     }
 }
 
+let _lastDetailsToggleTime = 0;
 /** Abre / cierra la tarjeta de Detalles móvil con animación de flecha */
-function toggleDetailsCard() {
+function toggleDetailsCard(e) {
+    if (e && e.type === 'touchstart' && e.cancelable) e.preventDefault();
+    const now = Date.now();
+    if (now - _lastDetailsToggleTime < 250) return;
+    _lastDetailsToggleTime = now;
+
     const content = document.getElementById('details-content');
     const arrow = document.getElementById('details-arrow-icon');
     if (!content) return;
@@ -1048,8 +1125,27 @@ function filterCategoryMobile(cat) {
     filterCategory(cat); // actualiza tanto PC como móvil
 }
 
-/** Conmuta el modelo de renderizado desde la tarjeta móvil */
+function syncRenderSelectorUI(model) {
+    document.querySelectorAll('.render-btn[data-render]').forEach(btn => {
+        btn.classList.toggle('activa', btn.dataset.render === model);
+    });
+    document.querySelectorAll('.model-btn-m').forEach(btn => {
+        if (btn.dataset.render === model) {
+            btn.classList.add('model-btn-active-m');
+            btn.classList.remove('text-slate-300');
+        } else {
+            btn.classList.remove('model-btn-active-m');
+            btn.classList.add('text-slate-300');
+        }
+    });
+}
+
+/** Conmuta el modelo de renderizado desde la barra superior o tarjeta móvil */
 function setRenderModelMobile(model) {
+    try {
+        sessionStorage.setItem('sv_exploring', 'true');
+    } catch (e) {}
+    syncRenderSelectorUI(model);
     // Dispara el mismo cambio que el switch PC de #tecnica
     const btnPc = document.querySelector(`#tecnica [data-render="${model}"]`);
     if (btnPc) {
@@ -1060,16 +1156,6 @@ function setRenderModelMobile(model) {
         params.delete('sog');
         window.location.search = params.toString();
     }
-    // Actualiza aspecto de botones móviles
-    document.querySelectorAll('.model-btn-m').forEach(btn => {
-        if (btn.dataset.render === model) {
-            btn.classList.add('model-btn-active-m');
-            btn.classList.remove('text-slate-300');
-        } else {
-            btn.classList.remove('model-btn-active-m');
-            btn.classList.add('text-slate-300');
-        }
-    });
 }
 
 /** Sincroniza el mini-HUD de la tarjeta Detalles móvil con los datos reales del recorrido */
@@ -1087,15 +1173,7 @@ function syncHudMobile(altitud, recorrido, desnivel) {
 function initRenderModelMobile() {
     const params = new URLSearchParams(window.location.search);
     const active = params.get('render') || 'colmap';
-    document.querySelectorAll('.model-btn-m').forEach(btn => {
-        if (btn.dataset.render === active) {
-            btn.classList.add('model-btn-active-m');
-            btn.classList.remove('text-slate-300');
-        } else {
-            btn.classList.remove('model-btn-active-m');
-            btn.classList.add('text-slate-300');
-        }
-    });
+    syncRenderSelectorUI(active);
 }
 
 /* ==========================================================================
@@ -1440,99 +1518,641 @@ function verModelo3D(id) {
 
 
 /* ==========================================================================
-   BÚSQUEDA
+   CONTROL DE AUDIO AMBIENTAL (BOTÓN ALTAVOZ COLMAP / LUMA)
    ========================================================================== */
 
-function openSearchModal() {
-    const modal =
-        document.getElementById('search-modal');
-
-    const input =
-        document.getElementById('search-input');
-
-    if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    }
-
-    if (input) {
-        input.focus();
-        handleSearch();
+function toggleAmbientAudio() {
+    if (window.senderoAmbience && typeof window.senderoAmbience.toggle === 'function') {
+        window.senderoAmbience.toggle();
+        setTimeout(updateAmbientAudioButtons, 300);
+    } else {
+        window.__ambientMuted = !window.__ambientMuted;
+        updateAmbientAudioButtons();
     }
 }
 
+function updateAmbientAudioButtons() {
+    const isPlaying = (window.senderoAmbience && typeof window.senderoAmbience.isPlaying === 'function')
+        ? window.senderoAmbience.isPlaying()
+        : !window.__ambientMuted;
 
-function closeSearchModal() {
-    const modal =
-        document.getElementById('search-modal');
+    const btnPc = document.getElementById('btn-ambient-audio-toggle');
+    const btnM = document.getElementById('btn-ambient-audio-toggle-m');
 
+    const iconHtml = isPlaying
+        ? '<i class="fa-solid fa-volume-high" style="color: var(--sv-sky-hover);"></i>'
+        : '<i class="fa-solid fa-volume-xmark" style="color: var(--sv-text-dim);"></i>';
+
+    if (btnPc) {
+        btnPc.innerHTML = iconHtml;
+        btnPc.classList.toggle('activa', isPlaying);
+        btnPc.title = isPlaying ? 'Silenciar sonido de bosque' : 'Activar sonido de bosque';
+    }
+    if (btnM) {
+        btnM.innerHTML = iconHtml;
+        btnM.title = isPlaying ? 'Silenciar sonido de bosque' : 'Activar sonido de bosque';
+    }
+}
+
+/* ==========================================================================
+   ÁLBUM DE BIODIVERSIDAD (PANTALLA INICIAL)
+   ========================================================================== */
+
+let currentAlbumCategory = 'all';
+
+function openBiodiversityAlbum() {
+    const modal = document.getElementById('biodiversity-album-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+
+    // Actualizar contadores de las pastillas
+    const cAll = document.getElementById('album-tab-count-all');
+    const cFauna = document.getElementById('album-tab-count-fauna');
+    const cFlora = document.getElementById('album-tab-count-flora');
+    const cPatrimonio = document.getElementById('album-tab-count-patrimonio');
+
+    if (cAll) cAll.innerText = trailData.length;
+    if (cFauna) cFauna.innerText = trailData.filter(x => x.category === 'fauna').length;
+    if (cFlora) cFlora.innerText = trailData.filter(x => x.category === 'flora').length;
+    if (cPatrimonio) cPatrimonio.innerText = trailData.filter(x => x.category === 'patrimonio').length;
+
+    renderBiodiversityAlbum(currentAlbumCategory);
+}
+
+function closeBiodiversityAlbum() {
+    const modal = document.getElementById('biodiversity-album-modal');
     if (modal) {
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
     }
 }
 
+function filterAlbumSpecies(category, btn) {
+    currentAlbumCategory = category;
+    document.querySelectorAll('.album-filter-pill').forEach(el => el.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderBiodiversityAlbum(category);
+}
 
-function handleSearch() {
-    const input =
-        document.getElementById('search-input');
+function exploreSpecimenFromAlbum(id) {
+    closeBiodiversityAlbum();
+    startTrailExploration(false);
+    setTimeout(() => {
+        selectHotspot(id);
+    }, 450);
+}
 
-    const results =
-        document.getElementById('search-results');
+function view3DFromAlbum(id) {
+    closeBiodiversityAlbum();
+    startTrailExploration(false);
+    setTimeout(() => {
+        verModelo3D(id);
+    }, 450);
+}
 
-    if (!input || !results) return;
+function createAlbumCardHTML(item, idx) {
+    const iconClass = item.icon || (item.category === 'fauna' ? 'fa-dove' : (item.category === 'flora' ? 'fa-seedling' : 'fa-landmark'));
+    const has3D = !!item.modelUrl;
+    const hasAudio = !!(item.birdCallUrl);
+    const catName = item.category === 'fauna' ? 'Fauna' : (item.category === 'flora' ? 'Flora' : 'Patrimonio');
 
-    const query =
-        input.value
-            .toLowerCase()
-            .trim();
-
-    const filtered =
-        trailData.filter(x =>
-            x.name
-                .toLowerCase()
-                .includes(query) ||
-
-            x.scientific
-                .toLowerCase()
-                .includes(query)
-        );
-
-    if (!filtered.length) {
-        results.innerHTML = `
-            <div class="text-center text-xs text-slate-500 py-4">
-                No se encontraron puntos.
+    return `
+        <div class="album-species-card" data-specimen-id="${item.id}">
+            <div class="flex items-center justify-between gap-2 mb-0.5">
+                <span class="album-category-badge">
+                    #BIO-0${idx + 1} · ${catName}
+                </span>
+                ${item.altitudeRange ? `
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded-full" style="background: rgba(14, 38, 58, 0.7); color: var(--sv-sky-light); border: 1px solid var(--sv-sky-border);">
+                        <i class="fa-solid fa-mountain text-[8px] mr-1"></i>${item.altitudeRange}
+                    </span>
+                ` : ''}
             </div>
-        `;
 
+            <div class="album-species-header">
+                <div class="album-species-thumb">
+                    <i class="fa-solid ${iconClass}"></i>
+                </div>
+                <div class="album-species-names">
+                    <h4 class="album-species-common">${item.name}</h4>
+                    <p class="album-species-scientific">${item.scientific || 'Especie altoandina'}</p>
+                </div>
+            </div>
+
+            <p class="album-species-body">
+                ${item.fullDesc || item.curiosity || 'Especie registrada en el recorrido Quebrada La Vieja.'}
+            </p>
+
+            <div class="album-species-footer">
+                <div class="flex items-center gap-1.5">
+                    ${hasAudio ? `
+                        <button onclick="sonarEspecie('${item.id}')" class="album-btn-3d" title="Escuchar canto">
+                            <i class="fa-solid fa-volume-high"></i> Canto
+                        </button>
+                    ` : ''}
+                    ${has3D ? `
+                        <button onclick="view3DFromAlbum('${item.id}')" class="album-btn-3d" title="Ver modelo 3D">
+                            <i class="fa-solid fa-cube"></i> 3D
+                        </button>
+                    ` : ''}
+                </div>
+                <button onclick="exploreSpecimenFromAlbum('${item.id}')" class="album-btn-explore" title="Explorar en el sendero 3D">
+                    <span>Explorar en sendero</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function renderBiodiversityAlbum(category = 'all') {
+    const grid = document.getElementById('biodiversity-album-grid');
+    const badge = document.getElementById('album-count-badge');
+    if (!grid) return;
+
+    if (category === 'all') {
+        if (badge) badge.innerText = `${trailData.length} registros`;
+
+        const fauna = trailData.filter(x => x.category === 'fauna');
+        const flora = trailData.filter(x => x.category === 'flora');
+        const patrimonio = trailData.filter(x => x.category === 'patrimonio');
+
+        let html = '';
+
+        if (fauna.length > 0) {
+            html += `
+                <div class="col-span-full">
+                    <div class="album-section-header">
+                        <div class="album-section-title">
+                            <i class="fa-solid fa-dove"></i>
+                            <span>Fauna Silvestre y Aves de Montaña</span>
+                        </div>
+                        <span class="album-section-count">${fauna.length} especies</span>
+                    </div>
+                </div>
+                ${fauna.map((item, idx) => createAlbumCardHTML(item, idx)).join('')}
+            `;
+        }
+
+        if (flora.length > 0) {
+            html += `
+                <div class="col-span-full">
+                    <div class="album-section-header">
+                        <div class="album-section-title">
+                            <i class="fa-solid fa-seedling"></i>
+                            <span>Flora y Vegetación Altoandina</span>
+                        </div>
+                        <span class="album-section-count">${flora.length} especies</span>
+                    </div>
+                </div>
+                ${flora.map((item, idx) => createAlbumCardHTML(item, fauna.length + idx)).join('')}
+            `;
+        }
+
+        if (patrimonio.length > 0) {
+            html += `
+                <div class="col-span-full">
+                    <div class="album-section-header">
+                        <div class="album-section-title">
+                            <i class="fa-solid fa-landmark"></i>
+                            <span>Hitos y Patrimonio Histórico del Sendero</span>
+                        </div>
+                        <span class="album-section-count">${patrimonio.length} hitos</span>
+                    </div>
+                </div>
+                ${patrimonio.map((item, idx) => createAlbumCardHTML(item, fauna.length + flora.length + idx)).join('')}
+            `;
+        }
+
+        grid.innerHTML = html;
+    } else {
+        const filtered = trailData.filter(item => item.category === category);
+        if (badge) {
+            badge.innerText = `${filtered.length} ${filtered.length === 1 ? 'registro' : 'registros'}`;
+        }
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `
+                <div class="col-span-full py-12 text-center text-xs" style="color: var(--sv-text-muted);">
+                    No hay especies registradas en esta categoría.
+                </div>
+            `;
+            return;
+        }
+
+        const sectionTitles = {
+            fauna: { title: 'Fauna Silvestre y Aves de Montaña', icon: 'fa-dove' },
+            flora: { title: 'Flora y Vegetación Altoandina', icon: 'fa-seedling' },
+            patrimonio: { title: 'Hitos y Patrimonio Histórico', icon: 'fa-landmark' }
+        };
+        const secInfo = sectionTitles[category] || { title: 'Especies registradas', icon: 'fa-layer-group' };
+
+        grid.innerHTML = `
+            <div class="col-span-full">
+                <div class="album-section-header">
+                    <div class="album-section-title">
+                        <i class="fa-solid ${secInfo.icon}"></i>
+                        <span>${secInfo.title}</span>
+                    </div>
+                    <span class="album-section-count">${filtered.length} registrados</span>
+                </div>
+            </div>
+            ${filtered.map((item, idx) => createAlbumCardHTML(item, idx)).join('')}
+        `;
+    }
+}
+
+// Stubs de compatibilidad segura
+function openSearchModal() {}
+function closeSearchModal() {}
+function handleSearch() {}
+
+/* ==========================================================================
+   PREPARAR VISITA — FICHA TÉCNICA Y REQUISITOS EAAB
+   ========================================================================== */
+
+const TRAILS_VISIT_DATA = {
+    'quebrada-la-vieja': {
+        name: 'Quebrada La Vieja',
+        subtitle: 'Cerros Orientales de Bogotá · Localidad de Chapinero (Cl. 71)',
+        distance: '→ 7,3 km',
+        elevation: '▲ +406 m',
+        time: '⏱ 3 h',
+        ecosystemTag: 'Ecosistema de Niebla y Nacimiento Hídrico',
+        description: 'El sendero más emblemático de los Cerros Orientales de Bogotá. Asciende a lo largo del cañón de la quebrada entre helechos gigantes, orquídeas silvestres y bosques de niebla hasta alcanzar la cascada y el mirador con vista panorámica a la sabana.',
+        image: 'assets/quebrada-cascada.webp',
+        mapImage: 'assets/hero-bg.webp',
+        hitos: ['01 · Entrada Cl. 71', '02 · Bosque Niebla', '03 · La Cascada', '04 · Mirador']
+    },
+    'santa-ana': {
+        name: 'Santa Ana - La Aguadora',
+        subtitle: 'Cerros Orientales de Bogotá · Localidad de Usaquén (Cl. 119)',
+        distance: '→ 4,5 km',
+        elevation: '▲ +180 m',
+        time: '⏱ 2 h',
+        ecosystemTag: 'Circuito Bosque de Pinos y Cuenca Hídrica',
+        description: 'Camino ecológico ancestral rodeado de imponentes bosques de pinos y vegetación nativa altoandina. Un sendero de pendiente amable ideal para caminatas contemplativas, avistamiento de aves andinas y conexión profunda con la naturaleza.',
+        image: 'assets/hero-bg.webp',
+        mapImage: 'assets/quebrada-cascada.webp',
+        hitos: ['01 · Entrada Cl. 119', '02 · Bosque Pinos', '03 · Mirador Aguadora', '04 · Reserva']
+    }
+};
+
+// Precarga inmediata de assets visuales WebP para evitar microstutters
+try {
+    const _imgP1 = new Image(); _imgP1.src = 'assets/quebrada-cascada.webp';
+    const _imgP2 = new Image(); _imgP2.src = 'assets/hero-bg.webp';
+} catch (e) {}
+
+let currentPrepararTrailKey = 'quebrada-la-vieja';
+const CHECKLIST_STORAGE_KEY = 'sv_visit_checklist_state';
+
+function getChecklistState() {
+    try {
+        const saved = localStorage.getItem(CHECKLIST_STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return { 0: false, 1: false, 2: false, 3: false };
+}
+
+function saveChecklistState(state) {
+    try {
+        localStorage.setItem(CHECKLIST_STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {}
+}
+
+function updateChecklistUI() {
+    const state = getChecklistState();
+    let checkedCount = 0;
+    const total = 4;
+
+    for (let i = 0; i < total; i++) {
+        const isChecked = !!state[i];
+        if (isChecked) checkedCount++;
+        const card = document.getElementById(`checklist-item-${i}`);
+        const checkIcon = document.getElementById(`checklist-icon-${i}`);
+        if (card) {
+            card.classList.toggle('is-checked', isChecked);
+        }
+        if (checkIcon) {
+            checkIcon.innerHTML = isChecked ? '<i class="fa-solid fa-check"></i>' : '';
+        }
+    }
+
+    const counter = document.getElementById('checklist-counter-badge');
+    if (counter) {
+        counter.innerText = `${checkedCount}/${total} listo`;
+        if (checkedCount === total) {
+            counter.style.background = 'rgba(16, 185, 129, 0.22)';
+            counter.style.color = '#34d399';
+            counter.style.borderColor = 'rgba(52, 211, 153, 0.5)';
+            counter.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.35)';
+        } else {
+            counter.style.background = 'var(--sv-sky-surface)';
+            counter.style.color = 'var(--sv-sky-light)';
+            counter.style.borderColor = 'var(--sv-sky-border)';
+            counter.style.boxShadow = 'none';
+        }
+    }
+}
+
+function toggleChecklistItem(index) {
+    const state = getChecklistState();
+    state[index] = !state[index];
+    saveChecklistState(state);
+    updateChecklistUI();
+}
+
+function switchPrepararTrail(trailKey) {
+    if (!TRAILS_VISIT_DATA[trailKey]) return;
+    currentPrepararTrailKey = trailKey;
+    const data = TRAILS_VISIT_DATA[trailKey];
+
+    // Actualizar botones de selector
+    document.querySelectorAll('.trail-select-pill').forEach(btn => {
+        const isSel = btn.dataset.trail === trailKey;
+        btn.classList.toggle('active', isSel);
+    });
+
+    // Actualizar textos y métricas
+    const titleEl = document.getElementById('preparar-trail-title');
+    const subEl = document.getElementById('preparar-trail-sub');
+    const distEl = document.getElementById('preparar-stat-distance');
+    const elevEl = document.getElementById('preparar-stat-elevation');
+    const timeEl = document.getElementById('preparar-stat-time');
+    const ecoTagEl = document.getElementById('preparar-eco-tag');
+    const descEl = document.getElementById('preparar-eco-desc');
+    const bannerEl = document.getElementById('preparar-eco-banner');
+    const mapImgEl = document.getElementById('preparar-map-img');
+    const hitosContainer = document.getElementById('preparar-map-hitos');
+
+    if (titleEl) titleEl.innerText = data.name;
+    if (subEl) subEl.innerHTML = `<i class="fa-solid fa-location-dot mr-1" style="color: var(--sv-sky-hover);"></i>${data.subtitle}`;
+    if (distEl) distEl.innerText = data.distance;
+    if (elevEl) elevEl.innerText = data.elevation;
+    if (timeEl) timeEl.innerText = data.time;
+    if (ecoTagEl) ecoTagEl.innerText = data.ecosystemTag;
+    if (descEl) descEl.innerText = data.description;
+    if (bannerEl) bannerEl.style.backgroundImage = `url('${data.image}')`;
+    if (mapImgEl && data.mapImage) mapImgEl.style.backgroundImage = `url('${data.mapImage}')`;
+    if (hitosContainer && data.hitos) {
+        hitosContainer.innerHTML = data.hitos.map((h, idx) => `
+            <span class="map-waypoint-pill">
+                <span class="w-1.5 h-1.5 rounded-full ${idx === 2 ? 'bg-sky-400' : (idx === 3 ? 'bg-amber-400' : 'bg-emerald-400')}"></span> ${h}
+            </span>
+        `).join('');
+    }
+}
+
+function openPrepararVisita() {
+    closeBiodiversityAlbum();
+    closeBottomSheet();
+    closeTabPanel();
+    const modal = document.getElementById('preparar-visita-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    switchPrepararTrail(currentPrepararTrailKey);
+    updateChecklistUI();
+}
+
+function closePrepararVisita() {
+    const modal = document.getElementById('preparar-visita-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+
+function launchExplorationFromVisit() {
+    closePrepararVisita();
+    startTrailExploration(false);
+}
+
+/* ==========================================================================
+   LOBBY DE SELECCIÓN DE SENDEROS (VENTANA INICIAL)
+   ========================================================================== */
+
+function openTrailLobby() {
+    closeBottomSheet();
+    closeTabPanel();
+    closeBiodiversityAlbum();
+    const lobby = document.getElementById('trail-lobby');
+    if (lobby) {
+        lobby.classList.add('reopened');
+        lobby.classList.remove('lobby-hidden');
+    }
+}
+
+function closeTrailLobby() {
+    const lobby = document.getElementById('trail-lobby');
+    if (lobby) {
+        lobby.classList.add('lobby-hidden');
+        lobby.classList.remove('reopened');
+    }
+}
+
+let isTrailTransitioning = false;
+
+function startTrailExploration(is3DMode = false) {
+    if (isTrailTransitioning) return;
+    const lobby = document.getElementById('trail-lobby');
+    if (!lobby || lobby.classList.contains('lobby-hidden')) return;
+
+    try {
+        sessionStorage.setItem('sv_exploring', 'true');
+    } catch (e) {}
+
+    isTrailTransitioning = true;
+    lobby.classList.add('hero-transitioning-out');
+
+    // Despertar contexto de audio si el navegador lo requería por gesto de usuario (RNF-008)
+    if (window.senderoAmbience && typeof window.senderoAmbience.resume === 'function') {
+        window.senderoAmbience.resume().catch(() => {});
+    }
+
+    // Iniciar el motor del recorrido si está disponible
+    if (window.senderoTour) {
+        if (typeof window.senderoTour.start === 'function') {
+            window.senderoTour.start();
+        }
+        if (is3DMode && typeof window.senderoTour.press === 'function') {
+            window.senderoTour.press('forward');
+            setTimeout(() => {
+                if (window.senderoTour && typeof window.senderoTour.release === 'function') {
+                    window.senderoTour.release('forward');
+                }
+            }, 800);
+        }
+    }
+
+    // Marcar visita para fluidez inmediata
+    localStorage.setItem('sv_onboarding_completed', 'true');
+
+    // Transición cinematográfica: desvanecimiento suave y revelado del entorno
+    setTimeout(() => {
+        closeTrailLobby();
+        lobby.classList.remove('hero-transitioning-out');
+        isTrailTransitioning = false;
+    }, 780);
+}
+
+/* ==========================================================================
+   ONBOARDING DE PRIMERA VEZ (TUTORIAL SIN SONIDO)
+   ========================================================================== */
+
+let currentOnboardingStep = 0;
+const ONBOARDING_STEPS = [
+    {
+        icon: 'fa-arrows-up-down-left-right',
+        color: 'var(--sv-sky-hover)',
+        title: 'Explora el Entorno 360°',
+        desc: 'Arrastra con tu dedo en el celular o con el ratón en la pantalla para girar la vista en cualquier dirección y contemplar los estratos del bosque.'
+    },
+    {
+        icon: 'fa-person-walking',
+        color: 'var(--sv-sky-light)',
+        title: 'Camina por el Sendero',
+        desc: 'Toca las flechas luminosas situadas sobre el camino para avanzar y retroceder paso a paso a lo largo del trazado real.'
+    },
+    {
+        icon: 'fa-cube',
+        color: 'var(--sv-sky)',
+        title: 'Descubre Especies y 3D',
+        desc: 'Toca los medallones flotantes para consultar la ficha botánica, escuchar cantos de aves y examinar modelos 3D interactivos.'
+    }
+];
+
+function renderOnboardingStep(index) {
+    const step = ONBOARDING_STEPS[index];
+    const container = document.getElementById('onboarding-step-container');
+    const prevBtn = document.getElementById('ob-btn-prev');
+    const nextBtn = document.getElementById('ob-btn-next');
+    
+    if (!container || !step) return;
+
+    container.innerHTML = `
+        <div class="onboarding-visual-bubble" style="color: ${step.color};">
+            <div class="pulse-indicator" style="border-color: ${step.color}60;"></div>
+            <i class="fa-solid ${step.icon}"></i>
+        </div>
+        <h3 class="onboarding-step-title">${step.title}</h3>
+        <p class="onboarding-step-desc">${step.desc}</p>
+    `;
+
+    // Actualizar dots
+    for (let i = 0; i < ONBOARDING_STEPS.length; i++) {
+        const dot = document.getElementById(`ob-dot-${i}`);
+        if (dot) {
+            dot.classList.toggle('active', i === index);
+        }
+    }
+
+    if (prevBtn) {
+        prevBtn.style.visibility = index === 0 ? 'hidden' : 'visible';
+    }
+    if (nextBtn) {
+        if (index === ONBOARDING_STEPS.length - 1) {
+            nextBtn.innerHTML = '¡Comenzar Recorrido! <i class="fa-solid fa-check ml-1"></i>';
+        } else {
+            nextBtn.innerHTML = 'Siguiente <i class="fa-solid fa-arrow-right ml-1"></i>';
+        }
+    }
+}
+
+function openOnboarding(force = false) {
+    if (!force && localStorage.getItem('sv_onboarding_completed')) {
         return;
     }
-
-    results.innerHTML =
-        filtered.map(item => `
-            <div
-                onclick="selectHotspot('${item.id}'); closeSearchModal();"
-                class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between cursor-pointer hover:border-emerald-500/50 touch-manipulation"
-            >
-
-                <div>
-
-                    <h4 class="text-xs font-bold text-slate-100">
-                        ${item.name}
-                    </h4>
-
-                    <p class="text-[10px] text-slate-400 font-mono">
-                        ${item.scientific}
-                    </p>
-
-                </div>
-
-                <i class="fa-solid fa-arrow-right text-xs text-emerald-400"></i>
-
-            </div>
-        `).join('');
+    closeTrailLobby();
+    closeBottomSheet();
+    closeTabPanel();
+    currentOnboardingStep = 0;
+    const guide = document.getElementById('onboarding-guide');
+    if (guide) {
+        guide.classList.remove('onboarding-hidden');
+        renderOnboardingStep(0);
+    }
 }
 
+function closeOnboarding() {
+    const guide = document.getElementById('onboarding-guide');
+    if (guide) {
+        guide.classList.add('onboarding-hidden');
+    }
+}
+
+function nextOnboardingStep() {
+    if (currentOnboardingStep < ONBOARDING_STEPS.length - 1) {
+        currentOnboardingStep++;
+        renderOnboardingStep(currentOnboardingStep);
+    } else {
+        finishOnboarding();
+    }
+}
+
+function prevOnboardingStep() {
+    if (currentOnboardingStep > 0) {
+        currentOnboardingStep--;
+        renderOnboardingStep(currentOnboardingStep);
+    }
+}
+
+function skipOnboarding() {
+    localStorage.setItem('sv_onboarding_completed', 'true');
+    closeOnboarding();
+}
+
+function finishOnboarding() {
+    localStorage.setItem('sv_onboarding_completed', 'true');
+    closeOnboarding();
+}
+
+function initLobby() {
+    const lobby = document.getElementById('trail-lobby');
+    const isExploring = sessionStorage.getItem('sv_exploring') === 'true';
+
+    if (isExploring) {
+        if (lobby) {
+            lobby.classList.add('lobby-hidden');
+        }
+        if (window.senderoTour && typeof window.senderoTour.start === 'function') {
+            window.senderoTour.start();
+        }
+    } else {
+        if (lobby) {
+            lobby.classList.remove('lobby-hidden');
+        }
+    }
+
+    const btnExplore = document.getElementById('btn-hero-explore');
+    const btn3D = document.getElementById('btn-hero-3d');
+    const btnBiodiversity = document.getElementById('btn-hero-biodiversity');
+
+    if (btnExplore) {
+        const handleExplore = (e) => {
+            if (e.type === 'touchend') e.preventDefault();
+            startTrailExploration(false);
+        };
+        btnExplore.addEventListener('click', handleExplore);
+        btnExplore.addEventListener('touchend', handleExplore, { passive: false });
+    }
+
+    if (btn3D) {
+        const handle3D = (e) => {
+            if (e.type === 'touchend') e.preventDefault();
+            startTrailExploration(true);
+        };
+        btn3D.addEventListener('click', handle3D);
+        btn3D.addEventListener('touchend', handle3D, { passive: false });
+    }
+
+    if (btnBiodiversity) {
+        const handleBio = (e) => {
+            if (e.type === 'touchend') e.preventDefault();
+            openBiodiversityAlbum();
+        };
+        btnBiodiversity.addEventListener('click', handleBio);
+        btnBiodiversity.addEventListener('touchend', handleBio, { passive: false });
+    }
+}
 
 /* ==========================================================================
    ARRANQUE
@@ -1554,6 +2174,15 @@ window.openSearchModal = openSearchModal;
 window.closeSearchModal = closeSearchModal;
 window.handleSearch = handleSearch;
 
+// Biodiversidad y Audio Ambiental
+window.openBiodiversityAlbum = openBiodiversityAlbum;
+window.closeBiodiversityAlbum = closeBiodiversityAlbum;
+window.filterAlbumSpecies = filterAlbumSpecies;
+window.renderBiodiversityAlbum = renderBiodiversityAlbum;
+window.exploreSpecimenFromAlbum = exploreSpecimenFromAlbum;
+window.view3DFromAlbum = view3DFromAlbum;
+window.toggleAmbientAudio = toggleAmbientAudio;
+
 window.playSpeciesSound = playSpeciesSound;
 window.alternarAmbiente = alternarAmbiente;
 
@@ -1566,6 +2195,24 @@ window.toggleMobileFilters = toggleMobileFilters;
 window.toggleDetailsCard = toggleDetailsCard;
 window.filterCategoryMobile = filterCategoryMobile;
 window.setRenderModelMobile = setRenderModelMobile;
+
+// Preparar Visita (Ficha Técnica & Requisitos)
+window.openPrepararVisita = openPrepararVisita;
+window.closePrepararVisita = closePrepararVisita;
+window.switchPrepararTrail = switchPrepararTrail;
+window.toggleChecklistItem = toggleChecklistItem;
+window.launchExplorationFromVisit = launchExplorationFromVisit;
+
+// Lobby & Onboarding
+window.openTrailLobby = openTrailLobby;
+window.closeTrailLobby = closeTrailLobby;
+window.startTrailExploration = startTrailExploration;
+window.openOnboarding = openOnboarding;
+window.closeOnboarding = closeOnboarding;
+window.nextOnboardingStep = nextOnboardingStep;
+window.prevOnboardingStep = prevOnboardingStep;
+window.skipOnboarding = skipOnboarding;
+window.finishOnboarding = finishOnboarding;
 
 
 /* ==========================================================================
@@ -1590,5 +2237,16 @@ cargarCatalogo()
     .finally(() => {
         updateDiscoveredProgress();
         initRenderModelMobile();
+        initLobby();
         esperarVisor();
+
+        // Atajos de teclado para la expedición
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeBiodiversityAlbum();
+                closePrepararVisita();
+                closeBottomSheet();
+                closeTabPanel();
+            }
+        });
     });

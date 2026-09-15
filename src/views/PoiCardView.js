@@ -454,7 +454,7 @@ export class PoiCardView {
                         display:flex;
                         align-items:center;
                         justify-content:center;
-                        color:#6fcf97;
+                        color:var(--sv-sky-hover);
                         font-size:14px;
                         z-index:2;
                     "
@@ -474,7 +474,7 @@ export class PoiCardView {
                     margin:0;
                     text-align:center;
                     font-size:30px;
-                    color:#6fcf97;
+                    color:var(--sv-sky-hover);
                 "
             >
                 ${commonName}
@@ -531,7 +531,7 @@ export class PoiCardView {
             <h3
                 style="
                     margin-top:25px;
-                    color:#6fcf97;
+                    color:var(--sv-sky-hover);
                 "
             >
                 Sobre esta especie
@@ -583,11 +583,12 @@ export class PoiCardView {
                         padding:14px;
                         border:none;
                         border-radius:12px;
-                        background:#6fcf97;
-                        color:#102016;
+                        background:linear-gradient(135deg, var(--sv-sky), var(--sv-sky-deep));
+                        color:#ffffff;
                         font-weight:bold;
                         font-size:15px;
                         cursor:pointer;
+                        box-shadow:0 4px 14px var(--sv-sky-glow);
                     "
                 >
                     🔊 Escuchar canto
@@ -599,10 +600,10 @@ export class PoiCardView {
                     type="button"
                     style="
                         padding:14px;
-                        border:1px solid #6fcf97;
+                        border:1px solid var(--sv-sky-border);
                         border-radius:12px;
-                        background:transparent;
-                        color:#6fcf97;
+                        background:rgba(14, 28, 44, 0.7);
+                        color:var(--sv-sky-light);
                         font-weight:bold;
                         font-size:15px;
                         cursor:pointer;
