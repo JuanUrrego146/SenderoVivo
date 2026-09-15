@@ -6,61 +6,94 @@
  */
 :root {
     /* ── Tipografía Oficial ── */
-    --sv-font-display:     'Playfair Display', serif;
-    --sv-font-title:       'Syne', sans-serif;
-    --sv-font-body:        'Quicksand', system-ui, -apple-system, sans-serif;
+    --sv-font-display: 'Playfair Display', serif;
+    --sv-font-title: 'Syne', sans-serif;
+    --sv-font-body: 'Quicksand', system-ui, -apple-system, sans-serif;
     --sv-font-handwriting: 'Caveat', cursive;
 
     /* ── Fondos de atmósfera Azul Noche / Midnight ── */
-    --sv-teal-deep:       #0b1622; /* Fondo nocturno azul profundo */
-    --sv-teal-surface:    #122334; /* Superficie azul petróleo */
-    --sv-teal-mid:        #1b3650; /* Azul medio de contraste */
+    --sv-teal-deep: #0b1622;
+    /* Fondo nocturno azul profundo */
+    --sv-teal-surface: #122334;
+    /* Superficie azul petróleo */
+    --sv-teal-mid: #1b3650;
+    /* Azul medio de contraste */
 
     /* ── Gama Principal de Acentos: Azul Celeste & Cielo ── */
-    --sv-sky-dark:        #024e7a; /* Azul marino */
-    --sv-sky-deep:        #0284c7; /* Azul océano */
-    --sv-sky:             #0ea5e9; /* Azul celeste base */
-    --sv-sky-hover:       #38bdf8; /* Azul celeste eléctrico / vibrante */
-    --sv-sky-light:       #7dd3fc; /* Azul celeste pastel / hielo */
-    --sv-sky-glow:        rgba(56, 189, 248, 0.35);
-    --sv-sky-surface:     rgba(14, 165, 233, 0.16);
-    --sv-sky-border:      rgba(56, 189, 248, 0.40);
+    --sv-sky-dark: #024e7a;
+    /* Azul marino */
+    --sv-sky-deep: #0284c7;
+    /* Azul océano */
+    --sv-sky: #0ea5e9;
+    /* Azul celeste base */
+    --sv-sky-hover: #38bdf8;
+    /* Azul celeste eléctrico / vibrante */
+    --sv-sky-light: #7dd3fc;
+    /* Azul celeste pastel / hielo */
+    --sv-sky-glow: rgba(56, 189, 248, 0.35);
+    --sv-sky-surface: rgba(14, 165, 233, 0.16);
+    --sv-sky-border: rgba(56, 189, 248, 0.40);
+
+    /* ── Acentos temáticos por Categoría (Biodiversidad y Patrimonio) ── */
+    --sv-flora-color: #10b981;
+    /* Verde esmeralda */
+    --sv-flora-hover: #34d399;
+    /* Verde menta vibrante */
+    --sv-flora-surface: rgba(16, 185, 129, 0.16);
+    --sv-flora-border: rgba(52, 211, 153, 0.40);
+    --sv-flora-glow: rgba(16, 185, 129, 0.30);
+
+    --sv-fauna-color: #f59e0b;
+    /* Ámbar cálido / ocre */
+    --sv-fauna-hover: #fbbf24;
+    /* Ámbar dorado brillante */
+    --sv-fauna-surface: rgba(245, 158, 11, 0.16);
+    --sv-fauna-border: rgba(251, 191, 36, 0.40);
+    --sv-fauna-glow: rgba(245, 158, 11, 0.30);
+
+    --sv-patrimonio-color: #a855f7;
+    /* Violeta orquídea andino */
+    --sv-patrimonio-hover: #c084fc;
+    /* Lavanda brillante */
+    --sv-patrimonio-surface: rgba(168, 85, 247, 0.16);
+    --sv-patrimonio-border: rgba(192, 132, 252, 0.40);
+    --sv-patrimonio-glow: rgba(168, 85, 247, 0.30);
 
     /* ── Redirección de variables legadas a la gama Azul (Garantía 0% verde/naranja/morado) ── */
-    --sv-celadon:         var(--sv-sky-light);
-    --sv-celadon-dim:     var(--sv-sky-hover);
-    --sv-olive-vibrant:   var(--sv-sky-hover);
-    --sv-plum-deep:       var(--sv-sky-dark);
-    --sv-plum-accent:     var(--sv-sky-deep);
-    --sv-tangerine:       var(--sv-sky);
+    --sv-celadon: var(--sv-sky-light);
+    --sv-celadon-dim: var(--sv-sky-hover);
+    --sv-olive-vibrant: var(--sv-sky-hover);
+    --sv-plum-deep: var(--sv-sky-dark);
+    --sv-plum-accent: var(--sv-sky-deep);
+    --sv-tangerine: var(--sv-sky);
     --sv-tangerine-hover: var(--sv-sky-hover);
-    --sv-tangerine-glow:  var(--sv-sky-glow);
+    --sv-tangerine-glow: var(--sv-sky-glow);
 
     /* Neutros de lectura */
-    --sv-text-primary:    #f0f9ff;
-    --sv-text-muted:      #94a3b8;
-    --sv-text-dim:        #64748b;
+    --sv-text-primary: #f0f9ff;
+    --sv-text-muted: #94a3b8;
+    --sv-text-dim: #64748b;
 
     /* ── Superficies y Delineados ── */
-    --sv-surface-panel:   rgba(14, 28, 44, 0.88);
-    --sv-surface-solid:   rgba(11, 22, 34, 0.96);
-    --sv-surface-border:  rgba(56, 189, 248, 0.28);
-    --sv-border-orange:   var(--sv-sky-border);
-    --sv-border-plum:     var(--sv-sky-border);
-    --sv-hover-border:    var(--sv-sky-hover);
-    --sv-hover-glow:      var(--sv-sky-glow);
-    --sv-active-color:    var(--sv-sky-hover);
-    --sv-surface-shadow:  0 8px 32px rgba(2, 12, 22, 0.55);
-    --sv-scrim:           rgba(11, 22, 34, 0.65);
-    --sv-scrim-heavy:     rgba(7, 15, 24, 0.90);
+    --sv-surface-panel: rgba(14, 28, 44, 0.88);
+    --sv-surface-solid: rgba(11, 22, 34, 0.96);
+    --sv-surface-border: rgba(56, 189, 248, 0.28);
+    --sv-border-orange: var(--sv-sky-border);
+    --sv-border-plum: var(--sv-sky-border);
+    --sv-hover-border: var(--sv-sky-hover);
+    --sv-hover-glow: var(--sv-sky-glow);
+    --sv-active-color: var(--sv-sky-hover);
+    --sv-surface-shadow: 0 8px 32px rgba(2, 12, 22, 0.55);
+    --sv-scrim: rgba(11, 22, 34, 0.65);
+    --sv-scrim-heavy: rgba(7, 15, 24, 0.90);
 
     /* ── Derivados funcionales activos ── */
-    --sv-pill-active-bg:     var(--sv-sky-surface);
+    --sv-pill-active-bg: var(--sv-sky-surface);
     --sv-pill-active-border: var(--sv-sky-border);
-    --sv-pill-active-color:  var(--sv-sky-hover);
-    --sv-plum-pill-bg:       var(--sv-sky-surface);
-    --sv-plum-pill-border:   var(--sv-sky-border);
-    --sv-tangerine-pill-bg:  var(--sv-sky-surface);
+    --sv-pill-active-color: var(--sv-sky-hover);
+    --sv-plum-pill-bg: var(--sv-sky-surface);
+    --sv-plum-pill-border: var(--sv-sky-border);
+    --sv-tangerine-pill-bg: var(--sv-sky-surface);
     --sv-tangerine-pill-border: var(--sv-sky-border);
 }
 
@@ -69,40 +102,40 @@
  * ------------------------------------------------------------------ */
 :root {
     --sv-black-900: var(--sv-teal-deep);
-    --sv-gray-950:  var(--sv-teal-deep);
-    --sv-gray-900:  var(--sv-teal-deep);
-    --sv-gray-800:  var(--sv-teal-surface);
-    --sv-gray-700:  var(--sv-teal-mid);
-    --sv-gray-600:  var(--sv-teal-mid);
-    --sv-gray-400:  var(--sv-text-dim);
-    --sv-gray-300:  var(--sv-text-muted);
-    --sv-gray-200:  var(--sv-text-muted);
-    --sv-gray-100:  var(--sv-text-primary);
-    --sv-gray-050:  var(--sv-text-primary);
+    --sv-gray-950: var(--sv-teal-deep);
+    --sv-gray-900: var(--sv-teal-deep);
+    --sv-gray-800: var(--sv-teal-surface);
+    --sv-gray-700: var(--sv-teal-mid);
+    --sv-gray-600: var(--sv-teal-mid);
+    --sv-gray-400: var(--sv-text-dim);
+    --sv-gray-300: var(--sv-text-muted);
+    --sv-gray-200: var(--sv-text-muted);
+    --sv-gray-100: var(--sv-text-primary);
+    --sv-gray-050: var(--sv-text-primary);
 
-    --sv-green-700:    var(--sv-sky-dark);
-    --sv-green-500:    var(--sv-sky);
-    --sv-green-300:    var(--sv-sky-hover);
-    --sv-water-400:    var(--sv-sky-hover);
+    --sv-green-700: var(--sv-sky-dark);
+    --sv-green-500: var(--sv-sky);
+    --sv-green-300: var(--sv-sky-hover);
+    --sv-water-400: var(--sv-sky-hover);
 
-    --sv-emerald-400:  var(--sv-sky-hover);
-    --sv-emerald-500:  var(--sv-sky);
-    --sv-emerald-600:  var(--sv-sky-deep);
-    --sv-emerald-900:  var(--sv-sky-dark);
-    --sv-emerald-950:  var(--sv-teal-deep);
-    --sv-teal-400:     var(--sv-sky-hover);
-    --sv-amber-400:    var(--sv-sky-hover);
-    --sv-sky-400:      var(--sv-sky-hover);
-    --sv-pink-400:     var(--sv-sky);
+    --sv-emerald-400: var(--sv-sky-hover);
+    --sv-emerald-500: var(--sv-sky);
+    --sv-emerald-600: var(--sv-sky-deep);
+    --sv-emerald-900: var(--sv-sky-dark);
+    --sv-emerald-950: var(--sv-teal-deep);
+    --sv-teal-400: var(--sv-sky-hover);
+    --sv-amber-400: var(--sv-sky-hover);
+    --sv-sky-400: var(--sv-sky-hover);
+    --sv-pink-400: var(--sv-sky);
 
     /* Derivados de superficie */
-    --sv-scrim-550:        var(--sv-scrim);
-    --sv-scrim-720:        rgba(14, 28, 44, 0.72);
-    --sv-scrim-850:        var(--sv-scrim-heavy);
-    --sv-glass-bg:         var(--sv-surface-panel);
-    --sv-glass-border:     var(--sv-surface-border);
-    --sv-green-300-25:     var(--sv-sky-surface);
-    --sv-green-300-60:     var(--sv-sky-border);
-    --sv-green-300-30:     var(--sv-sky-surface);
-    --sv-green-300-40:     var(--sv-sky-surface);
+    --sv-scrim-550: var(--sv-scrim);
+    --sv-scrim-720: rgba(14, 28, 44, 0.72);
+    --sv-scrim-850: var(--sv-scrim-heavy);
+    --sv-glass-bg: var(--sv-surface-panel);
+    --sv-glass-border: var(--sv-surface-border);
+    --sv-green-300-25: var(--sv-sky-surface);
+    --sv-green-300-60: var(--sv-sky-border);
+    --sv-green-300-30: var(--sv-sky-surface);
+    --sv-green-300-40: var(--sv-sky-surface);
 }

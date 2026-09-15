@@ -749,12 +749,14 @@
 
 .render-btn:hover {
     color: var(--sv-text-primary);
+    background: rgba(56, 189, 248, 0.08);
+    border-color: rgba(56, 189, 248, 0.22);
 }
 
 .render-btn.activa {
-    background: var(--sv-pill-active-bg);
-    border-color: var(--sv-pill-active-border);
-    color: var(--sv-sky-hover);
+    background: var(--sv-pill-active-bg) !important;
+    border-color: var(--sv-pill-active-border) !important;
+    color: var(--sv-sky-hover) !important;
     box-shadow: 0 0 10px var(--sv-sky-glow);
 }
 
@@ -1066,40 +1068,88 @@
     box-shadow: 0 0 10px var(--sv-sky-glow);
 }
 
+.tab-filter-pill.tab-cat-flora.active-tab-filter {
+    background: var(--sv-flora-surface) !important;
+    border-color: var(--sv-flora-border) !important;
+    color: var(--sv-flora-hover) !important;
+    box-shadow: 0 0 10px var(--sv-flora-glow);
+}
+
+.tab-filter-pill.tab-cat-fauna.active-tab-filter {
+    background: var(--sv-fauna-surface) !important;
+    border-color: var(--sv-fauna-border) !important;
+    color: var(--sv-fauna-hover) !important;
+    box-shadow: 0 0 10px var(--sv-fauna-glow);
+}
+
+.tab-filter-pill.tab-cat-curiosidades.active-tab-filter {
+    background: var(--sv-patrimonio-surface) !important;
+    border-color: var(--sv-patrimonio-border) !important;
+    color: var(--sv-patrimonio-hover) !important;
+    box-shadow: 0 0 10px var(--sv-patrimonio-glow);
+}
+
 .tab-modal-body {
-    padding: 10px 14px;
+    padding: 12px 14px 20px 14px;
     overflow-y: auto;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
 }
 
-/* Tarjeta individual de especie / POI / ítem — compacta como en original */
+/* Tarjeta individual de especie / POI / ítem */
 .species-catalog-card {
-    background: rgba(26, 46, 42, 0.85);
-    border: 1px solid var(--sv-border-plum);
-    border-radius: 14px;
-    padding: 8px 12px;
+    background: rgba(18, 33, 50, 0.88);
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    border-radius: 16px;
+    padding: 11px 14px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     touch-action: manipulation;
 }
 
 .species-catalog-card:hover {
     border-color: var(--sv-sky-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px var(--sv-sky-glow);
-    background: rgba(35, 63, 57, 0.92);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(2, 12, 22, 0.65), 0 0 12px var(--sv-sky-glow);
+    background: rgba(25, 45, 68, 0.95);
+}
+
+/* Variantes temáticas por categoría */
+.species-catalog-card.card-cat-flora {
+    border-color: rgba(16, 185, 129, 0.30);
+}
+.species-catalog-card.card-cat-flora:hover {
+    border-color: var(--sv-flora-hover);
+    box-shadow: 0 8px 24px rgba(2, 12, 22, 0.65), 0 0 14px var(--sv-flora-glow);
+}
+
+.species-catalog-card.card-cat-fauna {
+    border-color: rgba(245, 158, 11, 0.30);
+}
+.species-catalog-card.card-cat-fauna:hover {
+    border-color: var(--sv-fauna-hover);
+    box-shadow: 0 8px 24px rgba(2, 12, 22, 0.65), 0 0 14px var(--sv-fauna-glow);
+}
+
+.species-catalog-card.card-cat-curiosidades,
+.species-catalog-card.card-cat-patrimonio {
+    border-color: rgba(168, 85, 247, 0.30);
+}
+.species-catalog-card.card-cat-curiosidades:hover,
+.species-catalog-card.card-cat-patrimonio:hover {
+    border-color: var(--sv-patrimonio-hover);
+    box-shadow: 0 8px 24px rgba(2, 12, 22, 0.65), 0 0 14px var(--sv-patrimonio-glow);
 }
 
 .species-chevron-btn {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1114,7 +1164,7 @@
 
 .species-catalog-card:hover .species-chevron-btn {
     background: var(--sv-sky-hover);
-    color: #0c1815;
+    color: #061523;
     border-color: var(--sv-sky-hover);
     transform: translateX(2px);
 }
@@ -1151,7 +1201,7 @@
     box-sizing: border-box;
     padding: clamp(24px, 4.5vw, 54px) clamp(24px, 5.5vw, 70px) clamp(20px, 3.5vw, 36px);
     background-color: #07131e;
-    background-image: url('../assets/hero-bg.jpg');
+    background-image: url('../assets/hero-bg.webp');
     background-position: center 65%;
     background-size: cover;
     background-repeat: no-repeat;
@@ -2071,4 +2121,386 @@
 .max-w-lg { max-width: 32rem; }
 .max-w-xl { max-width: 36rem; }
 .max-w-2xl { max-width: 42rem; }
+
+/* ==========================================================================
+   SECCIÓN: PREPARAR VISITA (FICHA TÉCNICA Y REQUISITOS EAAB)
+   ========================================================================== */
+
+#preparar-visita-modal {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 10005 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: clamp(10px, 2.5vw, 28px) !important;
+    background: rgba(4, 12, 22, 0.94) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#preparar-visita-modal.hidden {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+.preparar-visita-modal-card {
+    width: 100% !important;
+    max-width: 1140px !important;
+    max-height: 92vh !important;
+    max-height: 92dvh !important;
+    margin: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border-radius: 26px !important;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.85), 0 0 0 1px var(--sv-sky-border) inset !important;
+    background: linear-gradient(165deg, rgba(14, 30, 48, 0.98) 0%, rgba(8, 18, 30, 0.99) 100%) !important;
+    border: 1px solid var(--sv-sky-border) !important;
+    overflow: hidden !important;
+    contain: paint;
+    transform: translateZ(0);
+}
+
+.preparar-header-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    padding: 20px 26px !important;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.20) !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    background: rgba(10, 22, 36, 0.65) !important;
+}
+
+@media (max-width: 800px) {
+    .preparar-header-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 16px 18px !important;
+        gap: 14px !important;
+    }
+}
+
+/* Contenedor desplazable con scrollbar visible y elegante */
+.preparar-scroll-container {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(56, 189, 248, 0.45) rgba(6, 16, 26, 0.5);
+    padding: clamp(16px, 2.5vw, 24px) !important;
+}
+
+.preparar-scroll-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.preparar-scroll-container::-webkit-scrollbar-track {
+    background: rgba(6, 16, 26, 0.45);
+    border-radius: 999px;
+    margin: 8px 0;
+}
+
+.preparar-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, 0.35);
+    border-radius: 999px;
+    transition: background 0.2s ease;
+}
+
+.preparar-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: var(--sv-sky-hover);
+}
+
+/* Grid de métricas técnicas (3 columnas exactas en desktop, 1 en mobile) */
+.preparar-metrics-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    margin-bottom: 22px !important;
+}
+
+@media (max-width: 680px) {
+    .preparar-metrics-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        margin-bottom: 16px !important;
+    }
+}
+
+/* Grid de 2 columnas para el cuerpo (Ecosistema/Mapa a la izq, Requisitos a la der) */
+.preparar-content-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 22px !important;
+    align-items: stretch !important;
+}
+
+@media (max-width: 960px) {
+    .preparar-content-grid {
+        grid-template-columns: 1fr !important;
+        gap: 18px !important;
+    }
+}
+
+/* Tarjetas de métricas técnicas */
+.trail-metric-card {
+    background: rgba(14, 28, 44, 0.82);
+    border: 1px solid rgba(56, 189, 248, 0.24);
+    border-radius: 18px;
+    padding: clamp(12px, 1.8vw, 16px) clamp(14px, 2vw, 20px);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.22s ease;
+}
+
+.trail-metric-card:hover {
+    border-color: var(--sv-sky-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(2, 12, 22, 0.6), 0 0 12px var(--sv-sky-glow);
+    background: rgba(18, 36, 58, 0.95);
+}
+
+.trail-metric-icon {
+    width: clamp(38px, 4vw, 44px);
+    height: clamp(38px, 4vw, 44px);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(14px, 1.6vw, 16px);
+    background: var(--sv-sky-surface);
+    border: 1px solid var(--sv-sky-border);
+    color: var(--sv-sky-hover);
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.trail-metric-icon.icon-fauna {
+    color: var(--sv-fauna-hover);
+    background: var(--sv-fauna-surface);
+    border-color: var(--sv-fauna-border);
+}
+
+.trail-metric-icon.icon-flora {
+    color: var(--sv-flora-hover);
+    background: var(--sv-flora-surface);
+    border-color: var(--sv-flora-border);
+}
+
+/* Banner de Ecosistema (Columna izquierda) */
+.ecosystem-banner-card {
+    background: rgba(12, 24, 38, 0.75);
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.ecosystem-banner {
+    position: relative;
+    overflow: hidden;
+    height: 190px;
+    background-size: cover;
+    background-position: center;
+    contain: paint;
+}
+
+.ecosystem-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(7, 18, 30, 0.1) 0%, rgba(7, 18, 30, 0.7) 60%, rgba(5, 14, 24, 0.95) 100%);
+    pointer-events: none;
+}
+
+/* Mapa Interactivo del Recorrido (Columna izquierda, réplica Image 2) */
+.preparar-map-card {
+    background: rgba(12, 24, 38, 0.75);
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.preparar-map-visual {
+    position: relative;
+    height: 160px;
+    border-radius: 16px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.preparar-map-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(7, 18, 30, 0.4) 0%, rgba(5, 14, 24, 0.85) 100%);
+}
+
+.map-waypoint-pill {
+    background: rgba(10, 24, 38, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    backdrop-filter: blur(6px);
+    border-radius: 999px;
+    padding: 3px 9px;
+    font-size: 10.5px;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    color: #f0f9ff;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    transition: all 0.2s ease;
+}
+
+.map-waypoint-pill:hover {
+    border-color: var(--sv-sky-hover);
+    transform: scale(1.05);
+    box-shadow: 0 0 12px var(--sv-sky-glow);
+}
+
+/* Grupo de requisitos EAAB (Columna derecha) */
+.checklist-card-group {
+    background: rgba(12, 24, 38, 0.75);
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.checklist-item-card {
+    background: rgba(16, 32, 50, 0.65);
+    border: 1px solid rgba(56, 189, 248, 0.18);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+}
+
+.checklist-item-card:hover {
+    border-color: var(--sv-sky-hover);
+    background: rgba(22, 44, 70, 0.90);
+    transform: translateX(4px);
+    box-shadow: 0 6px 18px rgba(2, 12, 22, 0.5);
+}
+
+.checklist-item-card.is-checked {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(52, 211, 153, 0.45);
+    box-shadow: 0 0 14px rgba(16, 185, 129, 0.20);
+}
+
+.checklist-checkbox {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(148, 163, 184, 0.45);
+    background: rgba(10, 20, 32, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.2s ease;
+    color: transparent;
+    font-size: 10px;
+}
+
+.checklist-item-card:hover .checklist-checkbox {
+    border-color: var(--sv-sky-hover);
+}
+
+.checklist-item-card.is-checked .checklist-checkbox {
+    background: #10b981;
+    border-color: #34d399;
+    color: #061814;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.55);
+}
+
+.checklist-badge-obligatorio {
+    font-size: 9.5px;
+    font-weight: 800;
+    font-family: 'Syne', sans-serif;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 5px;
+    background: rgba(245, 158, 11, 0.18);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.45);
+    flex-shrink: 0;
+}
+
+.checklist-badge-recomendado {
+    font-size: 9.5px;
+    font-weight: 800;
+    font-family: 'Syne', sans-serif;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 5px;
+    background: var(--sv-sky-surface);
+    color: var(--sv-sky-hover);
+    border: 1px solid var(--sv-sky-border);
+    flex-shrink: 0;
+}
+
+.eaab-platform-link {
+    background: rgba(16, 34, 54, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    transition: all 0.22s ease;
+}
+
+.eaab-platform-link:hover {
+    background: rgba(22, 46, 74, 0.95);
+    border-color: var(--sv-sky-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--sv-sky-glow);
+}
+
+.trail-select-pill {
+    background: transparent;
+    color: var(--sv-text-muted);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.trail-select-pill:hover {
+    color: var(--sv-text-primary);
+}
+
+.trail-select-pill.active {
+    background: var(--sv-sky-surface) !important;
+    color: var(--sv-sky-hover) !important;
+    border-color: var(--sv-sky-border) !important;
+    box-shadow: 0 0 12px var(--sv-sky-glow);
+}
+
+@media (max-width: 640px) {
+    .preparar-visita-modal-card {
+        border-radius: 20px !important;
+    }
+}
 

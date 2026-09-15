@@ -439,21 +439,54 @@ function esperarVisor() {
    FICHA DESLIZANTE — BOTTOM SHEET
    ========================================================================== */
 
-function medallonHTML(item, tam = 'w-10 h-10') {
-    const bg = 'var(--sv-sky-surface)';
-    const border = 'var(--sv-sky-border)';
-    const color = 'var(--sv-sky-hover)';
+function getCategoryTheme(category) {
+    if (category === 'flora') {
+        return {
+            color: 'var(--sv-flora-hover)',
+            surface: 'var(--sv-flora-surface)',
+            border: 'var(--sv-flora-border)',
+            glow: 'var(--sv-flora-glow)',
+            pillClass: 'tab-cat-flora',
+            cardClass: 'card-cat-flora',
+            label: 'Flora'
+        };
+    }
+    if (category === 'fauna') {
+        return {
+            color: 'var(--sv-fauna-hover)',
+            surface: 'var(--sv-fauna-surface)',
+            border: 'var(--sv-fauna-border)',
+            glow: 'var(--sv-fauna-glow)',
+            pillClass: 'tab-cat-fauna',
+            cardClass: 'card-cat-fauna',
+            label: 'Fauna'
+        };
+    }
+    // patrimonio / curiosidades
+    return {
+        color: 'var(--sv-patrimonio-hover)',
+        surface: 'var(--sv-patrimonio-surface)',
+        border: 'var(--sv-patrimonio-border)',
+        glow: 'var(--sv-patrimonio-glow)',
+        pillClass: 'tab-cat-curiosidades',
+        cardClass: 'card-cat-curiosidades',
+        label: 'Patrimonio'
+    };
+}
 
+function medallonHTML(item, tam = 'w-10 h-10') {
+    const theme = getCategoryTheme(item?.category);
     return `
         <div
             class="${tam} rounded-xl shadow-sm flex items-center justify-center flex-shrink-0"
             style="
-                background: ${bg};
-                color: ${color};
-                border: 1px solid ${border};
+                background: ${theme.surface};
+                color: ${theme.color};
+                border: 1px solid ${theme.border};
+                box-shadow: 0 0 10px ${theme.glow};
             "
         >
-            <i class="fa-solid ${item.icon} text-base"></i>
+            <i class="fa-solid ${item.icon || 'fa-seedling'} text-base"></i>
         </div>
     `;
 }
@@ -833,17 +866,17 @@ function switchTab(tab) {
         if (filterBar) {
             filterBar.style.display = 'flex';
             filterBar.innerHTML = `
-                <button onclick="filterCatalogCards('all')" id="tab-cat-all" class="tab-filter-pill active-tab-filter px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition">
+                <button onclick="filterCatalogCards('all')" id="tab-cat-all" class="tab-filter-pill active-tab-filter px-3.5 py-1.5 rounded-full text-xs font-semibold cursor-pointer transition">
                     Todo (${trailData.length})
                 </button>
-                <button onclick="filterCatalogCards('flora')" id="tab-cat-flora" class="tab-filter-pill px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition">
-                    <i class="fa-solid fa-seedling mr-1"></i> Flora (${trailData.filter(x => x.category === 'flora').length})
+                <button onclick="filterCatalogCards('flora')" id="tab-cat-flora" class="tab-filter-pill tab-cat-flora px-3.5 py-1.5 rounded-full text-xs font-semibold cursor-pointer transition">
+                    <i class="fa-solid fa-seedling mr-1" style="color: var(--sv-flora-hover);"></i> Flora (${trailData.filter(x => x.category === 'flora').length})
                 </button>
-                <button onclick="filterCatalogCards('fauna')" id="tab-cat-fauna" class="tab-filter-pill px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition">
-                    <i class="fa-solid fa-dove mr-1"></i> Fauna (${trailData.filter(x => x.category === 'fauna').length})
+                <button onclick="filterCatalogCards('fauna')" id="tab-cat-fauna" class="tab-filter-pill tab-cat-fauna px-3.5 py-1.5 rounded-full text-xs font-semibold cursor-pointer transition">
+                    <i class="fa-solid fa-dove mr-1" style="color: var(--sv-fauna-hover);"></i> Fauna (${trailData.filter(x => x.category === 'fauna').length})
                 </button>
-                <button onclick="filterCatalogCards('curiosidades')" id="tab-cat-curiosidades" class="tab-filter-pill px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition">
-                    <i class="fa-solid fa-landmark mr-1"></i> Patrimonio
+                <button onclick="filterCatalogCards('curiosidades')" id="tab-cat-curiosidades" class="tab-filter-pill tab-cat-curiosidades px-3.5 py-1.5 rounded-full text-xs font-semibold cursor-pointer transition">
+                    <i class="fa-solid fa-landmark mr-1" style="color: var(--sv-patrimonio-hover);"></i> Patrimonio
                 </button>
             `;
         }
@@ -869,72 +902,81 @@ function switchTab(tab) {
         if (filterBar) filterBar.style.display = 'none';
 
         content.innerHTML = `
-            <div class="glass-panel rounded-xl p-2.5 mb-2.5" style="border-color: var(--sv-border-plum); background: linear-gradient(165deg, rgba(35, 63, 57, 0.9) 0%, rgba(24, 43, 39, 0.95) 100%);">
-                <div class="flex justify-between items-center mb-1.5">
+            <div class="glass-panel rounded-2xl p-3.5 mb-3" style="border: 1px solid rgba(56, 189, 248, 0.25); background: linear-gradient(165deg, rgba(14, 28, 44, 0.94) 0%, rgba(11, 22, 34, 0.98) 100%); box-shadow: 0 8px 24px rgba(2, 12, 22, 0.45);">
+                <div class="flex justify-between items-center mb-2">
                     <span class="text-xs font-bold" style="color: var(--sv-text-primary);">
                         Especies y Puntos Registrados
                     </span>
-                    <span class="text-xs font-bold font-syne" style="color: var(--sv-sky-hover);">
+                    <span class="text-xs font-bold font-syne px-2 py-0.5 rounded-full" style="color: var(--sv-sky-hover); background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border);">
                         ${discoveredCount} de ${totalCount}
                     </span>
                 </div>
 
-                <div class="w-full rounded-full h-2 overflow-hidden mb-1.5" style="background: rgba(16, 30, 27, 0.8); border: 1px solid var(--sv-border-plum);">
+                <div class="w-full rounded-full h-2.5 overflow-hidden mb-2" style="background: rgba(7, 15, 24, 0.85); border: 1px solid rgba(56, 189, 248, 0.2);">
                     <div
                         class="h-full transition-all duration-700"
-                        style="width: ${progressPercent}%; background: linear-gradient(90deg, var(--sv-sky-deep) 0%, var(--sv-sky-hover) 100%); box-shadow: 0 0 8px var(--sv-sky-glow);"
+                        style="width: ${progressPercent}%; background: linear-gradient(90deg, var(--sv-sky-deep) 0%, var(--sv-sky-hover) 100%); box-shadow: 0 0 10px var(--sv-sky-glow);"
                     ></div>
                 </div>
 
-                <div class="flex items-center justify-between text-[9px] font-mono" style="color: var(--sv-text-dim);">
+                <div class="flex items-center justify-between text-[10px] font-mono" style="color: var(--sv-text-muted);">
                     <span>${progressPercent}% completado</span>
                     <span>${totalCount - discoveredCount} pendientes</span>
                 </div>
             </div>
 
-            <h3 class="text-[10.5px] font-bold tracking-wider uppercase mb-1.5 flex items-center gap-1.5" style="color: var(--sv-text-muted);">
-                <i class="fa-solid fa-list-check text-[10px]" style="color: var(--sv-sky-hover);"></i> Registro de avistamientos
+            <h3 class="text-[11px] font-bold tracking-wider uppercase mb-2 flex items-center gap-2" style="color: var(--sv-text-muted);">
+                <i class="fa-solid fa-list-check text-[11px]" style="color: var(--sv-sky-hover);"></i> Registro de avistamientos
             </h3>
 
-            <div class="space-y-1.5">
-                ${trailData.map(item => `
+            <div class="flex flex-col gap-3">
+                ${trailData.map(item => {
+                    const theme = getCategoryTheme(item.category);
+                    return `
                     <div
                         onclick="selectHotspot('${item.id}');"
-                        class="species-catalog-card"
-                        style="${item.discovered ? 'border-color: var(--sv-sky-border);' : ''}"
+                        class="species-catalog-card ${theme.cardClass}"
                     >
-                        <div class="flex items-center gap-2 flex-1 min-w-0">
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
                             <div
-                                class="w-7 h-7 rounded-lg flex items-center justify-center text-xs shadow-md flex-shrink-0"
-                                style="${item.discovered
-                                    ? 'background: var(--sv-sky-surface); color: var(--sv-sky-hover); border: 1px solid var(--sv-sky-hover);'
-                                    : 'background: var(--sv-teal-surface); color: var(--sv-text-dim); border: 1px solid var(--sv-border-plum);'
-                                }"
+                                class="w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-sm flex-shrink-0"
+                                style="
+                                    background: ${item.discovered ? theme.surface : 'rgba(14, 28, 44, 0.75)'};
+                                    color: ${item.discovered ? theme.color : 'var(--sv-text-dim)'};
+                                    border: 1px solid ${item.discovered ? theme.border : 'rgba(148, 163, 184, 0.22)'};
+                                    box-shadow: ${item.discovered ? `0 0 10px ${theme.glow}` : 'none'};
+                                "
                             >
-                                <i class="fa-solid ${item.discovered ? 'fa-check' : 'fa-eye-slash'} text-[10px]"></i>
+                                <i class="fa-solid ${item.icon || 'fa-seedling'} text-sm"></i>
                             </div>
 
                             <div class="min-w-0 flex-1">
-                                <h5 class="text-xs font-bold font-syne truncate" style="color: ${item.discovered ? 'var(--sv-text-primary)' : 'var(--sv-text-muted)'};">
-                                    ${item.name}
-                                </h5>
-                                <span class="text-[9.5px] font-mono truncate block" style="color: var(--sv-text-dim);">
+                                <div class="flex items-center gap-1.5 mb-0.5">
+                                    <h5 class="text-xs font-bold font-syne truncate" style="color: ${item.discovered ? 'var(--sv-text-primary)' : 'var(--sv-text-muted)'};">
+                                        ${item.name}
+                                    </h5>
+                                </div>
+                                <span class="text-[10px] font-mono truncate block" style="color: var(--sv-text-dim);">
                                     ${item.typeLabel}
                                 </span>
                             </div>
                         </div>
 
                         <span
-                            class="text-[9.5px] font-bold font-mono px-2 py-0.5 rounded-full flex-shrink-0"
+                            class="text-[10px] font-semibold font-mono px-2.5 py-1 rounded-full flex items-center gap-1.5 flex-shrink-0"
                             style="${item.discovered
-                                ? 'background: var(--sv-sky-surface); color: var(--sv-sky-hover); border: 1px solid var(--sv-sky-border);'
-                                : 'background: rgba(35, 63, 57, 0.5); color: var(--sv-text-dim); border: 1px solid var(--sv-border-plum);'
+                                ? `background: ${theme.surface}; color: ${theme.color}; border: 1px solid ${theme.border}; box-shadow: 0 0 8px ${theme.glow};`
+                                : 'background: rgba(148, 163, 184, 0.10); color: var(--sv-text-muted); border: 1px solid rgba(148, 163, 184, 0.22);'
                             }"
                         >
-                            ${item.discovered ? '✓ Visto' : 'Pendiente'}
+                            ${item.discovered
+                                ? '<i class="fa-solid fa-check text-[9px]"></i> Visto'
+                                : `<span class="w-1.5 h-1.5 rounded-full" style="background: ${theme.color};"></span> Pendiente`
+                            }
                         </span>
                     </div>
-                `).join('')}
+                `;
+                }).join('')}
             </div>
         `;
     }
@@ -961,39 +1003,35 @@ function renderCatalogCards(category = 'all') {
     }
 
     content.innerHTML = filtered.map((item, idx) => {
-        const isPlum = item.category === 'fauna';
-        const badgeBg = 'var(--sv-sky-surface)';
-        const badgeColor = 'var(--sv-sky-hover)';
-        const badgeBorder = 'var(--sv-sky-border)';
-
+        const theme = getCategoryTheme(item.category);
         return `
             <div
                 onclick="selectHotspot('${item.id}');"
-                class="species-catalog-card"
+                class="species-catalog-card ${theme.cardClass}"
             >
-                ${medallonHTML(item, 'w-9 h-9')}
+                ${medallonHTML(item, 'w-10 h-10')}
 
                 <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-1.5 mb-0.5">
-                        <span class="text-[8.5px] font-mono font-bold px-1.5 py-0.2 rounded" style="background: ${badgeBg}; color: ${badgeColor}; border: 1px solid ${badgeBorder};">
+                    <div class="flex items-center gap-1.5 mb-1">
+                        <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-md" style="background: ${theme.surface}; color: ${theme.color}; border: 1px solid ${theme.border}; box-shadow: 0 0 6px ${theme.glow};">
                             #BIO-0${idx + 1}
                         </span>
-                        <span class="text-[9px] font-medium truncate" style="color: var(--sv-text-muted);">
+                        <span class="text-[9.5px] font-medium truncate" style="color: var(--sv-text-muted);">
                             ${item.typeLabel}
                         </span>
                     </div>
 
-                    <h4 class="text-xs font-bold truncate font-syne" style="color: var(--sv-text-primary);">
+                    <h4 class="text-sm font-bold truncate font-syne mb-0.5" style="color: var(--sv-text-primary);">
                         ${item.name}
                     </h4>
 
-                    <p class="text-[9.5px] italic font-mono truncate" style="color: var(--sv-sky-light);">
+                    <p class="text-[10px] italic font-mono truncate" style="color: var(--sv-text-muted);">
                         ${item.scientific}
                     </p>
                 </div>
 
-                <div class="species-chevron-btn" title="Ver en el sendero">
-                    <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                <div class="species-chevron-btn" style="border-color: ${theme.border}; color: ${theme.color};" title="Ver en el sendero">
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
                 </div>
             </div>
         `;
@@ -1087,11 +1125,27 @@ function filterCategoryMobile(cat) {
     filterCategory(cat); // actualiza tanto PC como móvil
 }
 
-/** Conmuta el modelo de renderizado desde la tarjeta móvil */
+function syncRenderSelectorUI(model) {
+    document.querySelectorAll('.render-btn[data-render]').forEach(btn => {
+        btn.classList.toggle('activa', btn.dataset.render === model);
+    });
+    document.querySelectorAll('.model-btn-m').forEach(btn => {
+        if (btn.dataset.render === model) {
+            btn.classList.add('model-btn-active-m');
+            btn.classList.remove('text-slate-300');
+        } else {
+            btn.classList.remove('model-btn-active-m');
+            btn.classList.add('text-slate-300');
+        }
+    });
+}
+
+/** Conmuta el modelo de renderizado desde la barra superior o tarjeta móvil */
 function setRenderModelMobile(model) {
     try {
         sessionStorage.setItem('sv_exploring', 'true');
     } catch (e) {}
+    syncRenderSelectorUI(model);
     // Dispara el mismo cambio que el switch PC de #tecnica
     const btnPc = document.querySelector(`#tecnica [data-render="${model}"]`);
     if (btnPc) {
@@ -1102,16 +1156,6 @@ function setRenderModelMobile(model) {
         params.delete('sog');
         window.location.search = params.toString();
     }
-    // Actualiza aspecto de botones móviles
-    document.querySelectorAll('.model-btn-m').forEach(btn => {
-        if (btn.dataset.render === model) {
-            btn.classList.add('model-btn-active-m');
-            btn.classList.remove('text-slate-300');
-        } else {
-            btn.classList.remove('model-btn-active-m');
-            btn.classList.add('text-slate-300');
-        }
-    });
 }
 
 /** Sincroniza el mini-HUD de la tarjeta Detalles móvil con los datos reales del recorrido */
@@ -1129,15 +1173,7 @@ function syncHudMobile(altitud, recorrido, desnivel) {
 function initRenderModelMobile() {
     const params = new URLSearchParams(window.location.search);
     const active = params.get('render') || 'colmap';
-    document.querySelectorAll('.model-btn-m').forEach(btn => {
-        if (btn.dataset.render === active) {
-            btn.classList.add('model-btn-active-m');
-            btn.classList.remove('text-slate-300');
-        } else {
-            btn.classList.remove('model-btn-active-m');
-            btn.classList.add('text-slate-300');
-        }
-    });
+    syncRenderSelectorUI(active);
 }
 
 /* ==========================================================================
@@ -1731,6 +1767,166 @@ function closeSearchModal() {}
 function handleSearch() {}
 
 /* ==========================================================================
+   PREPARAR VISITA — FICHA TÉCNICA Y REQUISITOS EAAB
+   ========================================================================== */
+
+const TRAILS_VISIT_DATA = {
+    'quebrada-la-vieja': {
+        name: 'Quebrada La Vieja',
+        subtitle: 'Cerros Orientales de Bogotá · Localidad de Chapinero (Cl. 71)',
+        distance: '→ 7,3 km',
+        elevation: '▲ +406 m',
+        time: '⏱ 3 h',
+        ecosystemTag: 'Ecosistema de Niebla y Nacimiento Hídrico',
+        description: 'El sendero más emblemático de los Cerros Orientales de Bogotá. Asciende a lo largo del cañón de la quebrada entre helechos gigantes, orquídeas silvestres y bosques de niebla hasta alcanzar la cascada y el mirador con vista panorámica a la sabana.',
+        image: 'assets/quebrada-cascada.webp',
+        mapImage: 'assets/hero-bg.webp',
+        hitos: ['01 · Entrada Cl. 71', '02 · Bosque Niebla', '03 · La Cascada', '04 · Mirador']
+    },
+    'santa-ana': {
+        name: 'Santa Ana - La Aguadora',
+        subtitle: 'Cerros Orientales de Bogotá · Localidad de Usaquén (Cl. 119)',
+        distance: '→ 4,5 km',
+        elevation: '▲ +180 m',
+        time: '⏱ 2 h',
+        ecosystemTag: 'Circuito Bosque de Pinos y Cuenca Hídrica',
+        description: 'Camino ecológico ancestral rodeado de imponentes bosques de pinos y vegetación nativa altoandina. Un sendero de pendiente amable ideal para caminatas contemplativas, avistamiento de aves andinas y conexión profunda con la naturaleza.',
+        image: 'assets/hero-bg.webp',
+        mapImage: 'assets/quebrada-cascada.webp',
+        hitos: ['01 · Entrada Cl. 119', '02 · Bosque Pinos', '03 · Mirador Aguadora', '04 · Reserva']
+    }
+};
+
+// Precarga inmediata de assets visuales WebP para evitar microstutters
+try {
+    const _imgP1 = new Image(); _imgP1.src = 'assets/quebrada-cascada.webp';
+    const _imgP2 = new Image(); _imgP2.src = 'assets/hero-bg.webp';
+} catch (e) {}
+
+let currentPrepararTrailKey = 'quebrada-la-vieja';
+const CHECKLIST_STORAGE_KEY = 'sv_visit_checklist_state';
+
+function getChecklistState() {
+    try {
+        const saved = localStorage.getItem(CHECKLIST_STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return { 0: false, 1: false, 2: false, 3: false };
+}
+
+function saveChecklistState(state) {
+    try {
+        localStorage.setItem(CHECKLIST_STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {}
+}
+
+function updateChecklistUI() {
+    const state = getChecklistState();
+    let checkedCount = 0;
+    const total = 4;
+
+    for (let i = 0; i < total; i++) {
+        const isChecked = !!state[i];
+        if (isChecked) checkedCount++;
+        const card = document.getElementById(`checklist-item-${i}`);
+        const checkIcon = document.getElementById(`checklist-icon-${i}`);
+        if (card) {
+            card.classList.toggle('is-checked', isChecked);
+        }
+        if (checkIcon) {
+            checkIcon.innerHTML = isChecked ? '<i class="fa-solid fa-check"></i>' : '';
+        }
+    }
+
+    const counter = document.getElementById('checklist-counter-badge');
+    if (counter) {
+        counter.innerText = `${checkedCount}/${total} listo`;
+        if (checkedCount === total) {
+            counter.style.background = 'rgba(16, 185, 129, 0.22)';
+            counter.style.color = '#34d399';
+            counter.style.borderColor = 'rgba(52, 211, 153, 0.5)';
+            counter.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.35)';
+        } else {
+            counter.style.background = 'var(--sv-sky-surface)';
+            counter.style.color = 'var(--sv-sky-light)';
+            counter.style.borderColor = 'var(--sv-sky-border)';
+            counter.style.boxShadow = 'none';
+        }
+    }
+}
+
+function toggleChecklistItem(index) {
+    const state = getChecklistState();
+    state[index] = !state[index];
+    saveChecklistState(state);
+    updateChecklistUI();
+}
+
+function switchPrepararTrail(trailKey) {
+    if (!TRAILS_VISIT_DATA[trailKey]) return;
+    currentPrepararTrailKey = trailKey;
+    const data = TRAILS_VISIT_DATA[trailKey];
+
+    // Actualizar botones de selector
+    document.querySelectorAll('.trail-select-pill').forEach(btn => {
+        const isSel = btn.dataset.trail === trailKey;
+        btn.classList.toggle('active', isSel);
+    });
+
+    // Actualizar textos y métricas
+    const titleEl = document.getElementById('preparar-trail-title');
+    const subEl = document.getElementById('preparar-trail-sub');
+    const distEl = document.getElementById('preparar-stat-distance');
+    const elevEl = document.getElementById('preparar-stat-elevation');
+    const timeEl = document.getElementById('preparar-stat-time');
+    const ecoTagEl = document.getElementById('preparar-eco-tag');
+    const descEl = document.getElementById('preparar-eco-desc');
+    const bannerEl = document.getElementById('preparar-eco-banner');
+    const mapImgEl = document.getElementById('preparar-map-img');
+    const hitosContainer = document.getElementById('preparar-map-hitos');
+
+    if (titleEl) titleEl.innerText = data.name;
+    if (subEl) subEl.innerHTML = `<i class="fa-solid fa-location-dot mr-1" style="color: var(--sv-sky-hover);"></i>${data.subtitle}`;
+    if (distEl) distEl.innerText = data.distance;
+    if (elevEl) elevEl.innerText = data.elevation;
+    if (timeEl) timeEl.innerText = data.time;
+    if (ecoTagEl) ecoTagEl.innerText = data.ecosystemTag;
+    if (descEl) descEl.innerText = data.description;
+    if (bannerEl) bannerEl.style.backgroundImage = `url('${data.image}')`;
+    if (mapImgEl && data.mapImage) mapImgEl.style.backgroundImage = `url('${data.mapImage}')`;
+    if (hitosContainer && data.hitos) {
+        hitosContainer.innerHTML = data.hitos.map((h, idx) => `
+            <span class="map-waypoint-pill">
+                <span class="w-1.5 h-1.5 rounded-full ${idx === 2 ? 'bg-sky-400' : (idx === 3 ? 'bg-amber-400' : 'bg-emerald-400')}"></span> ${h}
+            </span>
+        `).join('');
+    }
+}
+
+function openPrepararVisita() {
+    closeBiodiversityAlbum();
+    closeBottomSheet();
+    closeTabPanel();
+    const modal = document.getElementById('preparar-visita-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    switchPrepararTrail(currentPrepararTrailKey);
+    updateChecklistUI();
+}
+
+function closePrepararVisita() {
+    const modal = document.getElementById('preparar-visita-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+
+function launchExplorationFromVisit() {
+    closePrepararVisita();
+    startTrailExploration(false);
+}
+
+/* ==========================================================================
    LOBBY DE SELECCIÓN DE SENDEROS (VENTANA INICIAL)
    ========================================================================== */
 
@@ -2000,6 +2196,13 @@ window.toggleDetailsCard = toggleDetailsCard;
 window.filterCategoryMobile = filterCategoryMobile;
 window.setRenderModelMobile = setRenderModelMobile;
 
+// Preparar Visita (Ficha Técnica & Requisitos)
+window.openPrepararVisita = openPrepararVisita;
+window.closePrepararVisita = closePrepararVisita;
+window.switchPrepararTrail = switchPrepararTrail;
+window.toggleChecklistItem = toggleChecklistItem;
+window.launchExplorationFromVisit = launchExplorationFromVisit;
+
 // Lobby & Onboarding
 window.openTrailLobby = openTrailLobby;
 window.closeTrailLobby = closeTrailLobby;
@@ -2041,6 +2244,7 @@ cargarCatalogo()
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeBiodiversityAlbum();
+                closePrepararVisita();
                 closeBottomSheet();
                 closeTabPanel();
             }

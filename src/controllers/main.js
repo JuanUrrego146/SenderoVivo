@@ -134,24 +134,29 @@ function isRemoteUrl(url) {
 /** Marca el botón activo del conmutador de técnica y engancha los clics. */
 function setUpTechSwitch(active) {
     const bar = document.getElementById('tecnica');
-    if (!bar) return;
-    bar.hidden = false;
-    for (const btn of bar.querySelectorAll('button')) {
-        btn.classList.toggle('activa', btn.dataset.render === active);
-        btn.addEventListener('click', () => {
-            if (btn.dataset.render === active) return;
-            const params = new URLSearchParams(window.location.search);
-            // Siempre explicito: sin parametro la resolucion es automatica
-            // (escritorio -> COLMAP, celular -> Luma liviana), asi que borrar
-            // ?render en celular convertia el boton COLMAP en un no-op.
-            try {
-                sessionStorage.setItem('sv_exploring', 'true');
-            } catch (e) {}
-            params.set('render', btn.dataset.render);
-            params.delete('sog');
-            window.location.search = params.toString();
-        });
+    if (bar) {
+        bar.hidden = false;
+        for (const btn of bar.querySelectorAll('button')) {
+            btn.classList.toggle('activa', btn.dataset.render === active);
+            btn.addEventListener('click', () => {
+                if (btn.dataset.render === active) return;
+                const params = new URLSearchParams(window.location.search);
+                // Siempre explicito: sin parametro la resolucion es automatica
+                // (escritorio -> COLMAP, celular -> Luma liviana), asi que borrar
+                // ?render en celular convertia el boton COLMAP en un no-op.
+                try {
+                    sessionStorage.setItem('sv_exploring', 'true');
+                } catch (e) {}
+                params.set('render', btn.dataset.render);
+                params.delete('sog');
+                window.location.search = params.toString();
+            });
+        }
     }
+    // Sincroniza los botones visibles en la barra superior (COLMAP / Luma)
+    document.querySelectorAll('.render-btn[data-render]').forEach(btn => {
+        btn.classList.toggle('activa', btn.dataset.render === active);
+    });
 }
 
 async function resolveSceneUrl() {
