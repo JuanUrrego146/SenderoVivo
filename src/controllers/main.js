@@ -30,6 +30,7 @@ import { PoiManager } from './PoiManager.js';
 import { PoiCard } from '../poi/PoiCard.js';
 import { ShellView } from '../views/ShellView.js';
 import AmbienceController from './AmbienceController.js';
+import { detectFromDevice } from '../models/QualityProfile.js';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
 const SCENES_CONFIG_URL = 'config/scenes.json';
@@ -278,13 +279,14 @@ async function loadWorldModel(app, { url, position = new Vec3(0, 0, 0), rotation
 }
 
 async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
+    let poiDiagnosticsVisible = false;
+    const qualityProfile = detectFromDevice();
     const canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
 
     const app = new Application(canvas, {
         graphicsDeviceOptions: {
-            // El cuello de botella del splatting es el fill rate; el antialiasing lo multiplica.
-            antialias: false,
+            antialias: qualityProfile.antialias,
             // En portatiles con dos GPU, pedir la dedicada (sin esto algunos navegadores
             // eligen la integrada y el visor va a tirones sin razon aparente).
             powerPreference: 'high-performance'
@@ -295,16 +297,12 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     window.senderoShellView = shellView;
     app.setCanvasFillMode(FILLMODE_FILL_WINDOW);
     app.setCanvasResolution(RESOLUTION_AUTO);
-    // En celular el render por defecto sale borroso (1 píxel de canvas por punto
-    // CSS con densidades de 3x). Se sube la nitidez a 2x, que la escena liviana
-    // aguanta; en escritorio se respeta el ajuste actual, que ya se ve bien.
-    if (window.matchMedia('(max-width: 640px)').matches) {
-        app.graphicsDevice.maxPixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-        app.resizeCanvas();   // sin esto el ratio nuevo solo aplicaria tras girar el telefono
-    }
+    app.graphicsDevice.maxPixelRatio = qualityProfile.maxPixelRatio;
+    app.resizeCanvas();
     app.start();
     // Expuesta para inspeccion y capturas desde la consola del navegador.
     window.senderoApp = app;
+    window.senderoQualityProfile = qualityProfile;
     window.addEventListener('resize', () => app.resizeCanvas());
 
     const assets = [
@@ -366,7 +364,7 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
         // OJO: NO se pasa ningun flag "unified": el streaming se activa solo por
         // cargar un lod-meta.json (asi lo hace el ejemplo oficial del motor;
         // pasar unified:true lo manda por otra ruta y no renderiza nada).
-        app.scene.gsplat.splatBudget = window.matchMedia('(max-width: 640px)').matches ? 1000000 : 3500000;
+        app.scene.gsplat.splatBudget = qualityProfile.splatBudget;
         app.scene.gsplat.radialSorting = true;
         splat.addComponent('gsplat', { asset: sceneAsset });
         // Distancias de transicion en unidades de mundo (1 u ≈ 2,1 m):
@@ -408,8 +406,25 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
         app.on('poi:request-close', () => poiManager.closePoi());
         try {
             await poiManager.load();
+            if (poiManager.diagnostics.length) {
+                poiDiagnosticsVisible = true;
+                const errors = poiManager.diagnostics.filter(issue => issue.severity === 'error');
+                const warnings = poiManager.diagnostics.filter(issue => issue.severity === 'warning');
+                const lines = [...errors, ...warnings].map(issue =>
+                    `<li><strong>${issue.poiId}</strong> · <code>${issue.field}</code>: ${issue.message}</li>`
+                ).join('');
+                showOverlay(`
+                    <h1>Revisa config/pois.json</h1>
+                    <p>${errors.length ? 'Hay POIs que no se cargaron por errores de validación.' : 'El catálogo cargó, pero hay referencias pendientes.'}</p>
+                    <ul>${lines}</ul>
+                    <p><button id="continue">Continuar</button></p>
+                `);
+                document.getElementById('continue').addEventListener('click', () => {
+                    overlay.hidden = true;
+                });
+            }
         } catch (error) {
-            console.warn('No se pudieron cargar los POIs:', error);
+            showError(error.message);
         }
     }
     // Ambientacion sonora (AmbienceController de David). Se instancia y se deja
@@ -441,6 +456,7 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
         await new Promise(r => setTimeout(r, 1500));
     }
     setLoadingProgress(100, 'Listo');
+    if (poiDiagnosticsVisible || document.getElementById('continue')) return;
     overlay.classList.add('desvanecer');
     setTimeout(() => { overlay.hidden = true; overlay.classList.remove('desvanecer'); }, 420);
 }

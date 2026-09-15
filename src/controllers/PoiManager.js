@@ -10,6 +10,7 @@ export class PoiManager {
         this.tour = tour;
 
         this.pois = [];
+        this.diagnostics = [];
         this.markers = [];
 
         this.selectedPoi = null;
@@ -180,6 +181,7 @@ export class PoiManager {
         this.catalog = new PoiCatalog();
 
         this.pois = await this.catalog.load();
+        this.diagnostics = this.catalog.diagnostics;
 
 
         /*
