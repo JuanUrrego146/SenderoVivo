@@ -131,40 +131,6 @@
     p { margin: 0; max-width: 68ch; }
     .apunte { color: var(--tinta-media); font-size: 15px; }
 
-    /* ── Lo que cambió ──────────────────────────────────────── */
-    .cambios { display: flex; flex-direction: column; gap: 10px; }
-    .cambio {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 14px;
-        align-items: baseline;
-        background: var(--tarjeta);
-        border: 1px solid var(--linea);
-        border-radius: 3px;
-        padding: 14px 18px;
-        box-shadow: var(--sombra);
-    }
-    .cambio .num {
-        font-family: "Fira Code", ui-monospace, monospace;
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--verde);
-    }
-    .cambio .txt { font-size: 15px; }
-    .antes {
-        font-family: "Fira Code", ui-monospace, monospace;
-        font-size: 13px;
-        color: var(--tinta-suave);
-        text-decoration: line-through;
-        text-decoration-thickness: 1px;
-    }
-    .ahora {
-        font-family: "Fira Code", ui-monospace, monospace;
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--verde);
-    }
-
     /* ── Tabla de ajustes ───────────────────────────────────── */
     .envoltura-tabla { overflow-x: auto; }
     table {
@@ -341,7 +307,7 @@
     @media print {
         body { background: #fff; color: #000; }
         .hoja { max-width: none; padding: 0; gap: 26px; }
-        figure, .cambio, table, .regla { box-shadow: none; break-inside: avoid; }
+        figure, table, .regla { box-shadow: none; break-inside: avoid; }
         /* Las secciones SI pueden partirse: forzar lo contrario dejaba media
            pagina en blanco cada vez que una no cabia entera. */
         section { break-inside: auto; }
@@ -362,50 +328,12 @@
         <p class="bajada">Cómo grabar el sendero Santa Ana - La Aguadora para que la reconstrucción 3D salga
             limpia. Se configura una vez al llegar y no se toca nada más hasta terminar.</p>
         <div class="ficha">
-            <span><b>Versión</b> 3 · 15 sep 2026</span>
-            <span><b>Reemplaza</b> la v1 del prototipo del parque</span>
+            <span><b>Actualizado</b> 15 sep 2026</span>
+            <span><b>Por tramo</b> 30 m · ~240 fotos · ~20 min</span>
             <span><b>Manual completo</b> docs/05 §§8–11</span>
         </div>
     </header>
 
-    <section>
-        <h2>Lo que cambió respecto a la vez pasada</h2>
-        <p class="apunte">El patrón de pasadas estaba bien. Lo que falló fue la ejecución: tres
-            ajustes explican la mayor parte de las agujas y la borrosidad del escaneo del parque.</p>
-        <div class="cambios">
-            <div class="cambio">
-                <span class="num">01</span>
-                <span class="txt">Obturación: <span class="antes">1/125 s</span> →
-                    <span class="ahora">1/500 s mínimo, 1/1000 s ideal</span>. A 1/125 caminando,
-                    el detalle fino sale movido y ningún entrenamiento lo recupera después.</span>
-            </div>
-            <div class="cambio">
-                <span class="num">02</span>
-                <span class="txt">Soporte: <span class="antes">video</span> →
-                    <span class="ahora">fotos</span>. El video arrastra compresión y desenfoque;
-                    con fotos se controla el instante y se borran las movidas una por una.</span>
-            </div>
-            <div class="cambio">
-                <span class="num">03</span>
-                <span class="txt">Pasadas laterales: <span class="antes">apuntar a 90°</span> →
-                    <span class="ahora">apuntar a 45°</span>. A 90° cada tronco cruza el encuadre
-                    tan rápido que pocas fotos lo ven.</span>
-            </div>
-            <div class="cambio">
-                <span class="num">04</span>
-                <span class="txt">P4: <span class="antes">picada 30° hacia abajo</span> →
-                    <span class="ahora">45° hacia arriba, al dosel</span>. En la v2 ninguna de las
-                    ocho pasadas apuntaba hacia arriba: el piso tenía tres y el dosel ninguna. Por
-                    eso el dosel salió deshecho. El piso sigue cubierto por P1 y P3.</span>
-            </div>
-            <div class="cambio">
-                <span class="num">05</span>
-                <span class="txt">Extensión: <span class="antes">capturar el tramo exacto</span> →
-                    <span class="ahora">5 m antes y 5 m después</span>. Los extremos de una
-                    reconstrucción siempre son la parte débil, y esto los saca del tramo útil.</span>
-            </div>
-        </div>
-    </section>
 
     <section>
         <h2>Por qué funciona · el paralaje</h2>
@@ -618,6 +546,15 @@
                 cámara. Va sintético en el visor.</figcaption>
         </figure>
 
+        <p>Queda una pregunta: si la paralaje es máxima mirando <b>perpendicular</b> a la
+            pared, ¿por qué 45° y no 90°? Porque lo que más pesa no es la paralaje instantánea
+            sino cuántas fotos seguidas ven la misma hoja. A 90°, con un encuadre de 4,2 m sobre
+            la pared y avanzando 1,2 m por foto, un tronco entra y sale en <b>tres o cuatro
+            fotos</b>: una cadena corta, y las cadenas cortas son restricciones débiles. A 45°
+            ese mismo tronco entra mucho antes, lo vas alcanzando y permanece visible <b>ocho o
+            diez fotos</b>. Se sacrifica algo de paralaje y se gana longitud de cadena y
+            diversidad de ángulos, que es el cambio que vale.</p>
+
         <h3>La ida y la vuelta son los dos ángulos</h3>
         <p>Aquí está el truco que hace que esto sea ejecutable sin llevar una chuleta al monte:
             <b>mantienes la cámara en el mismo ángulo respecto a tu cuerpo durante toda la ida y
@@ -721,8 +658,8 @@
                     <tr><th>Ajuste</th><th>Valor</th><th>Por qué</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Formato</td><td class="valor">Fotos RAW</td><td class="motivo">Video 4K 60 fps solo como respaldo</td></tr>
-                    <tr><td>Obturación</td><td class="valor">1/1000 s</td><td class="motivo">Nunca por debajo de 1/500 caminando</td></tr>
+                    <tr><td>Formato</td><td class="valor">Fotos RAW</td><td class="motivo">El video arrastra compresión y desenfoque. Con fotos se controla el instante y se borran las movidas una por una. Video 4K 60 fps solo como respaldo</td></tr>
+                    <tr><td>Obturación</td><td class="valor">1/1000 s</td><td class="motivo">Nunca por debajo de 1/500 caminando. El detalle fino que sale movido no lo recupera ningún entrenamiento después</td></tr>
                     <tr><td>Diafragma</td><td class="valor">f/8 – f/11</td><td class="motivo">Nitidez y profundidad de campo</td></tr>
                     <tr><td>ISO</td><td class="valor">El más bajo posible</td><td class="motivo">Fijo. Antes grano que movido: si falta luz, sube ISO, no bajes obturación</td></tr>
                     <tr><td>Exposición</td><td class="valor">Manual, bloqueada</td><td class="motivo">El ajuste crítico. En automático la escena parpadea entre fotos</td></tr>
@@ -1070,7 +1007,7 @@
                 <circle cx="120" cy="258" r="11" fill="none" stroke="#2E8B57" stroke-width="1.8"/>
                 <circle cx="120" cy="258" r="2.5" fill="#2E8B57"/>
 
-                <text x="264" y="276" font-family="Plus Jakarta Sans, sans-serif" font-size="12.5" fill="currentColor" opacity=".75">Ahora lo ven <tspan font-weight="700">9 fotos</tspan>, desde los dos lados.</text>
+                <text x="264" y="276" font-family="Plus Jakarta Sans, sans-serif" font-size="12.5" fill="currentColor" opacity=".75">Lo ven <tspan font-weight="700">9 fotos</tspan>, desde los dos lados.</text>
                 <text x="264" y="293" font-family="Plus Jakarta Sans, sans-serif" font-size="12.5" fill="currentColor" opacity=".6">El borde d&#233;bil queda fuera del tramo &#250;til.</text>
 
                 <line x1="120" y1="348" x2="600" y2="348" stroke="currentColor" stroke-width="1" opacity=".4"/>
