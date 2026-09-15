@@ -267,7 +267,7 @@
     .pasos li {
         counter-increment: paso;
         display: grid;
-        grid-template-columns: 30px 1fr;
+        grid-template-columns: 30px minmax(0, 1fr);
         gap: 14px;
         align-items: baseline;
         font-size: 15.5px;
@@ -341,8 +341,12 @@
     @media print {
         body { background: #fff; color: #000; }
         .hoja { max-width: none; padding: 0; gap: 26px; }
-        figure, .cambio, table { box-shadow: none; break-inside: avoid; }
-        section { break-inside: avoid; }
+        figure, .cambio, table, .regla { box-shadow: none; break-inside: avoid; }
+        /* Las secciones SI pueden partirse: forzar lo contrario dejaba media
+           pagina en blanco cada vez que una no cabia entera. */
+        section { break-inside: auto; }
+        h2, h3 { break-after: avoid; }
+        .pasos li, .lista li, .no li { break-inside: avoid; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -358,7 +362,7 @@
         <p class="bajada">Cómo grabar el sendero Santa Ana - La Aguadora para que la reconstrucción 3D salga
             limpia. Se configura una vez al llegar y no se toca nada más hasta terminar.</p>
         <div class="ficha">
-            <span><b>Versión</b> 2 · 26 ago 2026</span>
+            <span><b>Versión</b> 3 · 15 sep 2026</span>
             <span><b>Reemplaza</b> la v1 del prototipo del parque</span>
             <span><b>Manual completo</b> docs/05 §§8–11</span>
         </div>
@@ -386,6 +390,19 @@
                 <span class="txt">Pasadas laterales: <span class="antes">apuntar a 90°</span> →
                     <span class="ahora">apuntar a 45°</span>. A 90° cada tronco cruza el encuadre
                     tan rápido que pocas fotos lo ven.</span>
+            </div>
+            <div class="cambio">
+                <span class="num">04</span>
+                <span class="txt">P4: <span class="antes">picada 30° hacia abajo</span> →
+                    <span class="ahora">45° hacia arriba, al dosel</span>. En la v2 ninguna de las
+                    ocho pasadas apuntaba hacia arriba: el piso tenía tres y el dosel ninguna. Por
+                    eso el dosel salió deshecho. El piso sigue cubierto por P1 y P3.</span>
+            </div>
+            <div class="cambio">
+                <span class="num">05</span>
+                <span class="txt">Extensión: <span class="antes">capturar el tramo exacto</span> →
+                    <span class="ahora">5 m antes y 5 m después</span>. Los extremos de una
+                    reconstrucción siempre son la parte débil, y esto los saca del tramo útil.</span>
             </div>
         </div>
     </section>
@@ -525,6 +542,174 @@
     </section>
 
     <section>
+        <h2>El corredor · cuatro superficies</h2>
+        <p>La duda que siempre vuelve: en los videos de ejemplo la cámara <b>orbita</b> alrededor
+            de un objeto y el resultado sale impecable, pero un sendero es un tramo recto y no se
+            puede orbitar. La salida está en dejar de pensar el sendero como el objeto.</p>
+        <p><b>El sendero es un corredor, y un corredor tiene cuatro superficies</b>: el dosel
+            arriba, las dos paredes de vegetación a los lados y el piso abajo. Cada una de esas
+            cuatro sí es un objeto, y a cada una sí se le puede dar media órbita.</p>
+
+        <div class="regla">
+            <span class="rotulo">La regla de la que sale todo lo demás</span>
+            <p>La cámara tiene que <b>moverse de costado respecto a lo que mira</b>, nunca hacia
+                ello. Caminando por el eje, tu desplazamiento es perpendicular a las dos paredes,
+                al piso y al dosel: las cuatro superficies tienen paralaje. La única dirección sin
+                paralaje es <b>hacia adelante</b>, que es justo hacia donde uno apunta por
+                instinto.</p>
+        </div>
+
+        <figure>
+            <svg viewBox="0 0 720 350" role="img" aria-label="Corte transversal del sendero, como si se mirara por dentro del corredor. Arriba el dosel de hojas a diez o quince metros de altura. A izquierda y derecha las dos paredes de vegetación a dos o tres metros. Abajo el piso de tierra a metro y medio por debajo de la cámara. En el centro la persona que captura, con cuatro conos de visión saliendo hacia cada una de las cuatro superficies, numerados del uno al cuatro según la ida y vuelta que le corresponde.">
+                <text x="16" y="20" font-family="Fira Code, monospace" font-size="11" fill="currentColor" opacity=".45">CORTE TRANSVERSAL &#183; MIRANDO POR EL EJE DEL SENDERO</text>
+
+                <!-- dosel -->
+                <path d="M 110 122 Q 235 52, 360 68 Q 485 84, 610 122" fill="none" stroke="currentColor" stroke-width="2" opacity=".35"/>
+                <circle cx="205" cy="96" r="15" fill="currentColor" opacity=".08"/>
+                <circle cx="290" cy="76" r="18" fill="currentColor" opacity=".08"/>
+                <circle cx="385" cy="72" r="16" fill="currentColor" opacity=".08"/>
+                <circle cx="470" cy="84" r="17" fill="currentColor" opacity=".08"/>
+                <circle cx="545" cy="104" r="14" fill="currentColor" opacity=".08"/>
+                <text x="360" y="42" font-family="Fira Code, monospace" font-size="12.5" font-weight="700" fill="currentColor" text-anchor="middle" opacity=".6">DOSEL &#183; 10&#8211;15 m</text>
+
+                <!-- paredes de vegetacion -->
+                <path d="M 110 300 L 110 208 Q 152 156, 205 176 Q 254 194, 266 246 L 266 300 Z" fill="currentColor" opacity=".1"/>
+                <path d="M 610 300 L 610 208 Q 568 156, 515 176 Q 466 194, 454 246 L 454 300 Z" fill="currentColor" opacity=".1"/>
+                <text x="132" y="266" font-family="Fira Code, monospace" font-size="12" font-weight="700" fill="currentColor" opacity=".6">PARED IZQ.</text>
+                <text x="132" y="282" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="currentColor" opacity=".5">2&#8211;3 m</text>
+                <text x="588" y="266" font-family="Fira Code, monospace" font-size="12" font-weight="700" fill="currentColor" text-anchor="end" opacity=".6">PARED DER.</text>
+                <text x="588" y="282" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="currentColor" text-anchor="end" opacity=".5">2&#8211;3 m</text>
+
+                <!-- piso -->
+                <line x1="90" y1="300" x2="630" y2="300" stroke="currentColor" stroke-width="1.5" opacity=".45"/>
+                <line x1="266" y1="300" x2="454" y2="300" stroke="currentColor" stroke-width="4" opacity=".5" stroke-linecap="round"/>
+                <text x="360" y="326" font-family="Fira Code, monospace" font-size="12.5" font-weight="700" fill="currentColor" text-anchor="middle" opacity=".6">PISO &#183; 1,5 m</text>
+
+                <!-- conos -->
+                <polygon points="360,215 228,158 228,272" fill="#2E8B57" opacity=".16"/>
+                <polygon points="360,215 492,158 492,272" fill="#2E8B57" opacity=".16"/>
+                <polygon points="360,215 303,95 417,95" fill="#2E8B57" opacity=".16"/>
+                <polygon points="360,215 318,292 402,292" fill="#2E8B57" opacity=".16"/>
+
+                <!-- numeros de ida y vuelta -->
+                <circle cx="252" cy="215" r="12" fill="var(--tarjeta, #fff)" stroke="#2E8B57" stroke-width="1.6"/>
+                <text x="252" y="220" font-family="Fira Code, monospace" font-size="13" font-weight="700" fill="#2E8B57" text-anchor="middle">1</text>
+                <circle cx="468" cy="215" r="12" fill="var(--tarjeta, #fff)" stroke="#2E8B57" stroke-width="1.6"/>
+                <text x="468" y="220" font-family="Fira Code, monospace" font-size="13" font-weight="700" fill="#2E8B57" text-anchor="middle">2</text>
+                <circle cx="360" cy="124" r="12" fill="var(--tarjeta, #fff)" stroke="#2E8B57" stroke-width="1.6"/>
+                <text x="360" y="129" font-family="Fira Code, monospace" font-size="13" font-weight="700" fill="#2E8B57" text-anchor="middle">3</text>
+                <circle cx="428" cy="288" r="12" fill="var(--tarjeta, #fff)" stroke="#2E8B57" stroke-width="1.6"/>
+                <text x="428" y="293" font-family="Fira Code, monospace" font-size="13" font-weight="700" fill="#2E8B57" text-anchor="middle">4</text>
+
+                <!-- persona, vista de frente -->
+                <circle cx="360" cy="188" r="8" fill="currentColor" opacity=".85"/>
+                <line x1="344" y1="206" x2="376" y2="206" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
+                <line x1="360" y1="196" x2="360" y2="252" stroke="currentColor" stroke-width="2.5" opacity=".85"/>
+                <line x1="360" y1="252" x2="348" y2="300" stroke="currentColor" stroke-width="2.5" opacity=".85"/>
+                <line x1="360" y1="252" x2="372" y2="300" stroke="currentColor" stroke-width="2.5" opacity=".85"/>
+                <rect x="352" y="209" width="16" height="11" rx="2" fill="none" stroke="#2E8B57" stroke-width="1.8"/>
+            </svg>
+            <figcaption>El corredor visto de frente. Las cuatro superficies están a distancias muy
+                distintas, y de ahí sale la dificultad de cada una: el <b>piso</b> es la más fácil
+                porque está a metro y medio y la paralaje es enorme; el <b>dosel</b> es la más
+                difícil porque a quince metros necesita los treinta metros completos del tramo para
+                resolverse. El <b>cielo</b> que se ve más allá de las hojas no aparece en esta
+                lista: está en el infinito, no tiene paralaje y no se puede triangular con ninguna
+                cámara. Va sintético en el visor.</figcaption>
+        </figure>
+
+        <h3>La ida y la vuelta son los dos ángulos</h3>
+        <p>Aquí está el truco que hace que esto sea ejecutable sin llevar una chuleta al monte:
+            <b>mantienes la cámara en el mismo ángulo respecto a tu cuerpo durante toda la ida y
+            toda la vuelta</b>, y es el cambio de dirección de marcha el que te regala el segundo
+            punto de vista. No tienes que recordar ocho ángulos distintos, solo cuatro, y cada uno
+            se camina dos veces.</p>
+
+        <figure>
+            <svg viewBox="0 0 720 360" role="img" aria-label="Vista desde arriba de un tramo recto de sendero. Un tronco está en el borde izquierdo. Abajo, la persona en la ida camina hacia el norte con la cámara girada 45 grados hacia adelante y a la izquierda, y su cono de visión alcanza el tronco desde el sur. Arriba, la misma persona en la vuelta camina hacia el sur con la cámara en el mismo ángulo respecto a su cuerpo, y su cono alcanza el mismo tronco desde el norte. Las dos direcciones de mirada sobre el tronco forman un ángulo cercano a los 95 grados.">
+                <defs>
+                    <marker id="andar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+                    </marker>
+                </defs>
+
+                <text x="16" y="20" font-family="Fira Code, monospace" font-size="11" fill="currentColor" opacity=".45">VISTA DESDE ARRIBA</text>
+
+                <!-- bordes y eje -->
+                <line x1="310" y1="36" x2="310" y2="344" stroke="currentColor" stroke-width="1.2" opacity=".3" stroke-dasharray="3 4"/>
+                <line x1="490" y1="36" x2="490" y2="344" stroke="currentColor" stroke-width="1.2" opacity=".3" stroke-dasharray="3 4"/>
+                <line x1="400" y1="36" x2="400" y2="344" stroke="currentColor" stroke-width="1" opacity=".5" stroke-dasharray="9 4 2 4"/>
+                <text x="408" y="340" font-family="Fira Code, monospace" font-size="10.5" fill="currentColor" opacity=".55">EJE</text>
+
+                <!-- conos -->
+                <polygon points="400,300 346,160 260,246" fill="#2E8B57" opacity=".17"/>
+                <polygon points="400,100 260,154 346,240" fill="#2E8B57" opacity=".17"/>
+
+                <!-- rayos al tronco -->
+                <line x1="400" y1="300" x2="310" y2="200" stroke="#2E8B57" stroke-width="1.3" stroke-dasharray="4 3"/>
+                <line x1="400" y1="100" x2="310" y2="200" stroke="#2E8B57" stroke-width="1.3" stroke-dasharray="4 3"/>
+
+                <!-- tronco -->
+                <circle cx="310" cy="200" r="12" fill="#2E8B57" opacity=".18"/>
+                <circle cx="310" cy="200" r="12" fill="none" stroke="#2E8B57" stroke-width="1.8"/>
+                <circle cx="310" cy="200" r="3" fill="#2E8B57"/>
+                <text x="290" y="188" font-family="Plus Jakarta Sans, sans-serif" font-size="11.5" fill="currentColor" text-anchor="end" opacity=".75">el mismo</text>
+                <text x="290" y="202" font-family="Plus Jakarta Sans, sans-serif" font-size="11.5" fill="currentColor" text-anchor="end" opacity=".75">tronco</text>
+
+                <!-- angulo en el tronco -->
+                <path d="M 338 168 A 42 42 0 0 0 338 232" fill="none" stroke="#2E8B57" stroke-width="2.2"/>
+                <text x="352" y="205" font-family="Fira Code, monospace" font-size="15" font-weight="700" fill="#2E8B57">&#8776;95&#176;</text>
+
+                <!-- persona ida (abajo), mira arriba-izquierda -->
+                <circle cx="400" cy="300" r="7" fill="currentColor" opacity=".9"/>
+                <line x1="392" y1="309" x2="410" y2="291" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".9"/>
+                <text x="416" y="308" font-family="Fira Code, monospace" font-size="12.5" font-weight="700" fill="currentColor" opacity=".75">IDA</text>
+
+                <!-- persona vuelta (arriba), mira abajo-izquierda -->
+                <circle cx="400" cy="100" r="7" fill="currentColor" opacity=".9"/>
+                <line x1="392" y1="91" x2="410" y2="109" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".9"/>
+                <text x="416" y="96" font-family="Fira Code, monospace" font-size="12.5" font-weight="700" fill="currentColor" opacity=".75">VUELTA</text>
+
+                <!-- por donde camino -->
+                <line x1="466" y1="326" x2="466" y2="252" stroke="currentColor" stroke-width="1.5" opacity=".5" marker-end="url(#andar)" stroke-dasharray="5 4"/>
+                <line x1="466" y1="74" x2="466" y2="148" stroke="currentColor" stroke-width="1.5" opacity=".5" marker-end="url(#andar)" stroke-dasharray="5 4"/>
+
+                <text x="540" y="184" font-family="Plus Jakarta Sans, sans-serif" font-size="12.5" fill="currentColor" opacity=".8">La c&#225;mara va</text>
+                <text x="540" y="201" font-family="Plus Jakarta Sans, sans-serif" font-size="12.5" font-weight="700" fill="currentColor" opacity=".8">siempre a 45&#176;</text>
+                <text x="540" y="218" font-family="Plus Jakarta Sans, sans-serif" font-size="12.5" font-weight="700" fill="currentColor" opacity=".8">adelante-izquierda.</text>
+                <text x="540" y="240" font-family="Plus Jakarta Sans, sans-serif" font-size="12" fill="currentColor" opacity=".6">Lo que cambia es</text>
+                <text x="540" y="256" font-family="Plus Jakarta Sans, sans-serif" font-size="12" fill="currentColor" opacity=".6">hacia d&#243;nde caminas.</text>
+            </svg>
+            <figcaption>Nunca giras la cámara respecto a tu cuerpo: en la ida y en la vuelta apunta
+                al mismo <b>45° adelante-izquierda</b>. Como caminas en sentido contrario, el mismo
+                tronco queda visto desde dos direcciones separadas casi un cuarto de vuelta. Eso es
+                media órbita, repartida en dos recorridos en vez de en un círculo. Repetir el
+                ejercicio hacia la derecha cubre la otra pared.</figcaption>
+        </figure>
+
+        <div class="envoltura-tabla">
+            <table>
+                <caption>Cuatro idas y vueltas, una por superficie. Las alturas cambian entre ellas
+                    a propósito: todo tu desplazamiento ocurre sobre un solo eje, así que variar la
+                    altura es lo único que te da paralaje vertical.</caption>
+                <thead>
+                    <tr><th class="paso">#</th><th>Cámara, igual en ida y vuelta</th><th>Altura</th><th>Superficie que resuelve</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="paso">1</td><td class="valor">45° adelante-izq.</td><td>Pecho</td><td class="motivo">Pared izquierda, desde los dos oblicuos</td></tr>
+                    <tr><td class="paso">2</td><td class="valor">45° adelante-der.</td><td>Pecho</td><td class="motivo">Pared derecha, desde los dos oblicuos</td></tr>
+                    <tr><td class="paso">3</td><td class="valor">45° arriba</td><td>Brazo en alto</td><td class="motivo">Dosel, y la parte alta de ambas paredes</td></tr>
+                    <tr><td class="paso">4</td><td class="valor">45° abajo</td><td>Rodilla</td><td class="motivo">Piso, y la base de ambas paredes</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="apunte">Este cuadro y el de las ocho pasadas de la sección siguiente son el mismo
+            plan visto de dos formas: aquí por superficie, allá por recorrido. Si en el monte se te
+            olvida la tabla larga, con estas cuatro idas y vueltas tienes cubierto lo esencial.</p>
+    </section>
+
+    <section>
         <h2>Ajustes · se configuran una vez y no se tocan</h2>
         <p class="apunte">Al llegar, con la luz del sitio. Antes de arrancar, comprobar que ningún
             valor cambia solo al mover la cámara.</p>
@@ -644,7 +829,7 @@
                     <tr><td class="paso">P1</td><td>Eje · ida</td><td>Ojos</td><td class="motivo">Al frente, inclinada 10–15° abajo</td></tr>
                     <tr><td class="paso">P2</td><td>Eje · regreso</td><td>Ojos</td><td class="motivo">Al frente. Es la vista de quien mira hacia atrás</td></tr>
                     <tr><td class="paso">P3</td><td>Eje · ida</td><td>Cintura</td><td class="motivo">Al frente y algo abajo. Es la pasada del piso</td></tr>
-                    <tr><td class="paso">P4</td><td>Eje · regreso</td><td>Brazo en alto</td><td class="motivo">Picada ~30° hacia abajo</td></tr>
+                    <tr><td class="paso">P4</td><td>Eje · regreso</td><td>Brazo en alto</td><td class="motivo">Alzada ~45° hacia arriba. Es la pasada del dosel</td></tr>
                     <tr><td class="paso">P5</td><td>Borde izq. · ida</td><td>Ojos</td><td class="motivo">Cruzada hacia el centro y la derecha (30–45°)</td></tr>
                     <tr><td class="paso">P6</td><td>Borde der. · regreso</td><td>Ojos</td><td class="motivo">Cruzada hacia el centro y la izquierda</td></tr>
                     <tr><td class="paso">P7</td><td>Eje · ida</td><td>Ojos</td><td class="motivo">Diagonal ~45° a la izquierda. No a 90°</td></tr>
@@ -750,12 +935,12 @@
 
         <h3>Cómo se ejecuta una pasada</h3>
         <ol class="pasos">
-            <li><b>Ubícate en tu carril.</b> El eje del sendero, o a un metro del borde — no encima de la vegetación.</li>
-            <li><b>Fija la altura</b> que le toca a esa pasada (ojos, cintura o brazo estirado) y no la cambies en toda la pasada.</li>
-            <li><b>Fija la dirección de la mirada</b> (al frente, cruzada o 45°) y tampoco la cambies. Apunta con los hombros, no con las muñecas: el cuerpo gira, el ángulo respecto al sendero se mantiene.</li>
-            <li><b>Camina lento</b>, un paso por segundo, rodillas semiflexionadas para amortiguar el rebote, codos pegados al cuerpo, cámara con las dos manos.</li>
-            <li><b>Dispara cada dos pasos.</b> Cuenta mentalmente: <em>paso, paso, clic</em>.</li>
-            <li><b>Al final del tramo deja de disparar, gírate y empieza la siguiente.</b> Nunca dispares mientras giras.</li>
+            <li><span><b>Ubícate en tu carril.</b> El eje del sendero, o a un metro del borde — no encima de la vegetación.</span></li>
+            <li><span><b>Fija la altura</b> que le toca a esa pasada (ojos, cintura o brazo estirado) y no la cambies en toda la pasada.</span></li>
+            <li><span><b>Fija la dirección de la mirada</b> (al frente, cruzada o 45°) y tampoco la cambies. Apunta con los hombros, no con las muñecas: el cuerpo gira, el ángulo respecto al sendero se mantiene.</span></li>
+            <li><span><b>Camina lento</b>, un paso por segundo, rodillas semiflexionadas para amortiguar el rebote, codos pegados al cuerpo, cámara con las dos manos.</span></li>
+            <li><span><b>Dispara cada dos pasos.</b> Cuenta mentalmente: <em>paso, paso, clic</em>.</span></li>
+            <li><span><b>Al final del tramo deja de disparar, gírate y empieza la siguiente.</b> Nunca dispares mientras giras.</span></li>
         </ol>
 
         <div class="envoltura-tabla">
@@ -769,6 +954,164 @@
                     <tr><td>Fotos por tramo</td><td class="valor">~240</td></tr>
                     <tr><td>Duración por pasada</td><td class="valor">~90 s</td></tr>
                     <tr><td>Duración por tramo, con pausas</td><td class="valor">~20 min</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+
+    <section>
+        <h2>Los extremos del tramo &#183; los 5 m de sobrante</h2>
+        <p>Este es el error que más sale caro y el que menos se sospecha. Un punto que cae en el
+            <b>centro</b> del tramo aparece en las fotos de antes y en las de después, así que lo
+            ven muchas cámaras y desde los dos lados. Un punto que cae justo en el <b>borde</b>
+            solo aparece en las fotos de un lado, porque del otro no hay cámara ninguna.</p>
+        <p>El resultado es que los primeros y los últimos metros de cualquier captura salen blandos
+            y deformes <b>siempre</b>, con cualquier cámara y con cualquier entrenamiento. No es un
+            defecto del equipo, es que ahí falta información.</p>
+
+        <figure>
+            <svg viewBox="0 0 720 380" role="img" aria-label="Dos esquemas comparados. Arriba, capturando exactamente los treinta metros del tramo: un punto situado en el extremo izquierdo solo recibe rayos de las cámaras que están a su derecha, cinco en total. Abajo, capturando cinco metros antes y cinco metros después: el mismo punto recibe rayos de cámaras situadas a ambos lados, nueve en total, y los cinco metros de sobrante quedan marcados en verde a cada extremo.">
+                <text x="16" y="20" font-family="Fira Code, monospace" font-size="11" fill="currentColor" opacity=".45">EL MISMO PUNTO, EN EL BORDE DEL TRAMO</text>
+
+                <!-- ═══ Panel A ═══ -->
+                <text x="16" y="46" font-family="Fira Code, monospace" font-size="12.5" font-weight="700" fill="currentColor" opacity=".55">&#10007;  CAPTURAS EL TRAMO EXACTO</text>
+
+                <line x1="120" y1="140" x2="120" y2="72" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+                <line x1="144" y1="140" x2="120" y2="72" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+                <line x1="168" y1="140" x2="120" y2="72" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+                <line x1="192" y1="140" x2="120" y2="72" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+                <line x1="216" y1="140" x2="120" y2="72" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+
+                <line x1="120" y1="140" x2="600" y2="140" stroke="currentColor" stroke-width="1.2" opacity=".35"/>
+                <circle cx="120" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="144" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="168" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="192" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="216" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="240" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="264" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="288" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="312" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="336" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="360" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="384" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="408" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="432" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="456" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="480" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="504" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="528" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="552" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="576" cy="140" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="600" cy="140" r="3" fill="currentColor" opacity=".35"/>
+
+                <circle cx="120" cy="72" r="11" fill="currentColor" opacity=".14"/>
+                <circle cx="120" cy="72" r="11" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".6"/>
+                <circle cx="120" cy="72" r="2.5" fill="currentColor" opacity=".7"/>
+
+                <text x="146" y="70" font-family="Plus Jakarta Sans, sans-serif" font-size="12.5" fill="currentColor" opacity=".75">Solo lo ven <tspan font-weight="700">5 fotos</tspan>,</text>
+                <text x="146" y="87" font-family="Plus Jakarta Sans, sans-serif" font-size="12.5" fill="currentColor" opacity=".75">y todas desde el mismo lado.</text>
+
+                <line x1="120" y1="164" x2="600" y2="164" stroke="currentColor" stroke-width="1" opacity=".4"/>
+                <line x1="120" y1="159" x2="120" y2="169" stroke="currentColor" stroke-width="1" opacity=".4"/>
+                <line x1="600" y1="159" x2="600" y2="169" stroke="currentColor" stroke-width="1" opacity=".4"/>
+                <text x="360" y="182" font-family="Fira Code, monospace" font-size="11.5" fill="currentColor" text-anchor="middle" opacity=".55">TRAMO &#183; 30 m</text>
+
+                <line x1="16" y1="206" x2="704" y2="206" stroke="currentColor" stroke-width="1" opacity=".16"/>
+
+                <!-- ═══ Panel B ═══ -->
+                <text x="16" y="234" font-family="Fira Code, monospace" font-size="12.5" font-weight="700" fill="#2E8B57">&#10003;  CAPTURAS 5 m ANTES Y 5 m DESPU&#201;S</text>
+
+                <line x1="40" y1="320" x2="120" y2="258" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+                <line x1="64" y1="320" x2="120" y2="258" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+                <line x1="88" y1="320" x2="120" y2="258" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+                <line x1="112" y1="320" x2="120" y2="258" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+                <line x1="136" y1="320" x2="120" y2="258" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+                <line x1="160" y1="320" x2="120" y2="258" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+                <line x1="184" y1="320" x2="120" y2="258" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+                <line x1="208" y1="320" x2="120" y2="258" stroke="#2E8B57" stroke-width="1" opacity=".45"/>
+
+                <line x1="40" y1="320" x2="680" y2="320" stroke="currentColor" stroke-width="1.2" opacity=".35"/>
+                <line x1="40" y1="320" x2="120" y2="320" stroke="#2E8B57" stroke-width="2.4" opacity=".8"/>
+                <line x1="600" y1="320" x2="680" y2="320" stroke="#2E8B57" stroke-width="2.4" opacity=".8"/>
+                <circle cx="40" cy="320" r="3" fill="#2E8B57" opacity="1"/>
+                <circle cx="64" cy="320" r="3" fill="#2E8B57" opacity="1"/>
+                <circle cx="88" cy="320" r="3" fill="#2E8B57" opacity="1"/>
+                <circle cx="112" cy="320" r="3" fill="#2E8B57" opacity="1"/>
+                <circle cx="136" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="160" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="184" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="208" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="232" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="256" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="280" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="304" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="328" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="352" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="376" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="400" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="424" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="448" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="472" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="496" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="520" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="544" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="568" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="592" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="616" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="640" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="664" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="624" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="648" cy="320" r="3" fill="currentColor" opacity=".35"/>
+                <circle cx="672" cy="320" r="3" fill="currentColor" opacity=".35"/>
+
+                <circle cx="120" cy="258" r="11" fill="#2E8B57" opacity=".18"/>
+                <circle cx="120" cy="258" r="11" fill="none" stroke="#2E8B57" stroke-width="1.8"/>
+                <circle cx="120" cy="258" r="2.5" fill="#2E8B57"/>
+
+                <text x="264" y="276" font-family="Plus Jakarta Sans, sans-serif" font-size="12.5" fill="currentColor" opacity=".75">Ahora lo ven <tspan font-weight="700">9 fotos</tspan>, desde los dos lados.</text>
+                <text x="264" y="293" font-family="Plus Jakarta Sans, sans-serif" font-size="12.5" fill="currentColor" opacity=".6">El borde d&#233;bil queda fuera del tramo &#250;til.</text>
+
+                <line x1="120" y1="348" x2="600" y2="348" stroke="currentColor" stroke-width="1" opacity=".4"/>
+                <line x1="120" y1="343" x2="120" y2="353" stroke="currentColor" stroke-width="1" opacity=".4"/>
+                <line x1="600" y1="343" x2="600" y2="353" stroke="currentColor" stroke-width="1" opacity=".4"/>
+                <text x="360" y="366" font-family="Fira Code, monospace" font-size="11.5" fill="currentColor" text-anchor="middle" opacity=".55">TRAMO &#218;TIL &#183; 30 m</text>
+                <text x="80" y="366" font-family="Fira Code, monospace" font-size="11" font-weight="700" fill="#2E8B57" text-anchor="middle">+5 m</text>
+                <text x="640" y="366" font-family="Fira Code, monospace" font-size="11" font-weight="700" fill="#2E8B57" text-anchor="middle">+5 m</text>
+            </svg>
+            <figcaption>Los cinco metros de sobrante no se usan en la escena final: existen para que
+                el borde del tramo útil deje de ser un borde. Cuestan unas ocho fotos más por
+                pasada y son la diferencia entre un extremo nítido y uno derretido.</figcaption>
+        </figure>
+
+        <div class="regla">
+            <span class="rotulo">Y entre tramo y tramo</span>
+            <p>Solapa los tramos vecinos <b>al menos un 30 %</b>. Así el extremo de un tramo cae
+                dentro del centro fuerte del siguiente, y de paso le das a la reconstrucción las
+                conexiones que amarran los 200 m completos en una sola pieza en vez de siete
+                pedazos sueltos.</p>
+        </div>
+
+        <h3>Si la escena se deforma, mira cuál de los dos es</h3>
+        <p>Dos defectos distintos se describen igual de fácil como &#171;se deformó&#187; y tienen
+            arreglos opuestos. Vale la pena distinguirlos antes de cambiar nada:</p>
+        <div class="envoltura-tabla">
+            <table>
+                <thead>
+                    <tr><th>Lo que ves</th><th>Qué es</th><th>Qué se hace</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>La reja recta sale curvada; los dos extremos del tramo no encajan. El defecto depende de <b>dónde</b> estás en el sendero.</td>
+                        <td class="motivo">Deriva de trayectoria. El error se acumuló a lo largo de la línea recta porque nada lo corrigió.</td>
+                        <td class="motivo">Cerrar el lazo con la vuelta, cruzar las pasadas y dejar un árbol alto visible de punta a punta.</td>
+                    </tr>
+                    <tr>
+                        <td>Lo cercano sale nítido y lo lejano blando <b>en todas partes por igual</b>. El defecto depende de <b>qué tan lejos</b> está la cosa.</td>
+                        <td class="motivo">Caída de paralaje. A 50 m, dos fotos separadas 1,2 m solo se desplazan 1,4°: no hay con qué triangular.</td>
+                        <td class="motivo">Aceptar un radio útil y recortar más allá. No se arregla con más pasadas cortas.</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -795,6 +1138,8 @@
             <li><span class="cruz">✗</span><span><b>Guardar las fotos movidas.</b> Más fotos no es más calidad: una foto movida empeora el resultado. Se borran en el sitio.</span></li>
             <li><span class="cruz">✗</span><span><b>Repetir el mismo ángulo.</b> Diez fotos desde el mismo punto valen menos que dos desde puntos distintos.</span></li>
             <li><span class="cruz">✗</span><span><b>Usar el 0.5× del celular.</b> El ultra gran angular queda fuera del rango que la reconstrucción maneja bien.</span></li>
+            <li><span class="cruz">✗</span><span><b>Tocar el zoom a mitad de jornada.</b> Si la focal cambia entre fotos, la reconstrucción está estimando una óptica que ya no es la misma y se degrada sin avisar. En cámara, clavado en el extremo ancho; en celular, solo 1× y nunca pellizcar.</span></li>
+            <li><span class="cruz">✗</span><span><b>Caminar de frente mirando al frente.</b> Es la única dirección sin paralaje: lo que tienes delante crece pero no se desplaza, y sin desplazamiento no hay nada que triangular.</span></li>
         </ul>
     </section>
 
