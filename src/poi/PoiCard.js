@@ -1,4 +1,4 @@
-import { ModelViewer } from './ModelViewer.js';
+import { ModelView } from '../views/ModelView.js';
 
 
 export class PoiCard {
