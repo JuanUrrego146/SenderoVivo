@@ -401,28 +401,77 @@ export class PoiManager {
          * =====================================================
          * ESTILO
          * =====================================================
+         *
+         * SW-10:
+         * Cada tipo de POI tiene una forma y tamaño
+         * diferente, además del color.
+         *
+         * Los colores utilizan exclusivamente tokens
+         * definidos en styles/tokens.css.
          */
+
+        const markerStyles = {
+
+            fauna: {
+                size: '52px',
+                color: 'var(--sv-green-500)',
+                borderRadius: '0',
+                clipPath:
+                    'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
+            },
+
+            flora: {
+                size: '44px',
+                color: 'var(--sv-green-500)',
+                borderRadius: '50%',
+                clipPath: 'none'
+            },
+
+            agua: {
+                size: '46px',
+                color: 'var(--sv-water-400)',
+                borderRadius: '0',
+                clipPath:
+                    'polygon(50% 0%, 100% 100%, 0% 100%)'
+            },
+
+            patrimonio: {
+                size: '48px',
+                color: 'var(--sv-gray-200)',
+                borderRadius: '6px',
+                clipPath: 'none'
+            }
+        };
+
+        const markerStyle =
+            markerStyles[poi.type] ||
+            markerStyles.flora;
+        console.log('SW-10 POI:', poi.type, markerStyle);    
+
 
         button.style.position =
             'fixed';
 
         button.style.width =
-            '48px';
+            markerStyle.size;
 
         button.style.height =
-            '48px';
+            markerStyle.size;
 
         button.style.border =
-            '2px solid rgba(255,255,255,0.85)';
+            '2px solid var(--sv-gray-050)';
 
         button.style.borderRadius =
-            '50%';
+            markerStyle.borderRadius;
+
+        button.style.clipPath =
+            markerStyle.clipPath;
 
         button.style.background =
-            'rgba(24, 37, 29, 0.88)';
+            'var(--sv-scrim-850)';
 
         button.style.color =
-            'var(--sv-sky-hover, #38bdf8)';
+            markerStyle.color;
 
         button.style.fontSize =
             '23px';
@@ -452,7 +501,7 @@ export class PoiManager {
             'border-box';
 
         button.style.boxShadow =
-            '0 4px 14px rgba(0,0,0,0.45)';
+            '0 4px 14px var(--sv-scrim-720)';
 
         button.style.transition =
             'transform 0.15s ease, box-shadow 0.15s ease';
@@ -505,7 +554,7 @@ export class PoiManager {
                     'translate(-50%, -50%) scale(1.12)';
 
                 button.style.boxShadow =
-                    '0 6px 18px rgba(0,0,0,0.55)';
+                    '0 6px 18px var(--sv-scrim-720)';
             }
         );
 
@@ -518,7 +567,7 @@ export class PoiManager {
                     'translate(-50%, -50%) scale(1)';
 
                 button.style.boxShadow =
-                    '0 4px 14px rgba(0,0,0,0.45)';
+                    '0 4px 14px var(--sv-scrim-720)';
             }
         );
 
