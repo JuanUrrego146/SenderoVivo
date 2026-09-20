@@ -182,6 +182,7 @@ export class PoiManager {
 
         this.pois = await this.catalog.load();
         this.diagnostics = this.catalog.diagnostics;
+        this.tour?.setPoiAnchors(this.pois);
 
 
         /*

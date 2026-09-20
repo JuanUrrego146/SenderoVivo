@@ -37,6 +37,11 @@ export class TourEngine {
         // Tope propio del picado hacia abajo: muy cerca del suelo el splatting se ve
         // como brochazos, y algunas escenas piden no dejar meter la camara ahi.
         this.pitchDownLimit = options.pitchDownLimit ?? this.pitchLimit;
+                // SW-17: desaceleración al acercarse a un punto de interés.
+        this.poiSlowdownDistance = options.poiSlowdownDistance ?? 1.2;
+        this.poiMinimumSpeedMultiplier =
+            options.poiMinimumSpeedMultiplier ?? 0.35;
+        this.poiAnchors = [];
 
         // distance, yaw, pitch y eyeHeight (desplazamiento vertical sobre el
         // trazado) viven en TourState (src/models/TourState.js).
@@ -56,8 +61,56 @@ export class TourEngine {
         this._dir = new Vec3();
         this._enabled = false;
 
-        this._onUpdate = this._update.bind(this);
+                this._onUpdate = this._update.bind(this);
     }
+
+    setPoiAnchors(pois = []) {
+        if (!Array.isArray(pois)) {
+            this.poiAnchors = [];
+            return;
+        }
+
+        this.poiAnchors = pois
+            .map((poi) => Number(poi?.trailAnchor?.d))
+            .filter(
+                (distance) =>
+                    Number.isFinite(distance) && distance >= 0
+            )
+            .sort((a, b) => a - b);
+    }
+
+    _getPoiSpeedMultiplier() {
+        if (this.poiAnchors.length === 0) return 1;
+
+        const currentDistance = this.state.distance;
+
+        const nextPoiDistance = this.poiAnchors.find(
+            (distance) => distance >= currentDistance
+        );
+
+        if (!Number.isFinite(nextPoiDistance)) return 1;
+
+        const distanceToPoi =
+            nextPoiDistance - currentDistance;
+
+        if (distanceToPoi >= this.poiSlowdownDistance) {
+            return 1;
+        }
+
+        const progress = Math.max(
+            0,
+            Math.min(
+                1,
+                distanceToPoi / this.poiSlowdownDistance
+            )
+        );
+
+        return (
+            this.poiMinimumSpeedMultiplier +
+            (1 - this.poiMinimumSpeedMultiplier) * progress
+        );
+    }
+
 
     start() {
         if (this._enabled || !this.trailPath.isUsable) return false;
@@ -181,8 +234,19 @@ export class TourEngine {
         // Cinturón extra para cualquier entrada (táctil incluida) cuando no hay reversa.
         if (this.forwardOnly && this._input.forward < 0) this._input.forward = 0;
         if (this._input.forward !== 0) {
-            const speed = this.speed * (this._input.fast ? this.fastMultiplier : 1);
-            this.state.distance += this._input.forward * speed * dt;
+            const baseSpeed =
+    this.speed * (this._input.fast ? this.fastMultiplier : 1);
+
+// SW-17: desacelerar únicamente al avanzar hacia un POI.
+// Si el usuario retrocede, conserva la velocidad normal.
+const poiMultiplier =
+    this._input.forward > 0
+        ? this._getPoiSpeedMultiplier()
+        : 1;
+
+const speed = baseSpeed * poiMultiplier;
+
+this.state.distance += this._input.forward * speed * dt;
             // El recorte a los extremos lo hace positionAt: no se sale del tramo.
             this.state.distance = Math.max(0, Math.min(this.state.distance, this.trailPath.totalLength()));
             this._emitProgress();
