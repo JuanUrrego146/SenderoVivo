@@ -100,8 +100,8 @@ function desdeContrato(poi) {
         conservation: poi.conservation || 'Verificado',
         curiosity: poi.curiosity || '',
         altitudeRange: limpiarAltitud(poi.id, poi.altitudeRange),
-        sightingTips: poi.sightingTips || 'Observar con paciencia en los estratos medios y altos del dosel.',
-
+        sightingTips: poi.sightingTips || '',
+        fieldIdTips: poi.fieldIdTips || '',
         audioFreq: poi.audioFreq || 440,
 
         discovered: false,
@@ -666,17 +666,65 @@ function selectHotspot(id) {
                 ${item.fullDesc}
             </p>
 
-            ${item.sightingTips && !item.sightingTips.includes('[por completar') ? `
-                <div class="rounded-2xl p-3 mb-2.5" style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border);">
-                    <h4 class="text-[11px] font-bold flex items-center gap-1.5 mb-1" style="color: var(--sv-sky-hover);">
-                        <i class="fa-solid fa-binoculars"></i>
-                        Consejos de avistamiento
-                    </h4>
-                    <p class="text-[11px] leading-relaxed" style="color: var(--sv-text-muted);">
-                        ${item.sightingTips}
-                    </p>
-                </div>
-            ` : ''}
+        <div class="space-y-3 mb-4">
+
+    <div
+        class="rounded-2xl p-3"
+        style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border);"
+    >
+        <h4
+            class="text-[11px] font-bold flex items-center gap-1.5 mb-1"
+            style="color: var(--sv-sky-hover);"
+        >
+            <i class="fa-solid fa-binoculars"></i>
+            Consejos de avistamiento
+        </h4>
+
+        <p
+            class="text-[11px] leading-relaxed"
+            style="color: var(--sv-text-muted);"
+        >
+            ${
+                !item.sightingTips ||
+                item.sightingTips
+                    .trim()
+                    .toLowerCase()
+                    .startsWith('[por completar')
+                    ? 'Información pendiente de completar.'
+                    : item.sightingTips
+            }
+        </p>
+    </div>
+
+    <div
+        class="rounded-2xl p-3"
+        style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border);"
+    >
+        <h4
+            class="text-[11px] font-bold flex items-center gap-1.5 mb-1"
+            style="color: var(--sv-sky-hover);"
+        >
+            <i class="fa-solid fa-magnifying-glass"></i>
+            Cómo identificarla en campo
+        </h4>
+
+        <p
+            class="text-[11px] leading-relaxed"
+            style="color: var(--sv-text-muted);"
+        >
+            ${
+                !item.fieldIdTips ||
+                item.fieldIdTips
+                    .trim()
+                    .toLowerCase()
+                    .startsWith('[por completar')
+                    ? 'Información pendiente de completar.'
+                    : item.fieldIdTips
+            }
+        </p>
+    </div>
+
+</div>
 
             ${item.curiosity ? `
                 <div class="rounded-2xl p-3 mb-3.5" style="background: rgba(24, 43, 39, 0.95); border: 1px solid var(--sv-surface-border);">
