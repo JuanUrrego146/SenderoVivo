@@ -27,7 +27,7 @@ import { TourEngine } from './TourEngine.js';
 import { TrailRecorder } from './TrailRecorder.js';
 import { TrailArrowsView } from '../views/TrailArrowsView.js';
 import { PoiManager } from './PoiManager.js';
-import { PoiCard } from '../poi/PoiCard.js';
+import { PoiCardView } from '../views/PoiCardView.js';
 import { ShellView } from '../views/ShellView.js';
 import AmbienceController from './AmbienceController.js';
 import { detectFromDevice } from '../models/QualityProfile.js';
@@ -400,7 +400,7 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     }
     if (window.senderoTour) {
         const poiManager = new PoiManager(app, camera, window.senderoTour);
-        const poiCard = new PoiCard(app);
+        const poiCard = new PoiCardView(app);
         window.senderoPoiManager = poiManager;
         window.senderoPoiCard = poiCard;
         app.on('poi:request-close', () => poiManager.closePoi());

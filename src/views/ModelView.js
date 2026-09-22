@@ -1,4 +1,3 @@
-```js
 export class ModelView {
 
     constructor(container) {
@@ -226,10 +225,38 @@ export class ModelView {
          */
 
         await new Promise(
-            resolve =>
-                requestAnimationFrame(
-                    () => resolve()
-                )
+            (resolve, reject) => {
+
+                let finished = false;
+
+                const finish = (callback) => {
+
+                    if (finished) {
+                        return;
+                    }
+
+                    finished = true;
+                    clearTimeout(timeout);
+                    callback();
+                };
+
+                const timeout = setTimeout(
+                    () => finish(() => reject(new Error('El modelo GLB tardó demasiado en cargar.'))),
+                    20000
+                );
+
+                model.addEventListener(
+                    'load',
+                    () => finish(resolve),
+                    { once: true }
+                );
+
+                model.addEventListener(
+                    'error',
+                    () => finish(() => reject(new Error('No se pudo cargar el modelo 3D: ' + modelUrl))),
+                    { once: true }
+                );
+            }
         );
 
 
@@ -356,4 +383,3 @@ export class ModelView {
         }
     }
 }
-```

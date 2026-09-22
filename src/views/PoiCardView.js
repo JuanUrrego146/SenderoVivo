@@ -715,7 +715,8 @@ export class PoiCardView {
          */
 
         await this._loadModel(
-            card
+            card,
+            poi
         );
     }
 
@@ -726,7 +727,7 @@ export class PoiCardView {
      * =========================================================
      */
 
-    async _loadModel(card) {
+    async _loadModel(card, poi) {
 
         const container =
             card.querySelector(
@@ -734,10 +735,15 @@ export class PoiCardView {
             );
 
 
-        const loading =
-            card.querySelector(
-                '#poi-model-loading'
-            );
+        const modelUrl =
+            poi?.modelUrl;
+
+        if (!modelUrl) {
+
+            this._showModelUnavailable(card);
+
+            return;
+        }
 
 
         try {
@@ -749,7 +755,7 @@ export class PoiCardView {
 
 
             await this.modelViewer.load(
-                'assets/models/golondrina-plomiza.glb'
+                modelUrl
             );
 
 
@@ -774,17 +780,57 @@ export class PoiCardView {
             );
 
 
-            if (
-                loading
-            ) {
-
-                loading.textContent =
-                    'No se pudo cargar el modelo 3D';
-
-                loading.style.color =
-                    '#ff8888';
-            }
+            this._showModelUnavailable(card);
         }
+    }
+
+
+    _showModelUnavailable(card) {
+
+        const container =
+            card.querySelector(
+                '#poi-model'
+            );
+
+        if (!container) {
+            return;
+        }
+
+        const message =
+            document.createElement(
+                'div'
+            );
+
+        message.id =
+            'poi-model-loading';
+
+        message.textContent =
+            'Este modelo 3D aún no está disponible.';
+
+        message.style.display =
+            'flex';
+
+        message.style.alignItems =
+            'center';
+
+        message.style.justifyContent =
+            'center';
+
+        message.style.height =
+            '100%';
+
+        message.style.padding =
+            '16px';
+
+        message.style.boxSizing =
+            'border-box';
+
+        message.style.textAlign =
+            'center';
+
+        container.replaceChildren(
+            message
+        );
     }
 
 
