@@ -80,10 +80,10 @@ function desdeContrato(poi) {
         cat = poi.type === 'flora' ? 'flora' : 'patrimonio';
     }
 
-    let catColor = '#38bdf8'; // Sky blue
-    if (cat === 'fauna') catColor = '#38bdf8';
-    else if (cat === 'flora') catColor = '#0ea5e9';
-    else catColor = '#0284c7';
+    let catColor = 'var(--sv-primary)';
+    if (cat === 'fauna') catColor = 'var(--sv-fauna-color)';
+    else if (cat === 'flora') catColor = 'var(--sv-flora-color)';
+    else catColor = 'var(--sv-patrimonio-color)';
 
     return {
         id: poi.id,
@@ -499,12 +499,12 @@ function accionesMediaHTML(item) {
     const claseBoton =
         'flex-1 min-w-[7rem] py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2 touch-manipulation cursor-pointer';
     const estiloBoton =
-        'background: var(--sv-teal-surface); border: 1px solid var(--sv-surface-border); color: var(--sv-text-primary);';
+        'background: var(--sv-surface-solid-warm); border: 1px solid var(--sv-surface-border); color: var(--sv-text-primary);';
 
     const botones = [];
 
     /*
-     * Canto.
+     * Audio / canto.
      */
     if (item.birdCallUrl) {
         botones.push(`
@@ -513,7 +513,7 @@ function accionesMediaHTML(item) {
                 class="${claseBoton}"
                 style="${estiloBoton}"
             >
-                <i class="fa-solid fa-volume-high" style="color: var(--sv-sky-hover);"></i>
+                <i class="fa-solid fa-volume-high" style="color: var(--sv-primary);"></i>
                 Escuchar canto
             </button>
         `);
@@ -540,7 +540,7 @@ function accionesMediaHTML(item) {
                 class="${claseBoton}"
                 style="${estiloBoton}"
             >
-                <i class="fa-solid fa-headphones" style="color: var(--sv-sky-hover);"></i>
+                <i class="fa-solid fa-headphones" style="color: var(--sv-secondary);"></i>
                 Narración
             </button>
         `);
@@ -556,7 +556,7 @@ function accionesMediaHTML(item) {
                 class="${claseBoton}"
                 style="${estiloBoton}"
             >
-                <i class="fa-solid fa-cube" style="color: var(--sv-sky-hover);"></i>
+                <i class="fa-solid fa-cube" style="color: var(--sv-primary-hover);"></i>
                 Ver en 3D
             </button>
         `);
@@ -618,7 +618,7 @@ function selectHotspot(id) {
             <button
                 onclick="closeBottomSheet()"
                 class="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center text-sm transition z-50 touch-manipulation cursor-pointer shadow-lg hover:scale-105"
-                style="background: var(--sv-teal-surface); border: 1px solid var(--sv-surface-border); color: var(--sv-text-muted);"
+                style="background: var(--sv-surface-solid-warm); border: 1px solid var(--sv-surface-border); color: var(--sv-text-muted);"
             >
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -634,9 +634,9 @@ function selectHotspot(id) {
                         <span
                             class="text-[9.5px] uppercase font-bold px-2 py-0.5 rounded-full border"
                             style="
-                                background:${item.color}18;
-                                color:${item.color};
-                                border-color:${item.color}45;
+                                background: var(--sv-primary-surface);
+                                color: var(--sv-primary);
+                                border-color: var(--sv-primary-border);
                             "
                         >
                             <i class="fa-solid ${item.icon}"></i>
@@ -644,7 +644,7 @@ function selectHotspot(id) {
                         </span>
 
                         ${item.altitudeRange ? `
-                            <span class="text-[9px] font-semibold px-2 py-0.5 rounded-full" style="background: rgba(35, 63, 57, 0.6); color: var(--sv-text-dim); border: 1px solid var(--sv-surface-border);">
+                            <span class="text-[9px] font-semibold px-2 py-0.5 rounded-full" style="background: var(--sv-surface-solid-warm); color: var(--sv-text-muted); border: 1px solid var(--sv-surface-border);">
                                 <i class="fa-solid fa-mountain text-[8px] mr-0.5"></i> ${item.altitudeRange}
                             </span>
                         ` : ''}
@@ -655,7 +655,7 @@ function selectHotspot(id) {
                         ${item.name}
                     </h3>
 
-                    <p class="text-[11px] italic font-mono" style="color: var(--sv-sky-light);">
+                    <p class="text-[11px] italic font-mono" style="color: var(--sv-primary);">
                         ${item.scientific}
                     </p>
 
@@ -667,8 +667,8 @@ function selectHotspot(id) {
             </p>
 
             ${item.sightingTips && !item.sightingTips.includes('[por completar') ? `
-                <div class="rounded-2xl p-3 mb-2.5" style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border);">
-                    <h4 class="text-[11px] font-bold flex items-center gap-1.5 mb-1" style="color: var(--sv-sky-hover);">
+                <div class="rounded-2xl p-3 mb-2.5" style="background: var(--sv-surface-solid-warm); border: 1px solid var(--sv-surface-border);">
+                    <h4 class="text-[11px] font-bold flex items-center gap-1.5 mb-1" style="color: var(--sv-primary);">
                         <i class="fa-solid fa-binoculars"></i>
                         Consejos de avistamiento
                     </h4>
@@ -679,8 +679,8 @@ function selectHotspot(id) {
             ` : ''}
 
             ${item.curiosity ? `
-                <div class="rounded-2xl p-3 mb-3.5" style="background: rgba(24, 43, 39, 0.95); border: 1px solid var(--sv-surface-border);">
-                    <h4 class="text-[11px] font-bold flex items-center gap-1.5 mb-1" style="color: var(--sv-sky-hover);">
+                <div class="rounded-2xl p-3 mb-3.5" style="background: var(--sv-surface-solid-warm); border: 1px solid var(--sv-secondary-border);">
+                    <h4 class="text-[11px] font-bold flex items-center gap-1.5 mb-1" style="color: var(--sv-secondary);">
                         <i class="fa-solid fa-lightbulb"></i>
                         ¿Sabías que?
                     </h4>
@@ -697,7 +697,7 @@ function selectHotspot(id) {
                 <button
                     onclick="markAsDiscovered('${item.id}')"
                     class="flex-1 py-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-2 shadow-lg touch-manipulation cursor-pointer hover:scale-[1.01]"
-                    style="background: linear-gradient(135deg, var(--sv-sky), var(--sv-sky-deep)); color: #fff; box-shadow: 0 4px 14px var(--sv-sky-glow);"
+                    style="background: linear-gradient(135deg, var(--sv-primary), var(--sv-primary-hover)); color: var(--sv-text-inverse); box-shadow: 0 4px 14px var(--sv-primary-glow);"
                 >
                     <i class="fa-solid ${item.discovered ? 'fa-circle-check' : 'fa-check'}"></i>
                     ${item.discovered ? 'Especie Registrada en Bitácora' : 'Marcar como Visto'}
@@ -823,7 +823,7 @@ function switchTab(tab) {
         if (btn) {
             if (t === tab) {
                 btn.className = 'active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition';
-                btn.style.color = 'var(--sv-sky-hover)';
+                btn.style.color = 'var(--sv-primary)';
             } else {
                 btn.className = 'flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
                 btn.style.color = 'var(--sv-text-dim)';
@@ -834,7 +834,7 @@ function switchTab(tab) {
         if (btnM) {
             if (t === tab) {
                 btnM.className = 'nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition';
-                btnM.style.color = 'var(--sv-sky-hover)';
+                btnM.style.color = 'var(--sv-primary)';
             } else {
                 btnM.className = 'nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
                 btnM.style.color = 'var(--sv-text-dim)';
@@ -902,20 +902,20 @@ function switchTab(tab) {
         if (filterBar) filterBar.style.display = 'none';
 
         content.innerHTML = `
-            <div class="glass-panel rounded-2xl p-3.5 mb-3" style="border: 1px solid rgba(56, 189, 248, 0.25); background: linear-gradient(165deg, rgba(14, 28, 44, 0.94) 0%, rgba(11, 22, 34, 0.98) 100%); box-shadow: 0 8px 24px rgba(2, 12, 22, 0.45);">
+            <div class="glass-panel rounded-2xl p-3.5 mb-3" style="border: 1px solid var(--sv-surface-border); background: var(--sv-surface-solid); box-shadow: var(--sv-surface-shadow);">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-xs font-bold" style="color: var(--sv-text-primary);">
                         Especies y Puntos Registrados
                     </span>
-                    <span class="text-xs font-bold font-syne px-2 py-0.5 rounded-full" style="color: var(--sv-sky-hover); background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border);">
+                    <span class="text-xs font-bold font-syne px-2 py-0.5 rounded-full" style="color: var(--sv-primary); background: var(--sv-primary-surface); border: 1px solid var(--sv-primary-border);">
                         ${discoveredCount} de ${totalCount}
                     </span>
                 </div>
 
-                <div class="w-full rounded-full h-2.5 overflow-hidden mb-2" style="background: rgba(7, 15, 24, 0.85); border: 1px solid rgba(56, 189, 248, 0.2);">
+                <div class="w-full rounded-full h-2.5 overflow-hidden mb-2" style="background: var(--sv-surface-inset); border: 1px solid var(--sv-surface-border);">
                     <div
                         class="h-full transition-all duration-700"
-                        style="width: ${progressPercent}%; background: linear-gradient(90deg, var(--sv-sky-deep) 0%, var(--sv-sky-hover) 100%); box-shadow: 0 0 10px var(--sv-sky-glow);"
+                        style="width: ${progressPercent}%; background: linear-gradient(90deg, var(--sv-primary) 0%, var(--sv-secondary) 100%); box-shadow: 0 0 10px var(--sv-primary-glow);"
                     ></div>
                 </div>
 
@@ -926,7 +926,7 @@ function switchTab(tab) {
             </div>
 
             <h3 class="text-[11px] font-bold tracking-wider uppercase mb-2 flex items-center gap-2" style="color: var(--sv-text-muted);">
-                <i class="fa-solid fa-list-check text-[11px]" style="color: var(--sv-sky-hover);"></i> Registro de avistamientos
+                <i class="fa-solid fa-list-check text-[11px]" style="color: var(--sv-primary);"></i> Registro de avistamientos
             </h3>
 
             <div class="flex flex-col gap-3">
@@ -941,9 +941,9 @@ function switchTab(tab) {
                             <div
                                 class="w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-sm flex-shrink-0"
                                 style="
-                                    background: ${item.discovered ? theme.surface : 'rgba(14, 28, 44, 0.75)'};
+                                    background: ${item.discovered ? theme.surface : 'var(--sv-surface-solid-warm)'};
                                     color: ${item.discovered ? theme.color : 'var(--sv-text-dim)'};
-                                    border: 1px solid ${item.discovered ? theme.border : 'rgba(148, 163, 184, 0.22)'};
+                                    border: 1px solid ${item.discovered ? theme.border : 'var(--sv-surface-border)'};
                                     box-shadow: ${item.discovered ? `0 0 10px ${theme.glow}` : 'none'};
                                 "
                             >
@@ -966,7 +966,7 @@ function switchTab(tab) {
                             class="text-[10px] font-semibold font-mono px-2.5 py-1 rounded-full flex items-center gap-1.5 flex-shrink-0"
                             style="${item.discovered
                                 ? `background: ${theme.surface}; color: ${theme.color}; border: 1px solid ${theme.border}; box-shadow: 0 0 8px ${theme.glow};`
-                                : 'background: rgba(148, 163, 184, 0.10); color: var(--sv-text-muted); border: 1px solid rgba(148, 163, 184, 0.22);'
+                                : 'background: var(--sv-surface-solid-warm); color: var(--sv-text-muted); border: 1px solid var(--sv-surface-border);'
                             }"
                         >
                             ${item.discovered
@@ -1067,14 +1067,14 @@ function closeTabPanel() {
             btn.className = (t === 'trail')
                 ? 'active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition'
                 : 'flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
-            btn.style.color = (t === 'trail') ? 'var(--sv-sky-hover)' : 'var(--sv-text-dim)';
+            btn.style.color = (t === 'trail') ? 'var(--sv-primary)' : 'var(--sv-text-dim)';
         }
         const btnM = document.getElementById(`nav-${t}-m`);
         if (btnM) {
             btnM.className = (t === 'trail')
                 ? 'nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition'
                 : 'nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
-            btnM.style.color = (t === 'trail') ? 'var(--sv-sky-hover)' : 'var(--sv-text-dim)';
+            btnM.style.color = (t === 'trail') ? 'var(--sv-primary)' : 'var(--sv-text-dim)';
         }
     });
 }
@@ -1540,7 +1540,7 @@ function updateAmbientAudioButtons() {
     const btnM = document.getElementById('btn-ambient-audio-toggle-m');
 
     const iconHtml = isPlaying
-        ? '<i class="fa-solid fa-volume-high" style="color: var(--sv-sky-hover);"></i>'
+        ? '<i class="fa-solid fa-volume-high" style="color: var(--sv-primary);"></i>'
         : '<i class="fa-solid fa-volume-xmark" style="color: var(--sv-text-dim);"></i>';
 
     if (btnPc) {
@@ -1559,11 +1559,16 @@ function updateAmbientAudioButtons() {
    ========================================================================== */
 
 let currentAlbumCategory = 'all';
+let currentAlbumSearchQuery = '';
 
 function openBiodiversityAlbum() {
     const modal = document.getElementById('biodiversity-album-modal');
     if (!modal) return;
     modal.classList.remove('hidden');
+
+    const searchInput = document.getElementById('album-search-input');
+    if (searchInput) searchInput.value = '';
+    currentAlbumSearchQuery = '';
 
     // Actualizar contadores de las pastillas
     const cAll = document.getElementById('album-tab-count-all');
@@ -1593,6 +1598,11 @@ function filterAlbumSpecies(category, btn) {
     renderBiodiversityAlbum(category);
 }
 
+function searchAlbumSpecies(query) {
+    currentAlbumSearchQuery = (query || '').toLowerCase().trim();
+    renderBiodiversityAlbum(currentAlbumCategory);
+}
+
 function exploreSpecimenFromAlbum(id) {
     closeBiodiversityAlbum();
     startTrailExploration(false);
@@ -1614,49 +1624,70 @@ function createAlbumCardHTML(item, idx) {
     const has3D = !!item.modelUrl;
     const hasAudio = !!(item.birdCallUrl);
     const catName = item.category === 'fauna' ? 'Fauna' : (item.category === 'flora' ? 'Flora' : 'Patrimonio');
+    const catClass = `card-cat-${item.category || 'patrimonio'}`;
 
     return `
-        <div class="album-species-card" data-specimen-id="${item.id}">
-            <div class="flex items-center justify-between gap-2 mb-0.5">
-                <span class="album-category-badge">
+        <div class="album-species-card ${catClass}" data-specimen-id="${item.id}">
+            <!-- Portada visual ilustrada con medallón botánico y badges -->
+            <div class="album-card-cover">
+                <span class="album-cover-badge-left">
                     #BIO-0${idx + 1} · ${catName}
                 </span>
-                ${item.altitudeRange ? `
-                    <span class="text-[10px] font-mono px-2 py-0.5 rounded-full" style="background: rgba(14, 38, 58, 0.7); color: var(--sv-sky-light); border: 1px solid var(--sv-sky-border);">
-                        <i class="fa-solid fa-mountain text-[8px] mr-1"></i>${item.altitudeRange}
-                    </span>
-                ` : ''}
-            </div>
 
-            <div class="album-species-header">
-                <div class="album-species-thumb">
+                <div class="album-cover-badge-right">
+                    ${has3D ? `
+                        <span class="album-feature-chip" title="Modelo 3D interactivo disponible">
+                            <i class="fa-solid fa-cube text-[9px]"></i> 3D
+                        </span>
+                    ` : ''}
+                    ${hasAudio ? `
+                        <span class="album-feature-chip chip-audio" title="Audio y canto disponible">
+                            <i class="fa-solid fa-volume-high text-[9px]"></i> Canto
+                        </span>
+                    ` : ''}
+                </div>
+
+                <!-- Medallón botánico central con icono representativo -->
+                <div class="album-card-medallion">
                     <i class="fa-solid ${iconClass}"></i>
                 </div>
-                <div class="album-species-names">
-                    <h4 class="album-species-common">${item.name}</h4>
-                    <p class="album-species-scientific">${item.scientific || 'Especie altoandina'}</p>
+            </div>
+
+            <!-- Identificación y taxonomía de la especie -->
+            <div class="album-species-names">
+                <h4 class="album-species-common">${item.name}</h4>
+                <p class="album-species-scientific">${item.scientific || 'Especie nativa de los Cerros'}</p>
+                <div class="album-species-meta-row">
+                    ${item.altitudeRange && !item.altitudeRange.includes('[por') ? `
+                        <span class="album-meta-pill">
+                            <i class="fa-solid fa-mountain text-[8px] mr-1"></i>${item.altitudeRange}
+                        </span>
+                    ` : ''}
+                    <span class="album-meta-pill">
+                        <i class="fa-solid fa-check text-[8px] mr-1" style="color: var(--sv-primary);"></i>${item.conservation || 'Verificado'}
+                    </span>
                 </div>
             </div>
 
+            <!-- Descripción y curiosidad botánica/faunística -->
             <p class="album-species-body">
-                ${item.fullDesc || item.curiosity || 'Especie registrada en el recorrido Quebrada La Vieja.'}
+                ${item.shortDesc || item.fullDesc || item.curiosity || 'Especie representativa de los Cerros Orientales de Bogotá.'}
             </p>
 
+            <!-- Acciones interactivas de la tarjeta -->
             <div class="album-species-footer">
-                <div class="flex items-center gap-1.5">
-                    ${hasAudio ? `
-                        <button onclick="sonarEspecie('${item.id}')" class="album-btn-3d" title="Escuchar canto">
-                            <i class="fa-solid fa-volume-high"></i> Canto
-                        </button>
-                    ` : ''}
-                    ${has3D ? `
-                        <button onclick="view3DFromAlbum('${item.id}')" class="album-btn-3d" title="Ver modelo 3D">
-                            <i class="fa-solid fa-cube"></i> 3D
-                        </button>
-                    ` : ''}
-                </div>
-                <button onclick="exploreSpecimenFromAlbum('${item.id}')" class="album-btn-explore" title="Explorar en el sendero 3D">
-                    <span>Explorar en sendero</span>
+                ${hasAudio ? `
+                    <button onclick="sonarEspecie('${item.id}'); event.stopPropagation();" class="album-btn-quick-audio" title="Escuchar canto">
+                        <i class="fa-solid fa-volume-high"></i> Canto
+                    </button>
+                ` : ''}
+                ${has3D ? `
+                    <button onclick="view3DFromAlbum('${item.id}'); event.stopPropagation();" class="album-btn-quick-3d" title="Examinar modelo 3D">
+                        <i class="fa-solid fa-cube"></i> 3D
+                    </button>
+                ` : ''}
+                <button onclick="exploreSpecimenFromAlbum('${item.id}'); event.stopPropagation();" class="album-btn-explore" title="Explorar en el sendero 3D">
+                    <span>Explorar</span>
                     <i class="fa-solid fa-arrow-right text-[10px]"></i>
                 </button>
             </div>
@@ -1669,96 +1700,37 @@ function renderBiodiversityAlbum(category = 'all') {
     const badge = document.getElementById('album-count-badge');
     if (!grid) return;
 
-    if (category === 'all') {
-        if (badge) badge.innerText = `${trailData.length} registros`;
+    let items = trailData;
 
-        const fauna = trailData.filter(x => x.category === 'fauna');
-        const flora = trailData.filter(x => x.category === 'flora');
-        const patrimonio = trailData.filter(x => x.category === 'patrimonio');
-
-        let html = '';
-
-        if (fauna.length > 0) {
-            html += `
-                <div class="col-span-full">
-                    <div class="album-section-header">
-                        <div class="album-section-title">
-                            <i class="fa-solid fa-dove"></i>
-                            <span>Fauna Silvestre y Aves de Montaña</span>
-                        </div>
-                        <span class="album-section-count">${fauna.length} especies</span>
-                    </div>
-                </div>
-                ${fauna.map((item, idx) => createAlbumCardHTML(item, idx)).join('')}
-            `;
-        }
-
-        if (flora.length > 0) {
-            html += `
-                <div class="col-span-full">
-                    <div class="album-section-header">
-                        <div class="album-section-title">
-                            <i class="fa-solid fa-seedling"></i>
-                            <span>Flora y Vegetación Altoandina</span>
-                        </div>
-                        <span class="album-section-count">${flora.length} especies</span>
-                    </div>
-                </div>
-                ${flora.map((item, idx) => createAlbumCardHTML(item, fauna.length + idx)).join('')}
-            `;
-        }
-
-        if (patrimonio.length > 0) {
-            html += `
-                <div class="col-span-full">
-                    <div class="album-section-header">
-                        <div class="album-section-title">
-                            <i class="fa-solid fa-landmark"></i>
-                            <span>Hitos y Patrimonio Histórico del Sendero</span>
-                        </div>
-                        <span class="album-section-count">${patrimonio.length} hitos</span>
-                    </div>
-                </div>
-                ${patrimonio.map((item, idx) => createAlbumCardHTML(item, fauna.length + flora.length + idx)).join('')}
-            `;
-        }
-
-        grid.innerHTML = html;
-    } else {
-        const filtered = trailData.filter(item => item.category === category);
-        if (badge) {
-            badge.innerText = `${filtered.length} ${filtered.length === 1 ? 'registro' : 'registros'}`;
-        }
-
-        if (filtered.length === 0) {
-            grid.innerHTML = `
-                <div class="col-span-full py-12 text-center text-xs" style="color: var(--sv-text-muted);">
-                    No hay especies registradas en esta categoría.
-                </div>
-            `;
-            return;
-        }
-
-        const sectionTitles = {
-            fauna: { title: 'Fauna Silvestre y Aves de Montaña', icon: 'fa-dove' },
-            flora: { title: 'Flora y Vegetación Altoandina', icon: 'fa-seedling' },
-            patrimonio: { title: 'Hitos y Patrimonio Histórico', icon: 'fa-landmark' }
-        };
-        const secInfo = sectionTitles[category] || { title: 'Especies registradas', icon: 'fa-layer-group' };
-
-        grid.innerHTML = `
-            <div class="col-span-full">
-                <div class="album-section-header">
-                    <div class="album-section-title">
-                        <i class="fa-solid ${secInfo.icon}"></i>
-                        <span>${secInfo.title}</span>
-                    </div>
-                    <span class="album-section-count">${filtered.length} registrados</span>
-                </div>
-            </div>
-            ${filtered.map((item, idx) => createAlbumCardHTML(item, idx)).join('')}
-        `;
+    // Filtro de búsqueda en tiempo real
+    if (currentAlbumSearchQuery) {
+        items = items.filter(item =>
+            (item.name && item.name.toLowerCase().includes(currentAlbumSearchQuery)) ||
+            (item.scientific && item.scientific.toLowerCase().includes(currentAlbumSearchQuery)) ||
+            (item.typeLabel && item.typeLabel.toLowerCase().includes(currentAlbumSearchQuery)) ||
+            (item.shortDesc && item.shortDesc.toLowerCase().includes(currentAlbumSearchQuery))
+        );
     }
+
+    if (category !== 'all') {
+        items = items.filter(x => x.category === category);
+    }
+
+    if (badge) {
+        badge.innerText = `${items.length} ${items.length === 1 ? 'registro' : 'registros'}`;
+    }
+
+    if (items.length === 0) {
+        grid.innerHTML = `
+            <div class="col-span-full py-12 text-center text-xs" style="color: var(--sv-text-muted);">
+                <i class="fa-solid fa-seedling text-2xl mb-2 block" style="color: var(--sv-primary);"></i>
+                No se encontraron especies que coincidan con la búsqueda.
+            </div>
+        `;
+        return;
+    }
+
+    grid.innerHTML = items.map((item, idx) => createAlbumCardHTML(item, idx)).join('');
 }
 
 // Stubs de compatibilidad segura
@@ -1842,14 +1814,14 @@ function updateChecklistUI() {
     if (counter) {
         counter.innerText = `${checkedCount}/${total} listo`;
         if (checkedCount === total) {
-            counter.style.background = 'rgba(16, 185, 129, 0.22)';
-            counter.style.color = '#34d399';
-            counter.style.borderColor = 'rgba(52, 211, 153, 0.5)';
-            counter.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.35)';
+            counter.style.background = 'var(--sv-primary-surface)';
+            counter.style.color = 'var(--sv-primary)';
+            counter.style.borderColor = 'var(--sv-primary-border)';
+            counter.style.boxShadow = '0 0 12px var(--sv-primary-glow)';
         } else {
-            counter.style.background = 'var(--sv-sky-surface)';
-            counter.style.color = 'var(--sv-sky-light)';
-            counter.style.borderColor = 'var(--sv-sky-border)';
+            counter.style.background = 'var(--sv-secondary-surface)';
+            counter.style.color = 'var(--sv-secondary)';
+            counter.style.borderColor = 'var(--sv-secondary-border)';
             counter.style.boxShadow = 'none';
         }
     }
@@ -1886,7 +1858,7 @@ function switchPrepararTrail(trailKey) {
     const hitosContainer = document.getElementById('preparar-map-hitos');
 
     if (titleEl) titleEl.innerText = data.name;
-    if (subEl) subEl.innerHTML = `<i class="fa-solid fa-location-dot mr-1" style="color: var(--sv-sky-hover);"></i>${data.subtitle}`;
+    if (subEl) subEl.innerHTML = `<i class="fa-solid fa-location-dot mr-1" style="color: var(--sv-primary);"></i>${data.subtitle}`;
     if (distEl) distEl.innerText = data.distance;
     if (elevEl) elevEl.innerText = data.elevation;
     if (timeEl) timeEl.innerText = data.time;
@@ -1897,7 +1869,7 @@ function switchPrepararTrail(trailKey) {
     if (hitosContainer && data.hitos) {
         hitosContainer.innerHTML = data.hitos.map((h, idx) => `
             <span class="map-waypoint-pill">
-                <span class="w-1.5 h-1.5 rounded-full ${idx === 2 ? 'bg-sky-400' : (idx === 3 ? 'bg-amber-400' : 'bg-emerald-400')}"></span> ${h}
+                <span class="w-1.5 h-1.5 rounded-full ${idx === 2 ? 'bg-amber-400' : (idx === 3 ? 'bg-amber-500' : 'bg-emerald-600')}"></span> ${h}
             </span>
         `).join('');
     }
@@ -2002,19 +1974,19 @@ let currentOnboardingStep = 0;
 const ONBOARDING_STEPS = [
     {
         icon: 'fa-arrows-up-down-left-right',
-        color: 'var(--sv-sky-hover)',
+        color: 'var(--sv-primary)',
         title: 'Explora el Entorno 360°',
         desc: 'Arrastra con tu dedo en el celular o con el ratón en la pantalla para girar la vista en cualquier dirección y contemplar los estratos del bosque.'
     },
     {
         icon: 'fa-person-walking',
-        color: 'var(--sv-sky-light)',
+        color: 'var(--sv-secondary)',
         title: 'Camina por el Sendero',
         desc: 'Toca las flechas luminosas situadas sobre el camino para avanzar y retroceder paso a paso a lo largo del trazado real.'
     },
     {
         icon: 'fa-cube',
-        color: 'var(--sv-sky)',
+        color: 'var(--sv-primary-hover)',
         title: 'Descubre Especies y 3D',
         desc: 'Toca los medallones flotantes para consultar la ficha botánica, escuchar cantos de aves y examinar modelos 3D interactivos.'
     }
@@ -2178,6 +2150,7 @@ window.handleSearch = handleSearch;
 window.openBiodiversityAlbum = openBiodiversityAlbum;
 window.closeBiodiversityAlbum = closeBiodiversityAlbum;
 window.filterAlbumSpecies = filterAlbumSpecies;
+window.searchAlbumSpecies = searchAlbumSpecies;
 window.renderBiodiversityAlbum = renderBiodiversityAlbum;
 window.exploreSpecimenFromAlbum = exploreSpecimenFromAlbum;
 window.view3DFromAlbum = view3DFromAlbum;

@@ -353,10 +353,10 @@ export class PoiCard {
             'auto';
 
         card.style.background =
-            'linear-gradient(165deg, rgba(35, 63, 57, 0.96) 0%, rgba(24, 43, 39, 0.98) 100%)';
+            'var(--sv-surface-solid, #E9D8C4)';
 
         card.style.color =
-            'var(--sv-text-primary, #F5F8F6)';
+            'var(--sv-text-primary, #1F2E22)';
 
         card.style.borderRadius =
             '28px';
@@ -371,10 +371,10 @@ export class PoiCard {
             "'Quicksand', system-ui, sans-serif";
 
         card.style.boxShadow =
-            '0 24px 70px rgba(8, 18, 15, 0.75), 0 0 0 1px rgba(169, 251, 195, 0.20) inset';
+            'var(--sv-surface-shadow-lg, 0 24px 60px rgba(40, 26, 15, 0.28))';
 
         card.style.border =
-            '1px solid rgba(169, 251, 195, 0.25)';
+            '1px solid var(--sv-surface-border, rgba(184, 150, 118, 0.42))';
 
         card.style.zIndex =
             '2147483647';
@@ -418,11 +418,11 @@ export class PoiCard {
                     right:14px;
                     width:36px;
                     height:36px;
-                    border:1px solid rgba(169,251,195,0.25);
+                    border:1px solid var(--sv-surface-border, rgba(184,150,118,0.42));
                     border-radius:50%;
-                    background:rgba(24,43,39,0.85);
-                    color:var(--sv-text-muted, #A5B7B1);
-                    font-size:22px;
+                    background:var(--sv-surface-solid-warm, #E4C7A8);
+                    color:var(--sv-text-primary, #1F2E22);
+                    font-size:20px;
                     cursor:pointer;
                     z-index:10;
                     display:flex;
@@ -430,8 +430,8 @@ export class PoiCard {
                     justify-content:center;
                     transition:all 0.2s;
                 "
-                onmouseenter="this.style.color='var(--sv-sky-hover)'; this.style.borderColor='var(--sv-sky-hover)';"
-                onmouseleave="this.style.color='var(--sv-text-muted, #A5B7B1)'; this.style.borderColor='rgba(56,189,248,0.25)';"
+                onmouseenter="this.style.color='var(--sv-primary, #386641)'; this.style.borderColor='var(--sv-primary, #386641)';"
+                onmouseleave="this.style.color='var(--sv-text-primary, #1F2E22)'; this.style.borderColor='var(--sv-surface-border, rgba(184,150,118,0.42))';"
             >
                 ✕
             </button>
@@ -449,8 +449,8 @@ export class PoiCard {
                     margin-bottom:18px;
                     border-radius:20px;
                     overflow:hidden;
-                    background:radial-gradient(circle at 50% 50%, rgba(14,38,58,0.6) 0%, rgba(8,18,28,0.95) 100%);
-                    border:1px solid rgba(56,189,248,0.20);
+                    background:var(--sv-surface-inset, rgba(228, 199, 168, 0.65));
+                    border:1px solid var(--sv-surface-border, rgba(184, 150, 118, 0.42));
                     position:relative;
                 "
             >
@@ -463,7 +463,7 @@ export class PoiCard {
                         display:flex;
                         align-items:center;
                         justify-content:center;
-                        color:var(--sv-sky-hover);
+                        color:var(--sv-primary, #386641);
                         font-size:13px;
                         font-weight:600;
                         z-index:2;
@@ -480,7 +480,7 @@ export class PoiCard {
             <!-- ========================================= -->
 
             <div style="text-align:center; margin-bottom:16px;">
-                <span style="display:inline-block; font-size:10px; text-transform:uppercase; font-weight:700; letter-spacing:0.06em; padding:3px 10px; border-radius:999px; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.30); color:var(--sv-sky-hover); margin-bottom:6px;">
+                <span style="display:inline-block; font-size:10px; text-transform:uppercase; font-weight:700; letter-spacing:0.06em; padding:3px 10px; border-radius:999px; background:var(--sv-primary-surface, rgba(56,102,65,0.12)); border:1px solid var(--sv-primary-border, rgba(56,102,65,0.30)); color:var(--sv-primary, #386641); margin-bottom:6px;">
                     Modelo 3D Interactivo
                 </span>
                 <h2
@@ -489,7 +489,7 @@ export class PoiCard {
                         font-family:'Syne', sans-serif;
                         font-size:24px;
                         font-weight:700;
-                        color:var(--sv-text-primary, #F5F8F6);
+                        color:var(--sv-text-primary, #1F2E22);
                     "
                 >
                     ${commonName}
@@ -498,7 +498,7 @@ export class PoiCard {
                 <p
                     style="
                         margin:4px 0 0 0;
-                        color:var(--sv-sky-hover);
+                        color:var(--sv-primary, #386641);
                         font-style:italic;
                         font-family:monospace;
                         font-size:12px;
@@ -517,8 +517,8 @@ export class PoiCard {
                 style="
                     margin-bottom:16px;
                     padding:12px 16px;
-                    background:rgba(24,43,39,0.70);
-                    border:1px solid rgba(169,251,195,0.12);
+                    background:var(--sv-surface-solid-warm, #E4C7A8);
+                    border:1px solid var(--sv-surface-border, rgba(184,150,118,0.42));
                     border-radius:16px;
                     display:grid;
                     grid-template-columns:1fr 1fr;
@@ -528,13 +528,13 @@ export class PoiCard {
             >
 
                 <div>
-                    <span style="display:block; font-size:10px; color:var(--sv-text-dim, #6B8078); text-transform:uppercase; font-weight:600;">Altitud</span>
-                    <strong style="color:var(--sv-text-primary, #F5F8F6);">${altitude}</strong>
+                    <span style="display:block; font-size:10px; color:var(--sv-text-dim, #6E7E72); text-transform:uppercase; font-weight:600;">Altitud</span>
+                    <strong style="color:var(--sv-text-primary, #1F2E22);">${altitude}</strong>
                 </div>
 
                 <div>
-                    <span style="display:block; font-size:10px; color:var(--sv-text-dim, #6B8078); text-transform:uppercase; font-weight:600;">Ubicación</span>
-                    <strong style="color:var(--sv-text-primary, #F5F8F6);">Cerros Orientales</strong>
+                    <span style="display:block; font-size:10px; color:var(--sv-text-dim, #6E7E72); text-transform:uppercase; font-weight:600;">Ubicación</span>
+                    <strong style="color:var(--sv-text-primary, #1F2E22);">Cerros Orientales</strong>
                 </div>
 
             </div>
@@ -548,7 +548,7 @@ export class PoiCard {
                 style="
                     font-size:13px;
                     line-height:1.6;
-                    color:var(--sv-text-muted, #A5B7B1);
+                    color:var(--sv-text-muted, #495A4D);
                     margin:0 0 16px 0;
                 "
             >
@@ -575,12 +575,12 @@ export class PoiCard {
                         padding:12px;
                         border:none;
                         border-radius:14px;
-                        background:linear-gradient(135deg, var(--sv-sky, #0ea5e9), var(--sv-sky-deep, #0284c7));
-                        color:#fff;
+                        background:linear-gradient(135deg, var(--sv-primary, #386641), var(--sv-primary-hover, #6A994E));
+                        color:var(--sv-text-inverse, #FFFFFF);
                         font-weight:700;
                         font-size:13px;
                         cursor:pointer;
-                        box-shadow:0 4px 14px var(--sv-sky-glow, rgba(56,189,248,0.35));
+                        box-shadow:0 4px 14px var(--sv-primary-glow, rgba(106,153,78,0.35));
                         transition:all 0.2s;
                     "
                 >
@@ -594,13 +594,14 @@ export class PoiCard {
                     style="
                         flex:1;
                         padding:12px;
-                        border:1px solid rgba(56,189,248,0.40);
+                        border:1px solid var(--sv-secondary, #E7A84E);
                         border-radius:14px;
-                        background:rgba(14,28,44,0.70);
-                        color:var(--sv-sky-light, #7dd3fc);
+                        background:var(--sv-surface-solid-warm, #E4C7A8);
+                        color:var(--sv-text-primary, #1F2E22);
                         font-weight:700;
                         font-size:13px;
                         cursor:pointer;
+                        box-shadow:0 4px 12px rgba(231,168,78,0.20);
                         transition:all 0.2s;
                     "
                 >

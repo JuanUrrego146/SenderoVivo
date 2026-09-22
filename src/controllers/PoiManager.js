@@ -413,16 +413,16 @@ export class PoiManager {
             '48px';
 
         button.style.border =
-            '2px solid rgba(255,255,255,0.85)';
+            '2px solid var(--sv-primary, #386641)';
 
         button.style.borderRadius =
             '50%';
 
         button.style.background =
-            'rgba(24, 37, 29, 0.88)';
+            'var(--sv-surface-solid, #E9D8C4)';
 
         button.style.color =
-            'var(--sv-sky-hover, #38bdf8)';
+            'var(--sv-primary, #386641)';
 
         button.style.fontSize =
             '23px';
@@ -452,7 +452,7 @@ export class PoiManager {
             'border-box';
 
         button.style.boxShadow =
-            '0 4px 14px rgba(0,0,0,0.45)';
+            'var(--sv-surface-shadow-lg, 0 6px 18px rgba(40, 26, 15, 0.22))';
 
         button.style.transition =
             'transform 0.15s ease, box-shadow 0.15s ease';
@@ -505,7 +505,7 @@ export class PoiManager {
                     'translate(-50%, -50%) scale(1.12)';
 
                 button.style.boxShadow =
-                    '0 6px 18px rgba(0,0,0,0.55)';
+                    '0 6px 20px var(--sv-primary-glow, rgba(106, 153, 78, 0.35))';
             }
         );
 
@@ -518,7 +518,7 @@ export class PoiManager {
                     'translate(-50%, -50%) scale(1)';
 
                 button.style.boxShadow =
-                    '0 4px 14px rgba(0,0,0,0.45)';
+                    'var(--sv-surface-shadow-lg, 0 6px 18px rgba(40, 26, 15, 0.22))';
             }
         );
 

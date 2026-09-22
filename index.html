@@ -60,10 +60,10 @@
                 color: var(--sv-text-muted);
             }
             #overlay-content p:last-child { margin-bottom: 0; }
-            #overlay-content a { color: var(--sv-sky-hover); }
+            #overlay-content a { color: var(--sv-primary); }
             #overlay-content code {
                 padding: 1px 5px;
-                background: var(--sv-teal-deep);
+                background: var(--sv-surface-solid);
                 border-radius: 6px;
                 color: var(--sv-text-primary);
                 font-size: 15px;
@@ -71,23 +71,23 @@
             }
             #overlay-content button {
                 padding: 10px 20px;
-                background: linear-gradient(135deg, var(--sv-sky), var(--sv-sky-deep));
+                background: linear-gradient(135deg, var(--sv-primary), var(--sv-primary-hover));
                 border: none;
                 border-radius: 12px;
-                color: #fff;
+                color: var(--sv-text-inverse);
                 font-size: 16px;
                 font-weight: 600;
                 cursor: pointer;
                 transition: background 0.2s;
             }
-            #overlay-content button:hover { background: var(--sv-sky-hover); }
+            #overlay-content button:hover { background: var(--sv-primary-hover); }
 
             .spinner {
                 width: 28px;
                 height: 28px;
                 margin-bottom: 16px;
-                border: 3px solid var(--sv-teal-mid);
-                border-top-color: var(--sv-sky-hover);
+                border: 3px solid var(--sv-surface-border);
+                border-top-color: var(--sv-primary);
                 border-radius: 50%;
                 animation: spin 0.9s linear infinite;
             }
@@ -112,20 +112,20 @@
                 color: var(--sv-text-muted);
                 box-shadow: var(--sv-surface-shadow);
             }
-            #hint strong { color: var(--sv-sky-hover); }
+            #hint strong { color: var(--sv-primary); }
 
             /* Barra de progreso de la carga */
             .barra {
                 height: 6px;
                 margin: 14px 0 10px;
-                background: var(--sv-teal-deep);
+                background: var(--sv-surface-inset);
                 border-radius: 3px;
                 overflow: hidden;
             }
             .barra-fill {
                 height: 100%;
                 width: 2%;
-                background: linear-gradient(90deg, var(--sv-sky-deep), var(--sv-sky-hover));
+                background: linear-gradient(90deg, var(--sv-secondary), var(--sv-primary));
                 border-radius: 3px;
                 transition: width 0.35s ease;
             }
@@ -161,10 +161,10 @@
                 transition: transform 0.3s ease-out, visibility 0s linear 0.3s;
             }
 
-            /* El foco de teclado se ve (RNF-006) — Azul Celeste */
+            /* El foco de teclado se ve (RNF-006) — Verde Botánico */
             #shell button:focus-visible, #bottom-sheet button:focus-visible,
             #tab-panel-container button:focus-visible, #tecnica button:focus-visible {
-                outline: 2px solid var(--sv-sky-hover);
+                outline: 2px solid var(--sv-primary);
                 outline-offset: 2px;
             }
 
@@ -205,9 +205,9 @@
                 transition: all 0.2s;
             }
             #tecnica button.activa {
-                background: var(--sv-pill-active-bg);
-                border-color: var(--sv-pill-active-border);
-                color: var(--sv-sky-hover);
+                background: var(--sv-primary);
+                border-color: var(--sv-primary);
+                color: var(--sv-text-inverse);
             }
             #tecnica button small {
                 display: block;
@@ -324,13 +324,13 @@
                 <div class="preparar-header-row">
                     <div class="min-w-0 pr-8 md:pr-0">
                         <span class="text-[10px] sm:text-[11px] font-bold font-mono tracking-wider uppercase block mb-1" style="color: var(--sv-text-dim);">
-                            FICHA TÉCNICA DEL SENDERO · <span style="color: var(--sv-sky-hover);">EAAB Cerros Orientales</span>
+                            FICHA TÉCNICA DEL SENDERO · <span style="color: var(--sv-primary);">EAAB Cerros Orientales</span>
                         </span>
                         <h2 id="preparar-trail-title" class="text-xl sm:text-3xl font-extrabold font-syne truncate" style="color: var(--sv-text-primary); letter-spacing: -0.02em;">
                             Quebrada La Vieja
                         </h2>
                         <p id="preparar-trail-sub" class="text-xs sm:text-[13px] mt-1 flex items-center truncate" style="color: var(--sv-text-muted);">
-                            <i class="fa-solid fa-location-dot mr-1.5" style="color: var(--sv-sky-hover);"></i>
+                            <i class="fa-solid fa-location-dot mr-1.5" style="color: var(--sv-primary);"></i>
                             Cerros Orientales de Bogotá · Localidad de Chapinero (Cl. 71)
                         </p>
                     </div>
@@ -341,7 +341,7 @@
                             <span class="text-xs font-semibold hidden lg:inline" style="color: var(--sv-text-muted);">
                                 Cambiar sendero:
                             </span>
-                            <div class="flex items-center gap-1.5 p-1 rounded-2xl" style="background: rgba(10, 22, 34, 0.85); border: 1px solid rgba(56, 189, 248, 0.25);">
+                            <div class="flex items-center gap-1.5 p-1 rounded-2xl" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-surface-border);">
                                 <button type="button" data-trail="quebrada-la-vieja" onclick="switchPrepararTrail('quebrada-la-vieja')" class="trail-select-pill active text-xs font-semibold px-3.5 py-1.5 rounded-xl cursor-pointer transition text-center">
                                     Quebrada La Vieja
                                 </button>
@@ -416,12 +416,12 @@
                                 <div id="preparar-eco-banner" class="ecosystem-banner" style="background-image: url('assets/quebrada-cascada.webp');">
                                     <div class="ecosystem-banner-overlay"></div>
                                     <div class="absolute bottom-3 left-4 right-4 z-10">
-                                        <span id="preparar-eco-tag" class="inline-block text-[10px] sm:text-xs font-bold font-syne px-3 py-1 rounded-full shadow-md" style="background: rgba(16, 185, 129, 0.35); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.5);">
+                                        <span id="preparar-eco-tag" class="inline-block text-[10px] sm:text-xs font-bold font-syne px-3 py-1 rounded-full shadow-md" style="background: var(--sv-flora-surface); color: var(--sv-flora-color); border: 1px solid var(--sv-flora-border);">
                                             Ecosistema de Niebla y Nacimiento Hídrico
                                         </span>
                                     </div>
                                 </div>
-                                <div class="p-4 sm:p-5" style="background: rgba(10, 22, 36, 0.75);">
+                                <div class="p-4 sm:p-5" style="background: var(--sv-surface-inset);">
                                     <p id="preparar-eco-desc" class="text-xs sm:text-[13.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted); font-family: 'Quicksand', sans-serif;">
                                         El sendero más emblemático de los Cerros Orientales de Bogotá. Asciende a lo largo del cañón de la quebrada entre helechos gigantes, orquídeas silvestres y bosques de niebla hasta alcanzar la cascada y el mirador con vista panorámica a la sabana.
                                     </p>
@@ -432,14 +432,14 @@
                             <div class="preparar-map-card p-4 sm:p-5">
                                 <div class="flex items-center justify-between gap-2 mb-1.5">
                                     <div class="flex items-center gap-2.5">
-                                        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-sm flex-shrink-0" style="background: var(--sv-sky-surface); color: var(--sv-sky-hover); border: 1px solid var(--sv-sky-border);">
+                                        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-sm flex-shrink-0" style="background: var(--sv-primary-surface); color: var(--sv-primary); border: 1px solid var(--sv-primary-border);">
                                             <i class="fa-solid fa-compass"></i>
                                         </div>
                                         <h3 class="text-sm sm:text-base font-bold font-syne" style="color: var(--sv-text-primary);">
                                             Mapa Interactivo del Recorrido
                                         </h3>
                                     </div>
-                                    <span class="text-[11px] font-bold font-mono px-2.5 py-1 rounded-lg flex items-center gap-1.5" style="background: rgba(56, 189, 248, 0.12); color: var(--sv-sky-light); border: 1px solid rgba(56, 189, 248, 0.25);">
+                                    <span class="text-[11px] font-bold font-mono px-2.5 py-1 rounded-lg flex items-center gap-1.5" style="background: var(--sv-secondary-surface); color: var(--sv-secondary); border: 1px solid var(--sv-secondary-border);">
                                         Norte <i class="fa-solid fa-arrow-up text-[10px]"></i>
                                     </span>
                                 </div>
@@ -451,7 +451,7 @@
                                 <div id="preparar-map-img" class="preparar-map-visual mb-3.5" style="background-image: url('assets/hero-bg.webp');">
                                     <div class="preparar-map-overlay"></div>
                                     <div class="absolute top-3 left-3 z-10">
-                                        <span class="text-[10px] sm:text-[10.5px] font-bold font-mono uppercase px-2.5 py-1 rounded-md flex items-center gap-1.5" style="background: rgba(10, 20, 32, 0.85); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); backdrop-filter: blur(4px);">
+                                        <span class="text-[10px] sm:text-[10.5px] font-bold font-mono uppercase px-2.5 py-1 rounded-md flex items-center gap-1.5" style="background: var(--sv-surface-solid); color: var(--sv-primary); border: 1px solid var(--sv-surface-border); backdrop-filter: blur(4px);">
                                             <i class="fa-solid fa-location-crosshairs text-[10px]"></i>
                                             ORIENTACIÓN N
                                         </span>
@@ -472,7 +472,7 @@
                                     <h3 class="text-base sm:text-lg font-bold font-syne" style="color: var(--sv-text-primary);">
                                         Antes de comenzar
                                     </h3>
-                                    <span id="checklist-counter-badge" class="text-xs font-mono font-bold px-3 py-1 rounded-full transition-all flex-shrink-0" style="background: var(--sv-sky-surface); color: var(--sv-sky-light); border: 1px solid var(--sv-sky-border);">
+                                    <span id="checklist-counter-badge" class="text-xs font-mono font-bold px-3 py-1 rounded-full transition-all flex-shrink-0" style="background: var(--sv-secondary-surface); color: var(--sv-secondary); border: 1px solid var(--sv-secondary-border);">
                                         0/4 listo
                                     </span>
                                 </div>
@@ -549,10 +549,10 @@
                             </div>
 
                             <!-- Plataforma EAAB y Horario Oficial -->
-                            <div class="mt-5 pt-4 border-t space-y-3" style="border-color: rgba(56, 189, 248, 0.16);">
+                            <div class="mt-5 pt-4 border-t space-y-3" style="border-color: var(--sv-surface-border-subtle);">
                                 <a href="https://caminos.eaab.gov.co/" target="_blank" rel="noopener noreferrer" class="eaab-platform-link">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0" style="background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.45);">
+                                        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0" style="background: var(--sv-secondary-surface); color: var(--sv-secondary); border: 1px solid var(--sv-secondary-border);">
                                             <i class="fa-regular fa-file-lines"></i>
                                         </div>
                                         <div>
@@ -564,7 +564,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-1.5 text-xs font-bold flex-shrink-0" style="color: var(--sv-sky-hover);">
+                                    <div class="flex items-center gap-1.5 text-xs font-bold flex-shrink-0" style="color: var(--sv-primary);">
                                         <i class="fa-solid fa-arrow-up-right-from-square text-[12px]"></i>
                                     </div>
                                 </a>
@@ -579,16 +579,16 @@
                 </div>
 
                 <!-- Footer del Modal (Responsivo Mobile y Desktop) -->
-                <div class="p-4 sm:p-5 border-t flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs flex-shrink-0" style="border-color: rgba(56, 189, 248, 0.18); background: rgba(10, 22, 34, 0.92);">
+                <div class="p-4 sm:p-5 border-t flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs flex-shrink-0" style="border-color: var(--sv-surface-border); background: var(--sv-surface-inset);">
                     <div class="text-[11px] sm:text-xs flex items-center gap-2" style="color: var(--sv-text-muted);">
-                        <i class="fa-solid fa-shield-halved text-xs" style="color: var(--sv-sky-hover);"></i>
+                        <i class="fa-solid fa-shield-halved text-xs" style="color: var(--sv-primary);"></i>
                         <span>Todo listo para vivir la expedición de manera responsable y segura.</span>
                     </div>
                     <div class="flex items-center gap-2.5 w-full sm:w-auto">
-                        <button type="button" onclick="closePrepararVisita()" class="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl font-bold cursor-pointer transition hover:bg-slate-800 text-center text-xs sm:text-sm" style="background: rgba(14, 28, 44, 0.85); border: 1px solid rgba(56, 189, 248, 0.25); color: var(--sv-text-muted);">
+                        <button type="button" onclick="closePrepararVisita()" class="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl font-bold cursor-pointer transition text-center text-xs sm:text-sm" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-surface-border); color: var(--sv-text-muted);">
                             Volver al inicio
                         </button>
-                        <button type="button" onclick="launchExplorationFromVisit()" class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 cursor-pointer transition hover:scale-105 text-xs sm:text-sm" style="background: linear-gradient(135deg, #0284c7 0%, #034671 100%); border: 1px solid #38bdf8; color: #ffffff; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);">
+                        <button type="button" onclick="launchExplorationFromVisit()" class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 cursor-pointer transition hover:scale-105 text-xs sm:text-sm" style="background: linear-gradient(135deg, var(--sv-primary) 0%, var(--sv-primary-hover) 100%); border: 1px solid var(--sv-primary-hover); color: var(--sv-text-inverse); box-shadow: 0 4px 14px var(--sv-primary-glow);">
                             <span>Iniciar Exploración 3D</span>
                             <i class="fa-solid fa-arrow-right text-[11px]"></i>
                         </button>
@@ -597,58 +597,64 @@
             </div>
         </div>
 
-        <!-- ============ ÁLBUM DE BIODIVERSIDAD (PANTALLA INICIAL) ============ -->
-        <div id="biodiversity-album-modal" class="hidden fixed inset-0 z-[10005] flex items-center justify-center p-3 sm:p-6" style="background: rgba(6, 16, 26, 0.90); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);" onclick="if(event.target===this) closeBiodiversityAlbum();">
-            <div class="biodiversity-modal-card glass-panel w-full max-w-5xl max-h-[92vh] flex flex-col rounded-3xl overflow-hidden shadow-2xl pointer-events-auto" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-sky-border);">
+        <!-- ============ ÁLBUM DE BIODIVERSIDAD (CATÁLOGO VISUAL) ============ -->
+        <div id="biodiversity-album-modal" class="hidden fixed inset-0 z-[10005] flex items-center justify-center p-3 sm:p-5" style="background: rgba(20, 16, 12, 0.68); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);" onclick="if(event.target===this) closeBiodiversityAlbum();">
+            <div class="biodiversity-modal-card glass-panel w-full max-w-4xl max-h-[85vh] flex flex-col rounded-[28px] overflow-hidden shadow-2xl pointer-events-auto" style="background: var(--sv-surface-solid); border: 2px solid var(--sv-surface-border);">
                 <!-- Cabecera del Álbum -->
-                <div class="p-5 sm:p-6 border-b flex items-center justify-between gap-4" style="border-color: rgba(56, 189, 248, 0.20);">
-                    <div class="flex items-center gap-3.5">
-                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-xl" style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border); color: var(--sv-sky-hover);">
+                <div class="p-4 sm:p-5 border-b flex items-center justify-between gap-3" style="border-color: var(--sv-surface-border); background: var(--sv-surface-solid);">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center text-lg sm:text-xl flex-shrink-0" style="background: var(--sv-primary-surface); border: 1.5px solid var(--sv-primary-border); color: var(--sv-primary);">
                             <i class="fa-solid fa-book-open"></i>
                         </div>
-                        <div>
-                            <h2 class="text-base sm:text-xl font-bold font-syne" style="color: var(--sv-text-primary);">Atlas de Biodiversidad y Patrimonio</h2>
-                            <p class="text-xs" style="color: var(--sv-text-muted);">Especies y elementos registrados · Quebrada La Vieja</p>
+                        <div class="min-w-0">
+                            <h2 class="text-sm sm:text-lg font-bold font-syne truncate" style="color: var(--sv-text-primary);">Catálogo Vivo de Biodiversidad</h2>
+                            <p class="text-[11px] sm:text-xs truncate" style="color: var(--sv-text-muted);">Guía ilustrada de campo · Quebrada La Vieja</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2.5">
-                        <span class="text-xs px-3 py-1 rounded-full font-mono font-bold" style="background: var(--sv-sky-surface); color: var(--sv-sky-light); border: 1px solid var(--sv-sky-border);" id="album-count-badge">8 registros</span>
-                        <button onclick="closeBiodiversityAlbum()" class="tab-modal-close-btn" title="Cerrar álbum">
+                    <div class="flex items-center gap-2.5 flex-shrink-0">
+                        <span class="text-xs px-3 py-1 rounded-full font-mono font-bold hidden sm:inline-block" style="background: var(--sv-secondary-surface); color: var(--sv-secondary); border: 1px solid var(--sv-secondary-border);" id="album-count-badge">8 especies</span>
+                        <button onclick="closeBiodiversityAlbum()" class="album-close-btn" title="Cerrar catálogo (Esc)" aria-label="Cerrar catálogo de biodiversidad">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- Filtros de categoría dentro del Álbum -->
-                <div class="px-5 py-3 border-b flex items-center gap-2 overflow-x-auto no-scrollbar" style="border-color: rgba(56, 189, 248, 0.15);">
-                    <button class="album-filter-pill active" onclick="filterAlbumSpecies('all', this)">
-                        <i class="fa-solid fa-layer-group text-xs"></i> Todas (<span id="album-tab-count-all">8</span>)
-                    </button>
-                    <button class="album-filter-pill" onclick="filterAlbumSpecies('fauna', this)">
-                        <i class="fa-solid fa-dove text-xs"></i> Fauna Silvestre (<span id="album-tab-count-fauna">3</span>)
-                    </button>
-                    <button class="album-filter-pill" onclick="filterAlbumSpecies('flora', this)">
-                        <i class="fa-solid fa-seedling text-xs"></i> Flora Altoandina (<span id="album-tab-count-flora">3</span>)
-                    </button>
-                    <button class="album-filter-pill" onclick="filterAlbumSpecies('patrimonio', this)">
-                        <i class="fa-solid fa-landmark text-xs"></i> Patrimonio (<span id="album-tab-count-patrimonio">2</span>)
-                    </button>
+                <!-- Filtros de categoría y buscador dentro del Álbum -->
+                <div class="px-4 sm:px-5 py-2.5 border-b flex flex-wrap items-center justify-between gap-2.5" style="border-color: var(--sv-surface-border-subtle); background: var(--sv-surface-solid-warm);">
+                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                        <button class="album-filter-pill active" onclick="filterAlbumSpecies('all', this)">
+                            <i class="fa-solid fa-layer-group text-xs"></i> Todas (<span id="album-tab-count-all">8</span>)
+                        </button>
+                        <button class="album-filter-pill" onclick="filterAlbumSpecies('fauna', this)">
+                            <i class="fa-solid fa-dove text-xs"></i> Fauna (<span id="album-tab-count-fauna">3</span>)
+                        </button>
+                        <button class="album-filter-pill" onclick="filterAlbumSpecies('flora', this)">
+                            <i class="fa-solid fa-seedling text-xs"></i> Flora (<span id="album-tab-count-flora">3</span>)
+                        </button>
+                        <button class="album-filter-pill" onclick="filterAlbumSpecies('patrimonio', this)">
+                            <i class="fa-solid fa-landmark text-xs"></i> Patrimonio (<span id="album-tab-count-patrimonio">2</span>)
+                        </button>
+                    </div>
+                    <div class="relative flex-1 sm:max-w-xs min-w-[170px]">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[11px]" style="color: var(--sv-text-dim);"></i>
+                        <input type="text" id="album-search-input" oninput="searchAlbumSpecies(this.value)" placeholder="Buscar por nombre..." class="w-full pl-8 pr-3 py-1.5 rounded-full text-xs font-sans" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-surface-border); color: var(--sv-text-primary); outline: none;" />
+                    </div>
                 </div>
 
-                <!-- Contenedor con scroll de especies -->
-                <div id="biodiversity-album-grid" class="p-5 sm:p-6 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 no-scrollbar">
+                <!-- Contenedor con scroll de especies tipo Catálogo -->
+                <div id="biodiversity-album-grid" class="p-4 sm:p-5 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 flex-1 no-scrollbar" style="background: var(--sv-surface-inset);">
                     <!-- Inyectado dinámicamente -->
                 </div>
 
-                <!-- Barra inferior / Footer con ayuda de navegación -->
-                <div class="px-5 py-3 border-t flex items-center justify-between gap-4 text-xs" style="border-color: rgba(56, 189, 248, 0.15); background: rgba(10, 22, 34, 0.65);">
+                <!-- Barra inferior / Footer con ayuda de navegación y botón de salida -->
+                <div class="px-4 sm:px-5 py-3 border-t flex items-center justify-between gap-3 text-xs" style="border-color: var(--sv-surface-border); background: var(--sv-surface-solid);">
                     <span class="text-[11px] truncate flex items-center gap-1.5" style="color: var(--sv-text-muted);">
-                        <i class="fa-solid fa-compass text-[11px]" style="color: var(--sv-sky-hover);"></i>
-                        Haz clic en <strong>Explorar en sendero</strong> para teletransportarte en 3D a cualquier punto
+                        <i class="fa-solid fa-compass text-[11px]" style="color: var(--sv-primary);"></i>
+                        Toca <strong>Explorar en sendero</strong> para situarte en 3D frente al punto
                     </span>
-                    <button onclick="closeBiodiversityAlbum()" class="text-xs px-3.5 py-1.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer transition hover:scale-105 flex-shrink-0" style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border); color: var(--sv-sky-light);">
-                        <i class="fa-solid fa-arrow-left text-[10px]"></i>
-                        Volver al inicio
+                    <button onclick="closeBiodiversityAlbum()" class="text-xs px-4 py-2 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer transition hover:scale-105 flex-shrink-0" style="background: var(--sv-surface-solid-warm); border: 1.5px solid var(--sv-primary); color: var(--sv-primary);">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                        Cerrar catálogo
                     </button>
                 </div>
             </div>
@@ -701,7 +707,7 @@
                     <div class="expedition-live-pill" title="Altitud de estación actual">
                         <span class="live-pulse-dot"></span>
                         <span style="font-size: 11px; font-weight: 600; color: var(--sv-text-muted);">
-                            <i class="fa-solid fa-mountain text-[10px]" style="color: var(--sv-sky-hover);"></i> <strong id="hud-altitud-top" style="color: var(--sv-text-primary); font-family: 'Syne', sans-serif;">2.712 m</strong>
+                            <i class="fa-solid fa-mountain text-[10px]" style="color: var(--sv-primary);"></i> <strong id="hud-altitud-top" style="color: var(--sv-text-primary); font-family: 'Syne', sans-serif;">2.712 m</strong>
                         </span>
                     </div>
                 </div>
@@ -783,11 +789,11 @@
 
                         <div class="telemetry-metrics-pills">
                             <div class="telemetry-mini-pill" title="Desnivel acumulado">
-                                <i class="fa-solid fa-arrow-trend-up" style="color: var(--sv-sky-hover);"></i>
+                                <i class="fa-solid fa-arrow-trend-up" style="color: var(--sv-secondary);"></i>
                                 <span id="hud-desnivel">+0 m</span>
                             </div>
                             <div class="telemetry-mini-pill" title="Pendiente media">
-                                <i class="fa-solid fa-percent" style="color: var(--sv-sky-hover);"></i>
+                                <i class="fa-solid fa-percent" style="color: var(--sv-secondary);"></i>
                                 <span id="hud-pendiente">0 %</span>
                             </div>
                         </div>
@@ -796,7 +802,7 @@
                     <div class="telemetry-progress-track">
                         <div class="telemetry-progress-header">
                             <span id="progreso-pct" style="color: var(--sv-text-muted);">Progreso del sendero · 0%</span>
-                            <span id="hud-recorrido" style="color: var(--sv-sky-hover); font-family: 'Syne', sans-serif;">0 m</span>
+                            <span id="hud-recorrido" style="color: var(--sv-primary); font-family: 'Syne', sans-serif;">0 m</span>
                         </div>
                         <div class="telemetry-bar-bg">
                             <div id="carga-barra-hud" class="telemetry-bar-fill"></div>
@@ -805,7 +811,7 @@
 
                     <div class="telemetry-footer-row">
                         <div class="telemetry-poi-count">
-                            <i class="fa-solid fa-binoculars" style="color: var(--sv-sky-hover); font-size: 11px;"></i>
+                            <i class="fa-solid fa-binoculars" style="color: var(--sv-primary); font-size: 11px;"></i>
                             <span id="discovered-counter">0 de 8 especies vistas</span>
                         </div>
                         <button onclick="switchTab('quest')" class="telemetry-btn-bitacora">
@@ -820,28 +826,28 @@
                 <div class="flex items-center justify-between px-3 py-2.5 cursor-pointer select-none"
                     onclick="toggleDetailsCard()" ontouchstart="toggleDetailsCard(); event.preventDefault();">
                     <div class="flex items-center gap-2">
-                        <i id="details-arrow-icon" class="fa-solid fa-chevron-up text-xs transition-transform duration-300" style="color: var(--sv-sky-hover);"></i>
+                        <i id="details-arrow-icon" class="fa-solid fa-chevron-up text-xs transition-transform duration-300" style="color: var(--sv-primary);"></i>
                         <span class="text-xs font-bold" style="color: var(--sv-text-primary);">Detalles del sendero</span>
                     </div>
-                    <span id="hud-datos-mobile" class="text-[10px] font-mono font-semibold" style="color: var(--sv-sky-hover);">2.712 m · 0 m</span>
+                    <span id="hud-datos-mobile" class="text-[10px] font-mono font-semibold" style="color: var(--sv-primary);">2.712 m · 0 m</span>
                 </div>
                 <div id="details-content" class="hidden" style="border-top: 1px solid var(--sv-surface-border);">
                     <div class="grid grid-cols-4 gap-1 px-3 py-2" style="font-variant-numeric: tabular-nums;">
                         <div class="text-center">
                             <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Altitud</div>
-                            <div class="text-[13px] font-semibold" style="color: var(--sv-sky-hover);" id="hud-altitud-m">2.712 m</div>
+                            <div class="text-[13px] font-semibold" style="color: var(--sv-primary);" id="hud-altitud-m">2.712 m</div>
                         </div>
                         <div class="text-center">
                             <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Recorrido</div>
-                            <div class="text-[13px] font-semibold" style="color: var(--sv-sky-hover);" id="hud-recorrido-m">0 m</div>
+                            <div class="text-[13px] font-semibold" style="color: var(--sv-primary);" id="hud-recorrido-m">0 m</div>
                         </div>
                         <div class="text-center">
                             <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Desnivel</div>
-                            <div class="text-[13px] font-semibold" style="color: var(--sv-sky-hover);" id="hud-desnivel-m">+0 m</div>
+                            <div class="text-[13px] font-semibold" style="color: var(--sv-primary);" id="hud-desnivel-m">+0 m</div>
                         </div>
                         <div class="text-center">
                             <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Pendiente</div>
-                            <div class="text-[13px] font-semibold" style="color: var(--sv-sky-hover);" id="hud-pendiente-m">0 %</div>
+                            <div class="text-[13px] font-semibold" style="color: var(--sv-primary);" id="hud-pendiente-m">0 %</div>
                         </div>
                     </div>
                 </div>
@@ -849,7 +855,7 @@
 
             <!-- Nav PC -->
             <nav id="shell-nav-pc" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-3 flex items-center gap-6 sm:gap-12 shadow-2xl pointer-events-auto">
-                <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition" style="color: var(--sv-sky-hover);">
+                <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition" style="color: var(--sv-primary);">
                     <i class="fa-solid fa-compass text-base sm:text-lg"></i>
                     <span class="text-[9px] sm:text-[10px]">Sendero</span>
                 </button>
@@ -866,7 +872,7 @@
             <!-- Nav móvil -->
             <nav id="shell-nav-mobile" class="absolute bottom-3 left-4 right-4 z-40 glass-panel rounded-full px-4 py-2 flex items-center justify-around shadow-2xl pointer-events-auto">
                 <button id="nav-trail-m" onclick="switchTab('trail')" ontouchstart="switchTab('trail')"
-                    class="nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition" style="color: var(--sv-sky-hover);">
+                    class="nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition" style="color: var(--sv-primary);">
                     <i class="fa-solid fa-compass text-base"></i>
                     <span class="text-[9px]">Sendero</span>
                 </button>
@@ -885,7 +891,7 @@
 
         <div id="bottom-sheet"
             class="fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-300 ease-out max-w-lg mx-auto px-4 pb-24 pt-2 pointer-events-auto">
-            <div class="glass-panel rounded-3xl p-5 shadow-2xl relative backdrop-blur-xl max-h-[75vh] overflow-y-auto no-scrollbar" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-sky-border);">
+            <div class="glass-panel rounded-3xl p-5 shadow-2xl relative backdrop-blur-xl max-h-[75vh] overflow-y-auto no-scrollbar" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-surface-border);">
                 <div id="sheet-content"></div>
             </div>
         </div>
@@ -897,7 +903,7 @@
                 <div class="tab-modal-header">
                     <div class="flex items-center gap-2.5 min-w-0">
                         <div id="tab-modal-icon-wrap" class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
-                             style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border); color: var(--sv-sky-hover);">
+                             style="background: var(--sv-primary-surface); border: 1px solid var(--sv-primary-border); color: var(--sv-primary);">
                             <i id="tab-modal-icon" class="fa-solid fa-book-bookmark"></i>
                         </div>
                         <div class="min-w-0">
@@ -911,7 +917,7 @@
                     </div>
                     <div class="flex items-center gap-2 flex-shrink-0">
                         <span id="tab-modal-badge" class="text-[10px] font-bold font-mono px-2.5 py-0.5 rounded-full hidden sm:inline-block"
-                              style="background: var(--sv-sky-surface); color: var(--sv-sky-light); border: 1px solid var(--sv-sky-border);">
+                              style="background: var(--sv-secondary-surface); color: var(--sv-secondary); border: 1px solid var(--sv-secondary-border);">
                             6 especies
                         </span>
                         <button onclick="closeTabPanel()" class="tab-modal-close-btn" title="Cerrar ventana">

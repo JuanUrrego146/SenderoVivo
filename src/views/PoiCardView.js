@@ -351,10 +351,10 @@ export class PoiCardView {
             'auto';
 
         card.style.background =
-            '#18251d';
+            'var(--sv-surface-solid, #E9D8C4)';
 
         card.style.color =
-            'white';
+            'var(--sv-text-primary, #1F2E22)';
 
         card.style.borderRadius =
             '24px';
@@ -366,13 +366,13 @@ export class PoiCardView {
             'border-box';
 
         card.style.fontFamily =
-            'Arial, sans-serif';
+            "'Quicksand', system-ui, sans-serif";
 
         card.style.boxShadow =
-            '0 20px 60px rgba(0,0,0,0.6)';
+            'var(--sv-surface-shadow-lg, 0 20px 60px rgba(40, 26, 15, 0.25))';
 
         card.style.border =
-            '1px solid rgba(111,207,151,0.5)';
+            '1px solid var(--sv-surface-border, rgba(184, 150, 118, 0.42))';
 
         card.style.zIndex =
             '2147483647';
@@ -416,16 +416,19 @@ export class PoiCardView {
                     right:15px;
                     width:38px;
                     height:38px;
-                    border:none;
+                    border:1px solid var(--sv-surface-border, rgba(184, 150, 118, 0.42));
                     border-radius:50%;
-                    background:rgba(255,255,255,0.12);
-                    color:white;
-                    font-size:26px;
+                    background:var(--sv-surface-solid-warm, #E4C7A8);
+                    color:var(--sv-text-primary, #1F2E22);
+                    font-size:24px;
                     cursor:pointer;
                     z-index:10;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
                 "
             >
-                ×
+                ✕
             </button>
 
 
@@ -441,7 +444,8 @@ export class PoiCardView {
                     margin-bottom:15px;
                     border-radius:16px;
                     overflow:hidden;
-                    background:#101510;
+                    background:var(--sv-surface-inset, rgba(228, 199, 168, 0.65));
+                    border:1px solid var(--sv-surface-border, rgba(184, 150, 118, 0.42));
                     position:relative;
                 "
             >
@@ -454,7 +458,7 @@ export class PoiCardView {
                         display:flex;
                         align-items:center;
                         justify-content:center;
-                        color:var(--sv-sky-hover);
+                        color:var(--sv-primary, #386641);
                         font-size:14px;
                         z-index:2;
                     "
@@ -473,8 +477,10 @@ export class PoiCardView {
                 style="
                     margin:0;
                     text-align:center;
-                    font-size:30px;
-                    color:var(--sv-sky-hover);
+                    font-size:26px;
+                    font-weight:700;
+                    font-family:'Syne', sans-serif;
+                    color:var(--sv-primary, #386641);
                 "
             >
                 ${commonName}
@@ -484,9 +490,10 @@ export class PoiCardView {
             <p
                 style="
                     text-align:center;
-                    margin-top:8px;
-                    color:#bdbdbd;
+                    margin-top:6px;
+                    color:var(--sv-text-muted, #495A4D);
                     font-style:italic;
+                    font-size:13px;
                 "
             >
                 ${scientificName}
@@ -499,24 +506,27 @@ export class PoiCardView {
 
             <div
                 style="
-                    margin-top:25px;
-                    padding:15px;
-                    background:rgba(255,255,255,0.07);
+                    margin-top:20px;
+                    padding:14px 16px;
+                    background:var(--sv-surface-solid-warm, #E4C7A8);
+                    border:1px solid var(--sv-surface-border, rgba(184, 150, 118, 0.42));
                     border-radius:14px;
+                    color:var(--sv-text-primary, #1F2E22);
+                    font-size:13px;
                 "
             >
 
-                <p style="margin:6px 0;">
+                <p style="margin:4px 0;">
                     <strong>🦜 Tipo:</strong>
                     Fauna
                 </p>
 
-                <p style="margin:6px 0;">
+                <p style="margin:4px 0;">
                     <strong>⛰️ Altitud:</strong>
                     ${altitude}
                 </p>
 
-                <p style="margin:6px 0;">
+                <p style="margin:4px 0;">
                     <strong>📍 Lugar:</strong>
                     Cerros Orientales de Bogotá
                 </p>
@@ -530,8 +540,11 @@ export class PoiCardView {
 
             <h3
                 style="
-                    margin-top:25px;
-                    color:var(--sv-sky-hover);
+                    margin-top:20px;
+                    margin-bottom:8px;
+                    font-size:15px;
+                    font-weight:700;
+                    color:var(--sv-primary, #386641);
                 "
             >
                 Sobre esta especie
@@ -541,7 +554,9 @@ export class PoiCardView {
             <p
                 style="
                     line-height:1.6;
-                    color:#e5e5e5;
+                    color:var(--sv-text-muted, #495A4D);
+                    font-size:13px;
+                    margin:0 0 8px 0;
                 "
             >
                 La golondrina plomiza
@@ -554,7 +569,9 @@ export class PoiCardView {
             <p
                 style="
                     line-height:1.6;
-                    color:#e5e5e5;
+                    color:var(--sv-text-muted, #495A4D);
+                    font-size:13px;
+                    margin:0;
                 "
             >
                 Su presencia forma parte de la
@@ -572,7 +589,7 @@ export class PoiCardView {
                     display:flex;
                     flex-direction:column;
                     gap:10px;
-                    margin-top:25px;
+                    margin-top:20px;
                 "
             >
 
@@ -580,15 +597,15 @@ export class PoiCardView {
                     id="poi-canto"
                     type="button"
                     style="
-                        padding:14px;
+                        padding:12px;
                         border:none;
                         border-radius:12px;
-                        background:linear-gradient(135deg, var(--sv-sky), var(--sv-sky-deep));
-                        color:#ffffff;
+                        background:linear-gradient(135deg, var(--sv-primary, #386641), var(--sv-primary-hover, #6A994E));
+                        color:var(--sv-text-inverse, #FFFFFF);
                         font-weight:bold;
-                        font-size:15px;
+                        font-size:14px;
                         cursor:pointer;
-                        box-shadow:0 4px 14px var(--sv-sky-glow);
+                        box-shadow:0 4px 14px var(--sv-primary-glow, rgba(106, 153, 78, 0.35));
                     "
                 >
                     🔊 Escuchar canto
@@ -599,14 +616,15 @@ export class PoiCardView {
                     id="poi-narracion"
                     type="button"
                     style="
-                        padding:14px;
-                        border:1px solid var(--sv-sky-border);
+                        padding:12px;
+                        border:1px solid var(--sv-secondary, #E7A84E);
                         border-radius:12px;
-                        background:rgba(14, 28, 44, 0.7);
-                        color:var(--sv-sky-light);
+                        background:var(--sv-surface-solid-warm, #E4C7A8);
+                        color:var(--sv-text-primary, #1F2E22);
                         font-weight:bold;
-                        font-size:15px;
+                        font-size:14px;
                         cursor:pointer;
+                        box-shadow:0 4px 12px rgba(231, 168, 78, 0.20);
                     "
                 >
                     🎧 Escuchar narración
