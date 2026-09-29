@@ -331,11 +331,11 @@
                         </p>
 
                         <!-- Selector de Sendero contextualizado junto a su título (Ley de Proximidad) -->
-                        <div class="flex items-center gap-2 mt-3 flex-wrap">
+                        <div class="trail-select-wrapper flex items-center gap-2 mt-3 flex-wrap">
                             <span class="text-xs font-semibold" style="color: var(--sv-text-muted);">
                                 Seleccionar sendero:
                             </span>
-                            <div class="inline-flex items-center gap-1.5 p-1 rounded-2xl" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-surface-border);">
+                            <div class="trail-select-btn-group inline-flex items-center gap-1.5 p-1 rounded-2xl" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-surface-border);">
                                 <button type="button" data-trail="quebrada-la-vieja" onclick="switchPrepararTrail('quebrada-la-vieja')" class="trail-select-pill active text-xs font-semibold px-4 py-2 rounded-xl cursor-pointer transition text-center min-h-[40px]">
                                     Quebrada La Vieja
                                 </button>
@@ -615,7 +615,7 @@
                 </div>
 
                 <!-- Filtros de categoría y buscador dentro del Álbum -->
-                <div class="px-4 sm:px-5 py-2.5 border-b flex flex-wrap items-center justify-between gap-2.5" style="border-color: var(--sv-surface-border-subtle); background: var(--sv-surface-solid-warm);">
+                <div class="album-filter-container px-4 sm:px-5 py-2.5 border-b flex flex-wrap items-center justify-between gap-2.5" style="border-color: var(--sv-surface-border-subtle); background: var(--sv-surface-solid-warm);">
                     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
                         <button class="album-filter-pill active" onclick="filterAlbumSpecies('all', this)">
                             <i class="fa-solid fa-layer-group text-xs"></i> Todas (<span id="album-tab-count-all">8</span>)
@@ -885,8 +885,8 @@
         </div>
 
         <div id="bottom-sheet"
-            class="fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-300 ease-out max-w-lg mx-auto px-4 pb-24 pt-2 pointer-events-auto">
-            <div class="glass-panel rounded-3xl p-5 shadow-2xl relative backdrop-blur-xl max-h-[75vh] overflow-y-auto no-scrollbar" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-surface-border);">
+            class="fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-300 ease-out max-w-lg mx-auto pointer-events-auto">
+            <div class="glass-panel rounded-3xl shadow-2xl relative backdrop-blur-xl overflow-y-auto no-scrollbar" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-surface-border);">
                 <div id="sheet-content"></div>
             </div>
         </div>

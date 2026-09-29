@@ -1284,25 +1284,37 @@
 
 @media (max-width: 639px) {
     #tab-panel-container {
-        padding: 12px 12px 80px 12px;
-        align-items: center;
+        padding: max(10px, env(safe-area-inset-top, 10px)) clamp(10px, 3vw, 14px) max(14px, env(safe-area-inset-bottom, 14px)) clamp(10px, 3vw, 14px) !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
     .tab-modal-dialog {
         max-width: 100% !important;
-        max-height: 82vh !important;
-        border-radius: 20px;
+        max-height: 86vh !important;
+        max-height: 86dvh !important;
+        border-radius: 24px !important;
+    }
+
+    .tab-modal-header {
+        padding: 10px 14px !important;
+    }
+
+    #tab-modal-filter-bar {
+        padding: 6px 12px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
     }
 
     .species-catalog-card {
-        padding: 14px 16px;
-        gap: 12px;
-        border-radius: 16px;
+        padding: 13px 15px !important;
+        gap: 12px !important;
+        border-radius: 18px !important;
     }
 
     .tab-modal-body {
-        gap: 14px;
-        padding: 14px 16px 22px 16px;
+        gap: 12px !important;
+        padding: 12px 14px 22px 14px !important;
     }
 }
 
@@ -1750,36 +1762,70 @@
 
 @media (max-width: 768px) {
     #trail-lobby {
-        padding: 20px 20px 16px 20px;
+        padding: max(16px, env(safe-area-inset-top, 16px)) clamp(16px, 5vw, 24px) max(16px, env(safe-area-inset-bottom, 16px)) clamp(16px, 5vw, 24px) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+        justify-content: flex-start !important;
+        gap: 16px !important;
     }
 
     .hero-top-bar {
-        gap: 10px;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+        margin-bottom: 0 !important;
     }
 
     .hero-pill-location,
     .hero-pill-tech {
-        font-size: 12px;
-        padding: 7px 14px;
+        font-size: 11.5px !important;
+        padding: 6px 12px !important;
+    }
+
+    .hero-main-content {
+        padding: 12px 0 !important;
+        margin-top: auto !important;
+        margin-bottom: auto !important;
+    }
+
+    .hero-brand-sendero,
+    .hero-brand-vivo {
+        font-size: clamp(3rem, 13vw, 4.8rem) !important;
+    }
+
+    .hero-brand-tagline {
+        font-size: clamp(1.1rem, 3.8vw, 1.35rem) !important;
+        margin: 12px 0 24px 0 !important;
     }
 
     .hero-cta-group {
-        flex-direction: column;
-        align-items: stretch;
-        width: 100%;
-        gap: 12px;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        gap: 10px !important;
     }
 
     .hero-btn-primary,
     .hero-btn-secondary {
-        width: 100%;
-        box-sizing: border-box;
+        width: 100% !important;
+        padding: 14px 20px !important;
+        font-size: 14.5px !important;
+        min-height: 48px !important;
+        box-sizing: border-box !important;
     }
 
     .hero-footer-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+    }
+
+    .hero-footer-stats {
+        font-size: clamp(12.5px, 3.5vw, 15px) !important;
+        flex-wrap: wrap !important;
+    }
+
+    .hero-footer-slogan {
+        font-size: clamp(1.2rem, 4.5vw, 1.6rem) !important;
     }
 }
 
@@ -2471,6 +2517,67 @@
     box-shadow: 0 6px 16px var(--sv-primary-glow);
 }
 
+@media (max-width: 640px) {
+    #biodiversity-album-modal {
+        padding: max(10px, env(safe-area-inset-top, 10px)) clamp(8px, 2.5vw, 12px) max(14px, env(safe-area-inset-bottom, 14px)) clamp(8px, 2.5vw, 12px) !important;
+    }
+
+    .biodiversity-modal-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 88vh !important;
+        max-height: 88dvh !important;
+        border-radius: 24px !important;
+    }
+
+    .album-filter-container {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+        padding: 8px 12px !important;
+    }
+
+    .album-filter-container > div:first-child {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 2px !important;
+    }
+
+    .album-filter-container > div:last-child {
+        width: 100% !important;
+    }
+
+    #biodiversity-album-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+        padding: 14px 12px !important;
+    }
+
+    .album-species-card {
+        padding: 14px 14px 16px 14px !important;
+        border-radius: 20px !important;
+        gap: 12px !important;
+    }
+
+    .album-species-footer {
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+
+    .album-btn-quick-audio,
+    .album-btn-quick-3d {
+        flex: 1 1 calc(50% - 4px) !important;
+        min-height: 38px !important;
+        justify-content: center !important;
+    }
+
+    .album-btn-explore {
+        flex: 1 1 100% !important;
+        min-height: 42px !important;
+    }
+}
+
 /* Fallback Tailwind max-w utilities */
 .max-w-xs {
     max-width: 20rem;
@@ -2600,10 +2707,98 @@
 }
 
 @media (max-width: 680px) {
+    .preparar-visita-modal-card {
+        border-radius: 22px !important;
+        max-height: 90vh !important;
+        max-height: 90dvh !important;
+    }
+
+    .preparar-header-row {
+        padding: 14px 16px !important;
+        gap: 12px !important;
+    }
+
+    .trail-select-wrapper {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 6px !important;
+        width: 100% !important;
+    }
+
+    .trail-select-btn-group {
+        display: flex !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .trail-select-btn-group .trail-select-pill {
+        flex: 1 1 50% !important;
+        padding: 8px 6px !important;
+        font-size: 11.5px !important;
+        min-height: 42px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        text-align: center !important;
+        justify-content: center !important;
+    }
+
     .preparar-metrics-grid {
-        grid-template-columns: 1fr !important;
-        gap: 10px !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 8px !important;
         margin-bottom: 16px !important;
+    }
+
+    .trail-metric-card {
+        padding: 10px 6px !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 6px !important;
+        border-radius: 16px !important;
+    }
+
+    .trail-metric-icon {
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px !important;
+        border-radius: 10px !important;
+        font-size: 13px !important;
+    }
+
+    .trail-metric-card span.font-mono {
+        font-size: 9.5px !important;
+        letter-spacing: 0.02em !important;
+    }
+
+    .trail-metric-card span.font-syne {
+        font-size: 13px !important;
+    }
+
+    .preparar-left-col {
+        gap: 16px !important;
+    }
+
+    .preparar-map-card {
+        padding: 14px !important;
+        gap: 12px !important;
+        border-radius: 18px !important;
+    }
+
+    .preparar-map-visual {
+        height: 140px !important;
+        border-radius: 14px !important;
+    }
+
+    .checklist-item-card {
+        padding: 10px 12px !important;
+        gap: 10px !important;
+    }
+
+    .checklist-checkbox {
+        width: 20px !important;
+        height: 20px !important;
+        min-width: 20px !important;
     }
 }
 
@@ -3011,4 +3206,87 @@
 button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-visible {
     outline: 2px solid var(--sv-primary) !important;
     outline-offset: 3px !important;
+}
+
+/* ==========================================================================
+   HOJA INFERIOR DE POI (BOTTOM SHEET) & RESPONSIVE MÓVIL GLOBAL
+   ========================================================================== */
+
+#bottom-sheet {
+    max-width: 520px !important;
+    padding: 8px clamp(10px, 3.5vw, 16px) max(14px, env(safe-area-inset-bottom, 14px)) !important;
+    box-sizing: border-box !important;
+}
+
+#bottom-sheet .glass-panel {
+    background: var(--sv-surface-solid) !important;
+    border: 1.5px solid var(--sv-surface-border) !important;
+    border-radius: 26px !important;
+    padding: clamp(16px, 4vw, 22px) !important;
+    max-height: 80vh !important;
+    max-height: 80dvh !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 16px 40px rgba(40, 26, 15, 0.28), 0 0 0 1px var(--sv-surface-border) !important;
+}
+
+@media (max-width: 639px) {
+    #mobile-top-bar {
+        position: absolute !important;
+        top: max(10px, env(safe-area-inset-top, 10px)) !important;
+        left: 12px !important;
+        right: 12px !important;
+        z-index: 35 !important;
+    }
+
+    .mobile-top-main {
+        padding: 6px 10px 6px 10px !important;
+    }
+
+    .mobile-action-icon {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+        font-size: 12px !important;
+    }
+
+    #shell-nav-mobile {
+        position: absolute !important;
+        bottom: max(10px, env(safe-area-inset-bottom, 10px)) !important;
+        left: 12px !important;
+        right: 12px !important;
+        padding: 8px 10px !important;
+        min-height: 54px !important;
+        z-index: 40 !important;
+    }
+
+    #shell-nav-mobile button {
+        min-height: 44px !important;
+        padding: 4px 6px !important;
+    }
+
+    #mobile-details-card {
+        position: absolute !important;
+        bottom: calc(max(10px, env(safe-area-inset-bottom, 10px)) + 58px) !important;
+        left: 12px !important;
+        right: 12px !important;
+        z-index: 35 !important;
+    }
+
+    .sv-poi-card {
+        width: 100% !important;
+        max-width: 94vw !important;
+        max-height: 86vh !important;
+        max-height: 86dvh !important;
+        border-radius: 22px !important;
+        padding: 16px 14px 20px 14px !important;
+    }
+
+    .onboarding-card {
+        padding: 22px 18px !important;
+        border-radius: 24px !important;
+        max-width: 92vw !important;
+    }
 }
