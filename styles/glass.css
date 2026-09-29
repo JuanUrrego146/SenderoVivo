@@ -58,7 +58,7 @@
     z-index: 60;
 }
 
-/* 1. Ondas de resonancia acústica biofónica */
+/* 1. Ondas de resonancia acústica biofónica (activadas sutilmente o en hover/foco para no saturar la GPU) */
 .poi-shockwave-ring {
     position: absolute;
     inset: -2px;
@@ -66,16 +66,23 @@
     border: 1.5px solid var(--poi-color, var(--sv-primary));
     pointer-events: none;
     opacity: 0;
-    animation: poi-echo-wave 3.4s cubic-bezier(0.1, 0.7, 0.1, 1) infinite;
+    transition: opacity 0.3s ease;
 }
 
-.poi-shockwave-ring.ring-2 {
-    animation-delay: 1.7s;
+.poi-beacon:hover .poi-shockwave-ring,
+.poi-beacon:focus-visible .poi-shockwave-ring {
+    opacity: 0.85;
+    animation: poi-echo-wave 2.4s cubic-bezier(0.1, 0.7, 0.1, 1) infinite;
+}
+
+.poi-beacon:hover .poi-shockwave-ring.ring-2,
+.poi-beacon:focus-visible .poi-shockwave-ring.ring-2 {
+    animation-delay: 1.2s;
 }
 
 @keyframes poi-echo-wave {
     0% {
-        transform: scale(0.65);
+        transform: scale(0.75);
         opacity: 0.85;
         border-width: 2px;
     }
@@ -85,7 +92,7 @@
     }
 
     100% {
-        transform: scale(2.8);
+        transform: scale(2.2);
         opacity: 0;
         border-width: 0.5px;
     }
@@ -97,7 +104,15 @@
     inset: -6px;
     border-radius: 50%;
     pointer-events: none;
-    animation: poi-orbit-spin 6.5s linear infinite;
+    opacity: 0.25;
+    transition: opacity 0.3s ease;
+    animation: poi-orbit-spin 10s linear infinite;
+}
+
+.poi-beacon:hover .poi-orbit-track,
+.poi-beacon:focus-visible .poi-orbit-track {
+    opacity: 1;
+    animation-duration: 3.5s;
 }
 
 .poi-orbit-spark {
@@ -120,6 +135,14 @@
 
     to {
         transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .poi-shockwave-ring,
+    .poi-orbit-track,
+    .poi-gem-body {
+        animation: none !important;
     }
 }
 
@@ -438,10 +461,11 @@
 }
 
 .telemetry-alt-val {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--sv-text-primary);
-    font-family: 'Syne', sans-serif;
+    font-family: 'Playfair Display', serif !important;
+    font-style: italic !important;
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
 }
@@ -1141,8 +1165,10 @@
 }
 
 .tab-modal-close-btn {
-    width: 30px;
-    height: 30px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1150,6 +1176,7 @@
     background: var(--sv-surface-inset);
     border: 1px solid var(--sv-surface-border);
     color: var(--sv-text-primary);
+    font-size: 15px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -1219,104 +1246,163 @@
 }
 
 .tab-modal-body {
-    padding: 12px 14px 20px 14px;
+    padding: 18px 20px 28px 20px;
     overflow-y: auto;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     background: var(--sv-surface-solid);
 }
 
-/* Tarjeta individual de especie / POI / ítem en beige */
+/* Tarjeta individual de especie / POI uniforme y coherente */
 .species-catalog-card {
-    background: var(--sv-surface-inset);
-    border: 1px solid var(--sv-surface-border);
-    border-radius: 16px;
-    padding: 11px 14px;
+    background: var(--sv-surface-solid);
+    border: 1.5px solid var(--sv-surface-border);
+    border-radius: 20px;
+    padding: 16px 20px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     cursor: pointer;
     transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     touch-action: manipulation;
+    box-shadow: 0 4px 14px rgba(40, 26, 15, 0.06);
 }
 
 .species-catalog-card:hover {
     border-color: var(--sv-primary);
     transform: translateY(-2px);
-    box-shadow: var(--sv-surface-shadow);
+    box-shadow: var(--sv-surface-shadow), 0 0 14px var(--sv-primary-glow);
     background: var(--sv-surface-panel-warm);
 }
 
-/* Variantes temáticas por categoría */
-.species-catalog-card.card-cat-flora {
-    border-color: var(--sv-flora-border);
-}
-
-.species-catalog-card.card-cat-flora:hover {
-    border-color: var(--sv-flora-color);
-    box-shadow: 0 8px 24px var(--sv-surface-shadow), 0 0 14px var(--sv-flora-glow);
-}
-
-.species-catalog-card.card-cat-fauna {
-    border-color: var(--sv-fauna-border);
-}
-
-.species-catalog-card.card-cat-fauna:hover {
-    border-color: var(--sv-fauna-color);
-    box-shadow: 0 8px 24px var(--sv-surface-shadow), 0 0 14px var(--sv-fauna-glow);
-}
-
-.species-catalog-card.card-cat-curiosidades,
-.species-catalog-card.card-cat-patrimonio {
-    border-color: var(--sv-patrimonio-border);
-}
-
-.species-catalog-card.card-cat-curiosidades:hover,
-.species-catalog-card.card-cat-patrimonio:hover {
-    border-color: var(--sv-patrimonio-color);
-    box-shadow: 0 8px 24px var(--sv-surface-shadow), 0 0 14px var(--sv-patrimonio-glow);
-}
-
 .species-chevron-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--sv-surface-solid);
-    border: 1px solid var(--sv-surface-border);
-    color: var(--sv-primary);
-    flex-shrink: 0;
-    font-size: 10px;
-    transition: all 0.2s ease;
-}
-
-.species-catalog-card:hover .species-chevron-btn {
-    background: var(--sv-primary);
-    color: var(--sv-text-inverse);
-    border-color: var(--sv-primary);
-    transform: translateX(2px);
+    display: none !important;
 }
 
 @media (max-width: 639px) {
     #tab-panel-container {
-        padding: 10px 10px 75px 10px;
+        padding: 12px 12px 80px 12px;
         align-items: center;
     }
 
     .tab-modal-dialog {
         max-width: 100% !important;
-        max-height: 80vh !important;
-        border-radius: 16px;
+        max-height: 82vh !important;
+        border-radius: 20px;
     }
 
     .species-catalog-card {
-        padding: 7px 10px;
-        gap: 8px;
+        padding: 14px 16px;
+        gap: 12px;
+        border-radius: 16px;
+    }
+
+    .tab-modal-body {
+        gap: 14px;
+        padding: 14px 16px 22px 16px;
+    }
+}
+
+/* ==========================================================================
+   BITÁCORA DE EXPEDICIÓN — ESPACIADO Y CAJAS PADRE DE ESPECIES POR ENCONTRAR
+   ========================================================================== */
+.bitacora-summary-card {
+    background: var(--sv-surface-solid) !important;
+    border: 1.5px solid var(--sv-primary-border) !important;
+    border-radius: 20px !important;
+    padding: clamp(16px, 2.5vw, 22px) !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 4px 16px rgba(40, 26, 15, 0.06) !important;
+}
+
+.bitacora-section-header {
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    color: var(--sv-text-muted) !important;
+    margin-bottom: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.bitacora-species-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important; /* Espacio generoso entre cada especie por encontrar / registrada */
+}
+
+.bitacora-species-card {
+    background: var(--sv-surface-solid) !important;
+    border: 1.5px solid var(--sv-surface-border) !important;
+    border-radius: 20px !important;
+    padding: 16px 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 4px 14px rgba(40, 26, 15, 0.05) !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    max-width: 100% !important;
+}
+
+.bitacora-species-card:hover {
+    border-color: var(--sv-primary) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(40, 26, 15, 0.12), 0 0 14px var(--sv-primary-glow) !important;
+    background: var(--sv-surface-panel-warm) !important;
+}
+
+/* Estado de especie en bitácora limpio (sin recuadro redondeado de botón) */
+.bitacora-status-inline {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: var(--sv-text-muted) !important;
+    white-space: nowrap !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+.bitacora-status-inline.is-registered {
+    color: var(--sv-primary) !important;
+    font-weight: 700 !important;
+}
+
+.bitacora-status-dot {
+    width: 7px !important;
+    height: 7px !important;
+    border-radius: 50% !important;
+    background: var(--sv-primary) !important;
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+}
+
+@media (max-width: 639px) {
+    .bitacora-species-list {
+        gap: 14px !important;
+    }
+
+    .bitacora-species-card {
+        padding: 14px 16px !important;
+        gap: 12px !important;
+        border-radius: 16px !important;
+    }
+
+    .bitacora-status-inline {
+        font-size: 11px !important;
+        gap: 5px !important;
     }
 }
 
@@ -1395,28 +1481,11 @@
 }
 
 .hero-close-trigger {
-    position: absolute;
-    top: clamp(20px, 4vw, 44px);
-    right: clamp(20px, 5vw, 64px);
-    z-index: 10;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: var(--sv-surface-panel);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--sv-surface-border);
-    color: var(--sv-text-primary);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 15px;
-    transition: all 0.25s ease;
+    display: none !important;
 }
 
 #trail-lobby.reopened .hero-close-trigger {
-    display: flex;
+    display: none !important;
 }
 
 .hero-close-trigger:hover {
@@ -1640,16 +1709,19 @@
 .hero-footer-stats {
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: clamp(12.5px, 1.8vw, 14.5px);
-    font-weight: 600;
+    gap: 6px;
+    font-family: 'Playfair Display', serif !important;
+    font-style: italic !important;
+    font-size: clamp(14px, 2vw, 17px);
+    font-weight: 700;
     color: var(--sv-surface-solid);
 }
 
 .hero-stat-highlight {
-    color: var(--sv-secondary);
-    font-weight: 700;
-    font-family: 'Syne', system-ui, sans-serif;
+    color: var(--sv-primary-hover) !important;
+    font-weight: 700 !important;
+    font-family: 'Playfair Display', serif !important;
+    font-style: italic !important;
     letter-spacing: 0.02em;
 }
 
@@ -1661,16 +1733,19 @@
 
 .hero-stat-time {
     color: var(--sv-surface-solid);
-    font-weight: 600;
+    font-family: 'Playfair Display', serif !important;
+    font-style: italic !important;
+    font-weight: 700 !important;
 }
 
 .hero-footer-slogan {
-    font-family: 'Caveat', cursive;
-    font-size: clamp(1.5rem, 2.5vw, 2.1rem);
-    color: var(--sv-secondary);
+    font-family: 'Playfair Display', serif !important;
+    font-style: italic !important;
+    font-size: clamp(1.4rem, 2.5vw, 2.1rem);
+    color: var(--sv-primary-hover) !important;
     font-weight: 700;
-    letter-spacing: 0.01em;
-    text-shadow: 0 2px 10px var(--sv-secondary-glow);
+    letter-spacing: -0.01em;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
 }
 
 @media (max-width: 768px) {
@@ -2067,10 +2142,12 @@
     position: relative !important;
 }
 
-/* Botón de cierre prominente, redondo y de alto contraste */
+/* Botón de cierre prominente, redondo y de alto contraste con touch target mínimo 44x44px */
 .album-close-btn {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     border-radius: 50%;
     background: var(--sv-surface-solid-warm);
     border: 2px solid var(--sv-surface-border);
@@ -2123,32 +2200,38 @@
     box-shadow: 0 2px 10px var(--sv-primary-glow);
 }
 
-/* Tarjeta individual de especie tipo Catálogo Coleccionable */
+/* Grid de Álbum de Biodiversidad con separación generosa entre especies */
+#biodiversity-album-grid {
+    gap: clamp(20px, 2.5vw, 28px) !important;
+    padding: clamp(18px, 2.5vw, 26px) !important;
+}
+
+/* Tarjeta individual de especie (Caja Padre Global) con espaciado amplio */
 .album-species-card {
-    background: var(--sv-surface-solid-warm);
+    background: var(--sv-surface-solid);
     border: 1.5px solid var(--sv-surface-border);
-    border-radius: 22px;
-    padding: 13px;
+    border-radius: 24px;
+    padding: 18px 18px 20px 18px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 14px;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
-    box-shadow: 0 4px 14px rgba(40, 26, 15, 0.08);
+    box-shadow: 0 6px 18px rgba(40, 26, 15, 0.08);
 }
 
 .album-species-card:hover {
     transform: translateY(-4px);
     border-color: var(--sv-primary);
-    box-shadow: 0 14px 30px rgba(40, 26, 15, 0.16), 0 0 16px var(--sv-primary-glow);
+    box-shadow: 0 16px 32px rgba(40, 26, 15, 0.14), 0 0 16px var(--sv-primary-glow);
     background: var(--sv-surface-solid);
 }
 
-/* Portada visual superior de la tarjeta según categoría */
+/* Portada visual superior de la tarjeta según categoría en gama verde botánica */
 .album-card-cover {
-    height: 105px;
+    height: 110px;
     width: 100%;
-    border-radius: 16px;
+    border-radius: 18px;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -2159,15 +2242,15 @@
 }
 
 .album-species-card.card-cat-fauna .album-card-cover {
-    background: linear-gradient(135deg, rgba(231, 168, 78, 0.30) 0%, rgba(248, 178, 41, 0.10) 100%), radial-gradient(circle at 75% 25%, rgba(231, 168, 78, 0.35) 0%, transparent 65%);
+    background: linear-gradient(135deg, rgba(56, 102, 65, 0.28) 0%, rgba(106, 153, 78, 0.12) 100%), radial-gradient(circle at 75% 25%, rgba(56, 102, 65, 0.30) 0%, transparent 65%);
 }
 
 .album-species-card.card-cat-flora .album-card-cover {
-    background: linear-gradient(135deg, rgba(56, 102, 65, 0.30) 0%, rgba(106, 153, 78, 0.12) 100%), radial-gradient(circle at 75% 25%, rgba(106, 153, 78, 0.35) 0%, transparent 65%);
+    background: linear-gradient(135deg, rgba(56, 102, 65, 0.30) 0%, rgba(106, 153, 78, 0.14) 100%), radial-gradient(circle at 75% 25%, rgba(106, 153, 78, 0.35) 0%, transparent 65%);
 }
 
 .album-species-card.card-cat-patrimonio .album-card-cover {
-    background: linear-gradient(135deg, rgba(106, 153, 78, 0.22) 0%, rgba(184, 150, 118, 0.30) 100%), radial-gradient(circle at 75% 25%, rgba(231, 168, 78, 0.25) 0%, transparent 65%);
+    background: linear-gradient(135deg, rgba(74, 124, 89, 0.25) 0%, rgba(45, 90, 39, 0.15) 100%), radial-gradient(circle at 75% 25%, rgba(56, 102, 65, 0.25) 0%, transparent 65%);
 }
 
 /* Medallón central de la especie con avatar botánico */
@@ -2420,7 +2503,7 @@
 #preparar-visita-modal {
     position: fixed !important;
     inset: 0 !important;
-    z-index: 10005 !important;
+    z-index: var(--sv-z-modal, 50) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -2611,25 +2694,34 @@
     pointer-events: none;
 }
 
-/* Mapa Interactivo del Recorrido */
+/* Columna de Ecosistema + Mapa Interactivo del Recorrido con separación amplia */
+.preparar-left-col {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: clamp(24px, 3.5vw, 36px) !important; /* Separación clara entre el panel de arriba y el mapa */
+}
+
+/* Mapa Interactivo del Recorrido con separación y distribución interna */
 .preparar-map-card {
     background: var(--sv-surface-inset);
-    border: 1px solid var(--sv-surface-border);
-    border-radius: 20px;
+    border: 1.5px solid var(--sv-surface-border);
+    border-radius: 24px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    gap: 16px; /* Distribución uniforme de elementos internos */
+    padding: clamp(20px, 2.8vw, 28px) !important;
     box-shadow: var(--sv-surface-shadow);
 }
 
 .preparar-map-visual {
     position: relative;
-    height: 160px;
-    border-radius: 16px;
+    height: 180px;
+    border-radius: 18px;
     overflow: hidden;
     background-size: cover;
     background-position: center;
-    border: 1px solid var(--sv-surface-border);
+    border: 1.5px solid var(--sv-surface-border);
 }
 
 .preparar-map-overlay {
@@ -2643,15 +2735,15 @@
     border: 1px solid var(--sv-surface-border);
     backdrop-filter: blur(6px);
     border-radius: 999px;
-    padding: 3px 9px;
-    font-size: 10.5px;
+    padding: 6px 14px;
+    font-size: 11px;
     font-weight: 700;
     font-family: 'Syne', sans-serif;
     color: var(--sv-text-primary);
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    box-shadow: var(--sv-surface-shadow);
+    gap: 7px;
+    box-shadow: 0 2px 8px rgba(40, 26, 15, 0.06);
     transition: all 0.2s ease;
 }
 
@@ -2723,17 +2815,18 @@
 }
 
 .checklist-badge-obligatorio {
-    font-size: 9.5px;
-    font-weight: 800;
-    font-family: 'Syne', sans-serif;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    padding: 2px 7px;
-    border-radius: 5px;
-    background: var(--sv-secondary-surface);
-    color: var(--sv-secondary);
-    border: 1px solid var(--sv-secondary-border);
-    flex-shrink: 0;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    font-family: 'Playfair Display', serif !important;
+    font-style: italic !important;
+    letter-spacing: 0.2px !important;
+    text-transform: none !important;
+    padding: 3px 10px !important;
+    border-radius: 8px !important;
+    background: var(--sv-secondary-surface) !important;
+    color: var(--sv-secondary) !important;
+    border: 1px solid var(--sv-secondary-border) !important;
+    flex-shrink: 0 !important;
 }
 
 .checklist-badge-recomendado {
@@ -2773,6 +2866,10 @@
     background: transparent;
     color: var(--sv-text-muted);
     border: 1px solid transparent;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.2s ease;
 }
 
@@ -2791,4 +2888,127 @@
     .preparar-visita-modal-card {
         border-radius: 20px !important;
     }
+}
+
+/* ==========================================================================
+   FICHA TÉCNICA DE POI / BIODIVERSIDAD (PoiCardView)
+   ========================================================================== */
+.sv-poi-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: var(--sv-scrim-heavy, rgba(20, 28, 22, 0.82)) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: var(--sv-z-modal, 50) !important;
+    padding: clamp(12px, 3vw, 24px) !important;
+    box-sizing: border-box !important;
+    animation: sv-fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sv-poi-card {
+    position: relative !important;
+    width: 440px !important;
+    max-width: 92vw !important;
+    max-height: 88vh !important;
+    max-height: 88dvh !important;
+    overflow-y: auto !important;
+    background: var(--sv-surface-solid) !important;
+    color: var(--sv-text-primary) !important;
+    border-radius: var(--sv-radius-xl, 28px) !important;
+    padding: clamp(20px, 3vw, 28px) !important;
+    box-sizing: border-box !important;
+    font-family: var(--sv-font-body) !important;
+    box-shadow: var(--sv-surface-shadow-lg) !important;
+    border: 1px solid var(--sv-surface-border) !important;
+    scrollbar-width: thin;
+    scrollbar-color: var(--sv-primary-hover) var(--sv-surface-inset);
+    animation: sv-card-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes sv-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes sv-card-pop {
+    from { opacity: 0; transform: scale(0.94) translateY(12px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.sv-poi-close-btn {
+    position: absolute !important;
+    top: 14px !important;
+    right: 14px !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    border: 1px solid var(--sv-surface-border) !important;
+    border-radius: 50% !important;
+    background: var(--sv-surface-solid-warm) !important;
+    color: var(--sv-text-primary) !important;
+    font-size: 18px !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+}
+
+.sv-poi-close-btn:hover {
+    background: var(--sv-primary) !important;
+    color: var(--sv-text-inverse) !important;
+    border-color: var(--sv-primary) !important;
+    transform: scale(1.08) rotate(90deg) !important;
+}
+
+.sv-poi-audio-btn {
+    padding: 13px 18px !important;
+    min-height: 44px !important;
+    border-radius: var(--sv-radius-md, 14px) !important;
+    font-weight: 700 !important;
+    font-size: 13.5px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.sv-poi-audio-primary {
+    border: 1px solid var(--sv-primary-border) !important;
+    background: linear-gradient(135deg, var(--sv-primary), var(--sv-primary-hover)) !important;
+    color: var(--sv-text-inverse) !important;
+    box-shadow: 0 4px 14px var(--sv-primary-glow) !important;
+}
+
+.sv-poi-audio-primary:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 18px var(--sv-primary-glow) !important;
+}
+
+.sv-poi-audio-secondary {
+    border: 1.5px solid var(--sv-secondary) !important;
+    background: var(--sv-surface-solid-warm) !important;
+    color: var(--sv-text-primary) !important;
+    box-shadow: 0 4px 12px rgba(231, 168, 78, 0.16) !important;
+}
+
+.sv-poi-audio-secondary:hover {
+    background: var(--sv-secondary-surface) !important;
+    border-color: var(--sv-secondary-hover) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Accesibilidad y navegación por teclado unificada */
+button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid var(--sv-primary) !important;
+    outline-offset: 3px !important;
 }

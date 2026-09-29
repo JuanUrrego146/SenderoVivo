@@ -53,47 +53,87 @@
     --sv-primary-glow: rgba(106, 153, 78, 0.32);
     /* Resplandor natural para foco e interacción */
 
-    /* ── Elementos Secundarios: Amarillo / Ámbar Cálido (#E7A84E / #F8B229) ── */
-    --sv-secondary: #E7A84E;
-    /* Miel silvestre / ocre dorado cálido */
-    --sv-secondary-hover: #F8B229;
-    /* Girasol andino brillante para hovers activos */
-    --sv-secondary-surface: rgba(231, 168, 78, 0.16);
-    /* Tinte ámbar traslúcido */
-    --sv-secondary-border: rgba(231, 168, 78, 0.42);
-    /* Borde ámbar suave */
-    --sv-secondary-glow: rgba(248, 178, 41, 0.30);
-    /* Resplandor ámbar */
+    /* ── Elementos Secundarios y Acentos: Verde Esmeralda Botánico ── */
+    --sv-secondary: #386641;
+    /* Verde bosque profundo y elegante */
+    --sv-secondary-hover: #6A994E;
+    /* Verde helecho vivo */
+    --sv-secondary-surface: rgba(56, 102, 65, 0.14);
+    /* Tinte verde vegetal traslúcido */
+    --sv-secondary-border: rgba(56, 102, 65, 0.35);
+    /* Borde verde orgánico */
+    --sv-secondary-glow: rgba(106, 153, 78, 0.28);
+    /* Resplandor verde */
 
-    /* ── Acentos temáticos por Categoría (Biodiversidad y Patrimonio) ── */
+    /* ── Acentos temáticos por Categoría (Biodiversidad y Patrimonio en Gama Verde) ── */
     --sv-flora-color: #386641;
     --sv-flora-hover: #6A994E;
-    --sv-flora-surface: rgba(56, 102, 65, 0.12);
+    --sv-flora-surface: rgba(56, 102, 65, 0.14);
     --sv-flora-border: rgba(56, 102, 65, 0.32);
     --sv-flora-glow: rgba(106, 153, 78, 0.28);
 
-    --sv-fauna-color: #E7A84E;
-    --sv-fauna-hover: #F8B229;
-    --sv-fauna-surface: rgba(231, 168, 78, 0.16);
-    --sv-fauna-border: rgba(231, 168, 78, 0.40);
-    --sv-fauna-glow: rgba(245, 158, 11, 0.28);
+    --sv-fauna-color: #386641;
+    --sv-fauna-hover: #6A994E;
+    --sv-fauna-surface: rgba(56, 102, 65, 0.14);
+    --sv-fauna-border: rgba(56, 102, 65, 0.32);
+    --sv-fauna-glow: rgba(106, 153, 78, 0.28);
 
-    --sv-patrimonio-color: #A0522D;
-    /* Ocre arcilla / siena colonial */
-    --sv-patrimonio-hover: #C27838;
-    --sv-patrimonio-surface: rgba(160, 82, 45, 0.14);
-    --sv-patrimonio-border: rgba(160, 82, 45, 0.35);
-    --sv-patrimonio-glow: rgba(160, 82, 45, 0.25);
+    --sv-patrimonio-color: #386641;
+    --sv-patrimonio-hover: #6A994E;
+    --sv-patrimonio-surface: rgba(56, 102, 65, 0.14);
+    --sv-patrimonio-border: rgba(56, 102, 65, 0.32);
+    --sv-patrimonio-glow: rgba(106, 153, 78, 0.25);
 
     /* ── Tipografía / Neutros de Lectura sobre Fondo Beige ── */
     --sv-text-primary: #1F2E22;
-    /* Espresso botánico profundo (máxima nitidez y elegancia) */
-    --sv-text-muted: #495A4D;
-    /* Grafito musgo oscuro (ratio 4.8:1 sobre beige) */
-    --sv-text-dim: #6E7E72;
-    /* Gris salvia terroso para metadatos sutiles */
+    /* Espresso botánico profundo (máxima nitidez y elegancia, ratio 10.4:1 sobre beige) */
+    --sv-text-muted: #3D4F41;
+    /* Grafito musgo oscuro (ratio 5.8:1 sobre beige) */
+    --sv-text-dim: #445548;
+    /* Gris salvia terroso accesible (ratio 5.1:1 sobre beige, superando WCAG 2.1 AA) */
     --sv-text-inverse: #FFFFFF;
     /* Blanco puro para botones de fondo verde u oscuro */
+
+    /* ── Escala Modular de Espaciado (Base 4px / 8px) ── */
+    --sv-space-2xs: 0.25rem;  /* 4px */
+    --sv-space-xs:  0.5rem;   /* 8px */
+    --sv-space-sm:  0.75rem;  /* 12px */
+    --sv-space-md:  1rem;     /* 16px */
+    --sv-space-lg:  1.5rem;   /* 24px */
+    --sv-space-xl:  2rem;     /* 32px */
+    --sv-space-2xl: 3rem;     /* 48px */
+
+    /* ── Radios de Borde Coherentes ── */
+    --sv-radius-sm: 8px;      /* Chips, inputs, tooltips */
+    --sv-radius-md: 14px;     /* Sub-tarjetas, controles secundarios */
+    --sv-radius-lg: 20px;     /* Tarjetas de contenido, docks */
+    --sv-radius-xl: 28px;     /* Modales principales, sheets */
+    --sv-radius-full: 9999px; /* Pills y botones circulares */
+
+    /* ── Escala Tipográfica (Fluid Type Scale) ── */
+    --sv-text-xs:   0.75rem;  /* 12px - Metadatos mínimos legibles */
+    --sv-text-sm:   0.875rem; /* 14px - Subtítulos, pills y badges */
+    --sv-text-base: 1rem;     /* 16px - Cuerpo de lectura óptimo */
+    --sv-text-lg:   1.25rem;  /* 20px - Subtítulos destacados */
+    --sv-text-xl:   1.5rem;   /* 24px - Títulos de sección */
+    --sv-text-2xl:  2rem;     /* 32px - Títulos de modal */
+    --sv-text-3xl:  2.75rem;  /* 44px - Hero display */
+
+    /* ── Jerarquía de Capas (Stacking Context Unificado) ── */
+    --sv-z-canvas:   0;
+    --sv-z-beacons:  10;
+    --sv-z-hud:      20;
+    --sv-z-dock:     30;
+    --sv-z-drawer:   40;
+    --sv-z-modal:    50;
+    --sv-z-toast:    100;
+
+    /* ── Tiempos y Curvas de Animación Funcional ── */
+    --sv-duration-fast: 150ms;
+    --sv-duration-base: 250ms;
+    --sv-duration-slow: 400ms;
+    --sv-ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    --sv-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 
     /* ── Superficies y Delineados Funcionales ── */
     --sv-border-orange: var(--sv-secondary-border);

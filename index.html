@@ -259,10 +259,6 @@
         <div id="trail-lobby" role="dialog" aria-modal="true" aria-label="Pantalla de inicio Sendero Vivo">
             <div class="hero-screen-overlay"></div>
 
-            <!-- Botón discreto para cerrar si se reabre desde el visor en recorrido -->
-            <button id="btn-hero-close" class="hero-close-trigger" onclick="closeTrailLobby()" title="Volver al visor" aria-label="Cerrar ventana inicial">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
 
             <!-- Barra Superior: Ubicación y Tecnología 3DGS -->
             <header class="hero-top-bar">
@@ -303,27 +299,27 @@
             <footer class="hero-bottom-footer">
                 <div class="hero-bottom-divider"></div>
                 <div class="hero-footer-content">
-                    <div class="hero-footer-stats">
-                        <span class="hero-stat-highlight">7,3 km</span>
+                    <div class="hero-footer-stats" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">
+                        <span class="hero-stat-highlight" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-primary-hover);">7,3 km</span>
                         <span class="hero-stat-sep">·</span>
-                        <span class="hero-stat-highlight">+406 m desnivel</span>
+                        <span class="hero-stat-highlight" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-primary-hover);">+406 m desnivel</span>
                         <span class="hero-stat-sep">·</span>
-                        <span class="hero-stat-time">3 horas</span>
+                        <span class="hero-stat-time" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-surface-solid);">3 horas</span>
                     </div>
-                    <div class="hero-footer-slogan">
+                    <div class="hero-footer-slogan" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-primary-hover);">
                         Buenos senderos, mejores personas
                     </div>
                 </div>
             </footer>
         </div>
 
-        <div id="preparar-visita-modal" class="hidden" onclick="if(event.target===this) closePrepararVisita();">
+        <div id="preparar-visita-modal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="preparar-trail-title" onclick="if(event.target===this) closePrepararVisita();">
             <div class="preparar-visita-modal-card glass-panel pointer-events-auto">
                 
-                <!-- Cabecera de la Ficha Técnica (Réplica exacta de Referencia Image 2) -->
+                <!-- Cabecera de la Ficha Técnica con Proximidad Gestalt Corregida -->
                 <div class="preparar-header-row">
-                    <div class="min-w-0 pr-8 md:pr-0">
-                        <span class="text-[10px] sm:text-[11px] font-bold font-mono tracking-wider uppercase block mb-1" style="color: var(--sv-text-dim);">
+                    <div class="min-w-0 flex-1">
+                        <span class="text-xs font-bold font-mono tracking-wider uppercase block mb-1" style="color: var(--sv-text-dim);">
                             FICHA TÉCNICA DEL SENDERO · <span style="color: var(--sv-primary);">EAAB Cerros Orientales</span>
                         </span>
                         <h2 id="preparar-trail-title" class="text-xl sm:text-3xl font-extrabold font-syne truncate" style="color: var(--sv-text-primary); letter-spacing: -0.02em;">
@@ -333,28 +329,27 @@
                             <i class="fa-solid fa-location-dot mr-1.5" style="color: var(--sv-primary);"></i>
                             Cerros Orientales de Bogotá · Localidad de Chapinero (Cl. 71)
                         </p>
-                    </div>
 
-                    <!-- Selector de Sendero + Botón Cerrar -->
-                    <div class="flex items-center gap-3 self-stretch sm:self-auto justify-between sm:justify-end flex-wrap">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-semibold hidden lg:inline" style="color: var(--sv-text-muted);">
-                                Cambiar sendero:
+                        <!-- Selector de Sendero contextualizado junto a su título (Ley de Proximidad) -->
+                        <div class="flex items-center gap-2 mt-3 flex-wrap">
+                            <span class="text-xs font-semibold" style="color: var(--sv-text-muted);">
+                                Seleccionar sendero:
                             </span>
-                            <div class="flex items-center gap-1.5 p-1 rounded-2xl" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-surface-border);">
-                                <button type="button" data-trail="quebrada-la-vieja" onclick="switchPrepararTrail('quebrada-la-vieja')" class="trail-select-pill active text-xs font-semibold px-3.5 py-1.5 rounded-xl cursor-pointer transition text-center">
+                            <div class="inline-flex items-center gap-1.5 p-1 rounded-2xl" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-surface-border);">
+                                <button type="button" data-trail="quebrada-la-vieja" onclick="switchPrepararTrail('quebrada-la-vieja')" class="trail-select-pill active text-xs font-semibold px-4 py-2 rounded-xl cursor-pointer transition text-center min-h-[40px]">
                                     Quebrada La Vieja
                                 </button>
-                                <button type="button" data-trail="santa-ana" onclick="switchPrepararTrail('santa-ana')" class="trail-select-pill text-xs font-semibold px-3.5 py-1.5 rounded-xl cursor-pointer transition text-center">
+                                <button type="button" data-trail="santa-ana" onclick="switchPrepararTrail('santa-ana')" class="trail-select-pill text-xs font-semibold px-4 py-2 rounded-xl cursor-pointer transition text-center min-h-[40px]">
                                     Santa Ana - La Aguadora
                                 </button>
                             </div>
                         </div>
-
-                        <button onclick="closePrepararVisita()" class="tab-modal-close-btn flex-shrink-0" title="Cerrar ventana" aria-label="Cerrar ventana">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
                     </div>
+
+                    <!-- Botón Cerrar aislado y accesible en esquina superior -->
+                    <button onclick="closePrepararVisita()" class="tab-modal-close-btn flex-shrink-0 self-start" title="Cerrar ventana (Esc)" aria-label="Cerrar ventana de preparación de visita">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                 </div>
 
                 <!-- Cuerpo del Modal (Desplazable con scroll suave y sin necesidad de zoom) -->
@@ -367,7 +362,7 @@
                                 <i class="fa-solid fa-shoe-prints"></i>
                             </div>
                             <div class="min-w-0">
-                                <span class="text-[9.5px] sm:text-[11px] font-bold font-mono tracking-wider uppercase block truncate" style="color: var(--sv-text-dim);">
+                                <span class="text-[11px] sm:text-xs font-bold font-mono tracking-wider uppercase block truncate" style="color: var(--sv-text-dim);">
                                     DISTANCIA
                                 </span>
                                 <span id="preparar-stat-distance" class="text-base sm:text-2xl font-bold font-syne block truncate" style="color: var(--sv-text-primary);">
@@ -381,7 +376,7 @@
                                 <i class="fa-solid fa-arrow-trend-up"></i>
                             </div>
                             <div class="min-w-0">
-                                <span class="text-[9.5px] sm:text-[11px] font-bold font-mono tracking-wider uppercase block truncate" style="color: var(--sv-text-dim);">
+                                <span class="text-[11px] sm:text-xs font-bold font-mono tracking-wider uppercase block truncate" style="color: var(--sv-text-dim);">
                                     DESNIVEL +
                                 </span>
                                 <span id="preparar-stat-elevation" class="text-base sm:text-2xl font-bold font-syne block truncate" style="color: var(--sv-text-primary);">
@@ -395,7 +390,7 @@
                                 <i class="fa-regular fa-clock"></i>
                             </div>
                             <div class="min-w-0">
-                                <span class="text-[9.5px] sm:text-[11px] font-bold font-mono tracking-wider uppercase block truncate" style="color: var(--sv-text-dim);">
+                                <span class="text-[11px] sm:text-xs font-bold font-mono tracking-wider uppercase block truncate" style="color: var(--sv-text-dim);">
                                     TIEMPO APROX.
                                 </span>
                                 <span id="preparar-stat-time" class="text-base sm:text-2xl font-bold font-syne block truncate" style="color: var(--sv-text-primary);">
@@ -408,8 +403,8 @@
                     <!-- Fila 2: Cuadrícula de 2 Columnas (Réplica visual exacta de Image 2) -->
                     <div class="preparar-content-grid">
 
-                        <!-- Columna Izquierda: Ecosistema + Mapa Interactivo del Recorrido -->
-                        <div class="flex flex-col gap-4 sm:gap-5">
+                        <!-- Columna Izquierda: Ecosistema + Mapa Interactivo del Recorrido (Separados con holgura) -->
+                        <div class="preparar-left-col flex flex-col gap-6 sm:gap-8">
                             
                             <!-- 1. Tarjeta Ecosistema con Imagen y Descripción -->
                             <div class="ecosystem-banner-card">
@@ -428,27 +423,27 @@
                                 </div>
                             </div>
 
-                            <!-- 2. Tarjeta Mapa Interactivo del Recorrido -->
-                            <div class="preparar-map-card p-4 sm:p-5">
-                                <div class="flex items-center justify-between gap-2 mb-1.5">
-                                    <div class="flex items-center gap-2.5">
-                                        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-sm flex-shrink-0" style="background: var(--sv-primary-surface); color: var(--sv-primary); border: 1px solid var(--sv-primary-border);">
+                            <!-- 2. Tarjeta Mapa Interactivo del Recorrido (Espaciada y distribuida) -->
+                            <div class="preparar-map-card p-5 sm:p-6">
+                                <div class="flex items-center justify-between gap-3 mb-2.5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0" style="background: var(--sv-primary-surface); color: var(--sv-primary); border: 1.5px solid var(--sv-primary-border);">
                                             <i class="fa-solid fa-compass"></i>
                                         </div>
                                         <h3 class="text-sm sm:text-base font-bold font-syne" style="color: var(--sv-text-primary);">
                                             Mapa Interactivo del Recorrido
                                         </h3>
                                     </div>
-                                    <span class="text-[11px] font-bold font-mono px-2.5 py-1 rounded-lg flex items-center gap-1.5" style="background: var(--sv-secondary-surface); color: var(--sv-secondary); border: 1px solid var(--sv-secondary-border);">
+                                    <span class="text-[11px] font-bold font-mono px-3 py-1.5 rounded-lg flex items-center gap-1.5" style="background: var(--sv-secondary-surface); color: var(--sv-secondary); border: 1px solid var(--sv-secondary-border);">
                                         Norte <i class="fa-solid fa-arrow-up text-[10px]"></i>
                                     </span>
                                 </div>
-                                <p class="text-xs sm:text-[12.5px] mb-3.5" style="color: var(--sv-text-muted);">
+                                <p class="text-xs sm:text-[13px] mb-4 leading-relaxed" style="color: var(--sv-text-muted);">
                                     Toca los hitos numerados para conocer detalles y recomendaciones
                                 </p>
 
                                 <!-- Visual del mapa con orientación Norte -->
-                                <div id="preparar-map-img" class="preparar-map-visual mb-3.5" style="background-image: url('assets/hero-bg.webp');">
+                                <div id="preparar-map-img" class="preparar-map-visual mb-4" style="background-image: url('assets/hero-bg.webp');">
                                     <div class="preparar-map-overlay"></div>
                                     <div class="absolute top-3 left-3 z-10">
                                         <span class="text-[10px] sm:text-[10.5px] font-bold font-mono uppercase px-2.5 py-1 rounded-md flex items-center gap-1.5" style="background: var(--sv-surface-solid); color: var(--sv-primary); border: 1px solid var(--sv-surface-border); backdrop-filter: blur(4px);">
@@ -459,7 +454,7 @@
                                 </div>
 
                                 <!-- Hitos interactivos del recorrido -->
-                                <div id="preparar-map-hitos" class="flex items-center gap-2 flex-wrap">
+                                <div id="preparar-map-hitos" class="flex items-center gap-2.5 flex-wrap pt-1">
                                     <!-- Generados dinámicamente por switchPrepararTrail -->
                                 </div>
                             </div>
@@ -490,7 +485,7 @@
                                                 <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">
                                                     Agua (Mínimo 1 Litro)
                                                 </h4>
-                                                <span class="checklist-badge-obligatorio">OBLIGATORIO</span>
+                                                <span class="checklist-badge-obligatorio">Obligatorio</span>
                                             </div>
                                             <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">
                                                 Llevar termo o cantimplora recargable. En los cerros está prohibido el plástico de un solo uso.
@@ -506,7 +501,7 @@
                                                 <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">
                                                     Calzado cómodo y con agarre
                                                 </h4>
-                                                <span class="checklist-badge-obligatorio">OBLIGATORIO</span>
+                                                <span class="checklist-badge-obligatorio">Obligatorio</span>
                                             </div>
                                             <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">
                                                 Botas de trekking o calzado deportivo con labrado para evitar resbalones sobre piedras húmedas y barro.
@@ -522,7 +517,7 @@
                                                 <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">
                                                     Reserva Acueducto de Bogotá
                                                 </h4>
-                                                <span class="checklist-badge-obligatorio">OBLIGATORIO</span>
+                                                <span class="checklist-badge-obligatorio">Obligatorio</span>
                                             </div>
                                             <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">
                                                 Reserva confirmada en el portal o app "Caminos de los Cerros" de la EAAB. Código QR listo en pantalla.
@@ -538,7 +533,7 @@
                                                 <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">
                                                     Chaqueta cortaviento o impermeable
                                                 </h4>
-                                                <span class="checklist-badge-obligatorio">OBLIGATORIO</span>
+                                                <span class="checklist-badge-obligatorio">Obligatorio</span>
                                             </div>
                                             <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">
                                                 La temperatura desciende bruscamente arriba de 3.000 m con niebla y brisa andina.
@@ -598,7 +593,7 @@
         </div>
 
         <!-- ============ ÁLBUM DE BIODIVERSIDAD (CATÁLOGO VISUAL) ============ -->
-        <div id="biodiversity-album-modal" class="hidden fixed inset-0 z-[10005] flex items-center justify-center p-3 sm:p-5" style="background: rgba(20, 16, 12, 0.68); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);" onclick="if(event.target===this) closeBiodiversityAlbum();">
+        <div id="biodiversity-album-modal" role="dialog" aria-modal="true" aria-label="Catálogo Vivo de Biodiversidad" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5" style="background: var(--sv-scrim-heavy); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);" onclick="if(event.target===this) closeBiodiversityAlbum();">
             <div class="biodiversity-modal-card glass-panel w-full max-w-4xl max-h-[85vh] flex flex-col rounded-[28px] overflow-hidden shadow-2xl pointer-events-auto" style="background: var(--sv-surface-solid); border: 2px solid var(--sv-surface-border);">
                 <!-- Cabecera del Álbum -->
                 <div class="p-4 sm:p-5 border-b flex items-center justify-between gap-3" style="border-color: var(--sv-surface-border); background: var(--sv-surface-solid);">
@@ -641,8 +636,8 @@
                     </div>
                 </div>
 
-                <!-- Contenedor con scroll de especies tipo Catálogo -->
-                <div id="biodiversity-album-grid" class="p-4 sm:p-5 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 flex-1 no-scrollbar" style="background: var(--sv-surface-inset);">
+                <!-- Contenedor con scroll de especies tipo Catálogo con separación generosa -->
+                <div id="biodiversity-album-grid" class="p-4 sm:p-6 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 flex-1 no-scrollbar" style="background: var(--sv-surface-inset);">
                     <!-- Inyectado dinámicamente -->
                 </div>
 
@@ -707,7 +702,7 @@
                     <div class="expedition-live-pill" title="Altitud de estación actual">
                         <span class="live-pulse-dot"></span>
                         <span style="font-size: 11px; font-weight: 600; color: var(--sv-text-muted);">
-                            <i class="fa-solid fa-mountain text-[10px]" style="color: var(--sv-primary);"></i> <strong id="hud-altitud-top" style="color: var(--sv-text-primary); font-family: 'Syne', sans-serif;">2.712 m</strong>
+                            <i class="fa-solid fa-mountain text-[10px]" style="color: var(--sv-primary);"></i> <strong id="hud-altitud-top" style="color: var(--sv-text-primary); font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">2.712 m</strong>
                         </span>
                     </div>
                 </div>
@@ -757,7 +752,7 @@
                         </div>
                         <div class="mobile-brand-titles">
                             <span class="mobile-brand-title">Sendero Santa Ana</span>
-                            <span class="mobile-brand-sub">2.712 m · Cerros Orientales</span>
+                            <span class="mobile-brand-sub" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">2.712 m · Cerros Orientales</span>
                         </div>
                     </button>
                     <div class="mobile-top-controls">
@@ -783,7 +778,7 @@
                             </div>
                             <div class="telemetry-alt-numbers">
                                 <span class="telemetry-alt-title">Altitud</span>
-                                <span class="telemetry-alt-val" id="hud-altitud">2.712 m</span>
+                                <span class="telemetry-alt-val" id="hud-altitud" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">2.712 m</span>
                             </div>
                         </div>
 
@@ -829,62 +824,62 @@
                         <i id="details-arrow-icon" class="fa-solid fa-chevron-up text-xs transition-transform duration-300" style="color: var(--sv-primary);"></i>
                         <span class="text-xs font-bold" style="color: var(--sv-text-primary);">Detalles del sendero</span>
                     </div>
-                    <span id="hud-datos-mobile" class="text-[10px] font-mono font-semibold" style="color: var(--sv-primary);">2.712 m · 0 m</span>
+                    <span id="hud-datos-mobile" class="text-xs font-bold" style="color: var(--sv-primary); font-family: 'Playfair Display', serif; font-style: italic;">2.712 m · 0 m</span>
                 </div>
                 <div id="details-content" class="hidden" style="border-top: 1px solid var(--sv-surface-border);">
-                    <div class="grid grid-cols-4 gap-1 px-3 py-2" style="font-variant-numeric: tabular-nums;">
+                    <div class="grid grid-cols-4 gap-2 px-3 py-2.5" style="font-variant-numeric: tabular-nums;">
                         <div class="text-center">
-                            <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Altitud</div>
-                            <div class="text-[13px] font-semibold" style="color: var(--sv-primary);" id="hud-altitud-m">2.712 m</div>
+                            <div class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--sv-text-dim);">Altitud</div>
+                            <div class="text-[14px] font-bold" style="color: var(--sv-primary); font-family: 'Playfair Display', serif; font-style: italic;" id="hud-altitud-m">2.712 m</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Recorrido</div>
-                            <div class="text-[13px] font-semibold" style="color: var(--sv-primary);" id="hud-recorrido-m">0 m</div>
+                            <div class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--sv-text-dim);">Recorrido</div>
+                            <div class="text-[14px] font-bold font-syne" style="color: var(--sv-primary);" id="hud-recorrido-m">0 m</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Desnivel</div>
-                            <div class="text-[13px] font-semibold" style="color: var(--sv-primary);" id="hud-desnivel-m">+0 m</div>
+                            <div class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--sv-text-dim);">Desnivel</div>
+                            <div class="text-[14px] font-bold font-syne" style="color: var(--sv-primary);" id="hud-desnivel-m">+0 m</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-[9px] font-semibold" style="color: var(--sv-text-dim);">Pendiente</div>
-                            <div class="text-[13px] font-semibold" style="color: var(--sv-primary);" id="hud-pendiente-m">0 %</div>
+                            <div class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--sv-text-dim);">Pendiente</div>
+                            <div class="text-[14px] font-bold font-syne" style="color: var(--sv-primary);" id="hud-pendiente-m">0 %</div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Nav PC -->
-            <nav id="shell-nav-pc" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-3 flex items-center gap-6 sm:gap-12 shadow-2xl pointer-events-auto">
-                <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition" style="color: var(--sv-primary);">
+            <nav id="shell-nav-pc" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-2.5 flex items-center gap-6 sm:gap-12 shadow-2xl pointer-events-auto">
+                <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="active-dock-tab flex flex-col items-center gap-1 font-medium touch-manipulation cursor-pointer transition min-w-[54px] min-h-[44px] justify-center" style="color: var(--sv-primary);">
                     <i class="fa-solid fa-compass text-base sm:text-lg"></i>
-                    <span class="text-[9px] sm:text-[10px]">Sendero</span>
+                    <span class="text-[10px] sm:text-[11px]">Sendero</span>
                 </button>
-                <button id="nav-catalog" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')" class="flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
+                <button id="nav-catalog" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')" class="flex flex-col items-center gap-1 transition touch-manipulation cursor-pointer min-w-[54px] min-h-[44px] justify-center" style="color: var(--sv-text-dim);">
                     <i class="fa-solid fa-book-bookmark text-base sm:text-lg"></i>
-                    <span class="text-[9px] sm:text-[10px]">Especies</span>
+                    <span class="text-[10px] sm:text-[11px]">Especies</span>
                 </button>
-                <button id="nav-quest" onclick="switchTab('quest')" ontouchstart="switchTab('quest')" class="flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
+                <button id="nav-quest" onclick="switchTab('quest')" ontouchstart="switchTab('quest')" class="flex flex-col items-center gap-1 transition touch-manipulation cursor-pointer min-w-[54px] min-h-[44px] justify-center" style="color: var(--sv-text-dim);">
                     <i class="fa-solid fa-trophy text-base sm:text-lg"></i>
-                    <span class="text-[9px] sm:text-[10px]">Bitácora</span>
+                    <span class="text-[10px] sm:text-[11px]">Bitácora</span>
                 </button>
             </nav>
 
             <!-- Nav móvil -->
             <nav id="shell-nav-mobile" class="absolute bottom-3 left-4 right-4 z-40 glass-panel rounded-full px-4 py-2 flex items-center justify-around shadow-2xl pointer-events-auto">
                 <button id="nav-trail-m" onclick="switchTab('trail')" ontouchstart="switchTab('trail')"
-                    class="nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition" style="color: var(--sv-primary);">
+                    class="nav-m-btn nav-m-active flex flex-col items-center gap-1 font-medium touch-manipulation cursor-pointer transition min-w-[50px] min-h-[44px] justify-center" style="color: var(--sv-primary);">
                     <i class="fa-solid fa-compass text-base"></i>
-                    <span class="text-[9px]">Sendero</span>
+                    <span class="text-[10px]">Sendero</span>
                 </button>
                 <button id="nav-catalog-m" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')"
-                    class="nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
+                    class="nav-m-btn flex flex-col items-center gap-1 transition touch-manipulation cursor-pointer min-w-[50px] min-h-[44px] justify-center" style="color: var(--sv-text-dim);">
                     <i class="fa-solid fa-book-bookmark text-base"></i>
-                    <span class="text-[9px]">Especies</span>
+                    <span class="text-[10px]">Especies</span>
                 </button>
                 <button id="nav-quest-m" onclick="switchTab('quest')" ontouchstart="switchTab('quest')"
-                    class="nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer" style="color: var(--sv-text-dim);">
+                    class="nav-m-btn flex flex-col items-center gap-1 transition touch-manipulation cursor-pointer min-w-[50px] min-h-[44px] justify-center" style="color: var(--sv-text-dim);">
                     <i class="fa-solid fa-trophy text-base"></i>
-                    <span class="text-[9px]">Bitácora</span>
+                    <span class="text-[10px]">Bitácora</span>
                 </button>
             </nav>
         </div>
