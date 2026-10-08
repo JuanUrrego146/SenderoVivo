@@ -47,7 +47,7 @@ COLMAP="C:/Users/Juan/Tools/colmap/bin/colmap.exe"
 cd "F:/Sendero/ensayo-360"
 
 "$COLMAP" feature_extractor \
-  --database_path db.db --image_path images --mask_path masks \
+  --database_path db.db --image_path images --ImageReader.mask_path masks \
   --ImageReader.camera_model OPENCV_FISHEYE \
   --ImageReader.single_camera_per_folder 1 \
   --FeatureExtraction.max_image_size 3200 \
