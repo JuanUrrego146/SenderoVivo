@@ -6,6 +6,7 @@
  * RESPONSABILIDADES:
  * - Mostrar el progreso del sendero.
  * - Mostrar distancia recorrida.
+ * - Mostrar distancia restante.
  * - Mostrar desnivel.
  * - Mostrar altitud.
  * - Mostrar pendiente.
@@ -88,6 +89,23 @@ export class HudView {
 
         if (!element) {
             return;
+        }
+
+        /**
+         * Muestra la distancia restante.
+         */
+        setRestante(text) {
+
+            const element =
+                this.get('hud-restante');
+
+            if (!element) {
+                return;
+            }
+
+            element.innerText =
+                text;
+
         }
 
         element.innerText =
@@ -177,6 +195,14 @@ export class HudView {
         ) {
             this.setRecorrido(
                 data.recorrido
+            );
+        }
+
+        if (
+            data.restante !== undefined
+        ) {
+            this.setRestante(
+                data.restante
             );
         }
 

@@ -430,7 +430,7 @@ Estos cuatro incumplimientos están declarados y fechados, no descubiertos: son 
 ### Notas de diseño
 
 - **`TourEngine` es el único que mueve la cámara.** `PoiManager` no la toca: pide a `TourEngine` que guarde y restaure el estado (RF-018). Y es el único que escribe `distance`: los controles externos (flechas, botones) pasan por `moveTo()` / `advance()`.
-- **`tour:progress` es el evento central.** Se publica con `app.fire('tour:progress', { distance, total, distanceMeters, position, yaw, pitch })` y se escucha con `app.on(...)`. `distanceMeters` va en `null` hasta que `TrailDataLayer` aporte la escala real.
+- **`tour:progress` es el evento central.** Se publica con `app.fire('tour:progress', { distance, total, distanceMeters, altitudeMeters, elevationGainMeters, slopePercent, position, yaw, pitch })` y se escucha con `app.on(...)`. Cuando existe el track GPS, `distanceMeters` se obtiene mediante una conversión proporcional entre la distancia de escena y la distancia acumulada del GPX.
 - **`TrailPath.clampToTrail()` es el guardián de RF-004.** Ninguna posición llega a la cámara sin pasar por ahí. Es lo que impide el movimiento libre dentro de una reserva protegida.
 - **`TrailDataLayer` no sabe nada de render.** Recibe una distancia recorrida y devuelve números. `HudView` los pinta. Esto permite probar la capa de datos sin motor.
 - **`PoiDescriptor` se construye únicamente desde `pois.json`** (RF-021, RNF-009): añadir un POI no toca código. Lo mismo vale para `SoundSourceDescriptor` y `soundscape.json`.

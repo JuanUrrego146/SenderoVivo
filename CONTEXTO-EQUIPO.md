@@ -225,7 +225,7 @@ Este es el punto donde más fácil se rompe el proyecto.
 ```javascript
 app.on('tour:progress', ({ distance, total, distanceMeters }) => {
     // distance y total están en unidades del motor
-    // distanceMeters lo llenará TrailDataLayer cuando exista el track GPS real
+    // distanceMeters lo llena GpsTrack cuando config/track.json contiene el track real
 });
 ```
 

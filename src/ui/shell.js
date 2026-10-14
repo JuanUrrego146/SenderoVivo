@@ -387,16 +387,6 @@ function esperarVisor() {
      */
     visorApp.on('update', updateHotspotsOverlay);
 
-    /*
-     * Datos reales del recorrido.
-     */
-    const METROS_POR_UNIDAD = 2.096;
-
-    /*
-     * Altitud base declarada para el inicio del sendero.
-     */
-    const ALTITUD_BASE = 2712;
-
     let yInicial = null;
 
     visorApp.on('tour:progress', (e) => {
@@ -411,26 +401,50 @@ function esperarVisor() {
 
         if (!e.position) return;
         if (yInicial === null) yInicial = e.position.y;
-        const recorridoM = e.distance * METROS_POR_UNIDAD;
-        const desnivelM = (e.position.y - yInicial) * METROS_POR_UNIDAD;
-        const pendiente = recorridoM > 1 ? (100 * desnivelM / recorridoM) : 0;
+        const hasGpsMetrics = Number.isFinite(e.distanceMeters);
+        const recorridoM = hasGpsMetrics ? e.distanceMeters : null;
+        const restanteM = hasGpsMetrics && Number.isFinite(e.distanceRemainingMeters)
+            ? e.distanceRemainingMeters
+            : null;
+        const desnivelM = hasGpsMetrics && Number.isFinite(e.elevationGainMeters)
+            ? e.elevationGainMeters
+            : null;
+        const pendiente = hasGpsMetrics && Number.isFinite(e.slopePercent)
+            ? e.slopePercent
+            : null;
         const set = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
-        const altitudTxt = `${(ALTITUD_BASE + desnivelM).toLocaleString('es-CO', { maximumFractionDigits: 0 })} m`;
-        const recorridoTxt = `${recorridoM.toFixed(0)} m`;
-        const desnivelTxt = `${desnivelM >= 0 ? '+' : ''}${desnivelM.toFixed(1)} m`;
-        const pendienteTxt = `${Math.abs(pendiente).toFixed(0)} %`;
+        const altitud = hasGpsMetrics && Number.isFinite(e.altitudeMeters)
+            ? e.altitudeMeters
+            : null;
+        const formatMeters = (value, decimals = 0) =>
+            Number.isFinite(value)
+                ? `${value.toFixed(decimals)} m`
+                : '—';
+        const altitudTxt = Number.isFinite(altitud)
+            ? `${altitud.toLocaleString('es-CO', { maximumFractionDigits: 0 })} m`
+            : '—';
+        const recorridoTxt = formatMeters(recorridoM);
+        const restanteTxt = formatMeters(restanteM);
+        const desnivelTxt = Number.isFinite(desnivelM)
+            ? `${desnivelM >= 0 ? '+' : ''}${desnivelM.toFixed(1)} m`
+            : '—';
+        const pendienteTxt = Number.isFinite(pendiente)
+            ? `${Math.abs(pendiente).toFixed(0)} %`
+            : '—';
         // PC HUD (Telemetría unificada y barra superior)
         set('hud-recorrido', recorridoTxt);
         set('hud-desnivel', desnivelTxt);
         set('hud-altitud', altitudTxt);
         set('hud-altitud-top', altitudTxt);
         set('hud-pendiente', pendienteTxt);
+        set('hud-restante', restanteTxt);
         // Móvil HUD (tarjeta Detalles)
         set('hud-recorrido-m', recorridoTxt);
         set('hud-desnivel-m', desnivelTxt);
         set('hud-altitud-m', altitudTxt);
         set('hud-pendiente-m', pendienteTxt);
-        set('hud-datos-mobile', `${altitudTxt} · ${recorridoTxt}`);
+        set('hud-restante-m', restanteTxt);
+        set('hud-datos-mobile', `${altitudTxt} · ${recorridoTxt} · ${restanteTxt}`);
     });
 }
 
