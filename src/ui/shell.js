@@ -387,65 +387,6 @@ function esperarVisor() {
      */
     visorApp.on('update', updateHotspotsOverlay);
 
-    let yInicial = null;
-
-    visorApp.on('tour:progress', (e) => {
-        const pct = document.getElementById('progreso-pct');
-        const barraHud = document.getElementById('carga-barra-hud');
-
-        if (e.total > 0) {
-            const porcentaje = Math.round(100 * e.distance / e.total);
-            if (pct) pct.innerText = `Progreso del sendero · ${porcentaje}%`;
-            if (barraHud) barraHud.style.width = `${porcentaje}%`;
-        }
-
-        if (!e.position) return;
-        if (yInicial === null) yInicial = e.position.y;
-        const hasGpsMetrics = Number.isFinite(e.distanceMeters);
-        const recorridoM = hasGpsMetrics ? e.distanceMeters : null;
-        const restanteM = hasGpsMetrics && Number.isFinite(e.distanceRemainingMeters)
-            ? e.distanceRemainingMeters
-            : null;
-        const desnivelM = hasGpsMetrics && Number.isFinite(e.elevationGainMeters)
-            ? e.elevationGainMeters
-            : null;
-        const pendiente = hasGpsMetrics && Number.isFinite(e.slopePercent)
-            ? e.slopePercent
-            : null;
-        const set = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
-        const altitud = hasGpsMetrics && Number.isFinite(e.altitudeMeters)
-            ? e.altitudeMeters
-            : null;
-        const formatMeters = (value, decimals = 0) =>
-            Number.isFinite(value)
-                ? `${value.toFixed(decimals)} m`
-                : '—';
-        const altitudTxt = Number.isFinite(altitud)
-            ? `${altitud.toLocaleString('es-CO', { maximumFractionDigits: 0 })} m`
-            : '—';
-        const recorridoTxt = formatMeters(recorridoM);
-        const restanteTxt = formatMeters(restanteM);
-        const desnivelTxt = Number.isFinite(desnivelM)
-            ? `${desnivelM >= 0 ? '+' : ''}${desnivelM.toFixed(1)} m`
-            : '—';
-        const pendienteTxt = Number.isFinite(pendiente)
-            ? `${Math.abs(pendiente).toFixed(0)} %`
-            : '—';
-        // PC HUD (Telemetría unificada y barra superior)
-        set('hud-recorrido', recorridoTxt);
-        set('hud-desnivel', desnivelTxt);
-        set('hud-altitud', altitudTxt);
-        set('hud-altitud-top', altitudTxt);
-        set('hud-pendiente', pendienteTxt);
-        set('hud-restante', restanteTxt);
-        // Móvil HUD (tarjeta Detalles)
-        set('hud-recorrido-m', recorridoTxt);
-        set('hud-desnivel-m', desnivelTxt);
-        set('hud-altitud-m', altitudTxt);
-        set('hud-pendiente-m', pendienteTxt);
-        set('hud-restante-m', restanteTxt);
-        set('hud-datos-mobile', `${altitudTxt} · ${recorridoTxt} · ${restanteTxt}`);
-    });
 }
 
 

@@ -29,6 +29,8 @@ import { TrailArrowsView } from '../views/TrailArrowsView.js';
 import { PoiManager } from './PoiManager.js';
 import { PoiCardView } from '../views/PoiCardView.js';
 import { ShellView } from '../views/ShellView.js';
+import { HudView } from '../views/HudView.js';
+import { DataController } from './DataController.js';
 import AmbienceController from './AmbienceController.js';
 import { detectFromDevice } from '../models/QualityProfile.js';
 
@@ -401,11 +403,14 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     if (window.senderoTour) {
         const poiManager = new PoiManager(app, camera, window.senderoTour);
         const poiCard = new PoiCardView(app);
+        const dataController = new DataController(app, window.senderoTour.gpsTrack, new HudView());
+        window.senderoDataController = dataController;
         window.senderoPoiManager = poiManager;
         window.senderoPoiCard = poiCard;
         app.on('poi:request-close', () => poiManager.closePoi());
         try {
             await poiManager.load();
+            dataController.setPois(poiManager.pois);
             if (poiManager.diagnostics.length) {
                 poiDiagnosticsVisible = true;
                 const errors = poiManager.diagnostics.filter(issue => issue.severity === 'error');

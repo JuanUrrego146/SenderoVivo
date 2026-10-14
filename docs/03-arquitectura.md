@@ -410,7 +410,7 @@ Todos van por el bus de PlayCanvas: `app.fire(nombre, payload)` y `app.on(nombre
 
 | Evento | Familia | Lo dispara | Lo escucha | Payload |
 |---|---|---|---|---|
-| `tour:progress` | Hecho | `TourEngine.js:216` | `main.js:518` | `{ distance, total, distanceMeters, position, yaw, pitch }` |
+| `tour:progress` | Hecho | `TourEngine.js:216` | `DataController.js` | `{ distance, total, distanceMeters, position, yaw, pitch }` |
 | `tour:eyeheight` | Hecho | `TourEngine.js:86` | `main.js:522` | número |
 | `poi:open` | Hecho | `PoiManager.js:1009` | `PoiCard.js:40` y `PoiManager.js:78` | el objeto `poi` |
 | `poi:close` | Hecho | `PoiManager.js:1028` | `PoiCard.js:45` y `PoiManager.js:83` | ninguno |
@@ -432,7 +432,7 @@ Estos cuatro incumplimientos están declarados y fechados, no descubiertos: son 
 - **`TourEngine` es el único que mueve la cámara.** `PoiManager` no la toca: pide a `TourEngine` que guarde y restaure el estado (RF-018). Y es el único que escribe `distance`: los controles externos (flechas, botones) pasan por `moveTo()` / `advance()`.
 - **`tour:progress` es el evento central.** Se publica con `app.fire('tour:progress', { distance, total, distanceMeters, altitudeMeters, elevationGainMeters, slopePercent, position, yaw, pitch })` y se escucha con `app.on(...)`. Cuando existe el track GPS, `distanceMeters` se obtiene mediante una conversión proporcional entre la distancia de escena y la distancia acumulada del GPX.
 - **`TrailPath.clampToTrail()` es el guardián de RF-004.** Ninguna posición llega a la cámara sin pasar por ahí. Es lo que impide el movimiento libre dentro de una reserva protegida.
-- **`TrailDataLayer` no sabe nada de render.** Recibe una distancia recorrida y devuelve números. `HudView` los pinta. Esto permite probar la capa de datos sin motor.
+- **`DataController` no calcula en la Vista.** Recibe `tour:progress`, consulta `GpsTrack`, estima el tiempo al siguiente POI teniendo en cuenta la pendiente y entrega valores listos a `HudView`. Esto permite probar la capa de datos sin motor.
 - **`PoiDescriptor` se construye únicamente desde `pois.json`** (RF-021, RNF-009): añadir un POI no toca código. Lo mismo vale para `SoundSourceDescriptor` y `soundscape.json`.
 - **`AmbienceController` no toca la cámara.** El oyente del audio espacial es la cámara activa, que ya mueve `TourEngine`; la espacialización se actualiza sola. El audio escucha `tour:progress` para decidir qué fuentes activar por distancia.
 - **`LodController` es el único que escribe `lodBaseDistance` y `lodMultiplier`** (RF-027). Los lee de `QualityProfile`, no los codifica.
