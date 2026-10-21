@@ -1,5 +1,4 @@
-```js
-export class ModelView {
+﻿export class ModelView {
 
     constructor(container) {
 
@@ -69,7 +68,7 @@ export class ModelView {
 
         /*
          * =====================================================
-         * CONFIGURACIÓN
+         * CONFIGURACIÃ“N
          * =====================================================
          */
 
@@ -162,7 +161,7 @@ export class ModelView {
                 );
 
                 console.log(
-                    '✅ MODELO 3D VISIBLE'
+                    'âœ… MODELO 3D VISIBLE'
                 );
 
                 console.log(
@@ -188,7 +187,7 @@ export class ModelView {
                 );
 
                 console.error(
-                    '❌ ERROR CARGANDO MODELO 3D'
+                    'âŒ ERROR CARGANDO MODELO 3D'
                 );
 
                 console.error(
@@ -244,7 +243,7 @@ export class ModelView {
 
     /*
      * =========================================================
-     * CARGAR LIBRERÍA MODEL-VIEWER
+     * CARGAR LIBRERÃA MODEL-VIEWER
      * =========================================================
      */
 
@@ -308,7 +307,7 @@ export class ModelView {
 
 
             console.log(
-                'Cargando librería Model Viewer...'
+                'Cargando librerÃ­a Model Viewer...'
             );
         }
 
@@ -323,7 +322,7 @@ export class ModelView {
 
 
         console.log(
-            '✅ Model Viewer listo'
+            'âœ… Model Viewer listo'
         );
     }
 
@@ -356,4 +355,4 @@ export class ModelView {
         }
     }
 }
-```
+

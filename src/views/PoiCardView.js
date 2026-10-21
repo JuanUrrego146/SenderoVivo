@@ -501,7 +501,7 @@ export class PoiCardView {
                 style="
                     margin-top:25px;
                     padding:15px;
-                    background:rgba(255,255,255,0.07);
+                    background:var(--sv-surface-panel);
                     border-radius:14px;
                 "
             >
@@ -541,7 +541,7 @@ export class PoiCardView {
             <p
                 style="
                     line-height:1.6;
-                    color:#e5e5e5;
+                    color:var(--sv-text-primary);
                 "
             >
                 La golondrina plomiza
@@ -554,7 +554,7 @@ export class PoiCardView {
             <p
                 style="
                     line-height:1.6;
-                    color:#e5e5e5;
+                    color:var(--sv-text-primary);
                 "
             >
                 Su presencia forma parte de la
@@ -602,7 +602,7 @@ export class PoiCardView {
                         padding:14px;
                         border:1px solid var(--sv-sky-border);
                         border-radius:12px;
-                        background:rgba(14, 28, 44, 0.7);
+                        background:var(--sv-scrim-720);
                         color:var(--sv-sky-light);
                         font-weight:bold;
                         font-size:15px;
@@ -611,6 +611,62 @@ export class PoiCardView {
                 >
                     🎧 Escuchar narración
                 </button>
+
+
+                <button
+                    id="poi-transcript-button"
+                    type="button"
+                    style="
+                        padding:14px;
+                        border:1px solid var(--sv-sky-border);
+                        border-radius:12px;
+                        background:var(--sv-scrim-720);
+                        color:var(--sv-sky-light);
+                        font-weight:bold;
+                        font-size:15px;
+                        cursor:pointer;
+                    "
+                >
+                    📄 Ver transcripción
+                </button>
+
+            </div>
+
+
+            <!-- ========================================= -->
+            <!-- TRANSCRIPCIÓN -->
+            <!-- ========================================= -->
+
+            <div
+                id="poi-transcript-content"
+                style="
+                    display:none;
+                    margin-top:20px;
+                    padding:15px;
+                    background:var(--sv-surface-panel);
+                    border-radius:14px;
+                "
+            >
+
+                <h3
+                    style="
+                        margin-top:0;
+                        color:var(--sv-sky-hover);
+                    "
+                >
+                    Transcripción
+                </h3>
+
+
+                <p
+                    id="poi-transcript-text"
+                    style="
+                        line-height:1.6;
+                        color:var(--sv-text-primary);
+                        white-space:pre-wrap;
+                        margin-bottom:0;
+                    "
+                ></p>
 
             </div>
 
@@ -703,6 +759,18 @@ export class PoiCardView {
          */
 
         this._setupAudio(
+            card,
+            poi
+        );
+
+
+        /*
+         * =====================================================
+         * TRANSCRIPCIÓN
+         * =====================================================
+         */
+
+        this._setupTranscript(
             card,
             poi
         );
@@ -1033,6 +1101,175 @@ export class PoiCardView {
 
                     narracionButton.textContent =
                         '🎧 Escuchar narración';
+                }
+            }
+        );
+    }
+
+
+    /*
+     * =========================================================
+     * TRANSCRIPCIÓN
+     * =========================================================
+     */
+
+    _setupTranscript(card, poi) {
+
+        /*
+         * La ruta sale del catálogo del POI.
+         * No se escribe ninguna ruta de assets/text/ directamente aquí.
+         */
+
+        const transcriptUrl =
+            (poi && poi.transcriptUrl) ||
+            '';
+
+
+        const transcriptButton =
+            card.querySelector(
+                '#poi-transcript-button'
+            );
+
+
+        const transcriptContent =
+            card.querySelector(
+                '#poi-transcript-content'
+            );
+
+
+        const transcriptText =
+            card.querySelector(
+                '#poi-transcript-text'
+            );
+
+
+        if (
+            !transcriptButton ||
+            !transcriptContent ||
+            !transcriptText
+        ) {
+            return;
+        }
+
+
+        transcriptButton.addEventListener(
+            'click',
+            async (event) => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                /*
+                 * Si ya está visible, se oculta.
+                 */
+
+                if (
+                    transcriptContent.style.display ===
+                    'block'
+                ) {
+
+                    transcriptContent.style.display =
+                        'none';
+
+                    transcriptButton.textContent =
+                        '📄 Ver transcripción';
+
+                    return;
+                }
+
+
+                /*
+                 * El botón siempre existe.
+                 *
+                 * Si el catálogo no tiene transcriptUrl,
+                 * se informa que la transcripción no está disponible.
+                 */
+
+                if (!transcriptUrl) {
+
+                    transcriptText.textContent =
+                        'Transcripción no disponible.';
+
+                    transcriptContent.style.display =
+                        'block';
+
+                    transcriptButton.textContent =
+                        '📄 Ocultar transcripción';
+
+                    return;
+                }
+
+
+                /*
+                 * Cargar la transcripción desde la ruta
+                 * proporcionada por el catálogo.
+                 */
+
+                transcriptText.textContent =
+                    'Cargando transcripción...';
+
+                transcriptContent.style.display =
+                    'block';
+
+                transcriptButton.textContent =
+                    '📄 Ocultar transcripción';
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            transcriptUrl
+                        );
+
+
+                    if (
+                        !response.ok
+                    ) {
+                        throw new Error(
+                            `HTTP ${response.status}`
+                        );
+                    }
+
+
+                    const text =
+                        await response.text();
+
+
+                    if (
+                        !text.trim()
+                    ) {
+
+                        transcriptText.textContent =
+                            'Transcripción no disponible.';
+
+                        return;
+                    }
+
+
+                    transcriptText.textContent =
+                        text;
+
+
+                    console.log(
+                        'Transcripción cargada correctamente:',
+                        transcriptUrl
+                    );
+
+
+                } catch (error) {
+
+                    console.warn(
+                        'No se pudo cargar la transcripción:',
+                        transcriptUrl,
+                        error
+                    );
+
+
+                    transcriptText.textContent =
+                        'Transcripción no disponible.';
                 }
             }
         );
