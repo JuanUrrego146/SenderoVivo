@@ -1,7 +1,7 @@
 {
   "version": 2,
   "note": "Catálogo ÚNICO de puntos de interés. Unifica el catálogo de presentación que estaba escrito a mano en src/ui/shell.js (Eybar Viasus) con el contrato funcional de este archivo (Alejandra Chambueta). Añadir un POI no toca código (RF-021, RNF-009, invariante 3). Campos de presentación: category, icon, colorToken, typeLabel, shortDesc, fullDesc, conservation, curiosity, audioFreq. Campos funcionales: type, sceneId, anchor, trailAnchor, modelUrl, idleAnimation, narrationUrl, transcriptUrl, birdCallUrl. Los colores se declaran como TOKEN de styles/tokens.css, nunca como literal (invariante 14).",
-  "anchorNote": "trailAnchor sitúa el punto sobre el TRAZADO real: d = distancia recorrida, lat = desplazamiento lateral, alt = altura sobre el ojo. Es el anclaje que usa hoy el visor. anchor {x,y,z} es el contrato original en coordenadas de mundo y sigue en (0,0,0): [por medir en campo] en V1.",
+  "anchorNote": "trailAnchor sitúa el punto sobre el trazado de su escena (sceneId): d = distancia recorrida, lat = desplazamiento lateral, positivo a la derecha del avance, y alt = altura sobre el punto del trazado. Es el anclaje que usa hoy el visor, y cada escena muestra solo los POI de las escenas que comparten su trazado. anchor {x,y,z} es el contrato original en coordenadas de mundo: en poi-silla-rota está medido sobre la reconstrucción del Tramo 2 (centro del tablón superior de la banca); en los demás sigue en (0,0,0), [por medir en campo].",
   "pois": [
     {
       "id": "poi-colibri-chillon",
@@ -565,16 +565,16 @@
       "category": "curiosidades",
       "commonName": "Silla rota",
       "scientificName": "Banca de madera deteriorada",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-02",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": 14.22,
+        "y": -0.86,
+        "z": 7.95
       },
       "trailAnchor": {
-        "d": 10.8,
-        "lat": 1,
-        "alt": 0.8
+        "d": 11.9,
+        "lat": -2.6,
+        "alt": 0.75
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/silla-rota.glb",

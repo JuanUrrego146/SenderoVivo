@@ -133,6 +133,30 @@ function desdeContrato(poi) {
     };
 }
 
+/**
+ * Deja solo los POI de la escena que se abre (RF-006): sus trailAnchor se midieron
+ * sobre el trazado de esa escena. Este archivo es un script clásico y un import
+ * estático lo rompería entero, por eso se importa con import() dinámico, y la ruta
+ * sale de document.baseURI para no depender de cómo la resuelva cada navegador.
+ * Si algo falla, quedan todos.
+ */
+async function poisDeLaEscenaAbierta(pois) {
+    try {
+        const { SceneCatalog } = await import(
+            new URL('src/models/SceneCatalog.js', document.baseURI).href
+        );
+        const escenas = new SceneCatalog();
+        await escenas.load();
+        return escenas.filterPois(pois);
+    } catch (error) {
+        console.warn(
+            'No se pudieron filtrar los puntos por escena; se muestran todos:',
+            error
+        );
+        return pois;
+    }
+}
+
 async function cargarCatalogo() {
     const respuesta = await fetch(CATALOGO_URL);
 
@@ -144,7 +168,7 @@ async function cargarCatalogo() {
 
     const datos = await respuesta.json();
 
-    trailData = (datos.pois || []).map(desdeContrato);
+    trailData = (await poisDeLaEscenaAbierta(datos.pois || [])).map(desdeContrato);
 }
 
 let currentFilter = 'all';

@@ -31,6 +31,10 @@ En los diez modelos, la cara con el texto mira hacia +Z. Es la vista con la que 
 
 Los modelos no están en metros: su caja envolvente mide entre 3,3 y 16,7 unidades de Maya y el pivote no siempre está en la base. El visor encuadra cada modelo por su caja envolvente, así que la escala original no estorba. Si algún día se coloca un modelo dentro de una escena, hay que medirlo y llevarlo a su altura real antes.
 
+## Dónde está cada uno en el sendero
+
+Revisado el 21/10/2026 en las pasadas centrales de los tres tramos grabados con celular. La silla rota está en el Tramo 2, en la curva que se ve en los cuadros 36 a 40 de `t2_CentroCentro_Ida`; su POI vive en la escena `sendero-02` y el medallón flota sobre ella. La banca vieja y el letrero del observatorio de aves están al final del Tramo 1, donde empalma con el Tramo 2 (cuadros 191 a 197 de `t1_CentroCentro_Ida`), y el tablero informativo está en la Cumbre, junto a la plataforma del mirador (`c_Plataforma_VistaTramo1` y `c_OrbitacionPlataforma`): los tres pasan a la escena de Cumbre y Tramo 1 cuando se publique. Los otros seis letreros no aparecen en ninguno de los tres tramos grabados y siguen como ejemplos en la escena del parque.
+
 ## Reglas para tocar estos archivos
 
 Si un `.glb` cambia, va con nombre nuevo y nunca se sobrescribe, porque `_headers` cachea `/assets/models/*` durante una semana. Un modelo nuevo de la misma familia se declara en `config/pois.json` sin tocar código: se copia aquí y se añade su POI de tipo `patrimonio` con `modelUrl`, dejando la historia en `[por verificar]` mientras no haya fuente citable.

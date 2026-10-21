@@ -700,7 +700,7 @@ Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el produ
 }
 ```
 
-> `anchor` y `trailAnchor` quedan en `[por medir en campo]` hasta que existan las escenas reconstruidas y el track alineado.
+> Cada POI se ve solo en las escenas que comparten el trazado de su `sceneId`: `scene-01` y su técnica alterna `scene-01-luma` usan `config/track.json` y comparten POI; `sendero-02` (Tramo 2) usa `config/track-sendero-02.json` y muestra solo los suyos. La regla vive en `SceneCatalog.filterPois()`. `trailAnchor` se mide sobre ese trazado: `d` es la distancia recorrida, `lat` el desplazamiento lateral, positivo a la derecha del avance, y `alt` la altura sobre el punto del trazado. `anchor` sigue en `[por medir en campo]` salvo en `poi-silla-rota`, medido sobre la reconstrucción del Tramo 2.
 > `type` admite `"fauna"`, `"flora"` y `"patrimonio"`. Todo POI necesita `id`, `commonName`, `sceneId`, `anchor` y `trailAnchor` con números; fauna añade `scientificName`, `modelUrl`, `altitudeRange`, `fieldIdTips` y `sightingTips`; flora añade `scientificName`; patrimonio añade `historicalNote`, `period` y `sourceUrl`. Si `historicalNote` afirma un dato, `sourceUrl` no puede quedar vacío. El catálogo comprueba además que `modelUrl`, `narrationUrl` y `birdCallUrl` apunten a archivos existentes y muestra el POI y campo problemáticos en pantalla.
 
 ### `soundscape.json`
