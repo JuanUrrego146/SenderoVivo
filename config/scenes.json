@@ -58,6 +58,20 @@
       "forwardOnlyNote": "La reconstruccion solo aguanta vistas hacia adelante: en reversa se ve mal. El visor bloquea retroceder cuando la escena activa lo pide.",
       "pitchDownLimit": 48,
       "pitchDownLimitNote": "Tope del picado hacia abajo (grados). Muy cerca del suelo las gaussianas se ven como brochazos: se impide meter la camara ahi."
+    },
+    {
+      "id": "sendero-02",
+      "order": 92,
+      "render": "sendero-t2",
+      "name": "Tramo 2",
+      "sogUrl": "assets/scenes/sendero-02/meta.json",
+      "lodUrl": "assets/scenes/sendero-02-stream/lod-meta.json",
+      "movilSogUrl": "assets/scenes/sendero-02-movil/meta.json",
+      "trackUrl": "config/track-sendero-02.json",
+      "baked": true,
+      "captureDate": "2026-09-23 (celular; Tramo 2)",
+      "note": "Sendero real grabado con celular (la Insta360 no sirvio). Se abre con ?render=sendero-t2. COLMAP registro 3681 de 3705 cuadros elegidos por nitidez (69 camaras de los clips _b y de dos pasadas mas quedaron mal puestas y su zona lejana se filtro a 30 m del corredor de camaras). Brush a 1920 con techo de 5 M, detenido en el paso 15.000 de 35.000 porque al pasar de 2,6 a 3,9 M de gaussianas se desbordo la memoria de la GPU y cada paso tardaba mas de medio segundo: es un entreno a medio refinar. Limpieza: agujas al p99,7 y alfa > 0,01 (con alfa > 0,05 se iba el 64 %, porque a mitad de entreno abundan las gaussianas tenues): 3,92 M a 3,72 M. Antes de entrenar: personas enmascaradas (YOLO11x-seg) y exposicion igualada entre pasadas con los puntos 3D que comparten; la toma sobreexpuesta t2_DerechaCentro_Ida se bajo x0,53 y lo quemado se enmascaro.",
+      "coordenadasNota": "Horneada (baked): el archivo ya esta en coordenadas del mundo, en metros y con +Y arriba. Arriba = la direccion mas perpendicular a los ejes X de todas las camaras (van sin alabeo); escala = altura de las pasadas a la altura del pecho llevada a 1,45 m; origen en el suelo bajo el primer cuadro de la pasada central de ida. El trazado sale de esas mismas camaras."
     }
   ]
 }
