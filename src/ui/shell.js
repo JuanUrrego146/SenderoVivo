@@ -112,7 +112,8 @@ function desdeContrato(poi) {
         fullDesc: poi.fullDesc || '',
         conservation: poi.conservation || 'Verificado',
         curiosity: limpiarCuriosidad(poi.id, poi.curiosity),
-        altitudeRange: limpiarAltitud(poi.id, poi.altitudeRange),
+        // La ficha patrimonial omite la distribución altitudinal (RF-030): nada de inventar una altitud.
+        altitudeRange: cat === 'patrimonio' ? '' : limpiarAltitud(poi.id, poi.altitudeRange),
         sightingTips: poi.sightingTips || '',
         fieldIdTips: poi.fieldIdTips || '',
         audioFreq: poi.audioFreq || 440,
@@ -461,7 +462,8 @@ function accionesMediaHTML(item) {
                 <span class="truncate">Escuchar canto</span>
             </button>
         `);
-    } else {
+    } else if (item.category !== 'patrimonio') {
+        // El tono de síntesis es de especies: un letrero o un muro no suena (RF-010).
         audioYnarracion.push(`
             <button
                 onclick="playSpeciesSound(${item.audioFreq})"
@@ -521,7 +523,7 @@ function accionesMediaHTML(item) {
                 style="background: linear-gradient(135deg, var(--sv-primary), var(--sv-primary-hover)); color: var(--sv-text-inverse); box-shadow: 0 4px 16px var(--sv-primary-glow); min-height: 52px;"
             >
                 <i class="fa-solid ${item.discovered ? 'fa-circle-check' : 'fa-check'} text-sm sm:text-base"></i>
-                <span>${item.discovered ? 'Especie Registrada en Bitácora' : 'Marcar como Visto'}</span>
+                <span>${item.discovered ? (item.category === 'patrimonio' ? 'Registrado en Bitácora' : 'Especie Registrada en Bitácora') : 'Marcar como Visto'}</span>
             </button>
         </div>
     `);
@@ -619,7 +621,9 @@ function selectHotspot(id) {
                 ${item.fullDesc}
             </p>
 
-            <!-- Consejos de avistamiento e identificacion en campo (#95): siempre visibles, con aviso si falta el dato -->
+            <!-- Consejos de avistamiento e identificacion en campo (#95): siempre visibles en fauna y flora, con aviso si falta el dato.
+                 La ficha patrimonial los omite: no hay especie que identificar (RF-030). -->
+            ${item.category !== 'patrimonio' ? `
             <div class="mb-5">
                 <h4 class="text-xs font-bold flex items-center gap-1.5 mb-1.5" style="color: var(--sv-primary);">
                     <i class="fa-solid fa-binoculars text-xs"></i>
@@ -655,6 +659,7 @@ function selectHotspot(id) {
                     }
                 </p>
             </div>
+            ` : ''}
 
             <!-- ¿Sabías que?: TOTALMENTE LIMPIO SIN RECUADROS NI BORDES -->
             ${item.curiosity && !item.curiosity.includes('[por') ? `

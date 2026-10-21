@@ -283,12 +283,16 @@ export class PoiCardView {
         const cantoButton = card.querySelector('#poi-canto');
         const narracionButton = card.querySelector('#poi-narracion');
 
-        if (!cantoUrl && cantoButton) {
-            cantoButton.style.display = 'none';
-        }
-        if (!narracionUrl && narracionButton) {
-            narracionButton.style.display = 'none';
-        }
+        // styles/glass.css fuerza display:flex !important en .sv-poi-audio-btn, así que un
+        // display:none común no oculta nada. Con prioridad important sí; y al haber audio se
+        // quita la propiedad para que el botón vuelva (la golondrina).
+        const mostrar = (button, visible) => {
+            if (!button) return;
+            if (visible) button.style.removeProperty('display');
+            else button.style.setProperty('display', 'none', 'important');
+        };
+        mostrar(cantoButton, Boolean(cantoUrl));
+        mostrar(narracionButton, Boolean(narracionUrl));
 
         if (!cantoUrl && !narracionUrl) {
             this.cantoAudio = null;
