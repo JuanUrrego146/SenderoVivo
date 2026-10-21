@@ -1,5 +1,14 @@
 import { ModelView } from './ModelView.js';
 
+// styles/glass.css fuerza display:flex !important en .sv-poi-audio-btn, así que un
+// display:none común no oculta nada. Con prioridad important sí; y al haber contenido se
+// quita la propiedad para que el botón vuelva (la golondrina).
+function mostrarBoton(button, visible) {
+    if (!button) return;
+    if (visible) button.style.removeProperty('display');
+    else button.style.setProperty('display', 'none', 'important');
+}
+
 export class PoiCardView {
     constructor(app) {
         this.app = app;
@@ -45,7 +54,10 @@ export class PoiCardView {
 
         const commonName = poi?.commonName || poi?.name || 'Especie nativa';
         const scientificName = poi?.scientificName || poi?.scientific || 'Biodiversidad altoandina';
-        const altitude = poi?.altitudeRange || poi?.altitude || '2.600 – 3.200 msnm';
+        // Sin respaldo inventado: si el POI no trae altitud, no se muestra ninguna. La ficha
+        // patrimonial tampoco la lleva nunca (RF-030).
+        const altitude = poi?.altitudeRange || poi?.altitude || '';
+        const showAltitude = poi?.type !== 'patrimonio' && Boolean(altitude);
         const description = poi?.fullDesc || poi?.shortDesc || poi?.desc || 'Especie representativa de los ecosistemas de alta montaña en los Cerros Orientales de Bogotá.';
 
         card.innerHTML = `
@@ -149,10 +161,12 @@ export class PoiCardView {
                     font-size: 12px;
                 "
             >
+                ${showAltitude ? `
                 <div>
                     <span style="display: block; font-size: 11px; color: var(--sv-text-dim); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 2px;">Altitud</span>
                     <strong style="color: var(--sv-text-primary); font-size: 13.5px;">${altitude}</strong>
                 </div>
+                ` : ''}
                 <div>
                     <span style="display: block; font-size: 11px; color: var(--sv-text-dim); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 2px;">Ubicación</span>
                     <strong style="color: var(--sv-text-primary); font-size: 13.5px;">Cerros Orientales</strong>
@@ -283,16 +297,8 @@ export class PoiCardView {
         const cantoButton = card.querySelector('#poi-canto');
         const narracionButton = card.querySelector('#poi-narracion');
 
-        // styles/glass.css fuerza display:flex !important en .sv-poi-audio-btn, así que un
-        // display:none común no oculta nada. Con prioridad important sí; y al haber audio se
-        // quita la propiedad para que el botón vuelva (la golondrina).
-        const mostrar = (button, visible) => {
-            if (!button) return;
-            if (visible) button.style.removeProperty('display');
-            else button.style.setProperty('display', 'none', 'important');
-        };
-        mostrar(cantoButton, Boolean(cantoUrl));
-        mostrar(narracionButton, Boolean(narracionUrl));
+        mostrarBoton(cantoButton, Boolean(cantoUrl));
+        mostrarBoton(narracionButton, Boolean(narracionUrl));
 
         if (!cantoUrl && !narracionUrl) {
             this.cantoAudio = null;
@@ -393,6 +399,9 @@ export class PoiCardView {
             card.querySelector(
                 '#poi-transcript-button'
             );
+
+        // Sin transcriptUrl el botón no se ofrece: antes solo respondía que no había transcripción.
+        mostrarBoton(transcriptButton, Boolean(transcriptUrl));
 
 
         const transcriptContent =
