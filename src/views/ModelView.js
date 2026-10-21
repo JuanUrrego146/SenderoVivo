@@ -1,4 +1,4 @@
-﻿export class ModelView {
+export class ModelView {
 
     constructor(container) {
 
@@ -68,7 +68,7 @@
 
         /*
          * =====================================================
-         * CONFIGURACIÃ“N
+         * CONFIGURACIÓN
          * =====================================================
          */
 
@@ -161,7 +161,7 @@
                 );
 
                 console.log(
-                    'âœ… MODELO 3D VISIBLE'
+                    '✅ MODELO 3D VISIBLE'
                 );
 
                 console.log(
@@ -187,7 +187,7 @@
                 );
 
                 console.error(
-                    'âŒ ERROR CARGANDO MODELO 3D'
+                    '❌ ERROR CARGANDO MODELO 3D'
                 );
 
                 console.error(
@@ -225,10 +225,38 @@
          */
 
         await new Promise(
-            resolve =>
-                requestAnimationFrame(
-                    () => resolve()
-                )
+            (resolve, reject) => {
+
+                let finished = false;
+
+                const finish = (callback) => {
+
+                    if (finished) {
+                        return;
+                    }
+
+                    finished = true;
+                    clearTimeout(timeout);
+                    callback();
+                };
+
+                const timeout = setTimeout(
+                    () => finish(() => reject(new Error('El modelo GLB tardó demasiado en cargar.'))),
+                    20000
+                );
+
+                model.addEventListener(
+                    'load',
+                    () => finish(resolve),
+                    { once: true }
+                );
+
+                model.addEventListener(
+                    'error',
+                    () => finish(() => reject(new Error('No se pudo cargar el modelo 3D: ' + modelUrl))),
+                    { once: true }
+                );
+            }
         );
 
 
@@ -243,7 +271,7 @@
 
     /*
      * =========================================================
-     * CARGAR LIBRERÃA MODEL-VIEWER
+     * CARGAR LIBRERÍA MODEL-VIEWER
      * =========================================================
      */
 
@@ -307,7 +335,7 @@
 
 
             console.log(
-                'Cargando librerÃ­a Model Viewer...'
+                'Cargando librería Model Viewer...'
             );
         }
 
@@ -322,7 +350,7 @@
 
 
         console.log(
-            'âœ… Model Viewer listo'
+            '✅ Model Viewer listo'
         );
     }
 
@@ -355,4 +383,3 @@
         }
     }
 }
-

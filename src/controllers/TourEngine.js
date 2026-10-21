@@ -47,8 +47,8 @@ export class TourEngine {
         // trazado) viven en TourState (src/models/TourState.js).
         this.state = new TourState({ eyeHeight: options.eyeHeight ?? 0 });
 
-        // Opcional: fuente real de distanceMeters (src/models/GpsTrack.js). Sin
-        // el o sin puntos GPS todavia, distanceMeters se queda en null.
+        // Fuente opcional de métricas GPS. La distancia de escena se convierte
+        // proporcionalmente a metros antes de consultar este modelo.
         this.gpsTrack = options.gpsTrack ?? null;
 
         this._input = { forward: 0, strafe: 0, fast: false };
@@ -288,18 +288,45 @@ this.state.distance += this._input.forward * speed * dt;
 
     _emitProgress() {
         const pos = this.camera.getPosition();
-        // distanceMeters sigue en null porque config/track.json no trae puntos GPS
-        // todavia: sin ellos, GpsTrack.distanceTraveled() cae a un respaldo que suma
-        // unidades del motor, y publicarlas con etiqueta de metros seria dato
-        // inventado (invariante 10). Se llena solo cuando V1 traiga el GPS real.
+        const sceneTotal = this.trailPath.totalLength();
+        const gpsTotal = this.gpsTrack?.totalDistance() ?? 0;
+        const gpsDistance =
+            sceneTotal > 0
+                ? (this.state.distance / sceneTotal) * gpsTotal
+                : 0;
         const distanceMeters =
-            (!this.gpsTrack || this.gpsTrack.points.length === 0)
+            this.gpsTrack?.points.length
+                ? this.gpsTrack.distanceTraveled(gpsDistance)
+                : null;
+        const totalDistanceMeters =
+            this.gpsTrack?.points.length
+                ? gpsTotal
+                : null;
+        const distanceRemainingMeters =
+            distanceMeters === null
                 ? null
-                : this.gpsTrack.distanceTraveled(this.state.distance);
+                : this.gpsTrack.distanceRemaining(distanceMeters);
+        const altitudeMeters =
+            distanceMeters === null
+                ? null
+                : this.gpsTrack.altitudeAt(distanceMeters);
+        const elevationGainMeters =
+            distanceMeters === null
+                ? null
+                : this.gpsTrack.cumulativeElevation(distanceMeters);
+        const slopePercent =
+            distanceMeters === null
+                ? null
+                : this.gpsTrack.slopeAt(distanceMeters);
         this.app.fire('tour:progress', {
             distance: this.state.distance,
-            total: this.trailPath.totalLength(),
+            total: sceneTotal,
             distanceMeters,
+            totalDistanceMeters,
+            distanceRemainingMeters,
+            altitudeMeters,
+            elevationGainMeters,
+            slopePercent,
             // Posición y orientación para quien las necesite: audio espacial, POIs por
             // cercanía, HUD. Se publican aquí para que ningún otro módulo tenga que leer
             // la cámara, que es lo que prohíbe el invariante 13.

@@ -702,7 +702,7 @@
                     <div class="expedition-live-pill" title="Altitud de estación actual">
                         <span class="live-pulse-dot"></span>
                         <span style="font-size: 11px; font-weight: 600; color: var(--sv-text-muted);">
-                            <i class="fa-solid fa-mountain text-[10px]" style="color: var(--sv-primary);"></i> <strong id="hud-altitud-top" style="color: var(--sv-text-primary); font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">2.712 m</strong>
+                            <i class="fa-solid fa-mountain text-[10px]" style="color: var(--sv-primary);"></i> <strong id="hud-altitud-top" style="color: var(--sv-text-primary); font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">—</strong>
                         </span>
                     </div>
                 </div>
@@ -752,7 +752,7 @@
                         </div>
                         <div class="mobile-brand-titles">
                             <span class="mobile-brand-title">Sendero Santa Ana</span>
-                            <span class="mobile-brand-sub" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">2.712 m · Cerros Orientales</span>
+                            <span class="mobile-brand-sub" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">Altitud GPS · Cerros Orientales</span>
                         </div>
                     </button>
                     <div class="mobile-top-controls">
@@ -778,7 +778,7 @@
                             </div>
                             <div class="telemetry-alt-numbers">
                                 <span class="telemetry-alt-title">Altitud</span>
-                                <span class="telemetry-alt-val" id="hud-altitud" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">2.712 m</span>
+                                <span class="telemetry-alt-val" id="hud-altitud" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">—</span>
                             </div>
                         </div>
 
@@ -797,7 +797,16 @@
                     <div class="telemetry-progress-track">
                         <div class="telemetry-progress-header">
                             <span id="progreso-pct" style="color: var(--sv-text-muted);">Progreso del sendero · 0%</span>
-                            <span id="hud-recorrido" style="color: var(--sv-primary); font-family: 'Syne', sans-serif;">0 m</span>
+                            <span title="Recorrido · distancia restante">
+                                <span style="color: var(--sv-text-dim);">Recorrido </span>
+                                <span id="hud-recorrido" style="color: var(--sv-primary); font-family: 'Syne', sans-serif;">—</span>
+                                <span style="color: var(--sv-text-dim);"> · Restante </span>
+                                <span id="hud-restante" style="color: var(--sv-text-muted); font-family: 'Syne', sans-serif;">—</span>
+                            </span>
+                        </div>
+                        <div class="text-[11px]" style="color: var(--sv-text-muted);">
+                            <span id="hud-eta-label">Próximo punto</span> ·
+                            <span id="hud-eta" style="color: var(--sv-primary); font-variant-numeric: tabular-nums;">—</span>
                         </div>
                         <div class="telemetry-bar-bg">
                             <div id="carga-barra-hud" class="telemetry-bar-fill"></div>
@@ -824,25 +833,29 @@
                         <i id="details-arrow-icon" class="fa-solid fa-chevron-up text-xs transition-transform duration-300" style="color: var(--sv-primary);"></i>
                         <span class="text-xs font-bold" style="color: var(--sv-text-primary);">Detalles del sendero</span>
                     </div>
-                    <span id="hud-datos-mobile" class="text-xs font-bold" style="color: var(--sv-primary); font-family: 'Playfair Display', serif; font-style: italic;">2.712 m · 0 m</span>
+                    <span id="hud-datos-mobile" class="text-xs font-bold" style="color: var(--sv-primary); font-family: 'Playfair Display', serif; font-style: italic;">—</span>
                 </div>
                 <div id="details-content" class="hidden" style="border-top: 1px solid var(--sv-surface-border);">
-                    <div class="grid grid-cols-4 gap-2 px-3 py-2.5" style="font-variant-numeric: tabular-nums;">
+                    <div class="grid grid-cols-5 gap-1 px-3 py-2.5" style="font-variant-numeric: tabular-nums;">
                         <div class="text-center">
                             <div class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--sv-text-dim);">Altitud</div>
-                            <div class="text-[14px] font-bold" style="color: var(--sv-primary); font-family: 'Playfair Display', serif; font-style: italic;" id="hud-altitud-m">2.712 m</div>
+                            <div class="text-[14px] font-bold" style="color: var(--sv-primary); font-family: 'Playfair Display', serif; font-style: italic;" id="hud-altitud-m">—</div>
                         </div>
                         <div class="text-center">
                             <div class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--sv-text-dim);">Recorrido</div>
-                            <div class="text-[14px] font-bold font-syne" style="color: var(--sv-primary);" id="hud-recorrido-m">0 m</div>
+                            <div class="text-[14px] font-bold font-syne" style="color: var(--sv-primary);" id="hud-recorrido-m">—</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--sv-text-dim);">Restante</div>
+                            <div class="text-[14px] font-bold font-syne" style="color: var(--sv-primary);" id="hud-restante-m">—</div>
                         </div>
                         <div class="text-center">
                             <div class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--sv-text-dim);">Desnivel</div>
-                            <div class="text-[14px] font-bold font-syne" style="color: var(--sv-primary);" id="hud-desnivel-m">+0 m</div>
+                            <div class="text-[14px] font-bold font-syne" style="color: var(--sv-primary);" id="hud-desnivel-m">—</div>
                         </div>
                         <div class="text-center">
                             <div class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--sv-text-dim);">Pendiente</div>
-                            <div class="text-[14px] font-bold font-syne" style="color: var(--sv-primary);" id="hud-pendiente-m">0 %</div>
+                            <div class="text-[14px] font-bold font-syne" style="color: var(--sv-primary);" id="hud-pendiente-m">—</div>
                         </div>
                     </div>
                 </div>

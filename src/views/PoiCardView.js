@@ -46,7 +46,6 @@ export class PoiCardView {
         const commonName = poi?.commonName || poi?.name || 'Especie nativa';
         const scientificName = poi?.scientificName || poi?.scientific || 'Biodiversidad altoandina';
         const altitude = poi?.altitudeRange || poi?.altitude || '2.600 – 3.200 msnm';
-        const modelPath = poi?.modelUrl || 'assets/models/golondrina-plomiza.glb';
         const description = poi?.fullDesc || poi?.shortDesc || poi?.desc || 'Especie representativa de los ecosistemas de alta montaña en los Cerros Orientales de Bogotá.';
 
         card.innerHTML = `
@@ -232,27 +231,49 @@ export class PoiCardView {
             }
         });
 
-        // Configurar audios y modelo 3D
+        // Configurar audios, transcripción y modelo 3D
         this._setupAudio(card, poi);
         this._setupTranscript(card, poi);
-        await this._loadModel(card, modelPath);
+        await this._loadModel(card, poi);
     }
 
-    async _loadModel(card, modelPath) {
+    async _loadModel(card, poi) {
         const container = card.querySelector('#poi-model');
         const loading = card.querySelector('#poi-model-loading');
+        const modelUrl = poi?.modelUrl;
+
+        // Sin modelo en el catálogo no se presta el de otra especie.
+        if (!modelUrl) {
+            this._showModelUnavailable(card);
+            return;
+        }
 
         try {
             this.modelViewer = new ModelView(container);
-            await this.modelViewer.load(modelPath || 'assets/models/golondrina-plomiza.glb');
+            await this.modelViewer.load(modelUrl);
             if (loading) loading.remove();
         } catch (error) {
             console.warn('Modelo 3D no disponible, mostrando estado alternativo:', error);
-            if (loading) {
-                loading.innerHTML = '<i class="fa-solid fa-cube mr-2"></i><span>Vista 3D disponible en recorrido</span>';
-                loading.style.color = 'var(--sv-text-muted)';
-            }
+            this._showModelUnavailable(card);
         }
+    }
+
+    _showModelUnavailable(card) {
+        const container = card.querySelector('#poi-model');
+        if (!container) return;
+
+        // Se reutiliza el aviso de carga; si el visor montó algo a medias, se retira.
+        let message = container.querySelector('#poi-model-loading');
+        if (!message) {
+            message = document.createElement('div');
+            message.id = 'poi-model-loading';
+            message.style.cssText = 'position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; font-weight: 600;';
+        }
+        message.style.padding = '16px';
+        message.style.textAlign = 'center';
+        message.style.color = 'var(--sv-text-muted)';
+        message.innerHTML = '<i class="fa-solid fa-cube"></i><span>Este modelo 3D aún no está disponible.</span>';
+        container.replaceChildren(message);
     }
 
     _setupAudio(card, poi) {

@@ -6,6 +6,7 @@
  * RESPONSABILIDADES:
  * - Mostrar el progreso del sendero.
  * - Mostrar distancia recorrida.
+ * - Mostrar distancia restante.
  * - Mostrar desnivel.
  * - Mostrar altitud.
  * - Mostrar pendiente.
@@ -69,6 +70,10 @@ export class HudView {
         element.innerText =
             `Progreso sendero · ${Math.round(percent)} %`;
 
+        const bar = this.get('carga-barra-hud');
+        if (bar) {
+            bar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+        }
     }
 
 
@@ -82,17 +87,30 @@ export class HudView {
      * Muestra la distancia recorrida.
      */
     setRecorrido(text) {
-
         const element =
             this.get('hud-recorrido');
+        if (element) element.innerText = text;
+        const mobile = this.get('hud-recorrido-m');
+        if (mobile) mobile.innerText = text;
+    }
 
-        if (!element) {
-            return;
-        }
 
-        element.innerText =
-            text;
+    /**
+     * Muestra la distancia restante.
+     */
+    setRestante(text) {
+        const element = this.get('hud-restante');
+        if (element) element.innerText = text;
+        const mobile = this.get('hud-restante-m');
+        if (mobile) mobile.innerText = text;
+    }
 
+
+    setEta(text, poiName = 'Próximo punto') {
+        const element = this.get('hud-eta');
+        if (element) element.innerText = text;
+        const label = this.get('hud-eta-label');
+        if (label) label.textContent = poiName;
     }
 
 
@@ -111,6 +129,8 @@ export class HudView {
         element.innerText =
             text;
 
+        const mobile = this.get('hud-desnivel-m');
+        if (mobile) mobile.innerText = text;
     }
 
 
@@ -129,6 +149,10 @@ export class HudView {
         element.innerText =
             text;
 
+        const top = this.get('hud-altitud-top');
+        if (top) top.innerText = text;
+        const mobile = this.get('hud-altitud-m');
+        if (mobile) mobile.innerText = text;
     }
 
 
@@ -147,6 +171,8 @@ export class HudView {
         element.innerText =
             text;
 
+        const mobile = this.get('hud-pendiente-m');
+        if (mobile) mobile.innerText = text;
     }
 
 
@@ -178,6 +204,32 @@ export class HudView {
             this.setRecorrido(
                 data.recorrido
             );
+        }
+
+        if (
+            data.restante !== undefined
+        ) {
+            this.setRestante(
+                data.restante
+            );
+        }
+
+        if (data.eta !== undefined) {
+            this.setEta(data.eta, data.nextPoi);
+        }
+
+        if (
+            data.altitud !== undefined ||
+            data.recorrido !== undefined ||
+            data.restante !== undefined
+        ) {
+            const values = [
+                data.altitud,
+                data.recorrido,
+                data.restante
+            ].filter(value => value !== undefined);
+            const mobile = this.get('hud-datos-mobile');
+            if (mobile) mobile.innerText = values.join(' · ');
         }
 
 
