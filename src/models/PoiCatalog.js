@@ -1,5 +1,5 @@
 const POIS_CONFIG_URL = 'config/pois.json';
-const POI_TYPES = new Set(['fauna', 'flora', 'patrimonio', 'infraestructura']);
+const POI_TYPES = new Set(['fauna', 'flora', 'patrimonio']);
 const RESOURCE_FIELDS = ['modelUrl', 'narrationUrl', 'birdCallUrl'];
 
 const COMMON_FIELDS = {
@@ -26,8 +26,7 @@ const TYPE_FIELDS = {
         historicalNote: 'texto',
         period: 'texto',
         sourceUrl: 'texto'
-    },
-    infraestructura: {}
+    }
 };
 
 function isNonEmptyString(value) {
@@ -50,42 +49,6 @@ function isValidField(value, expected) {
     return typeof value === 'string';
 }
 
-function isNumber(value) {
-    return typeof value === 'number' && Number.isFinite(value);
-}
-
-/*
- * worldModel coloca el modelo del POI de pie en la escena. Un fallo aqui es un
- * aviso: la ficha y el medallon del POI siguen funcionando sin el modelo.
- */
-function validateWorldModel(poi, poiId) {
-    const issues = [];
-    const warn = (field, message) =>
-        issues.push({ poiId, field, message, severity: 'warning' });
-    const worldModel = poi.worldModel;
-
-    if (!worldModel || typeof worldModel !== 'object' || Array.isArray(worldModel)) {
-        warn('worldModel', 'debe ser un objeto');
-        return issues;
-    }
-    if (typeof worldModel.visible !== 'boolean') {
-        warn('worldModel.visible', 'debe ser verdadero o falso');
-    } else if (worldModel.visible) {
-        if (!isNonEmptyString(worldModel.url)) {
-            warn('worldModel.url', 'es obligatorio cuando visible es verdadero y debe ser texto');
-        }
-        if (!isNumber(worldModel.heightMeters) || worldModel.heightMeters <= 0) {
-            warn('worldModel.heightMeters', 'es obligatorio cuando visible es verdadero y debe ser un número mayor que 0');
-        }
-    }
-    for (const field of ['yawOffsetDegrees', 'groundOffset']) {
-        if (hasField(worldModel, field) && !isNumber(worldModel[field])) {
-            warn(`worldModel.${field}`, 'debe ser un número');
-        }
-    }
-    return issues;
-}
-
 function validatePoi(poi) {
     const issues = [];
 
@@ -102,7 +65,7 @@ function validatePoi(poi) {
     }
 
     if (hasField(poi, 'type') && !POI_TYPES.has(poi.type)) {
-        issues.push({ poiId, field: 'type', message: 'debe ser fauna, flora, patrimonio o infraestructura', severity: 'error' });
+        issues.push({ poiId, field: 'type', message: 'debe ser fauna, flora o patrimonio', severity: 'error' });
     }
 
     const typeFields = TYPE_FIELDS[poi.type] || {};
@@ -122,10 +85,6 @@ function validatePoi(poi) {
         });
     }
 
-    if (hasField(poi, 'worldModel')) {
-        issues.push(...validateWorldModel(poi, poiId));
-    }
-
     return issues;
 }
 
@@ -135,7 +94,6 @@ export class PoiCatalog {
         this.configUrl = configUrl;
         this.pois = [];
         this.diagnostics = [];
-        this.worldModelDefaults = {};
     }
 
     async load() {
@@ -160,7 +118,6 @@ export class PoiCatalog {
             throw new Error(`${this.configUrl}: el campo "pois" es obligatorio y debe ser un arreglo.`);
         }
 
-        this.worldModelDefaults = config.worldModelDefaults || {};
         this.diagnostics = config.pois.flatMap(validatePoi);
         this.pois = config.pois.filter(poi =>
             !this.diagnostics.some(issue => issue.poiId === poi?.id && issue.severity === 'error')
@@ -177,11 +134,8 @@ export class PoiCatalog {
         // resultado y una HEAD por recurso, en serie, alargaba el arranque.
         const checks = [];
         for (const poi of pois) {
-            const resources = RESOURCE_FIELDS.map(field => [field, poi[field]]);
-            if (poi.worldModel && typeof poi.worldModel === 'object') {
-                resources.push(['worldModel.url', poi.worldModel.url]);
-            }
-            for (const [field, url] of resources) {
+            for (const field of RESOURCE_FIELDS) {
+                const url = poi[field];
                 if (!isNonEmptyString(url)) continue;
                 checks.push(this._checkResource(poi.id, field, url));
             }

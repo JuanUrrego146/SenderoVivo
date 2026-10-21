@@ -174,7 +174,6 @@ Nombres en **inglés**, según la convención del proyecto.
 | Overlay de carga/error | **[existe]** | `src/ui/shell.js` (RNF-007) |
 | `CameraRig` | **disuelto** | Sus responsabilidades viven dentro de `TourEngine`. Si S4 exige separarlo, se extrae entonces |
 | `PoiManager`, `PoiCard`, `ModelViewer` | **[existe]** | `src/poi/PoiManager.js`, `src/poi/PoiCard.js`, `src/poi/ModelViewer.js` |
-| `WorldModelsView` | **[existe]** | `src/views/WorldModelsView.js`. Firma real: `new WorldModelsView(app, trailPath, defaults)`, `async load(pois)` y `destroy()`. Coloca de pie en la escena los modelos de los POI con `worldModel.visible` en `true`, con luces de máscara propia que no tocan las flechas ni la luz ambiente. `PoiManager.load()` la crea, la publica en `window.senderoWorldModels` y no espera a que termine; `placed` guarda `{ id, url, entity, scale, heightUnits }` por cada modelo colocado |
 | `TrailDataLayer`, `GpsTrack` | [previsto] | `src/data/` — David |
 | `AmbienceController`, `SpatialAudioSource`, `AudioPlayer` | **[existe]** / [previsto] | `AmbienceController` en `src/audio/AmbienceController.js`; `SpatialAudioSource` y `AudioPlayer` siguen [previsto] |
 | `QualityProfile`, `LodController` | [previsto] | `src/engine/` — Alejandra |
@@ -657,7 +656,6 @@ Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el produ
 ```json
 {
   "version": 1,
-  "worldModelDefaults": { "metersPerUnit": 2.1, "groundOffset": -0.6, "facingTowardVisitorDegrees": 30 },
   "pois": [
     {
       "id": "poi-colibri-chillon",
@@ -697,30 +695,13 @@ Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el produ
             "historicalNote": "[por verificar]",
       "period": "[por verificar]",
       "sourceUrl": ""
-    },
-    {
-      "id": "poi-letrero-observatorio-de-aves",
-      "type": "infraestructura",
-      "commonName": "Observatorio de aves",
-      "sceneId": "scene-01",
-      "anchor": { "x": 0, "y": 0, "z": 0 },
-      "trailAnchor": { "d": 6, "lat": 2.4, "alt": 0.4 },
-      "modelUrl": "assets/models/letrero-observatorio-de-aves.glb",
-      "worldModel": {
-        "url": "assets/models/mundo/letrero-observatorio-de-aves.glb",
-        "visible": true,
-        "heightMeters": 1.5,
-        "yawOffsetDegrees": 0
-      }
     }
   ]
 }
 ```
 
 > `anchor` y `trailAnchor` quedan en `[por medir en campo]` hasta que existan las escenas reconstruidas y el track alineado.
-> `type` admite cuatro valores: `"fauna"`, `"flora"`, `"patrimonio"` e `"infraestructura"`. Todo POI necesita `id`, `commonName`, `sceneId`, `anchor` y `trailAnchor` con números; fauna añade `scientificName`, `modelUrl`, `altitudeRange`, `fieldIdTips` y `sightingTips`; flora añade `scientificName`; patrimonio añade `historicalNote`, `period` y `sourceUrl`; infraestructura (letreros, bancas y demás mobiliario del sendero) no añade campos obligatorios. Si `historicalNote` afirma un dato, `sourceUrl` no puede quedar vacío.
-> `worldModel` es opcional y coloca el modelo del POI de pie en la escena. Lleva `url` (la versión ligera del `.glb`, en `assets/models/mundo/`), `visible` (si se coloca o no) y `heightMeters` (la altura real del objeto), más `yawOffsetDegrees` y `groundOffset` si hacen falta. El modelo se apoya sobre el suelo en la posición de `trailAnchor` (`d` y `lat`), a su altura real y con la cara frontal (+Z del modelo) hacia el sendero. `worldModelDefaults`, en la raíz del archivo, calibra la escena activa: `metersPerUnit` es lo que mide una unidad del motor, `groundOffset` es el desnivel del suelo respecto de la línea del trazado y `facingTowardVisitorDegrees` es el giro del modelo hacia quien llega. Un `worldModel` mal formado es un aviso y no descarta el POI.
-> El catálogo comprueba además que `modelUrl`, `narrationUrl`, `birdCallUrl` y `worldModel.url` apunten a archivos existentes, con las peticiones en paralelo, y muestra el POI y campo problemáticos en pantalla.
+> `type` admite `"fauna"`, `"flora"` y `"patrimonio"`. Todo POI necesita `id`, `commonName`, `sceneId`, `anchor` y `trailAnchor` con números; fauna añade `scientificName`, `modelUrl`, `altitudeRange`, `fieldIdTips` y `sightingTips`; flora añade `scientificName`; patrimonio añade `historicalNote`, `period` y `sourceUrl`. Si `historicalNote` afirma un dato, `sourceUrl` no puede quedar vacío. El catálogo comprueba además que `modelUrl`, `narrationUrl` y `birdCallUrl` apunten a archivos existentes y muestra el POI y campo problemáticos en pantalla.
 
 ### `soundscape.json`
 
@@ -867,8 +848,7 @@ SenderoVivo/
 │   │                           filtrar.js (limpieza log-espacio sin cajas),
 │   │                           muestrear.js (poda por importancia para móvil)
 │   ├── modelos/                Pipeline de modelos: extraer_mb.py (parser del .mb de
-│   │                           Maya), ensamblar_glb.py (GLB con PBR embebido) y
-│   │                           aligerar_glb.py (versión ligera para el mundo)
+│   │                           Maya) y ensamblar_glb.py (GLB con PBR embebido)
 │   ├── setup_repo.sh           DEPRECADO (13/08): bootstrap ya ejecutado; historia
 │   └── sync-github.mjs         DEPRECADO (13/08)
 ├── src/
@@ -896,8 +876,8 @@ SenderoVivo/
     │                           los .sog y .ply sueltos siguen ignorados
     ├── models/                 marcador-provisional.glb · golondrina-plomiza.glb (convertido
     │                           19/08 con scripts/modelos/) · golondrina-plomiza-fuente/ ·
-    │                           diez modelos de señalización y mobiliario de Alberto y, en
-    │                           mundo/, su versión ligera (ver LEEME.md)
+    │                           diez modelos de señalización y mobiliario de Alberto, que
+    │                           se ven en el visor 3D de la ficha (ver LEEME.md)
     ├── audio/
     └── text/
 ```
