@@ -460,7 +460,7 @@ export class PoiManager {
             markerStyle.size;
 
         button.style.border =
-            '2px solid var(--sv-gray-050)';
+            '2px solid var(--sv-primary, #386641)';
 
         button.style.borderRadius =
             markerStyle.borderRadius;
@@ -469,7 +469,7 @@ export class PoiManager {
             markerStyle.clipPath;
 
         button.style.background =
-            'var(--sv-scrim-850)';
+            'var(--sv-surface-solid, #E9D8C4)';
 
         button.style.color =
             markerStyle.color;
@@ -502,7 +502,7 @@ export class PoiManager {
             'border-box';
 
         button.style.boxShadow =
-            '0 4px 14px var(--sv-scrim-720)';
+            'var(--sv-surface-shadow-lg, 0 6px 18px rgba(40, 26, 15, 0.22))';
 
         button.style.transition =
             'transform 0.15s ease, box-shadow 0.15s ease';
@@ -555,7 +555,7 @@ export class PoiManager {
                     'translate(-50%, -50%) scale(1.12)';
 
                 button.style.boxShadow =
-                    '0 6px 18px var(--sv-scrim-720)';
+                    '0 6px 20px var(--sv-primary-glow, rgba(106, 153, 78, 0.35))';
             }
         );
 
@@ -568,7 +568,7 @@ export class PoiManager {
                     'translate(-50%, -50%) scale(1)';
 
                 button.style.boxShadow =
-                    '0 4px 14px var(--sv-scrim-720)';
+                    'var(--sv-surface-shadow-lg, 0 6px 18px rgba(40, 26, 15, 0.22))';
             }
         );
 

@@ -70,6 +70,19 @@ function limpiarAltitud(id, alt) {
     return alt;
 }
 
+function limpiarCuriosidad(id, curiosity) {
+    if (!curiosity || curiosity.includes('[por')) {
+        if (id === 'poi-golondrina-plomiza' || id === 'poi-golondrina') {
+            return 'Es una de las pocas golondrinas residentes en la cordillera; anida en taludes y barrancos a lo largo de senderos y valles altoandinos.';
+        }
+        if (id === 'poi-muro-antiguo') {
+            return 'Ruta de conexión histórica entre comunidades del valle del Teusacá y los Cerros Orientales de Bogotá.';
+        }
+        return '';
+    }
+    return curiosity;
+}
+
 function desdeContrato(poi) {
     let cat = poi.category || poi.type || 'patrimonio';
     if (poi.id === 'poi-pino') {
@@ -80,10 +93,10 @@ function desdeContrato(poi) {
         cat = poi.type === 'flora' ? 'flora' : 'patrimonio';
     }
 
-    let catColor = '#38bdf8'; // Sky blue
-    if (cat === 'fauna') catColor = '#38bdf8';
-    else if (cat === 'flora') catColor = '#0ea5e9';
-    else catColor = '#0284c7';
+    let catColor = 'var(--sv-primary)';
+    if (cat === 'fauna') catColor = 'var(--sv-fauna-color)';
+    else if (cat === 'flora') catColor = 'var(--sv-flora-color)';
+    else catColor = 'var(--sv-patrimonio-color)';
 
     return {
         id: poi.id,
@@ -98,7 +111,7 @@ function desdeContrato(poi) {
         shortDesc: poi.shortDesc || '',
         fullDesc: poi.fullDesc || '',
         conservation: poi.conservation || 'Verificado',
-        curiosity: poi.curiosity || '',
+        curiosity: limpiarCuriosidad(poi.id, poi.curiosity),
         altitudeRange: limpiarAltitud(poi.id, poi.altitudeRange),
         sightingTips: poi.sightingTips || '',
         fieldIdTips: poi.fieldIdTips || '',
@@ -440,37 +453,14 @@ function esperarVisor() {
    ========================================================================== */
 
 function getCategoryTheme(category) {
-    if (category === 'flora') {
-        return {
-            color: 'var(--sv-flora-hover)',
-            surface: 'var(--sv-flora-surface)',
-            border: 'var(--sv-flora-border)',
-            glow: 'var(--sv-flora-glow)',
-            pillClass: 'tab-cat-flora',
-            cardClass: 'card-cat-flora',
-            label: 'Flora'
-        };
-    }
-    if (category === 'fauna') {
-        return {
-            color: 'var(--sv-fauna-hover)',
-            surface: 'var(--sv-fauna-surface)',
-            border: 'var(--sv-fauna-border)',
-            glow: 'var(--sv-fauna-glow)',
-            pillClass: 'tab-cat-fauna',
-            cardClass: 'card-cat-fauna',
-            label: 'Fauna'
-        };
-    }
-    // patrimonio / curiosidades
     return {
-        color: 'var(--sv-patrimonio-hover)',
-        surface: 'var(--sv-patrimonio-surface)',
-        border: 'var(--sv-patrimonio-border)',
-        glow: 'var(--sv-patrimonio-glow)',
-        pillClass: 'tab-cat-curiosidades',
-        cardClass: 'card-cat-curiosidades',
-        label: 'Patrimonio'
+        color: 'var(--sv-primary)',
+        surface: 'var(--sv-primary-surface)',
+        border: 'var(--sv-primary-border)',
+        glow: 'var(--sv-primary-glow)',
+        pillClass: 'tab-cat-flora',
+        cardClass: 'card-cat-flora',
+        label: category === 'flora' ? 'Flora' : (category === 'fauna' ? 'Fauna' : 'Patrimonio')
     };
 }
 
@@ -493,82 +483,97 @@ function medallonHTML(item, tam = 'w-10 h-10') {
 
 
 /**
- * Botones multimedia.
+ * Botones interactivos de la ficha de especie.
+ * Distribución:
+ * - Fila 1: Canto y Narración alineados horizontalmente (lado a lado)
+ * - Fila 2: Ver en 3D solo, más grande y robusto
+ * - Fila 3: Marcar como Visto abajo del 3D, con separación y mayor tamaño
  */
 function accionesMediaHTML(item) {
-    const claseBoton =
-        'flex-1 min-w-[7rem] py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2 touch-manipulation cursor-pointer';
-    const estiloBoton =
-        'background: var(--sv-teal-surface); border: 1px solid var(--sv-surface-border); color: var(--sv-text-primary);';
+    const filas = [];
 
-    const botones = [];
+    // Fila 1: Audio / Canto y Narración alineados horizontalmente (lado a lado)
+    const audioYnarracion = [];
 
-    /*
-     * Canto.
-     */
     if (item.birdCallUrl) {
-        botones.push(`
+        audioYnarracion.push(`
             <button
                 onclick="sonarEspecie('${item.id}')"
-                class="${claseBoton}"
-                style="${estiloBoton}"
+                class="w-full py-3.5 px-3 rounded-xl text-xs sm:text-[13px] font-bold transition flex items-center justify-center gap-2 touch-manipulation cursor-pointer shadow-sm hover:translate-y-[-1px] active:scale-[0.98]"
+                style="background: var(--sv-surface-solid-warm); border: 1.5px solid var(--sv-surface-border); color: var(--sv-text-primary); min-height: 46px;"
             >
-                <i class="fa-solid fa-volume-high" style="color: var(--sv-sky-hover);"></i>
-                Escuchar canto
+                <i class="fa-solid fa-volume-high text-sm" style="color: var(--sv-primary);"></i>
+                <span class="truncate">Escuchar canto</span>
             </button>
         `);
     } else {
-        botones.push(`
+        audioYnarracion.push(`
             <button
                 onclick="playSpeciesSound(${item.audioFreq})"
-                class="${claseBoton}"
-                style="${estiloBoton}"
+                class="w-full py-3.5 px-3 rounded-xl text-xs sm:text-[13px] font-bold transition flex items-center justify-center gap-2 touch-manipulation cursor-pointer shadow-sm hover:translate-y-[-1px] active:scale-[0.98]"
+                style="background: var(--sv-surface-solid-warm); border: 1.5px solid var(--sv-surface-border); color: var(--sv-text-primary); min-height: 46px;"
             >
-                <i class="fa-solid fa-wave-square" style="color: var(--sv-text-dim);"></i>
-                Tono provisional
+                <i class="fa-solid fa-wave-square text-sm" style="color: var(--sv-text-dim);"></i>
+                <span class="truncate">Tono síntesis</span>
             </button>
         `);
     }
 
-    /*
-     * Narración.
-     */
     if (item.narrationUrl) {
-        botones.push(`
+        audioYnarracion.push(`
             <button
                 onclick="sonarNarracion('${item.id}')"
-                class="${claseBoton}"
-                style="${estiloBoton}"
+                class="w-full py-3.5 px-3 rounded-xl text-xs sm:text-[13px] font-bold transition flex items-center justify-center gap-2 touch-manipulation cursor-pointer shadow-sm hover:translate-y-[-1px] active:scale-[0.98]"
+                style="background: var(--sv-surface-solid-warm); border: 1.5px solid var(--sv-surface-border); color: var(--sv-text-primary); min-height: 46px;"
             >
-                <i class="fa-solid fa-headphones" style="color: var(--sv-sky-hover);"></i>
-                Narración
+                <i class="fa-solid fa-headphones text-sm" style="color: var(--sv-primary);"></i>
+                <span class="truncate">Narración</span>
             </button>
         `);
     }
 
-    /*
-     * Modelo 3D.
-     */
+    if (audioYnarracion.length > 0) {
+        const gridCols = audioYnarracion.length > 1 ? 'grid-cols-2' : 'grid-cols-1';
+        filas.push(`
+            <div class="grid ${gridCols} gap-3 w-full">
+                ${audioYnarracion.join('')}
+            </div>
+        `);
+    }
+
+    // Fila 2: Modelo 3D abajo solo, más grande y con presencia sólida (no delgado)
     if (item.modelUrl) {
-        botones.push(`
-            <button
-                onclick="verModelo3D('${item.id}')"
-                class="${claseBoton}"
-                style="${estiloBoton}"
-            >
-                <i class="fa-solid fa-cube" style="color: var(--sv-sky-hover);"></i>
-                Ver en 3D
-            </button>
+        filas.push(`
+            <div class="w-full">
+                <button
+                    onclick="verModelo3D('${item.id}')"
+                    class="w-full py-3.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2.5 touch-manipulation cursor-pointer shadow-sm hover:translate-y-[-1px] active:scale-[0.98]"
+                    style="background: var(--sv-surface-solid-warm); border: 1.5px solid var(--sv-surface-border); color: var(--sv-text-primary); min-height: 50px;"
+                >
+                    <i class="fa-solid fa-cube text-base" style="color: var(--sv-primary-hover);"></i>
+                    <span>Ver en 3D</span>
+                </button>
+            </div>
         `);
     }
 
-    if (!botones.length) {
-        return '';
-    }
+    // Fila 3: Botón de Marcar como Visto abajo del 3D, aún más grande y prominente
+    filas.push(`
+        <div class="w-full">
+            <button
+                onclick="markAsDiscovered('${item.id}')"
+                class="w-full py-4 px-5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2.5 shadow-lg touch-manipulation cursor-pointer hover:scale-[1.01] active:scale-[0.99]"
+                style="background: linear-gradient(135deg, var(--sv-primary), var(--sv-primary-hover)); color: var(--sv-text-inverse); box-shadow: 0 4px 16px var(--sv-primary-glow); min-height: 52px;"
+            >
+                <i class="fa-solid ${item.discovered ? 'fa-circle-check' : 'fa-check'} text-sm sm:text-base"></i>
+                <span>${item.discovered ? 'Especie Registrada en Bitácora' : 'Marcar como Visto'}</span>
+            </button>
+        </div>
+    `);
 
     return `
-        <div class="flex gap-2 flex-wrap mb-2">
-            ${botones.join('')}
+        <div class="flex flex-col gap-3 w-full">
+            ${filas.join('')}
         </div>
     `;
 }
@@ -618,139 +623,100 @@ function selectHotspot(id) {
             <button
                 onclick="closeBottomSheet()"
                 class="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center text-sm transition z-50 touch-manipulation cursor-pointer shadow-lg hover:scale-105"
-                style="background: var(--sv-teal-surface); border: 1px solid var(--sv-surface-border); color: var(--sv-text-muted);"
+                style="background: var(--sv-surface-solid-warm); border: 1px solid var(--sv-surface-border); color: var(--sv-text-muted);"
+                title="Cerrar ficha"
+                aria-label="Cerrar ficha"
             >
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <div class="flex items-start gap-3.5 mb-3 pr-6">
+            <!-- Cabecera limpia y espaciada: 1 SOLO ICONO, sin recuadros redundantes -->
+            <div class="mb-5 pr-7">
 
-                ${medallonHTML(item, 'w-20 h-20')}
+                <!-- Metadatos de categoría y altitud: LIMPIOS SIN RECUADROS NI PILLS DE BOTÓN -->
+                <div class="flex items-center gap-2 flex-wrap mb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5" style="color: var(--sv-primary);">
+                        <i class="fa-solid ${item.icon || 'fa-seedling'} text-xs"></i>
+                        ${item.typeLabel}
+                    </span>
 
-                <div class="flex-1 min-w-0">
-
-                    <div class="flex items-center gap-1.5 flex-wrap mb-1">
-
-                        <span
-                            class="text-[9.5px] uppercase font-bold px-2 py-0.5 rounded-full border"
-                            style="
-                                background:${item.color}18;
-                                color:${item.color};
-                                border-color:${item.color}45;
-                            "
-                        >
-                            <i class="fa-solid ${item.icon}"></i>
-                            ${item.typeLabel}
+                    ${item.altitudeRange ? `
+                        <span class="text-xs font-medium flex items-center gap-1.5" style="color: var(--sv-text-dim);">
+                            <span class="opacity-40">·</span>
+                            <i class="fa-solid fa-mountain text-[10px]"></i>
+                            ${item.altitudeRange}
                         </span>
-
-                        ${item.altitudeRange ? `
-                            <span class="text-[9px] font-semibold px-2 py-0.5 rounded-full" style="background: rgba(35, 63, 57, 0.6); color: var(--sv-text-dim); border: 1px solid var(--sv-surface-border);">
-                                <i class="fa-solid fa-mountain text-[8px] mr-0.5"></i> ${item.altitudeRange}
-                            </span>
-                        ` : ''}
-
-                    </div>
-
-                    <h3 class="text-base sm:text-lg font-bold leading-snug tracking-tight font-syne" style="color: var(--sv-text-primary);">
-                        ${item.name}
-                    </h3>
-
-                    <p class="text-[11px] italic font-mono" style="color: var(--sv-sky-light);">
-                        ${item.scientific}
-                    </p>
-
+                    ` : ''}
                 </div>
+
+                <h3 class="text-base sm:text-xl font-bold leading-snug tracking-tight font-syne mb-1" style="color: var(--sv-text-primary);">
+                    ${item.name}
+                </h3>
+
+                <p class="text-xs italic font-mono" style="color: var(--sv-primary);">
+                    ${item.scientific}
+                </p>
+
             </div>
 
-            <p class="text-xs leading-relaxed mb-3" style="color: var(--sv-text-muted);">
+            <!-- Descripción general espaciada con excelente respiración -->
+            <p class="text-xs sm:text-[13.5px] leading-relaxed mb-5" style="color: var(--sv-text-muted); line-height: 1.65;">
                 ${item.fullDesc}
             </p>
 
-        <div class="space-y-3 mb-4">
+            <!-- Consejos de avistamiento e identificacion en campo (#95): siempre visibles, con aviso si falta el dato -->
+            <div class="mb-5">
+                <h4 class="text-xs font-bold flex items-center gap-1.5 mb-1.5" style="color: var(--sv-primary);">
+                    <i class="fa-solid fa-binoculars text-xs"></i>
+                    <span>Consejos de avistamiento</span>
+                </h4>
+                <p class="text-xs sm:text-[12.5px] leading-relaxed" style="color: var(--sv-text-muted);">
+                    ${
+                        !item.sightingTips ||
+                        item.sightingTips
+                            .trim()
+                            .toLowerCase()
+                            .startsWith('[por completar')
+                            ? 'Información pendiente de completar.'
+                            : item.sightingTips
+                    }
+                </p>
+            </div>
 
-    <div
-        class="rounded-2xl p-3"
-        style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border);"
-    >
-        <h4
-            class="text-[11px] font-bold flex items-center gap-1.5 mb-1"
-            style="color: var(--sv-sky-hover);"
-        >
-            <i class="fa-solid fa-binoculars"></i>
-            Consejos de avistamiento
-        </h4>
+            <div class="mb-5">
+                <h4 class="text-xs font-bold flex items-center gap-1.5 mb-1.5" style="color: var(--sv-primary);">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    <span>Cómo identificarla en campo</span>
+                </h4>
+                <p class="text-xs sm:text-[12.5px] leading-relaxed" style="color: var(--sv-text-muted);">
+                    ${
+                        !item.fieldIdTips ||
+                        item.fieldIdTips
+                            .trim()
+                            .toLowerCase()
+                            .startsWith('[por completar')
+                            ? 'Información pendiente de completar.'
+                            : item.fieldIdTips
+                    }
+                </p>
+            </div>
 
-        <p
-            class="text-[11px] leading-relaxed"
-            style="color: var(--sv-text-muted);"
-        >
-            ${
-                !item.sightingTips ||
-                item.sightingTips
-                    .trim()
-                    .toLowerCase()
-                    .startsWith('[por completar')
-                    ? 'Información pendiente de completar.'
-                    : item.sightingTips
-            }
-        </p>
-    </div>
-
-    <div
-        class="rounded-2xl p-3"
-        style="background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border);"
-    >
-        <h4
-            class="text-[11px] font-bold flex items-center gap-1.5 mb-1"
-            style="color: var(--sv-sky-hover);"
-        >
-            <i class="fa-solid fa-magnifying-glass"></i>
-            Cómo identificarla en campo
-        </h4>
-
-        <p
-            class="text-[11px] leading-relaxed"
-            style="color: var(--sv-text-muted);"
-        >
-            ${
-                !item.fieldIdTips ||
-                item.fieldIdTips
-                    .trim()
-                    .toLowerCase()
-                    .startsWith('[por completar')
-                    ? 'Información pendiente de completar.'
-                    : item.fieldIdTips
-            }
-        </p>
-    </div>
-
-</div>
-
-            ${item.curiosity ? `
-                <div class="rounded-2xl p-3 mb-3.5" style="background: rgba(24, 43, 39, 0.95); border: 1px solid var(--sv-surface-border);">
-                    <h4 class="text-[11px] font-bold flex items-center gap-1.5 mb-1" style="color: var(--sv-sky-hover);">
-                        <i class="fa-solid fa-lightbulb"></i>
-                        ¿Sabías que?
+            <!-- ¿Sabías que?: TOTALMENTE LIMPIO SIN RECUADROS NI BORDES -->
+            ${item.curiosity && !item.curiosity.includes('[por') ? `
+                <div class="mb-5">
+                    <h4 class="text-xs font-bold flex items-center gap-1.5 mb-1.5" style="color: var(--sv-primary);">
+                        <i class="fa-solid fa-lightbulb text-xs"></i>
+                        <span>¿Sabías que?</span>
                     </h4>
-                    <p class="text-[11px] leading-relaxed" style="color: var(--sv-text-muted);">
+                    <p class="text-xs sm:text-[13px] leading-relaxed italic" style="color: var(--sv-text-muted);">
                         ${item.curiosity}
                     </p>
                 </div>
             ` : ''}
 
-            ${accionesMediaHTML(item)}
-
-            <div class="flex gap-2 mt-2">
-
-                <button
-                    onclick="markAsDiscovered('${item.id}')"
-                    class="flex-1 py-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-2 shadow-lg touch-manipulation cursor-pointer hover:scale-[1.01]"
-                    style="background: linear-gradient(135deg, var(--sv-sky), var(--sv-sky-deep)); color: #fff; box-shadow: 0 4px 14px var(--sv-sky-glow);"
-                >
-                    <i class="fa-solid ${item.discovered ? 'fa-circle-check' : 'fa-check'}"></i>
-                    ${item.discovered ? 'Especie Registrada en Bitácora' : 'Marcar como Visto'}
-                </button>
-
+            <!-- Botones multimedia interactivos distribuidos con jerarquía -->
+            <div class="mt-2 mb-2 w-full">
+                ${accionesMediaHTML(item)}
             </div>
 
         </div>
@@ -871,7 +837,7 @@ function switchTab(tab) {
         if (btn) {
             if (t === tab) {
                 btn.className = 'active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition';
-                btn.style.color = 'var(--sv-sky-hover)';
+                btn.style.color = 'var(--sv-primary)';
             } else {
                 btn.className = 'flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
                 btn.style.color = 'var(--sv-text-dim)';
@@ -882,7 +848,7 @@ function switchTab(tab) {
         if (btnM) {
             if (t === tab) {
                 btnM.className = 'nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition';
-                btnM.style.color = 'var(--sv-sky-hover)';
+                btnM.style.color = 'var(--sv-primary)';
             } else {
                 btnM.className = 'nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
                 btnM.style.color = 'var(--sv-text-dim)';
@@ -946,82 +912,71 @@ function switchTab(tab) {
         if (modalBadge) {
             modalBadge.innerText = `${progressPercent}% completado`;
             modalBadge.style.display = 'inline-block';
+            modalBadge.style.color = 'var(--sv-primary)';
+            modalBadge.style.background = 'var(--sv-primary-surface)';
+            modalBadge.style.borderColor = 'var(--sv-primary-border)';
         }
         if (filterBar) filterBar.style.display = 'none';
 
         content.innerHTML = `
-            <div class="glass-panel rounded-2xl p-3.5 mb-3" style="border: 1px solid rgba(56, 189, 248, 0.25); background: linear-gradient(165deg, rgba(14, 28, 44, 0.94) 0%, rgba(11, 22, 34, 0.98) 100%); box-shadow: 0 8px 24px rgba(2, 12, 22, 0.45);">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-xs font-bold" style="color: var(--sv-text-primary);">
+            <div class="bitacora-summary-card glass-panel rounded-2xl p-5 mb-5" style="border: 1.5px solid var(--sv-primary-border); background: var(--sv-surface-solid); box-shadow: var(--sv-surface-shadow);">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-xs sm:text-sm font-bold font-syne" style="color: var(--sv-text-primary);">
                         Especies y Puntos Registrados
                     </span>
-                    <span class="text-xs font-bold font-syne px-2 py-0.5 rounded-full" style="color: var(--sv-sky-hover); background: var(--sv-sky-surface); border: 1px solid var(--sv-sky-border);">
+                    <span class="text-xs font-bold font-syne px-3 py-1 rounded-full" style="color: var(--sv-primary); background: var(--sv-primary-surface); border: 1px solid var(--sv-primary-border);">
                         ${discoveredCount} de ${totalCount}
                     </span>
                 </div>
 
-                <div class="w-full rounded-full h-2.5 overflow-hidden mb-2" style="background: rgba(7, 15, 24, 0.85); border: 1px solid rgba(56, 189, 248, 0.2);">
+                <div class="w-full rounded-full h-3.5 p-0.5 overflow-hidden mb-3" style="background: rgba(44, 34, 22, 0.12); border: 1.5px solid var(--sv-surface-border);">
                     <div
-                        class="h-full transition-all duration-700"
-                        style="width: ${progressPercent}%; background: linear-gradient(90deg, var(--sv-sky-deep) 0%, var(--sv-sky-hover) 100%); box-shadow: 0 0 10px var(--sv-sky-glow);"
+                        class="h-full rounded-full transition-all duration-700"
+                        style="width: ${progressPercent}%; background: linear-gradient(90deg, var(--sv-primary) 0%, var(--sv-primary-hover) 100%); box-shadow: 0 0 12px var(--sv-primary-glow);"
                     ></div>
                 </div>
 
-                <div class="flex items-center justify-between text-[10px] font-mono" style="color: var(--sv-text-muted);">
+                <div class="flex items-center justify-between text-xs font-mono font-bold" style="color: var(--sv-text-muted);">
                     <span>${progressPercent}% completado</span>
                     <span>${totalCount - discoveredCount} pendientes</span>
                 </div>
             </div>
 
-            <h3 class="text-[11px] font-bold tracking-wider uppercase mb-2 flex items-center gap-2" style="color: var(--sv-text-muted);">
-                <i class="fa-solid fa-list-check text-[11px]" style="color: var(--sv-sky-hover);"></i> Registro de avistamientos
+            <h3 class="bitacora-section-header text-xs font-bold tracking-wider uppercase mb-3.5 flex items-center gap-2" style="color: var(--sv-text-muted);">
+                <i class="fa-solid fa-list-check text-xs" style="color: var(--sv-primary);"></i> Registro de avistamientos
             </h3>
 
-            <div class="flex flex-col gap-3">
-                ${trailData.map(item => {
+            <div class="bitacora-species-list flex flex-col gap-4 sm:gap-5">
+                ${trailData.map((item) => {
                     const theme = getCategoryTheme(item.category);
                     return `
                     <div
                         onclick="selectHotspot('${item.id}');"
-                        class="species-catalog-card ${theme.cardClass}"
+                        class="species-catalog-card bitacora-species-card ${theme.cardClass}"
+                        data-status="${item.discovered ? 'discovered' : 'pending'}"
                     >
-                        <div class="flex items-center gap-3 flex-1 min-w-0">
-                            <div
-                                class="w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-sm flex-shrink-0"
-                                style="
-                                    background: ${item.discovered ? theme.surface : 'rgba(14, 28, 44, 0.75)'};
-                                    color: ${item.discovered ? theme.color : 'var(--sv-text-dim)'};
-                                    border: 1px solid ${item.discovered ? theme.border : 'rgba(148, 163, 184, 0.22)'};
-                                    box-shadow: ${item.discovered ? `0 0 10px ${theme.glow}` : 'none'};
-                                "
-                            >
-                                <i class="fa-solid ${item.icon || 'fa-seedling'} text-sm"></i>
-                            </div>
+                        ${medallonHTML(item, 'w-11 h-11')}
 
-                            <div class="min-w-0 flex-1">
-                                <div class="flex items-center gap-1.5 mb-0.5">
-                                    <h5 class="text-xs font-bold font-syne truncate" style="color: ${item.discovered ? 'var(--sv-text-primary)' : 'var(--sv-text-muted)'};">
-                                        ${item.name}
-                                    </h5>
-                                </div>
-                                <span class="text-[10px] font-mono truncate block" style="color: var(--sv-text-dim);">
+                        <div class="flex-1 min-w-0 pr-3">
+                            <div class="mb-1">
+                                <span class="text-[11px] font-semibold tracking-wide truncate block" style="color: var(--sv-text-muted);">
                                     ${item.typeLabel}
                                 </span>
                             </div>
+                            <h4 class="text-sm sm:text-base font-bold truncate font-syne mb-0.5" style="color: var(--sv-text-primary);">
+                                ${item.name}
+                            </h4>
+                            <p class="text-xs italic font-mono truncate" style="color: var(--sv-text-muted);">
+                                ${item.scientific || item.typeLabel}
+                            </p>
                         </div>
 
-                        <span
-                            class="text-[10px] font-semibold font-mono px-2.5 py-1 rounded-full flex items-center gap-1.5 flex-shrink-0"
-                            style="${item.discovered
-                                ? `background: ${theme.surface}; color: ${theme.color}; border: 1px solid ${theme.border}; box-shadow: 0 0 8px ${theme.glow};`
-                                : 'background: rgba(148, 163, 184, 0.10); color: var(--sv-text-muted); border: 1px solid rgba(148, 163, 184, 0.22);'
-                            }"
-                        >
+                        <div class="bitacora-status-inline ${item.discovered ? 'is-registered' : ''}">
                             ${item.discovered
-                                ? '<i class="fa-solid fa-check text-[9px]"></i> Visto'
-                                : `<span class="w-1.5 h-1.5 rounded-full" style="background: ${theme.color};"></span> Pendiente`
+                                ? '<i class="fa-solid fa-check text-xs" style="color: var(--sv-primary);"></i> <span>Registrado</span>'
+                                : '<span class="bitacora-status-dot"></span> <span>Por encontrar</span>'
                             }
-                        </span>
+                        </div>
                     </div>
                 `;
                 }).join('')}
@@ -1050,36 +1005,29 @@ function renderCatalogCards(category = 'all') {
         return;
     }
 
-    content.innerHTML = filtered.map((item, idx) => {
+    content.innerHTML = filtered.map((item) => {
         const theme = getCategoryTheme(item.category);
         return `
             <div
                 onclick="selectHotspot('${item.id}');"
                 class="species-catalog-card ${theme.cardClass}"
             >
-                ${medallonHTML(item, 'w-10 h-10')}
+                ${medallonHTML(item, 'w-11 h-11')}
 
                 <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-1.5 mb-1">
-                        <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-md" style="background: ${theme.surface}; color: ${theme.color}; border: 1px solid ${theme.border}; box-shadow: 0 0 6px ${theme.glow};">
-                            #BIO-0${idx + 1}
-                        </span>
-                        <span class="text-[9.5px] font-medium truncate" style="color: var(--sv-text-muted);">
+                    <div class="mb-1">
+                        <span class="text-[11px] font-semibold tracking-wide truncate block" style="color: var(--sv-text-muted);">
                             ${item.typeLabel}
                         </span>
                     </div>
 
-                    <h4 class="text-sm font-bold truncate font-syne mb-0.5" style="color: var(--sv-text-primary);">
+                    <h4 class="text-sm sm:text-base font-bold truncate font-syne mb-0.5" style="color: var(--sv-text-primary);">
                         ${item.name}
                     </h4>
 
-                    <p class="text-[10px] italic font-mono truncate" style="color: var(--sv-text-muted);">
+                    <p class="text-xs italic font-mono truncate" style="color: var(--sv-text-muted);">
                         ${item.scientific}
                     </p>
-                </div>
-
-                <div class="species-chevron-btn" style="border-color: ${theme.border}; color: ${theme.color};" title="Ver en el sendero">
-                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
                 </div>
             </div>
         `;
@@ -1115,14 +1063,14 @@ function closeTabPanel() {
             btn.className = (t === 'trail')
                 ? 'active-dock-tab flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition'
                 : 'flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
-            btn.style.color = (t === 'trail') ? 'var(--sv-sky-hover)' : 'var(--sv-text-dim)';
+            btn.style.color = (t === 'trail') ? 'var(--sv-primary)' : 'var(--sv-text-dim)';
         }
         const btnM = document.getElementById(`nav-${t}-m`);
         if (btnM) {
             btnM.className = (t === 'trail')
                 ? 'nav-m-btn nav-m-active flex flex-col items-center gap-0.5 font-medium touch-manipulation cursor-pointer transition'
                 : 'nav-m-btn flex flex-col items-center gap-0.5 transition touch-manipulation cursor-pointer';
-            btnM.style.color = (t === 'trail') ? 'var(--sv-sky-hover)' : 'var(--sv-text-dim)';
+            btnM.style.color = (t === 'trail') ? 'var(--sv-primary)' : 'var(--sv-text-dim)';
         }
     });
 }
@@ -1588,7 +1536,7 @@ function updateAmbientAudioButtons() {
     const btnM = document.getElementById('btn-ambient-audio-toggle-m');
 
     const iconHtml = isPlaying
-        ? '<i class="fa-solid fa-volume-high" style="color: var(--sv-sky-hover);"></i>'
+        ? '<i class="fa-solid fa-volume-high" style="color: var(--sv-primary);"></i>'
         : '<i class="fa-solid fa-volume-xmark" style="color: var(--sv-text-dim);"></i>';
 
     if (btnPc) {
@@ -1607,11 +1555,16 @@ function updateAmbientAudioButtons() {
    ========================================================================== */
 
 let currentAlbumCategory = 'all';
+let currentAlbumSearchQuery = '';
 
 function openBiodiversityAlbum() {
     const modal = document.getElementById('biodiversity-album-modal');
     if (!modal) return;
     modal.classList.remove('hidden');
+
+    const searchInput = document.getElementById('album-search-input');
+    if (searchInput) searchInput.value = '';
+    currentAlbumSearchQuery = '';
 
     // Actualizar contadores de las pastillas
     const cAll = document.getElementById('album-tab-count-all');
@@ -1641,6 +1594,11 @@ function filterAlbumSpecies(category, btn) {
     renderBiodiversityAlbum(category);
 }
 
+function searchAlbumSpecies(query) {
+    currentAlbumSearchQuery = (query || '').toLowerCase().trim();
+    renderBiodiversityAlbum(currentAlbumCategory);
+}
+
 function exploreSpecimenFromAlbum(id) {
     closeBiodiversityAlbum();
     startTrailExploration(false);
@@ -1662,50 +1620,71 @@ function createAlbumCardHTML(item, idx) {
     const has3D = !!item.modelUrl;
     const hasAudio = !!(item.birdCallUrl);
     const catName = item.category === 'fauna' ? 'Fauna' : (item.category === 'flora' ? 'Flora' : 'Patrimonio');
+    const catClass = `card-cat-${item.category || 'patrimonio'}`;
 
     return `
-        <div class="album-species-card" data-specimen-id="${item.id}">
-            <div class="flex items-center justify-between gap-2 mb-0.5">
-                <span class="album-category-badge">
+        <div class="album-species-card ${catClass}" data-specimen-id="${item.id}">
+            <!-- Portada visual ilustrada con medallón botánico y badges -->
+            <div class="album-card-cover">
+                <span class="album-cover-badge-left">
                     #BIO-0${idx + 1} · ${catName}
                 </span>
-                ${item.altitudeRange ? `
-                    <span class="text-[10px] font-mono px-2 py-0.5 rounded-full" style="background: rgba(14, 38, 58, 0.7); color: var(--sv-sky-light); border: 1px solid var(--sv-sky-border);">
-                        <i class="fa-solid fa-mountain text-[8px] mr-1"></i>${item.altitudeRange}
-                    </span>
-                ` : ''}
-            </div>
 
-            <div class="album-species-header">
-                <div class="album-species-thumb">
+                <div class="album-cover-badge-right">
+                    ${has3D ? `
+                        <span class="album-feature-chip" title="Modelo 3D interactivo disponible">
+                            <i class="fa-solid fa-cube text-[9px]"></i> 3D
+                        </span>
+                    ` : ''}
+                    ${hasAudio ? `
+                        <span class="album-feature-chip chip-audio" title="Audio y canto disponible">
+                            <i class="fa-solid fa-volume-high text-[9px]"></i> Canto
+                        </span>
+                    ` : ''}
+                </div>
+
+                <!-- Medallón botánico central con icono representativo -->
+                <div class="album-card-medallion">
                     <i class="fa-solid ${iconClass}"></i>
                 </div>
-                <div class="album-species-names">
-                    <h4 class="album-species-common">${item.name}</h4>
-                    <p class="album-species-scientific">${item.scientific || 'Especie altoandina'}</p>
+            </div>
+
+            <!-- Identificación y taxonomía de la especie -->
+            <div class="album-species-names">
+                <h4 class="album-species-common">${item.name}</h4>
+                <p class="album-species-scientific">${item.scientific || 'Especie nativa de los Cerros'}</p>
+                <div class="album-species-meta-row">
+                    ${item.altitudeRange && !item.altitudeRange.includes('[por') ? `
+                        <span class="album-meta-pill">
+                            <i class="fa-solid fa-mountain text-[8px] mr-1"></i>${item.altitudeRange}
+                        </span>
+                    ` : ''}
+                    <span class="album-meta-pill">
+                        <i class="fa-solid fa-check text-[8px] mr-1" style="color: var(--sv-primary);"></i>${item.conservation || 'Verificado'}
+                    </span>
                 </div>
             </div>
 
+            <!-- Descripción y curiosidad botánica/faunística -->
             <p class="album-species-body">
-                ${item.fullDesc || item.curiosity || 'Especie registrada en el recorrido Quebrada La Vieja.'}
+                ${item.shortDesc || item.fullDesc || item.curiosity || 'Especie representativa de los Cerros Orientales de Bogotá.'}
             </p>
 
+            <!-- Acciones interactivas de la tarjeta -->
             <div class="album-species-footer">
-                <div class="flex items-center gap-1.5">
-                    ${hasAudio ? `
-                        <button onclick="sonarEspecie('${item.id}')" class="album-btn-3d" title="Escuchar canto">
-                            <i class="fa-solid fa-volume-high"></i> Canto
-                        </button>
-                    ` : ''}
-                    ${has3D ? `
-                        <button onclick="view3DFromAlbum('${item.id}')" class="album-btn-3d" title="Ver modelo 3D">
-                            <i class="fa-solid fa-cube"></i> 3D
-                        </button>
-                    ` : ''}
-                </div>
-                <button onclick="exploreSpecimenFromAlbum('${item.id}')" class="album-btn-explore" title="Explorar en el sendero 3D">
-                    <span>Explorar en sendero</span>
-                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                ${hasAudio ? `
+                    <button onclick="sonarEspecie('${item.id}'); event.stopPropagation();" class="album-btn-quick-audio" title="Escuchar canto">
+                        <i class="fa-solid fa-volume-high"></i> Canto
+                    </button>
+                ` : ''}
+                ${has3D ? `
+                    <button onclick="view3DFromAlbum('${item.id}'); event.stopPropagation();" class="album-btn-quick-3d" title="Examinar modelo 3D">
+                        <i class="fa-solid fa-cube"></i> 3D
+                    </button>
+                ` : ''}
+                <button onclick="exploreSpecimenFromAlbum('${item.id}'); event.stopPropagation();" class="album-btn-explore" title="Explorar en el sendero 3D">
+                    <i class="fa-solid fa-compass text-xs mr-1"></i>
+                    <span>Explorar</span>
                 </button>
             </div>
         </div>
@@ -1717,96 +1696,37 @@ function renderBiodiversityAlbum(category = 'all') {
     const badge = document.getElementById('album-count-badge');
     if (!grid) return;
 
-    if (category === 'all') {
-        if (badge) badge.innerText = `${trailData.length} registros`;
+    let items = trailData;
 
-        const fauna = trailData.filter(x => x.category === 'fauna');
-        const flora = trailData.filter(x => x.category === 'flora');
-        const patrimonio = trailData.filter(x => x.category === 'patrimonio');
-
-        let html = '';
-
-        if (fauna.length > 0) {
-            html += `
-                <div class="col-span-full">
-                    <div class="album-section-header">
-                        <div class="album-section-title">
-                            <i class="fa-solid fa-dove"></i>
-                            <span>Fauna Silvestre y Aves de Montaña</span>
-                        </div>
-                        <span class="album-section-count">${fauna.length} especies</span>
-                    </div>
-                </div>
-                ${fauna.map((item, idx) => createAlbumCardHTML(item, idx)).join('')}
-            `;
-        }
-
-        if (flora.length > 0) {
-            html += `
-                <div class="col-span-full">
-                    <div class="album-section-header">
-                        <div class="album-section-title">
-                            <i class="fa-solid fa-seedling"></i>
-                            <span>Flora y Vegetación Altoandina</span>
-                        </div>
-                        <span class="album-section-count">${flora.length} especies</span>
-                    </div>
-                </div>
-                ${flora.map((item, idx) => createAlbumCardHTML(item, fauna.length + idx)).join('')}
-            `;
-        }
-
-        if (patrimonio.length > 0) {
-            html += `
-                <div class="col-span-full">
-                    <div class="album-section-header">
-                        <div class="album-section-title">
-                            <i class="fa-solid fa-landmark"></i>
-                            <span>Hitos y Patrimonio Histórico del Sendero</span>
-                        </div>
-                        <span class="album-section-count">${patrimonio.length} hitos</span>
-                    </div>
-                </div>
-                ${patrimonio.map((item, idx) => createAlbumCardHTML(item, fauna.length + flora.length + idx)).join('')}
-            `;
-        }
-
-        grid.innerHTML = html;
-    } else {
-        const filtered = trailData.filter(item => item.category === category);
-        if (badge) {
-            badge.innerText = `${filtered.length} ${filtered.length === 1 ? 'registro' : 'registros'}`;
-        }
-
-        if (filtered.length === 0) {
-            grid.innerHTML = `
-                <div class="col-span-full py-12 text-center text-xs" style="color: var(--sv-text-muted);">
-                    No hay especies registradas en esta categoría.
-                </div>
-            `;
-            return;
-        }
-
-        const sectionTitles = {
-            fauna: { title: 'Fauna Silvestre y Aves de Montaña', icon: 'fa-dove' },
-            flora: { title: 'Flora y Vegetación Altoandina', icon: 'fa-seedling' },
-            patrimonio: { title: 'Hitos y Patrimonio Histórico', icon: 'fa-landmark' }
-        };
-        const secInfo = sectionTitles[category] || { title: 'Especies registradas', icon: 'fa-layer-group' };
-
-        grid.innerHTML = `
-            <div class="col-span-full">
-                <div class="album-section-header">
-                    <div class="album-section-title">
-                        <i class="fa-solid ${secInfo.icon}"></i>
-                        <span>${secInfo.title}</span>
-                    </div>
-                    <span class="album-section-count">${filtered.length} registrados</span>
-                </div>
-            </div>
-            ${filtered.map((item, idx) => createAlbumCardHTML(item, idx)).join('')}
-        `;
+    // Filtro de búsqueda en tiempo real
+    if (currentAlbumSearchQuery) {
+        items = items.filter(item =>
+            (item.name && item.name.toLowerCase().includes(currentAlbumSearchQuery)) ||
+            (item.scientific && item.scientific.toLowerCase().includes(currentAlbumSearchQuery)) ||
+            (item.typeLabel && item.typeLabel.toLowerCase().includes(currentAlbumSearchQuery)) ||
+            (item.shortDesc && item.shortDesc.toLowerCase().includes(currentAlbumSearchQuery))
+        );
     }
+
+    if (category !== 'all') {
+        items = items.filter(x => x.category === category);
+    }
+
+    if (badge) {
+        badge.innerText = `${items.length} ${items.length === 1 ? 'registro' : 'registros'}`;
+    }
+
+    if (items.length === 0) {
+        grid.innerHTML = `
+            <div class="col-span-full py-12 text-center text-xs" style="color: var(--sv-text-muted);">
+                <i class="fa-solid fa-seedling text-2xl mb-2 block" style="color: var(--sv-primary);"></i>
+                No se encontraron especies que coincidan con la búsqueda.
+            </div>
+        `;
+        return;
+    }
+
+    grid.innerHTML = items.map((item, idx) => createAlbumCardHTML(item, idx)).join('');
 }
 
 // Stubs de compatibilidad segura
@@ -1890,14 +1810,14 @@ function updateChecklistUI() {
     if (counter) {
         counter.innerText = `${checkedCount}/${total} listo`;
         if (checkedCount === total) {
-            counter.style.background = 'rgba(16, 185, 129, 0.22)';
-            counter.style.color = '#34d399';
-            counter.style.borderColor = 'rgba(52, 211, 153, 0.5)';
-            counter.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.35)';
+            counter.style.background = 'var(--sv-primary-surface)';
+            counter.style.color = 'var(--sv-primary)';
+            counter.style.borderColor = 'var(--sv-primary-border)';
+            counter.style.boxShadow = '0 0 12px var(--sv-primary-glow)';
         } else {
-            counter.style.background = 'var(--sv-sky-surface)';
-            counter.style.color = 'var(--sv-sky-light)';
-            counter.style.borderColor = 'var(--sv-sky-border)';
+            counter.style.background = 'var(--sv-secondary-surface)';
+            counter.style.color = 'var(--sv-secondary)';
+            counter.style.borderColor = 'var(--sv-secondary-border)';
             counter.style.boxShadow = 'none';
         }
     }
@@ -1934,7 +1854,7 @@ function switchPrepararTrail(trailKey) {
     const hitosContainer = document.getElementById('preparar-map-hitos');
 
     if (titleEl) titleEl.innerText = data.name;
-    if (subEl) subEl.innerHTML = `<i class="fa-solid fa-location-dot mr-1" style="color: var(--sv-sky-hover);"></i>${data.subtitle}`;
+    if (subEl) subEl.innerHTML = `<i class="fa-solid fa-location-dot mr-1" style="color: var(--sv-primary);"></i>${data.subtitle}`;
     if (distEl) distEl.innerText = data.distance;
     if (elevEl) elevEl.innerText = data.elevation;
     if (timeEl) timeEl.innerText = data.time;
@@ -1945,7 +1865,7 @@ function switchPrepararTrail(trailKey) {
     if (hitosContainer && data.hitos) {
         hitosContainer.innerHTML = data.hitos.map((h, idx) => `
             <span class="map-waypoint-pill">
-                <span class="w-1.5 h-1.5 rounded-full ${idx === 2 ? 'bg-sky-400' : (idx === 3 ? 'bg-amber-400' : 'bg-emerald-400')}"></span> ${h}
+                <span class="w-2 h-2 rounded-full ${idx % 2 === 0 ? 'bg-emerald-600' : 'bg-emerald-500'}"></span> ${h}
             </span>
         `).join('');
     }
@@ -2050,19 +1970,19 @@ let currentOnboardingStep = 0;
 const ONBOARDING_STEPS = [
     {
         icon: 'fa-arrows-up-down-left-right',
-        color: 'var(--sv-sky-hover)',
+        color: 'var(--sv-primary)',
         title: 'Explora el Entorno 360°',
         desc: 'Arrastra con tu dedo en el celular o con el ratón en la pantalla para girar la vista en cualquier dirección y contemplar los estratos del bosque.'
     },
     {
         icon: 'fa-person-walking',
-        color: 'var(--sv-sky-light)',
+        color: 'var(--sv-secondary)',
         title: 'Camina por el Sendero',
         desc: 'Toca las flechas luminosas situadas sobre el camino para avanzar y retroceder paso a paso a lo largo del trazado real.'
     },
     {
         icon: 'fa-cube',
-        color: 'var(--sv-sky)',
+        color: 'var(--sv-primary-hover)',
         title: 'Descubre Especies y 3D',
         desc: 'Toca los medallones flotantes para consultar la ficha botánica, escuchar cantos de aves y examinar modelos 3D interactivos.'
     }
@@ -2226,6 +2146,7 @@ window.handleSearch = handleSearch;
 window.openBiodiversityAlbum = openBiodiversityAlbum;
 window.closeBiodiversityAlbum = closeBiodiversityAlbum;
 window.filterAlbumSpecies = filterAlbumSpecies;
+window.searchAlbumSpecies = searchAlbumSpecies;
 window.renderBiodiversityAlbum = renderBiodiversityAlbum;
 window.exploreSpecimenFromAlbum = exploreSpecimenFromAlbum;
 window.view3DFromAlbum = view3DFromAlbum;
@@ -2288,13 +2209,21 @@ cargarCatalogo()
         initLobby();
         esperarVisor();
 
-        // Atajos de teclado para la expedición
+        // Atajos de teclado unificados para la expedición (WCAG 2.1 Esc Dismissal)
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeBiodiversityAlbum();
                 closePrepararVisita();
                 closeBottomSheet();
                 closeTabPanel();
+                closeOnboarding();
+                const lobby = document.getElementById('trail-lobby');
+                if (lobby && lobby.classList.contains('reopened')) {
+                    closeTrailLobby();
+                }
+                if (window.app && typeof window.app.fire === 'function') {
+                    window.app.fire('poi:request-close');
+                }
             }
         });
     });
