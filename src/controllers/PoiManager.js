@@ -1,5 +1,6 @@
 import { Entity } from 'playcanvas';
 import { PoiCatalog } from '../models/PoiCatalog.js';
+import { WorldModelsView } from '../views/WorldModelsView.js';
 
 export class PoiManager {
 
@@ -219,6 +220,36 @@ export class PoiManager {
 
             }
         );
+
+
+        /*
+         * Modelos de pie en la escena (worldModel de pois.json).
+         * No se espera: la pantalla de carga no depende de ellos,
+         * aparecen cuando llegan.
+         */
+
+        if (this.worldModels) {
+            this.worldModels.destroy();
+        }
+
+        this.worldModels =
+            new WorldModelsView(
+                this.app,
+                this.tour?.trailPath,
+                this.catalog.worldModelDefaults
+            );
+
+        window.senderoWorldModels =
+            this.worldModels;
+
+        this.worldModels
+            .load(this.pois)
+            .catch(
+                error => console.warn(
+                    'No se pudieron colocar los modelos del mundo:',
+                    error
+                )
+            );
     }
 
 

@@ -1,7 +1,13 @@
 {
   "version": 2,
-  "note": "Catálogo ÚNICO de puntos de interés. Unifica el catálogo de presentación que estaba escrito a mano en src/ui/shell.js (Eybar Viasus) con el contrato funcional de este archivo (Alejandra Chambueta). Añadir un POI no toca código (RF-021, RNF-009, invariante 3). Campos de presentación: category, icon, colorToken, typeLabel, shortDesc, fullDesc, conservation, curiosity, audioFreq. Campos funcionales: type, sceneId, anchor, trailAnchor, modelUrl, idleAnimation, narrationUrl, transcriptUrl, birdCallUrl. Los colores se declaran como TOKEN de styles/tokens.css, nunca como literal (invariante 14).",
-  "anchorNote": "trailAnchor sitúa el punto sobre el TRAZADO real: d = distancia recorrida, lat = desplazamiento lateral, alt = altura sobre el ojo. Es el anclaje que usa hoy el visor. anchor {x,y,z} es el contrato original en coordenadas de mundo y sigue en (0,0,0): [por medir en campo] en V1.",
+  "note": "Catálogo ÚNICO de puntos de interés. Unifica el catálogo de presentación que estaba escrito a mano en src/ui/shell.js (Eybar Viasus) con el contrato funcional de este archivo (Alejandra Chambueta). Añadir un POI no toca código (RF-021, RNF-009, invariante 3). Campos de presentación: category, icon, colorToken, typeLabel, shortDesc, fullDesc, conservation, curiosity, audioFreq. Campos funcionales: type, sceneId, anchor, trailAnchor, modelUrl, idleAnimation, narrationUrl, transcriptUrl, birdCallUrl, worldModel. Los colores se declaran como TOKEN de styles/tokens.css, nunca como literal (invariante 14).",
+  "anchorNote": "trailAnchor sitúa el punto sobre el TRAZADO real: d = distancia recorrida, lat = desplazamiento lateral, alt = altura sobre el ojo. Es el anclaje que usa hoy el visor. anchor {x,y,z} es el contrato original en coordenadas de mundo y sigue en (0,0,0): [por medir en campo] en V1. worldModel coloca el modelo de pie sobre el suelo en la posición de trailAnchor (d y lat), a la altura real heightMeters, con la cara frontal hacia el sendero.",
+  "worldModelDefaults": {
+    "metersPerUnit": 2.1,
+    "groundOffset": -0.6,
+    "facingTowardVisitorDegrees": 30,
+    "note": "Calibración de la escena activa (scene-01, parque de prueba): una unidad del motor mide unos 2,1 m y el suelo queda 0,6 u por debajo de la línea del trazado, el mismo desplazamiento con el que se apoyan las flechas. Se recalibra cada vez que cambie la escena."
+  },
   "pois": [
     {
       "id": "poi-colibri-chillon",
@@ -278,6 +284,396 @@
       "curiosity": "[por completar tras V1]",
       "audioFreq": 300,
       "mediaNote": "[por definir] Declarado en scene-02, que todavía no existe. El modelo muro-antiguo.glb tampoco está en el repositorio."
+    },
+    {
+      "id": "poi-tablero-informativo",
+      "type": "infraestructura",
+      "category": "curiosidades",
+      "commonName": "Tablero informativo",
+      "scientificName": "Tablero con techo de madera",
+      "sceneId": "scene-01",
+      "anchor": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "trailAnchor": {
+        "d": 1.3,
+        "lat": 2.4,
+        "alt": 0.9
+      },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/tablero-informativo.glb",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "",
+      "altitudeRange": "Altitud sin medir",
+      "icon": "fa-map",
+      "colorToken": "--sv-gray-200",
+      "typeLabel": "Señalización del sendero",
+      "shortDesc": "El nombre Santa Ana viene de la hacienda Santa Ana, que existió entre los siglos XVIII y XX.",
+      "fullDesc": "Tablero de madera con techo y dos paneles. El de arriba se titula «SANTA ANA-LA AGUADORA» y dice: «Camino ubicado en la localidad de Usaquén. El nombre “Santa Ana” proviene de la hacienda Santa Ana que existió entre los siglos XVIII - XX y “La Aguadora” es un homenaje a las mujeres que transportaban el agua en vasijas proveniente de la quebrada Santa Bárbara.» Al pie trae seis normas ilustradas con íconos: [por verificar]. El panel de abajo es el «MAPA DEL RECORRIDO», con los circuitos del Camino Santa Ana y un perfil de altura; sus cifras no se leen a 1024 px: [por verificar].",
+      "conservation": "Modelo 3D del equipo",
+      "curiosity": "Según el propio tablero, «La Aguadora» recuerda a las mujeres que transportaban el agua en vasijas desde la quebrada Santa Bárbara.",
+      "audioFreq": 330,
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026). La ficha usa el original; el mundo usa la versión ligera de assets/models/mundo/.",
+      "worldModel": {
+        "url": "assets/models/mundo/tablero-informativo.glb",
+        "visible": true,
+        "heightMeters": 2.6,
+        "yawOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "poi-letrero-indicaciones",
+      "type": "infraestructura",
+      "category": "curiosidades",
+      "commonName": "Poste de indicaciones",
+      "scientificName": "Poste de madera con flechas",
+      "sceneId": "scene-01",
+      "anchor": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "trailAnchor": {
+        "d": 2.4,
+        "lat": -1.95,
+        "alt": 0.8
+      },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/letrero-indicaciones.glb",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "",
+      "altitudeRange": "Altitud sin medir",
+      "icon": "fa-signs-post",
+      "colorToken": "--sv-gray-200",
+      "typeLabel": "Señalización del sendero",
+      "shortDesc": "Poste con tres flechas que señalan Portería Calle 119, Bosque Alto Andino y Bosque de pinos.",
+      "fullDesc": "Poste de madera con tres flechas indicadoras y un colibrí dibujado en el cabezal. Las flechas dicen «Portería Calle 119», «Bosque Alto Andino» y «Bosque de pinos».",
+      "conservation": "Modelo 3D del equipo",
+      "curiosity": "Cada flecha trae el nombre del destino en español y en inglés.",
+      "audioFreq": 330,
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026). La ficha usa el original; el mundo usa la versión ligera de assets/models/mundo/.",
+      "worldModel": {
+        "url": "assets/models/mundo/letrero-indicaciones.glb",
+        "visible": true,
+        "heightMeters": 2.4,
+        "yawOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "poi-letrero-bosque-alto-andino",
+      "type": "infraestructura",
+      "category": "curiosidades",
+      "commonName": "Bosque alto andino",
+      "scientificName": "Letrero interpretativo",
+      "sceneId": "scene-01",
+      "anchor": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "trailAnchor": {
+        "d": 3.6,
+        "lat": 2.4,
+        "alt": 0.7
+      },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/letrero-bosque-alto-andino.glb",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "",
+      "altitudeRange": "2.808 msnm, según el letrero",
+      "icon": "fa-tree",
+      "colorToken": "--sv-gray-200",
+      "typeLabel": "Señalización del sendero",
+      "shortDesc": "Las bromelias, orquídeas y helechos del bosque rebosan agua, fauna y microvida.",
+      "fullDesc": "Letrero interpretativo titulado «BOSQUE ALTO ANDINO», con una ilustración rotulada «Bromeliaceae». Dice: «Nos rodean numerosos hábitats, las bromelias, orquídeas y helechos rebosan agua, fauna, microvida, la esencia misma del bosque andino.» Pide dos cosas: «No extraigas material geológico o vegetal» y «Sigue la ruta establecida». Indica «Altitud: 2.808 m.s.n.m».",
+      "conservation": "Modelo 3D del equipo",
+      "curiosity": "El letrero indica que desde ese punto falta 1.125 m al Mirador Santa Ana y 212 m al Tanque Nuevo Usaquén.",
+      "audioFreq": 330,
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026). La ficha usa el original; el mundo usa la versión ligera de assets/models/mundo/.",
+      "worldModel": {
+        "url": "assets/models/mundo/letrero-bosque-alto-andino.glb",
+        "visible": true,
+        "heightMeters": 2.2,
+        "yawOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "poi-banca-vieja",
+      "type": "infraestructura",
+      "category": "curiosidades",
+      "commonName": "Banca vieja",
+      "scientificName": "Banca de madera con techo",
+      "sceneId": "scene-01",
+      "anchor": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "trailAnchor": {
+        "d": 4.8,
+        "lat": 2.6,
+        "alt": 0.6
+      },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/banca-vieja.glb",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "",
+      "altitudeRange": "Altitud sin medir",
+      "icon": "fa-chair",
+      "colorToken": "--sv-gray-200",
+      "typeLabel": "Mobiliario del sendero",
+      "shortDesc": "Banca de madera con techo, modelada por el equipo.",
+      "fullDesc": "Modelo 3D de una banca de madera con techo: un asiento largo sobre patas gruesas, dos columnas laterales y un techo inclinado. No lleva letrero ni texto.",
+      "conservation": "Modelo 3D del equipo",
+      "curiosity": "",
+      "audioFreq": 330,
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026). La ficha usa el original; el mundo usa la versión ligera de assets/models/mundo/.",
+      "worldModel": {
+        "url": "assets/models/mundo/banca-vieja.glb",
+        "visible": true,
+        "heightMeters": 2,
+        "yawOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "poi-letrero-observatorio-de-aves",
+      "type": "infraestructura",
+      "category": "curiosidades",
+      "commonName": "Observatorio de aves",
+      "scientificName": "Letrero interpretativo",
+      "sceneId": "scene-01",
+      "anchor": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "trailAnchor": {
+        "d": 6,
+        "lat": 2.4,
+        "alt": 0.4
+      },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/letrero-observatorio-de-aves.glb",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "",
+      "altitudeRange": "3.024 msnm, según el letrero",
+      "icon": "fa-binoculars",
+      "colorToken": "--sv-gray-200",
+      "typeLabel": "Señalización del sendero",
+      "shortDesc": "Las aves dispersan semillas, polinizan las plantas y ayudan a controlar las poblaciones de insectos.",
+      "fullDesc": "Letrero interpretativo titulado «OBSERVATORIO DE AVES», con una ilustración rotulada «Grallaria ruficapilla». Dice: «Las aves son muy importantes para los cerros orientales ya que dispersan semillas, polinizan las plantas y también ayudan a controlar las poblaciones de insectos.» Indica «Altitud: 3.024 m.s.n.m» y «Ubicación: a 270 m del mirador Santa Ana».",
+      "conservation": "Modelo 3D del equipo",
+      "curiosity": "El letrero lo ubica a 270 m del mirador Santa Ana.",
+      "audioFreq": 330,
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026). La ficha usa el original; el mundo usa la versión ligera de assets/models/mundo/.",
+      "worldModel": {
+        "url": "assets/models/mundo/letrero-observatorio-de-aves.glb",
+        "visible": true,
+        "heightMeters": 1.5,
+        "yawOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "poi-letrero-prohibido-el-paso",
+      "type": "infraestructura",
+      "category": "curiosidades",
+      "commonName": "Prohibido el paso",
+      "scientificName": "Letrero del Acueducto",
+      "sceneId": "scene-01",
+      "anchor": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "trailAnchor": {
+        "d": 7.2,
+        "lat": -1.95,
+        "alt": 0.4
+      },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/letrero-prohibido-el-paso.glb",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "",
+      "altitudeRange": "Altitud sin medir",
+      "icon": "fa-ban",
+      "colorToken": "--sv-gray-200",
+      "typeLabel": "Señalización del sendero",
+      "shortDesc": "Prohibido el paso a particulares: uso exclusivo de la E.A.B.",
+      "fullDesc": "Letrero con dos postes y un panel claro que dice «PROHIBIDO EL PASO A PARTICULARES USO EXCLUSIVO DE LA E.A.B.». Lleva el logotipo «acueducto» y dos pictogramas tachados en rojo.",
+      "conservation": "Modelo 3D del equipo",
+      "curiosity": "El logotipo del letrero trae la leyenda «Agua y alcantarillado de Bogotá».",
+      "audioFreq": 330,
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026). La ficha usa el original; el mundo usa la versión ligera de assets/models/mundo/.",
+      "worldModel": {
+        "url": "assets/models/mundo/letrero-prohibido-el-paso.glb",
+        "visible": true,
+        "heightMeters": 1.5,
+        "yawOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "poi-letrero-bosque-andino-y-pinos",
+      "type": "infraestructura",
+      "category": "curiosidades",
+      "commonName": "Bosque andino y bosque de pinos",
+      "scientificName": "Letrero interpretativo",
+      "sceneId": "scene-01",
+      "anchor": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "trailAnchor": {
+        "d": 8.4,
+        "lat": 1,
+        "alt": 0.8
+      },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/letrero-bosque-andino-y-pinos.glb",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "",
+      "altitudeRange": "2.705 msnm, según el letrero",
+      "icon": "fa-tree",
+      "colorToken": "--sv-gray-200",
+      "typeLabel": "Señalización del sendero",
+      "shortDesc": "Las especies nativas e introducidas de los Cerros Orientales generan espacios de intercambio biológico.",
+      "fullDesc": "Letrero interpretativo titulado «BOSQUE ANDINO Y BOSQUE DE PINOS», con una ilustración rotulada «Junglans regia». Dice: «La presencia de especies nativas e introducidas en los Cerros Orientales generan espacios de intercambio biológico, diversidad de hábitats, belleza escénica, apropiación y bienestar físico y mental.» Pide dos cosas: «No extraigas material geológico o vegetal» y «Sigue la ruta establecida». Indica «Altitud: 2.705 m.s.n.m».",
+      "conservation": "Modelo 3D del equipo",
+      "curiosity": "El letrero indica que desde ese punto falta 736 m al Tanque Nuevo Usaquén y 2.075 m al Mirador Santa Ana.",
+      "audioFreq": 330,
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026). La ficha usa el original; el mundo usa la versión ligera de assets/models/mundo/.",
+      "worldModel": {
+        "url": "assets/models/mundo/letrero-bosque-andino-y-pinos.glb",
+        "visible": false,
+        "heightMeters": 2.2,
+        "yawOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "poi-letrero-servicios-ambientales",
+      "type": "infraestructura",
+      "category": "curiosidades",
+      "commonName": "Servicios ambientales",
+      "scientificName": "Letrero interpretativo",
+      "sceneId": "scene-01",
+      "anchor": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "trailAnchor": {
+        "d": 9.6,
+        "lat": -1,
+        "alt": 0.8
+      },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/letrero-servicios-ambientales.glb",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "",
+      "altitudeRange": "2.876 msnm, según el letrero",
+      "icon": "fa-leaf",
+      "colorToken": "--sv-gray-200",
+      "typeLabel": "Señalización del sendero",
+      "shortDesc": "Los servicios ecosistémicos son los procesos y funciones de los ecosistemas que percibimos como beneficio.",
+      "fullDesc": "Letrero interpretativo titulado «SERVICIOS AMBIENTALES», con una ilustración de un insecto sobre una flor. Dice: «Los servicios ecosistémicos son los procesos y funciones de los ecosistemas que los seres humanos percibimos como beneficio.» Indica «Altitud: 2.876 m.s.n.m» y «Ubicación: Falta 613 m al Mirador Santa Ana».",
+      "conservation": "Modelo 3D del equipo",
+      "curiosity": "Según el letrero, desde ese punto falta 613 m al Mirador Santa Ana.",
+      "audioFreq": 330,
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026). La ficha usa el original; el mundo usa la versión ligera de assets/models/mundo/.",
+      "worldModel": {
+        "url": "assets/models/mundo/letrero-servicios-ambientales.glb",
+        "visible": false,
+        "heightMeters": 1.5,
+        "yawOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "poi-silla-rota",
+      "type": "infraestructura",
+      "category": "curiosidades",
+      "commonName": "Silla rota",
+      "scientificName": "Banca de madera deteriorada",
+      "sceneId": "scene-01",
+      "anchor": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "trailAnchor": {
+        "d": 10.8,
+        "lat": 1,
+        "alt": 0.7
+      },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/silla-rota.glb",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "",
+      "altitudeRange": "Altitud sin medir",
+      "icon": "fa-chair",
+      "colorToken": "--sv-gray-200",
+      "typeLabel": "Mobiliario del sendero",
+      "shortDesc": "Banca de madera con techo y deterioro visible, modelada por el equipo.",
+      "fullDesc": "Modelo 3D de una banca de madera con techo y deterioro visible: sus tablones están torcidos y desprendidos y en la base se ven troncos cortos. No lleva letrero ni texto.",
+      "conservation": "Modelo 3D del equipo",
+      "curiosity": "",
+      "audioFreq": 330,
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026). La ficha usa el original; el mundo usa la versión ligera de assets/models/mundo/.",
+      "worldModel": {
+        "url": "assets/models/mundo/silla-rota.glb",
+        "visible": false,
+        "heightMeters": 1.7,
+        "yawOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "poi-letrero-flecha",
+      "type": "infraestructura",
+      "category": "curiosidades",
+      "commonName": "La montaña es vida",
+      "scientificName": "Panel con flecha",
+      "sceneId": "scene-01",
+      "anchor": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "trailAnchor": {
+        "d": 12,
+        "lat": -1,
+        "alt": 0.8
+      },
+      "distanceMeters": 0,
+      "modelUrl": "assets/models/letrero-flecha.glb",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "",
+      "altitudeRange": "Altitud sin medir",
+      "icon": "fa-arrow-right",
+      "colorToken": "--sv-gray-200",
+      "typeLabel": "Señalización del sendero",
+      "shortDesc": "Panel de madera con una flecha a cada lado y el mensaje «LA MONTAÑA ES VIDA !!».",
+      "fullDesc": "Panel de madera con una flecha a cada lado y, al centro, una ilustración de paisaje con un pictograma tachado en rojo. Lleva dos frases, una a cada lado de la ilustración: «LA MONTAÑA ES VIDA !!» y «GRACIAS POR CUIDARLA !!».",
+      "conservation": "Modelo 3D del equipo",
+      "curiosity": "Una de las dos frases del panel es un agradecimiento: «GRACIAS POR CUIDARLA !!».",
+      "audioFreq": 330,
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026). La ficha usa el original; el mundo usa la versión ligera de assets/models/mundo/.",
+      "worldModel": {
+        "url": "assets/models/mundo/letrero-flecha.glb",
+        "visible": false,
+        "heightMeters": 1,
+        "yawOffsetDegrees": 0
+      }
     }
   ]
 }
