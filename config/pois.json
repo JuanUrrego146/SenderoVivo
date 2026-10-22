@@ -572,9 +572,9 @@
         "z": 47.07
       },
       "trailAnchor": {
-        "d": 58.4,
+        "d": 58.3,
         "lat": -2,
-        "alt": 0.66
+        "alt": 0.64
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/silla-rota.glb",
