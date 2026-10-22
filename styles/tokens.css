@@ -37,6 +37,12 @@
     --sv-surface-shadow-lg: 0 24px 60px rgba(44, 34, 22, 0.22);
     /* Sombra profunda para modales */
 
+    /* ── Fondo del visor en las escenas del sendero real ── */
+    --sv-escena-cielo-nublado: #D1DBDE;
+    /* Mediana del cielo nublado en los cuadros grabados (pixeles claros y sin saturacion del
+       tercio superior de 160 cuadros). Por los huecos del dosel se ve este color y no el beige
+       de la interfaz, que en el bosque se lee como neblina. */
+
     /* Scrims de atenuación traslúcida para ventanas emergentes */
     --sv-scrim: rgba(28, 38, 30, 0.55);
     --sv-scrim-heavy: rgba(20, 28, 22, 0.82);

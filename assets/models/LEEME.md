@@ -33,7 +33,7 @@ Los modelos no están en metros: su caja envolvente mide entre 3,3 y 16,7 unidad
 
 ## Dónde está cada uno en el sendero
 
-Revisado el 21/10/2026 en las pasadas centrales de los tres tramos grabados con celular. La silla rota está en el Tramo 2, en la curva que se ve en los cuadros 36 a 40 de `t2_CentroCentro_Ida`; su POI vive en la escena `sendero-02` y el medallón flota sobre ella. La banca vieja y el letrero del observatorio de aves están al final del Tramo 1, donde empalma con el Tramo 2 (cuadros 191 a 197 de `t1_CentroCentro_Ida`), y el tablero informativo está en la Cumbre, junto a la plataforma del mirador (`c_Plataforma_VistaTramo1` y `c_OrbitacionPlataforma`): los tres pasan a la escena de Cumbre y Tramo 1 cuando se publique. Los otros seis letreros no aparecen en ninguno de los tres tramos grabados y siguen como ejemplos en la escena del parque.
+Revisado el 21/10/2026 en las pasadas centrales de los tres tramos grabados con celular. La silla rota está en el Tramo 2, en la curva que se ve hacia el segundo 31 de `t2_CentroCentro_Ida` (cuadros 92 a 98 de la extracción a 3 fps); su POI vive en la escena `sendero-02` y el medallón flota sobre ella. La banca vieja y el letrero del observatorio de aves están al final del Tramo 1, donde empalma con el Tramo 2 (hacia el segundo 130 de `t1_CentroCentro_Ida`, cuadros 519 a 528 de la extracción a 4 fps), y el tablero informativo está en la Cumbre, junto a la plataforma del mirador (`c_Plataforma_VistaTramo1` y `c_OrbitacionPlataforma`): los tres viven en la escena `sendero-01` (Cumbre y Tramo 1). Los otros seis letreros no aparecen en ninguno de los tres tramos grabados y siguen como ejemplos en la escena del parque.
 
 ## Reglas para tocar estos archivos
 

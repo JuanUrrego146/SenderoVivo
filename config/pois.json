@@ -1,7 +1,7 @@
 {
   "version": 2,
   "note": "Catálogo ÚNICO de puntos de interés. Unifica el catálogo de presentación que estaba escrito a mano en src/ui/shell.js (Eybar Viasus) con el contrato funcional de este archivo (Alejandra Chambueta). Añadir un POI no toca código (RF-021, RNF-009, invariante 3). Campos de presentación: category, icon, colorToken, typeLabel, shortDesc, fullDesc, conservation, curiosity, audioFreq. Campos funcionales: type, sceneId, anchor, trailAnchor, modelUrl, idleAnimation, narrationUrl, transcriptUrl, birdCallUrl. Los colores se declaran como TOKEN de styles/tokens.css, nunca como literal (invariante 14).",
-  "anchorNote": "trailAnchor sitúa el punto sobre el trazado de su escena (sceneId): d = distancia recorrida, lat = desplazamiento lateral, positivo a la derecha del avance, y alt = altura sobre el punto del trazado. Es el anclaje que usa hoy el visor, y cada escena muestra solo los POI de las escenas que comparten su trazado. anchor {x,y,z} es el contrato original en coordenadas de mundo: en poi-silla-rota está medido sobre la reconstrucción del Tramo 2 (centro del tablón superior de la banca); en los demás sigue en (0,0,0), [por medir en campo].",
+  "anchorNote": "trailAnchor sitúa el punto sobre el trazado de su escena (sceneId): d = distancia recorrida, lat = desplazamiento lateral, positivo a la derecha del avance, y alt = altura sobre el punto del trazado. Es el anclaje que usa hoy el visor, y cada escena muestra solo los POI de las escenas que comparten su trazado. anchor {x,y,z} es el contrato original en coordenadas de mundo, medido sobre la reconstrucción horneada de su escena en poi-silla-rota (Tramo 2), poi-banca-vieja, poi-letrero-observatorio-de-aves y poi-tablero-informativo (Cumbre y Tramo 1): las bancas con los puntos 3D de COLMAP dentro de su recuadro (centro en x y z, tablón superior en y) y los dos letreros triangulando un rasgo marcado en tres o cuatro cuadros. El medallón flota unos 0,3 m sobre el objeto. En los demás sigue en (0,0,0), [por medir en campo].",
   "pois": [
     {
       "id": "poi-colibri-chillon",
@@ -285,16 +285,16 @@
       "category": "curiosidades",
       "commonName": "Tablero informativo",
       "scientificName": "Tablero con techo de madera",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -9.26,
+        "y": 4.16,
+        "z": -4.76
       },
       "trailAnchor": {
-        "d": 1.3,
-        "lat": 1,
-        "alt": 0.8
+        "d": 7,
+        "lat": 7.6,
+        "alt": 1.9
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/tablero-informativo.glb",
@@ -390,16 +390,16 @@
       "category": "curiosidades",
       "commonName": "Banca vieja",
       "scientificName": "Banca de madera con techo",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -77.3,
+        "y": -27.47,
+        "z": -90.09
       },
       "trailAnchor": {
-        "d": 4.8,
-        "lat": -1,
-        "alt": 0.8
+        "d": 153,
+        "lat": -2.8,
+        "alt": 0.71
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/banca-vieja.glb",
@@ -425,16 +425,16 @@
       "category": "curiosidades",
       "commonName": "Observatorio de aves",
       "scientificName": "Letrero interpretativo",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -72.29,
+        "y": -27.26,
+        "z": -88.69
       },
       "trailAnchor": {
-        "d": 6,
-        "lat": 1,
-        "alt": 0.8
+        "d": 153,
+        "lat": 2.3,
+        "alt": 0.9
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/letrero-observatorio-de-aves.glb",
@@ -567,14 +567,14 @@
       "scientificName": "Banca de madera deteriorada",
       "sceneId": "sendero-02",
       "anchor": {
-        "x": 14.22,
-        "y": -0.86,
-        "z": 7.95
+        "x": 34.85,
+        "y": -6.26,
+        "z": 47.07
       },
       "trailAnchor": {
-        "d": 11.9,
-        "lat": -2.6,
-        "alt": 0.75
+        "d": 58.4,
+        "lat": -2,
+        "alt": 0.66
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/silla-rota.glb",
