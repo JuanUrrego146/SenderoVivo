@@ -130,31 +130,37 @@ export class PoiCatalog {
     }
 
     async _checkResources(pois) {
-        const warnings = [];
+        // Todas las peticiones salen a la vez: la pantalla de carga espera este
+        // resultado y una HEAD por recurso, en serie, alargaba el arranque.
+        const checks = [];
         for (const poi of pois) {
             for (const field of RESOURCE_FIELDS) {
                 const url = poi[field];
                 if (!isNonEmptyString(url)) continue;
-                let response;
-                try {
-                    response = await fetch(url, { method: 'HEAD' });
-                    if (response.status === 405 || response.status === 501) {
-                        response = await fetch(url);
-                    }
-                } catch {
-                    response = null;
-                }
-                if (!response || !response.ok) {
-                    warnings.push({
-                        poiId: poi.id,
-                        field,
-                        message: `apunta a un archivo que no existe: ${url}`,
-                        severity: 'warning'
-                    });
-                }
+                checks.push(this._checkResource(poi.id, field, url));
             }
         }
-        return warnings;
+        const results = await Promise.all(checks);
+        return results.filter(Boolean);
+    }
+
+    async _checkResource(poiId, field, url) {
+        let response;
+        try {
+            response = await fetch(url, { method: 'HEAD' });
+            if (response.status === 405 || response.status === 501) {
+                response = await fetch(url);
+            }
+        } catch {
+            response = null;
+        }
+        if (response && response.ok) return null;
+        return {
+            poiId,
+            field,
+            message: `apunta a un archivo que no existe: ${url}`,
+            severity: 'warning'
+        };
     }
 
     getAll() {

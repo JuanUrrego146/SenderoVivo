@@ -859,6 +859,22 @@
     box-shadow: 0 0 10px var(--sv-primary-glow);
 }
 
+/* Selector del sendero real: zona y versión (src/ui/selectorSendero.js) */
+.selector-sendero {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+}
+
+@media (max-width: 639px) {
+    .selector-sendero .render-btn {
+        padding: 5px 8px;
+        font-size: 10.5px;
+    }
+}
+
 .command-actions-cluster {
     display: flex;
     align-items: center;

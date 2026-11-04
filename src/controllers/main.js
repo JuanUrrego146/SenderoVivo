@@ -196,7 +196,8 @@ async function resolveSceneUrl() {
                 isOverride: false, renderTech: render,
                 sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
                 eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
-                pitchDownLimit: match.pitchDownLimit, baked: !!match.baked
+                pitchDownLimit: match.pitchDownLimit, baked: !!match.baked,
+                clearColorToken: match.clearColorToken
             };
         }
     }
@@ -211,7 +212,8 @@ async function resolveSceneUrl() {
                     url: override, isOverride: true,
                     sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
                     eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
-                    pitchDownLimit: match.pitchDownLimit, baked: !!match.baked
+                    pitchDownLimit: match.pitchDownLimit, baked: !!match.baked,
+                    clearColorToken: match.clearColorToken
                 };
             }
         }
@@ -334,7 +336,9 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     const camera = new Entity('camera');
     camera.setPosition(0, 0, 2.5);
     camera.addComponent('camera', {
-        clearColor: colorFromToken('--sv-black-900')
+        // Una escena puede pedir su propio fondo (clearColorToken en config/scenes.json):
+        // en el sendero real los huecos del dosel deben verse como cielo, no como el beige de la UI.
+        clearColor: colorFromToken(sceneOpts.clearColorToken || '--sv-black-900')
     });
     // El oyente del audio espacial es la cámara activa. Con este componente, cualquier
     // fuente posicional que cree src/audio/ se espacializa sola conforme TourEngine

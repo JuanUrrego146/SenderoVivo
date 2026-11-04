@@ -1,5 +1,6 @@
 import { Entity } from 'playcanvas';
 import { PoiCatalog } from '../models/PoiCatalog.js';
+import { SceneCatalog } from '../models/SceneCatalog.js';
 
 export class PoiManager {
 
@@ -182,6 +183,49 @@ export class PoiManager {
 
         this.pois = await this.catalog.load();
         this.diagnostics = this.catalog.diagnostics;
+
+
+        /*
+         * Cada escena muestra solo los POI de las escenas que
+         * comparten su trazado (RF-006): sus trailAnchor se midieron
+         * sobre ese trazado. Si config/scenes.json no se puede leer,
+         * quedan todos, como antes.
+         */
+
+        try {
+
+            const scenes = new SceneCatalog();
+
+            await scenes.load();
+
+            this.pois.forEach(
+                poi => {
+
+                    if (
+                        !scenes.getById(poi.sceneId)
+                    ) {
+
+                        this.diagnostics.push({
+                            poiId: poi.id,
+                            field: 'sceneId',
+                            message:
+                                'no corresponde a ninguna escena de config/scenes.json',
+                            severity: 'warning'
+                        });
+                    }
+                }
+            );
+
+            this.pois = scenes.filterPois(this.pois);
+
+        } catch (error) {
+
+            console.warn(
+                'No se pudieron filtrar los POI por escena; se muestran todos:',
+                error
+            );
+        }
+
         this.tour?.setPoiAnchors(this.pois);
 
 

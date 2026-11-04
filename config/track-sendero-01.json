@@ -1,0 +1,153 @@
+{
+  "version": 2,
+  "capturedOn": "2026-09-16 (Cumbre)",
+  "source": "camaras de COLMAP de la pasada central de ida, hasta la plataforma (39 m), corridas de lado hacia el espacio libre de la escena de Luma",
+  "distanceUnit": "meters",
+  "note": "Trazado de la Cumbre: los primeros 39 m del trazado anterior, que salia de las camaras de la pasada central de ida. Cada punto se corrio de lado (mediana 0,22 m, maximo 1,5 m) hacia donde la escena de Luma no tiene vegetacion a la altura del cuerpo y de los ojos. Coordenadas en metros del motor (escena horneada, +Y arriba).",
+  "sceneWaypoints": [
+    {
+      "x": -0.167,
+      "y": 0.604,
+      "z": 0.16
+    },
+    {
+      "x": -1.525,
+      "y": 1.009,
+      "z": 0.636
+    },
+    {
+      "x": -2.88,
+      "y": 1.47,
+      "z": 1.079
+    },
+    {
+      "x": -4.24,
+      "y": 1.988,
+      "z": 1.428
+    },
+    {
+      "x": -5.551,
+      "y": 2.522,
+      "z": 1.918
+    },
+    {
+      "x": -6.863,
+      "y": 3.023,
+      "z": 2.438
+    },
+    {
+      "x": -8.205,
+      "y": 3.457,
+      "z": 2.946
+    },
+    {
+      "x": -9.555,
+      "y": 3.834,
+      "z": 3.472
+    },
+    {
+      "x": -10.907,
+      "y": 4.193,
+      "z": 4.009
+    },
+    {
+      "x": -12.267,
+      "y": 4.516,
+      "z": 4.553
+    },
+    {
+      "x": -13.414,
+      "y": 4.881,
+      "z": 5.585
+    },
+    {
+      "x": -14.639,
+      "y": 5.181,
+      "z": 6.605
+    },
+    {
+      "x": -15.999,
+      "y": 5.388,
+      "z": 7.545
+    },
+    {
+      "x": -17.488,
+      "y": 5.592,
+      "z": 7.891
+    },
+    {
+      "x": -18.873,
+      "y": 5.862,
+      "z": 8.225
+    },
+    {
+      "x": -20.381,
+      "y": 6.145,
+      "z": 8.159
+    },
+    {
+      "x": -21.947,
+      "y": 6.461,
+      "z": 8.131
+    },
+    {
+      "x": -23.488,
+      "y": 6.783,
+      "z": 7.779
+    },
+    {
+      "x": -23.573,
+      "y": 6.789,
+      "z": 7.511
+    },
+    {
+      "x": -22.63,
+      "y": 6.444,
+      "z": 6.512
+    },
+    {
+      "x": -21.586,
+      "y": 6.098,
+      "z": 5.485
+    },
+    {
+      "x": -20.595,
+      "y": 5.75,
+      "z": 4.424
+    },
+    {
+      "x": -19.824,
+      "y": 5.399,
+      "z": 3.186
+    },
+    {
+      "x": -19.042,
+      "y": 5.046,
+      "z": 1.948
+    },
+    {
+      "x": -18.301,
+      "y": 4.692,
+      "z": 0.674
+    },
+    {
+      "x": -17.582,
+      "y": 4.337,
+      "z": -0.709
+    },
+    {
+      "x": -18.361,
+      "y": 4.144,
+      "z": -1.694
+    },
+    {
+      "x": -19.57,
+      "y": 4.036,
+      "z": -2.575
+    }
+  ],
+  "eyeHeight": 0.85,
+  "corridorRadius": 1.5,
+  "eyeHeightNote": "Los puntos van a 0,6 m del suelo, donde el visor pone las flechas; 0,85 m mas arriba quedan los ojos a la altura a la que se grabo (1,45 m).",
+  "points": []
+}

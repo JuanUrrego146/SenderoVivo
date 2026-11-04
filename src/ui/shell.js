@@ -112,7 +112,8 @@ function desdeContrato(poi) {
         fullDesc: poi.fullDesc || '',
         conservation: poi.conservation || 'Verificado',
         curiosity: limpiarCuriosidad(poi.id, poi.curiosity),
-        altitudeRange: limpiarAltitud(poi.id, poi.altitudeRange),
+        // La ficha patrimonial omite la distribución altitudinal (RF-030): nada de inventar una altitud.
+        altitudeRange: cat === 'patrimonio' ? '' : limpiarAltitud(poi.id, poi.altitudeRange),
         sightingTips: poi.sightingTips || '',
         fieldIdTips: poi.fieldIdTips || '',
         audioFreq: poi.audioFreq || 440,
@@ -132,6 +133,30 @@ function desdeContrato(poi) {
     };
 }
 
+/**
+ * Deja solo los POI de la escena que se abre (RF-006): sus trailAnchor se midieron
+ * sobre el trazado de esa escena. Este archivo es un script clásico y un import
+ * estático lo rompería entero, por eso se importa con import() dinámico, y la ruta
+ * sale de document.baseURI para no depender de cómo la resuelva cada navegador.
+ * Si algo falla, quedan todos.
+ */
+async function poisDeLaEscenaAbierta(pois) {
+    try {
+        const { SceneCatalog } = await import(
+            new URL('src/models/SceneCatalog.js', document.baseURI).href
+        );
+        const escenas = new SceneCatalog();
+        await escenas.load();
+        return escenas.filterPois(pois);
+    } catch (error) {
+        console.warn(
+            'No se pudieron filtrar los puntos por escena; se muestran todos:',
+            error
+        );
+        return pois;
+    }
+}
+
 async function cargarCatalogo() {
     const respuesta = await fetch(CATALOGO_URL);
 
@@ -143,7 +168,7 @@ async function cargarCatalogo() {
 
     const datos = await respuesta.json();
 
-    trailData = (datos.pois || []).map(desdeContrato);
+    trailData = (await poisDeLaEscenaAbierta(datos.pois || [])).map(desdeContrato);
 }
 
 let currentFilter = 'all';
@@ -461,7 +486,8 @@ function accionesMediaHTML(item) {
                 <span class="truncate">Escuchar canto</span>
             </button>
         `);
-    } else {
+    } else if (item.category !== 'patrimonio') {
+        // El tono de síntesis es de especies: un letrero o un muro no suena (RF-010).
         audioYnarracion.push(`
             <button
                 onclick="playSpeciesSound(${item.audioFreq})"
@@ -521,7 +547,7 @@ function accionesMediaHTML(item) {
                 style="background: linear-gradient(135deg, var(--sv-primary), var(--sv-primary-hover)); color: var(--sv-text-inverse); box-shadow: 0 4px 16px var(--sv-primary-glow); min-height: 52px;"
             >
                 <i class="fa-solid ${item.discovered ? 'fa-circle-check' : 'fa-check'} text-sm sm:text-base"></i>
-                <span>${item.discovered ? 'Especie Registrada en Bitácora' : 'Marcar como Visto'}</span>
+                <span>${item.discovered ? (item.category === 'patrimonio' ? 'Registrado en Bitácora' : 'Especie Registrada en Bitácora') : 'Marcar como Visto'}</span>
             </button>
         </div>
     `);
@@ -619,7 +645,9 @@ function selectHotspot(id) {
                 ${item.fullDesc}
             </p>
 
-            <!-- Consejos de avistamiento e identificacion en campo (#95): siempre visibles, con aviso si falta el dato -->
+            <!-- Consejos de avistamiento e identificacion en campo (#95): siempre visibles en fauna y flora, con aviso si falta el dato.
+                 La ficha patrimonial los omite: no hay especie que identificar (RF-030). -->
+            ${item.category !== 'patrimonio' ? `
             <div class="mb-5">
                 <h4 class="text-xs font-bold flex items-center gap-1.5 mb-1.5" style="color: var(--sv-primary);">
                     <i class="fa-solid fa-binoculars text-xs"></i>
@@ -655,6 +683,7 @@ function selectHotspot(id) {
                     }
                 </p>
             </div>
+            ` : ''}
 
             <!-- ¿Sabías que?: TOTALMENTE LIMPIO SIN RECUADROS NI BORDES -->
             ${item.curiosity && !item.curiosity.includes('[por') ? `

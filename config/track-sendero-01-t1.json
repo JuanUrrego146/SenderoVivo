@@ -1,0 +1,199 @@
+{
+  "version": 2,
+  "capturedOn": "2026-09-16 (Tramo 1)",
+  "source": "trayectoria del video de vista previa de Luma, que va por encima del camino; piso medido debajo de cada punto",
+  "distanceUnit": "meters",
+  "note": "Trazado del Tramo 1 de SUBIDA: arranca abajo y termina cerca de la plataforma de la Cumbre. En planta sigue la trayectoria del video de vista previa de Luma; la altura sale del piso medido dibujando hacia abajo desde cada punto. Cada punto se corrio de lado hacia el espacio libre y luego hacia el centro de la escalera donde la baranda quedaba encima (0,5 m al comienzo, 0,9 m al final). Se recortaron 3 m al inicio y 15 m al final, donde la reconstruccion se pierde. Coordenadas en metros del motor (escena horneada, +Y arriba).",
+  "sceneWaypoints": [
+    {
+      "x": -3.041,
+      "y": 1.234,
+      "z": -0.431
+    },
+    {
+      "x": -4.554,
+      "y": 1.574,
+      "z": -0.33
+    },
+    {
+      "x": -6.048,
+      "y": 1.962,
+      "z": -0.135
+    },
+    {
+      "x": -7.521,
+      "y": 2.207,
+      "z": 0.001
+    },
+    {
+      "x": -9.026,
+      "y": 2.36,
+      "z": 0.084
+    },
+    {
+      "x": -10.536,
+      "y": 2.411,
+      "z": 0.261
+    },
+    {
+      "x": -11.997,
+      "y": 2.624,
+      "z": 0.475
+    },
+    {
+      "x": -13.463,
+      "y": 2.868,
+      "z": 0.487
+    },
+    {
+      "x": -14.947,
+      "y": 3.256,
+      "z": 0.493
+    },
+    {
+      "x": -16.469,
+      "y": 3.58,
+      "z": 0.392
+    },
+    {
+      "x": -17.996,
+      "y": 3.896,
+      "z": 0.485
+    },
+    {
+      "x": -19.504,
+      "y": 4.102,
+      "z": 0.572
+    },
+    {
+      "x": -21.018,
+      "y": 4.083,
+      "z": 0.753
+    },
+    {
+      "x": -22.537,
+      "y": 3.809,
+      "z": 0.979
+    },
+    {
+      "x": -24.037,
+      "y": 3.606,
+      "z": 1.478
+    },
+    {
+      "x": -25.456,
+      "y": 3.942,
+      "z": 2.149
+    },
+    {
+      "x": -26.911,
+      "y": 4.528,
+      "z": 2.321
+    },
+    {
+      "x": -28.408,
+      "y": 5.355,
+      "z": 2.491
+    },
+    {
+      "x": -29.911,
+      "y": 5.751,
+      "z": 2.528
+    },
+    {
+      "x": -31.412,
+      "y": 6.335,
+      "z": 2.559
+    },
+    {
+      "x": -32.921,
+      "y": 6.665,
+      "z": 2.082
+    },
+    {
+      "x": -34.421,
+      "y": 7.222,
+      "z": 2.099
+    },
+    {
+      "x": -35.921,
+      "y": 7.576,
+      "z": 2.108
+    },
+    {
+      "x": -37.422,
+      "y": 7.995,
+      "z": 2.609
+    },
+    {
+      "x": -38.924,
+      "y": 8.209,
+      "z": 2.604
+    },
+    {
+      "x": -40.432,
+      "y": 8.488,
+      "z": 3.091
+    },
+    {
+      "x": -41.937,
+      "y": 8.758,
+      "z": 3.071
+    },
+    {
+      "x": -43.442,
+      "y": 8.93,
+      "z": 3.043
+    },
+    {
+      "x": -44.933,
+      "y": 9.035,
+      "z": 2.508
+    },
+    {
+      "x": -46.436,
+      "y": 9.431,
+      "z": 2.465
+    },
+    {
+      "x": -47.937,
+      "y": 9.953,
+      "z": 2.414
+    },
+    {
+      "x": -49.439,
+      "y": 10.555,
+      "z": 2.356
+    },
+    {
+      "x": -50.929,
+      "y": 10.907,
+      "z": 2.065
+    },
+    {
+      "x": -52.417,
+      "y": 11.412,
+      "z": 1.767
+    },
+    {
+      "x": -53.792,
+      "y": 11.98,
+      "z": 1.476
+    },
+    {
+      "x": -55.354,
+      "y": 12.592,
+      "z": 0.649
+    },
+    {
+      "x": -57.028,
+      "y": 13.194,
+      "z": 1.053
+    }
+  ],
+  "eyeHeight": 0.85,
+  "corridorRadius": 0.7,
+  "eyeHeightNote": "Los puntos van a 0,6 m del suelo, donde el visor pone las flechas; 0,85 m mas arriba quedan los ojos a 1,45 m, la altura a la que se grabo.",
+  "corridorNote": "Corredor de 0,7 m a cada lado: son escaleras con baranda y la reconstruccion solo aguanta cerca del camino.",
+  "points": []
+}

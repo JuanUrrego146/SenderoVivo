@@ -700,7 +700,7 @@ Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el produ
 }
 ```
 
-> `anchor` y `trailAnchor` quedan en `[por medir en campo]` hasta que existan las escenas reconstruidas y el track alineado.
+> Cada POI se ve solo en las escenas que comparten el trazado de su `sceneId`: `scene-01` y su técnica alterna `scene-01-luma` usan `config/track.json` y comparten POI; `sendero-01` (Cumbre), `sendero-01-t1` (Tramo 1 de subida) y `sendero-02` (Tramo 2) usan `config/track-sendero-01.json`, `config/track-sendero-01-t1.json` y `config/track-sendero-02.json` y muestran solo los suyos. La Cumbre y el Tramo 1 son reconstrucciones de Luma: la Cumbre esta encajada en el marco de siempre y el Tramo 1 tiene su propio marco, por eso son escenas separadas. Cada escena del sendero declara `zona` y `version` en `config/scenes.json`; con esos dos campos `src/ui/selectorSendero.js` arma arriba a la derecha el selector de zona (Cumbre, Tramo 1, Tramo 2) y de versión de la reconstrucción (Nuestra, Luma, Polycam), de modo que sumar una versión no toca código. La regla vive en `SceneCatalog.filterPois()`. `trailAnchor` se mide sobre ese trazado: `d` es la distancia recorrida, `lat` el desplazamiento lateral, positivo a la derecha del avance, y `alt` la altura sobre el punto del trazado. `anchor` sigue en `[por medir en campo]` salvo en `poi-silla-rota` (Tramo 2) y en `poi-tablero-informativo` (Cumbre), medidos sobre la reconstrucción horneada de su escena; `poi-banca-vieja` y `poi-letrero-observatorio-de-aves` quedan al arranque del Tramo 1 de subida, el punto reconstruido más cercano a donde están, y su `anchor` sale de ese trazado. Una escena del sendero real declara además `clearColorToken: --sv-escena-cielo-nublado`, para que los huecos del dosel se vean como el cielo nublado de la grabación y no como el beige de la interfaz.
 > `type` admite `"fauna"`, `"flora"` y `"patrimonio"`. Todo POI necesita `id`, `commonName`, `sceneId`, `anchor` y `trailAnchor` con números; fauna añade `scientificName`, `modelUrl`, `altitudeRange`, `fieldIdTips` y `sightingTips`; flora añade `scientificName`; patrimonio añade `historicalNote`, `period` y `sourceUrl`. Si `historicalNote` afirma un dato, `sourceUrl` no puede quedar vacío. El catálogo comprueba además que `modelUrl`, `narrationUrl` y `birdCallUrl` apunten a archivos existentes y muestra el POI y campo problemáticos en pantalla.
 
 ### `soundscape.json`
@@ -875,7 +875,9 @@ SenderoVivo/
     │                           scene-01-movil/ (poda 1,2 M, celular) y scene-01-luma/;
     │                           los .sog y .ply sueltos siguen ignorados
     ├── models/                 marcador-provisional.glb · golondrina-plomiza.glb (convertido
-    │                           19/08 con scripts/modelos/) · golondrina-plomiza-fuente/
+    │                           19/08 con scripts/modelos/) · golondrina-plomiza-fuente/ ·
+    │                           diez modelos de señalización y mobiliario de Alberto, que
+    │                           se ven en el visor 3D de la ficha (ver LEEME.md)
     ├── audio/
     └── text/
 ```
