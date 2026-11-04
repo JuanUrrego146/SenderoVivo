@@ -1,11 +1,10 @@
 /*
- * Selector de zona (Cumbre, Tramo 1) y versión de la reconstrucción (COLMAP, que
- * es la nuestra, Luma y Polycam), para recorrer cada tramo y comparar las técnicas
- * en el mismo lugar.
+ * Selector de zona (Cumbre, Tramo 1) y versión de la reconstrucción (Luma, Polycam
+ * y Mixta), para recorrer cada tramo y comparar las técnicas en el mismo lugar.
  *
  * Se arma solo con los campos `zona` y `version` de config/scenes.json: agregar o
- * quitar una versión o una zona no toca código (el parque de prueba y el Tramo 2
- * no llevan zona y por eso no salen). Reemplaza al conmutador COLMAP / Luma.
+ * quitar una versión o una zona no toca código (el parque de prueba, el Tramo 2 y
+ * nuestras versiones COLMAP no llevan zona y por eso no salen). Reemplaza al conmutador COLMAP / Luma.
  * Cambiar de zona conserva la versión si esa zona la tiene.
  */
 const SCENES_CONFIG_URL = 'config/scenes.json';
