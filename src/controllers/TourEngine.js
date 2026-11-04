@@ -55,6 +55,8 @@ export class TourEngine {
         // Joystick en pantalla (celular): ejes analógicos de -1 a 1, aparte de _input para
         // que soltar el dedo que mira (touchend del canvas) no apague el avance del pulgar.
         this._stick = { forward: 0, strafe: 0 };
+        // Teclado (W A S D, flechas) y dos dedos: también relativos a la vista.
+        this._teclas = { forward: 0, strafe: 0 };
         this._lookPointer = null;
         // Punto de arranque sobre el trazado, recortado a su largo.
         const largo = this.trailPath.isUsable ? this.trailPath.totalLength() : 0;
@@ -172,12 +174,13 @@ export class TourEngine {
     _bindInput() {
         const canvas = this.app.graphicsDevice.canvas;
 
+        // Teclado: relativo a la vista, igual que el joystick (W hacia donde se mira).
         this._keyDown = (e) => {
             const k = e.key.toLowerCase();
-            if (k === 'w' || k === 'arrowup') this._input.forward = 1;
-            if (k === 's' || k === 'arrowdown') this._input.forward = this.forwardOnly ? 0 : -1;
-            if (k === 'a' || k === 'arrowleft') this._input.strafe = -1;
-            if (k === 'd' || k === 'arrowright') this._input.strafe = 1;
+            if (k === 'w' || k === 'arrowup') this._teclas.forward = 1;
+            if (k === 's' || k === 'arrowdown') this._teclas.forward = -1;
+            if (k === 'a' || k === 'arrowleft') this._teclas.strafe = -1;
+            if (k === 'd' || k === 'arrowright') this._teclas.strafe = 1;
             if (e.shiftKey) this._input.fast = true;
             // Calibrar la altura de los ojos en vivo: la escala de cada escena
             // es distinta y hay que verla para acertar.
@@ -186,8 +189,8 @@ export class TourEngine {
         };
         this._keyUp = (e) => {
             const k = e.key.toLowerCase();
-            if (k === 'w' || k === 'arrowup' || k === 's' || k === 'arrowdown') this._input.forward = 0;
-            if (k === 'a' || k === 'arrowleft' || k === 'd' || k === 'arrowright') this._input.strafe = 0;
+            if (k === 'w' || k === 'arrowup' || k === 's' || k === 'arrowdown') this._teclas.forward = 0;
+            if (k === 'a' || k === 'arrowleft' || k === 'd' || k === 'arrowright') this._teclas.strafe = 0;
             if (!e.shiftKey) this._input.fast = false;
         };
         // Solo mira el puntero que se apoyó en la escena: el pulgar sobre el joystick
@@ -209,7 +212,7 @@ export class TourEngine {
         this._touchStart = (e) => {
             const dedos = e.targetTouches;
             if (dedos.length === 1) { this._looking = true; this._lastTouch = dedos[0]; }
-            if (dedos.length === 2) this._input.forward = 1;
+            if (dedos.length === 2) this._teclas.forward = 1;   // dos dedos: hacia donde se mira
         };
         this._touchMove = (e) => {
             const dedos = e.targetTouches;
@@ -222,7 +225,7 @@ export class TourEngine {
             }
             this._lastTouch = { clientX: t.clientX, clientY: t.clientY };
         };
-        this._touchEnd = () => { this._looking = false; this._lastTouch = null; this._input.forward = 0; };
+        this._touchEnd = () => { this._looking = false; this._lastTouch = null; this._teclas.forward = 0; };
 
         window.addEventListener('keydown', this._keyDown);
         window.addEventListener('keyup', this._keyUp);
@@ -249,12 +252,13 @@ export class TourEngine {
     _update(dt) {
         // Cinturón extra para cualquier entrada (táctil incluida) cuando no hay reversa.
         if (this.forwardOnly && this._input.forward < 0) this._input.forward = 0;
-        // Teclado, flechas y dos dedos mandan (relativos al camino); si no hay ninguno,
-        // manda el joystick, que es relativo a la vista.
+        // Las flechas del camino (press) mandan y son relativas al sendero. Si no hay,
+        // el teclado (o dos dedos) y si tampoco, el joystick: los dos relativos a la vista.
         let avance = this._input.forward;
         let lateral = this._input.strafe;
-        if (!avance && !lateral && (this._stick.forward || this._stick.strafe)) {
-            ({ avance, lateral } = this._stickSobreElCamino());
+        if (!avance && !lateral) {
+            const v = (this._teclas.forward || this._teclas.strafe) ? this._teclas : this._stick;
+            if (v.forward || v.strafe) ({ avance, lateral } = this._haciaLaVista(v.forward, v.strafe));
         }
         if (this.forwardOnly && avance < 0) avance = 0;
         if (avance !== 0) {
@@ -311,24 +315,33 @@ this.state.distance += avance * speed * dt;
     }
 
     /**
-     * El joystick mueve hacia donde mira el visitante: arriba es la dirección de la
-     * vista y los lados son su derecha e izquierda. Ese movimiento en el plano se
-     * descompone sobre el camino: la parte a lo largo del trazado es el avance (se
-     * retrocede si se mira hacia atrás) y la parte de lado es el paso lateral, que
-     * _update sigue recortando al corredor (RF-004).
+     * Teclado y joystick mueven hacia donde mira el visitante: adelante es la
+     * dirección de la vista y los lados su derecha e izquierda. Como la posición
+     * siempre sale del trazado (RF-004), ese movimiento se lleva al camino:
+     *   - avance: a velocidad completa por el sendero, en el sentido hacia el que
+     *     se mira (de regreso si se mira hacia atrás). Solo cuando la vista queda
+     *     casi de través al camino (a menos de ~17 grados de la perpendicular) baja
+     *     de forma continua hasta 0, para no saltar de un sentido al otro.
+     *   - lateral: la parte de lado de la mirada, que _update recorta al corredor.
      */
-    _stickSobreElCamino() {
+    _haciaLaVista(adelante, derecha) {
         const y = this.state.yaw * RAD;
         // Vista y derecha horizontales de la cámara (misma convención que start()).
         const fx = -Math.sin(y), fz = -Math.cos(y);
         const rx = Math.cos(y), rz = -Math.sin(y);
-        const mx = this._stick.forward * fx + this._stick.strafe * rx;
-        const mz = this._stick.forward * fz + this._stick.strafe * rz;
+        let mx = adelante * fx + derecha * rx;
+        let mz = adelante * fz + derecha * rz;
+        const norma = Math.hypot(mx, mz);
+        if (norma === 0) return { avance: 0, lateral: 0 };
+        const fuerza = Math.min(1, norma);
+        mx /= norma; mz /= norma;
         this.trailPath.directionAt(this.state.distance, this._dir);
         const largo = Math.hypot(this._dir.x, this._dir.z) || 1;
         const tx = this._dir.x / largo, tz = this._dir.z / largo;
-        // Lateral positivo = derecha del avance, la misma perpendicular que usa _update.
-        return { avance: mx * tx + mz * tz, lateral: mx * -tz + mz * tx };
+        const along = mx * tx + mz * tz;             // coseno con el camino
+        const side = mx * -tz + mz * tx;             // derecha del avance, la perpendicular de _update
+        const pleno = Math.min(1, Math.abs(along) / 0.3);
+        return { avance: Math.sign(along) * fuerza * pleno, lateral: side * fuerza };
     }
 
     /**
