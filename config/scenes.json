@@ -27,7 +27,9 @@
         "y": -0.879,
         "z": -0.431
       },
-      "sceneUpNote": "Vector 'arriba' real de la escena, promediado de las 987 poses de camara de COLMAP. El visor calcula con el la rotacion que nivela el horizonte. Se recalcula por escena tras cada reconstruccion."
+      "sceneUpNote": "Vector 'arriba' real de la escena, promediado de las 987 poses de camara de COLMAP. El visor calcula con el la rotacion que nivela el horizonte. Se recalcula por escena tras cada reconstruccion.",
+      "zona": "Parque",
+      "version": "COLMAP"
     },
     {
       "id": "scene-02",
@@ -57,7 +59,9 @@
       "forwardOnly": true,
       "forwardOnlyNote": "La reconstruccion solo aguanta vistas hacia adelante: en reversa se ve mal. El visor bloquea retroceder cuando la escena activa lo pide.",
       "pitchDownLimit": 48,
-      "pitchDownLimitNote": "Tope del picado hacia abajo (grados). Muy cerca del suelo las gaussianas se ven como brochazos: se impide meter la camara ahi."
+      "pitchDownLimitNote": "Tope del picado hacia abajo (grados). Muy cerca del suelo las gaussianas se ven como brochazos: se impide meter la camara ahi.",
+      "zona": "Parque",
+      "version": "Luma"
     },
     {
       "id": "sendero-01",
