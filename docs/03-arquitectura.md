@@ -767,6 +767,15 @@ Forma real vigente (el prototipo ya lo consume):
 > día de la captura y alimenta a `TrailDataLayer`. **`eyeHeight`** levanta la cámara sobre los
 > puntos marcados; **`corridorRadius`** es el margen lateral permitido (RF-004 sin camisa de
 > fuerza). Se calibran en vivo con R/F y se anotan aquí.
+> **`startDistance`** (opcional, en metros desde el primer punto) es dónde arranca el recorrido;
+> sin él arranca en el primer punto. La Cumbre (`config/track-sendero-01.json`) arranca en su centro,
+> d = 15 m, y desde ahí se camina hacia la entrada o hacia la plataforma.
+>
+> En celular (menos de 640 px) se camina además con un joystick en pantalla, `src/views/JoystickView.js`:
+> la Vista solo publica `trail:joystick` con `{ forward, strafe }` de -1 a 1 y `main.js` lo pasa a
+> `TourEngine.setStick`, que lo combina con el teclado y aplica el corredor y `forwardOnly`. El motor
+> cuenta solo los dedos que tocan la escena (`targetTouches`) y gira la vista solo con el puntero que
+> se apoyó en ella, para que el pulgar del joystick no mire ni cuente como segundo dedo.
 
 ---
 

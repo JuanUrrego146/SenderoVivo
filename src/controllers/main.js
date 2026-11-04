@@ -26,6 +26,7 @@ import { SceneCatalog } from '../models/SceneCatalog.js';
 import { TourEngine } from './TourEngine.js';
 import { TrailRecorder } from './TrailRecorder.js';
 import { TrailArrowsView } from '../views/TrailArrowsView.js';
+import { JoystickView } from '../views/JoystickView.js';
 import { PoiManager } from './PoiManager.js';
 import { PoiCardView } from '../views/PoiCardView.js';
 import { ShellView } from '../views/ShellView.js';
@@ -494,6 +495,8 @@ async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
         const cfg = await response.json();
         const path = new TrailModel(cfg.sceneWaypoints || [],cfg.corridorRadius ?? 1.5);
         path.eyeHeight = cfg.eyeHeight ?? 0;
+        // Punto de arranque sobre el trazado (metros desde su primer punto); 0 si no se declara.
+        path.startDistance = Number.isFinite(cfg.startDistance) ? cfg.startDistance : 0;
         // Mismo cfg ya leido y parseado: un solo fetch de track.json, dos modelos.
         const gpsTrack = new GpsTrack(cfg);
         return { trail: path, gpsTrack };
@@ -544,10 +547,15 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
         forwardOnly,
         // Tope del picado hacia abajo: evita meter la camara donde el splat se ve mal.
         pitchDownLimit,
+        // Algunos trazados no arrancan en su primer punto (config/track-*.json, startDistance).
+        startDistance: trail.startDistance ?? 0,
         gpsTrack
     });
     tour.start();
     window.senderoTour = tour;
+    // Joystick en pantalla para celular: la Vista solo publica los ejes y el motor mueve.
+    new JoystickView(app);
+    app.on('trail:joystick', ({ forward, strafe }) => tour.setStick(forward, strafe));
     // Flechas dentro de la escena, sobre el camino: se tocan para avanzar.
    window.senderoMarkers = new TrailArrowsView(
     app,

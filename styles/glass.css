@@ -885,6 +885,58 @@
     font-size: 11.5px;
 }
 
+/* Joystick para caminar desde el celular (src/views/JoystickView.js) */
+.sv-joystick {
+    display: none;
+    position: fixed;
+    left: 18px;
+    bottom: 84px;
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    z-index: 34;
+    background: var(--sv-surface-panel);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--sv-surface-border);
+    box-shadow: var(--sv-surface-shadow);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    pointer-events: auto;
+    opacity: 0.82;
+    transition: opacity 0.2s ease;
+}
+
+.sv-joystick.activa {
+    opacity: 1;
+}
+
+.sv-joystick-perilla {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    border-radius: 50%;
+    background: var(--sv-primary);
+    border: 2px solid var(--sv-surface-solid);
+    box-shadow: 0 0 12px var(--sv-primary-glow);
+    pointer-events: none;
+}
+
+.sv-joystick:not(.activa) .sv-joystick-perilla {
+    transition: transform 0.15s ease-out;
+}
+
+@media (max-width: 639px) {
+    .sv-joystick {
+        display: block;
+    }
+}
+
 .command-actions-cluster {
     display: flex;
     align-items: center;
