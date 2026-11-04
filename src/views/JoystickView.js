@@ -41,6 +41,8 @@ export class JoystickView {
 
         this._colocar = this._colocar.bind(this);
         window.addEventListener('resize', this._colocar);
+        // La tarjeta se mueve (no cambia de tamaño) cuando src/ui/acomodoMovil.js mide la barra.
+        window.addEventListener('sv:acomodo-movil', this._colocar);
         const tarjeta = document.getElementById('mobile-details-card');
         if (tarjeta && 'ResizeObserver' in window) new ResizeObserver(this._colocar).observe(tarjeta);
         this._colocar();
