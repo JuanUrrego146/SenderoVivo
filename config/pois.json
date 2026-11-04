@@ -227,7 +227,7 @@
         "alt": 1.24
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/golondrina-plomiza.glb",
+      "modelUrl": "assets/models/512/golondrina-plomiza.glb",
       "idleAnimation": "[pendiente: el .mb fuente no trae animación; RF-029 con Felipe]",
       "narrationUrl": "assets/audio/golondrina-narracion.mp3",
       "transcriptUrl": "assets/text/golondrina-transcripcion.txt",
@@ -298,7 +298,7 @@
         "alt": 1.9
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/tablero-informativo.glb",
+      "modelUrl": "assets/models/512/tablero-informativo.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -333,7 +333,7 @@
         "alt": 0.63
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/letrero-indicaciones.glb",
+      "modelUrl": "assets/models/512/letrero-indicaciones.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -369,7 +369,7 @@
         "alt": 0.64
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/letrero-bosque-alto-andino.glb",
+      "modelUrl": "assets/models/512/letrero-bosque-alto-andino.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -405,7 +405,7 @@
         "alt": 0.71
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/banca-vieja.glb",
+      "modelUrl": "assets/models/512/banca-vieja.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -441,7 +441,7 @@
         "alt": 0.9
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/letrero-observatorio-de-aves.glb",
+      "modelUrl": "assets/models/512/letrero-observatorio-de-aves.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -477,7 +477,7 @@
         "alt": 0.7
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/letrero-prohibido-el-paso.glb",
+      "modelUrl": "assets/models/512/letrero-prohibido-el-paso.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -513,7 +513,7 @@
         "alt": 0.69
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/letrero-bosque-andino-y-pinos.glb",
+      "modelUrl": "assets/models/512/letrero-bosque-andino-y-pinos.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -549,7 +549,7 @@
         "alt": 0.73
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/letrero-servicios-ambientales.glb",
+      "modelUrl": "assets/models/512/letrero-servicios-ambientales.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -585,7 +585,7 @@
         "alt": 1.56
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/silla-rota.glb",
+      "modelUrl": "assets/models/512/silla-rota.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -621,7 +621,7 @@
         "alt": 0.77
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/letrero-flecha.glb",
+      "modelUrl": "assets/models/512/letrero-flecha.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
