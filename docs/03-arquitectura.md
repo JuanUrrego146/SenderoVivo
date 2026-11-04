@@ -773,7 +773,7 @@ Forma real vigente (el prototipo ya lo consume):
 >
 > En celular (menos de 640 px) se camina además con un joystick en pantalla, `src/views/JoystickView.js`:
 > la Vista solo publica `trail:joystick` con `{ forward, strafe }` de -1 a 1 y `main.js` lo pasa a
-> `TourEngine.setStick`, que lo combina con el teclado y aplica el corredor y `forwardOnly`. El motor
+> `TourEngine.setStick`. Los ejes son relativos a la vista (arriba = hacia donde se mira): el motor descompone ese movimiento en avance a lo largo del trazado y paso lateral, de modo que mirando hacia atrás el joystick regresa y mirando a un lado se acerca a ese borde; el teclado y las flechas del camino siguen relativos al trazado y mandan sobre el joystick, y el corredor y `forwardOnly` se aplican igual a todos. El motor
 > cuenta solo los dedos que tocan la escena (`targetTouches`) y gira la vista solo con el puntero que
 > se apoyó en ella, para que el pulgar del joystick no mire ni cuente como segundo dedo.
 > `src/ui/acomodoMovil.js` mide lo que ocupa la barra de navegación móvil y lo publica en
