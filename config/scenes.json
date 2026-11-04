@@ -72,7 +72,9 @@
       "clearColorToken": "--sv-escena-cielo-nublado",
       "captureDate": "2026-09-16 (celular; Cumbre con plataforma)",
       "note": "Sendero real grabado con celular, reconstruido por Luma (Fields, Gaussian Splatting) desde los 1981 cuadros 4K de la Cumbre. Se abre con ?render=sendero. Reemplaza la version entrenada en casa (b31dc71), que tenia la Cumbre con poco detalle. Limpieza medida igual que antes (agujas p99,7 y alfa > 0,01).",
-      "coordenadasNota": "Horneada (baked) en el marco de siempre (metros, +Y arriba): la escena de Luma se encajo sobre nuestras camaras de COLMAP. Primero en planta (arriba = -Y de Luma, giros cada 0,5 grados y escalas, correlacion de mapas de densidad) y luego afinada con PnP en 28 fotos reales: desfase mediano de 1,1 m, el mismo desacuerdo que ya tenian entre si las pasadas de ida y de vuelta. Por eso el trazado y el tablero conservan su lugar."
+      "coordenadasNota": "Horneada (baked) en el marco de siempre (metros, +Y arriba): la escena de Luma se encajo sobre nuestras camaras de COLMAP. Primero en planta (arriba = -Y de Luma, giros cada 0,5 grados y escalas, correlacion de mapas de densidad) y luego afinada con PnP en 28 fotos reales: desfase mediano de 1,1 m, el mismo desacuerdo que ya tenian entre si las pasadas de ida y de vuelta. Por eso el trazado y el tablero conservan su lugar.",
+      "zona": "Cumbre",
+      "version": "Luma"
     },
     {
       "id": "sendero-01-t1",
@@ -91,11 +93,13 @@
       "pitchDownLimitNote": "Tope del picado hacia abajo (grados): se ven los escalones sin meter la camara en el piso.",
       "captureDate": "2026-09-16 (celular; Tramo 1)",
       "note": "Tramo 1 del sendero real reconstruido por Luma (Fields, Gaussian Splatting) desde los 10022 cuadros 4K del tramo. Se abre con ?render=sendero-t1. Nuestra reconstruccion COLMAP del Tramo 1 quedo partida: las pasadas de ida y de vuelta formaron dos caminos separados hasta 90 m en el extremo de abajo, por eso tenia poco detalle; la de Luma es un solo camino coherente.",
-      "coordenadasNota": "Horneada en el marco propio de la escena de Luma, llevado a metros con +Y arriba: giro de 180 grados sobre X (arriba = -Y de Luma) y escala 13,3. La escala la sostienen dos medidas independientes: con ella la camara de Luma queda a 1,45 m del piso (la altura a la que se grabo) y el tramo mide del orden de 100 m como el real. Origen en el piso al inicio de la trayectoria de Luma. NO comparte marco con la Cumbre: tiene su propio trazado."
+      "coordenadasNota": "Horneada en el marco propio de la escena de Luma, llevado a metros con +Y arriba: giro de 180 grados sobre X (arriba = -Y de Luma) y escala 13,3. La escala la sostienen dos medidas independientes: con ella la camara de Luma queda a 1,45 m del piso (la altura a la que se grabo) y el tramo mide del orden de 100 m como el real. Origen en el piso al inicio de la trayectoria de Luma. NO comparte marco con la Cumbre: tiene su propio trazado.",
+      "zona": "Tramo 1",
+      "version": "Luma"
     },
     {
       "id": "sendero-02",
-      "order": 92,
+      "order": 94,
       "render": "sendero-t2",
       "name": "Tramo 2",
       "sogUrl": "assets/scenes/sendero-02-v2/meta.json",
@@ -106,7 +110,41 @@
       "clearColorToken": "--sv-escena-cielo-nublado",
       "captureDate": "2026-09-23 (celular; Tramo 2)",
       "note": "Sendero real grabado con celular (la Insta360 no sirvio). Se abre con ?render=sendero-t2. COLMAP registro 10044 de 10213 cuadros elegidos por nitidez (4K, o 720p en las tomas que solo llegaron en .MP4);Brush 150 mil pasos a 1920 px, creciendo hasta el paso 100 mil, con techo de 3 M; limpieza medida (agujas p99,7 y alfa > 0,01): 3,00 M a 2,97 M de gaussianas. Antes de entrenar: personas enmascaradas (YOLO11x-seg) y exposicion igualada entre pasadas con los puntos 3D que comparten, enmascarando lo quemado en las tomas sobreexpuestas.",
-      "coordenadasNota": "Horneada (baked): el archivo ya esta en coordenadas del mundo, en metros y con +Y arriba. Arriba = la direccion mas perpendicular a los ejes X de todas las camaras (van sin alabeo); escala = altura de las pasadas a la altura del pecho llevada a 1,45 m; origen en el suelo bajo el primer cuadro de la pasada central de ida. El trazado sale de esas mismas camaras."
+      "coordenadasNota": "Horneada (baked): el archivo ya esta en coordenadas del mundo, en metros y con +Y arriba. Arriba = la direccion mas perpendicular a los ejes X de todas las camaras (van sin alabeo); escala = altura de las pasadas a la altura del pecho llevada a 1,45 m; origen en el suelo bajo el primer cuadro de la pasada central de ida. El trazado sale de esas mismas camaras.",
+      "zona": "Tramo 2",
+      "version": "Nuestra"
+    },
+    {
+      "id": "sendero-01-nuestra",
+      "order": 90.5,
+      "render": "sendero-nuestra",
+      "name": "Cumbre (nuestra)",
+      "zona": "Cumbre",
+      "version": "Nuestra",
+      "sogUrl": "assets/scenes/sendero-01/meta.json",
+      "lodUrl": "assets/scenes/sendero-01-stream/lod-meta.json",
+      "movilSogUrl": "assets/scenes/sendero-01-movil/meta.json",
+      "trackUrl": "config/track-sendero-01.json",
+      "baked": true,
+      "clearColorToken": "--sv-escena-cielo-nublado",
+      "captureDate": "2026-09-16 (celular; Cumbre)",
+      "note": "Version entrenada en casa (COLMAP + Brush, b31dc71), para compararla con Luma y Polycam. Se abre con ?render=sendero-nuestra. Mismo marco y mismo trazado que la Cumbre de Luma."
+    },
+    {
+      "id": "sendero-01-t1-nuestra",
+      "order": 92.5,
+      "render": "sendero-t1-nuestra",
+      "name": "Tramo 1 (nuestra)",
+      "zona": "Tramo 1",
+      "version": "Nuestra",
+      "sogUrl": "assets/scenes/sendero-01/meta.json",
+      "lodUrl": "assets/scenes/sendero-01-stream/lod-meta.json",
+      "movilSogUrl": "assets/scenes/sendero-01-movil/meta.json",
+      "trackUrl": "config/track-sendero-01-t1-nuestra.json",
+      "baked": true,
+      "clearColorToken": "--sv-escena-cielo-nublado",
+      "captureDate": "2026-09-16 (celular; Tramo 1)",
+      "note": "Version entrenada en casa (COLMAP + Brush, b31dc71), para compararla con Luma y Polycam. Se abre con ?render=sendero-t1-nuestra. Usa el trazado anterior desde la plataforma, de bajada como se grabo; esta reconstruccion tiene la ida y la vuelta separadas en dos caminos."
     }
   ]
 }
