@@ -2,6 +2,20 @@
 <html lang="es">
     <head>
         <meta charset="utf-8">
+        <script>
+            // La app abre la Cumbre de Polycam: sin ?render=, ?sog= ni ?editor se agrega ?render=sendero-polycam
+            // antes de que carguen main.js, el filtro de puntos por escena y el selector, para
+            // que los tres vean la misma escena. El parque de prueba sigue en ?render=colmap.
+            (function () {
+                try {
+                    var p = new URLSearchParams(window.location.search);
+                    if (!p.has('render') && !p.has('sog') && !p.has('editor')) {
+                        p.set('render', 'sendero-polycam');
+                        history.replaceState(null, '', window.location.pathname + '?' + p.toString() + window.location.hash);
+                    }
+                } catch (e) {}
+            })();
+        </script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Sendero Vivo · Expedición Inmersiva Cerros Orientales</title>
         <link rel="stylesheet" href="styles/tokens.css">

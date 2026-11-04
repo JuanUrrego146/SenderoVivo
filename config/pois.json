@@ -215,16 +215,16 @@
       "category": "fauna",
       "commonName": "Golondrina plomiza",
       "scientificName": "[por verificar: HU-11.2, la fuente cita solo el nombre común]",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -22.76,
+        "y": 6.69,
+        "z": 4.1
       },
       "trailAnchor": {
-        "d": 8.4,
-        "lat": -1,
-        "alt": 1.2
+        "d": 29.5,
+        "lat": -1.8,
+        "alt": 1.24
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/golondrina-plomiza.glb",
@@ -242,7 +242,8 @@
       "fullDesc": "El sendero registra dos golondrinas en eBird y ninguna otra: la ventriparda (Orochelidon murina) y la albiazul (Pygochelidon cyanoleuca). El binomio de la plomiza sale de una de esas dos y se cierra en ART-06.",
       "conservation": "Verificado",
       "curiosity": "Es una de las pocas golondrinas residentes en la cordillera; anida en taludes y barrancos a lo largo de senderos y valles altoandinos.",
-      "audioFreq": 760
+      "audioFreq": 760,
+      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): el parque de prueba salio del selector. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 3,5 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
     },
     {
       "id": "poi-muro-antiguo",
@@ -320,16 +321,16 @@
       "category": "curiosidades",
       "commonName": "Poste de indicaciones",
       "scientificName": "Poste de madera con flechas",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -11.16,
+        "y": 4.45,
+        "z": 6.05
       },
       "trailAnchor": {
-        "d": 2.4,
-        "lat": -1,
-        "alt": 0.8
+        "d": 13.0,
+        "lat": -1.8,
+        "alt": 0.63
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/letrero-indicaciones.glb",
@@ -347,7 +348,8 @@
       "conservation": "Modelo 3D del equipo",
       "curiosity": "Cada flecha trae el nombre del destino en español y en inglés.",
       "audioFreq": 330,
-      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026)."
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
+      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): este letrero no aparece en ningun tramo grabado, asi que no marca donde esta en campo. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 4 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
     },
     {
       "id": "poi-letrero-bosque-alto-andino",
@@ -355,16 +357,16 @@
       "category": "curiosidades",
       "commonName": "Bosque alto andino",
       "scientificName": "Letrero interpretativo",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -18.98,
+        "y": 5.93,
+        "z": 10.02
       },
       "trailAnchor": {
-        "d": 3.6,
-        "lat": 1,
-        "alt": 0.8
+        "d": 21.5,
+        "lat": -1.8,
+        "alt": 0.64
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/letrero-bosque-alto-andino.glb",
@@ -382,7 +384,8 @@
       "conservation": "Modelo 3D del equipo",
       "curiosity": "El letrero indica que desde ese punto falta 1.125 m al Mirador Santa Ana y 212 m al Tanque Nuevo Usaquén.",
       "audioFreq": 330,
-      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026)."
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
+      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): este letrero no aparece en ningun tramo grabado, asi que no marca donde esta en campo. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 4 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
     },
     {
       "id": "poi-banca-vieja",
@@ -462,16 +465,16 @@
       "category": "curiosidades",
       "commonName": "Prohibido el paso",
       "scientificName": "Letrero del Acueducto",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -15.34,
+        "y": 4.43,
+        "z": -1.47
       },
       "trailAnchor": {
-        "d": 7.2,
-        "lat": -1,
-        "alt": 0.8
+        "d": 37.0,
+        "lat": 2.4,
+        "alt": 0.7
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/letrero-prohibido-el-paso.glb",
@@ -489,7 +492,8 @@
       "conservation": "Modelo 3D del equipo",
       "curiosity": "El logotipo del letrero trae la leyenda «Agua y alcantarillado de Bogotá».",
       "audioFreq": 330,
-      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026)."
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
+      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): este letrero no aparece en ningun tramo grabado, asi que no marca donde esta en campo. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 4 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
     },
     {
       "id": "poi-letrero-bosque-andino-y-pinos",
@@ -497,16 +501,16 @@
       "category": "curiosidades",
       "commonName": "Bosque andino y bosque de pinos",
       "scientificName": "Letrero interpretativo",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -24.7,
+        "y": 6.85,
+        "z": 9.81
       },
       "trailAnchor": {
-        "d": 8.4,
-        "lat": 1,
-        "alt": 0.8
+        "d": 26.0,
+        "lat": -2.4,
+        "alt": 0.69
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/letrero-bosque-andino-y-pinos.glb",
@@ -524,7 +528,8 @@
       "conservation": "Modelo 3D del equipo",
       "curiosity": "El letrero indica que desde ese punto falta 736 m al Tanque Nuevo Usaquén y 2.075 m al Mirador Santa Ana.",
       "audioFreq": 330,
-      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026)."
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
+      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): este letrero no aparece en ningun tramo grabado, asi que no marca donde esta en campo. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 4 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
     },
     {
       "id": "poi-letrero-servicios-ambientales",
@@ -532,16 +537,16 @@
       "category": "curiosidades",
       "commonName": "Servicios ambientales",
       "scientificName": "Letrero interpretativo",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -16.62,
+        "y": 5.02,
+        "z": 2.56
       },
       "trailAnchor": {
-        "d": 9.6,
-        "lat": -1,
-        "alt": 0.8
+        "d": 34.5,
+        "lat": 2.4,
+        "alt": 0.73
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/letrero-servicios-ambientales.glb",
@@ -559,7 +564,8 @@
       "conservation": "Modelo 3D del equipo",
       "curiosity": "Según el letrero, desde ese punto falta 613 m al Mirador Santa Ana.",
       "audioFreq": 330,
-      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026)."
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
+      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): este letrero no aparece en ningun tramo grabado, asi que no marca donde esta en campo. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 4 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
     },
     {
       "id": "poi-silla-rota",
@@ -567,16 +573,16 @@
       "category": "curiosidades",
       "commonName": "Silla rota",
       "scientificName": "Banca de madera deteriorada",
-      "sceneId": "sendero-02",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 34.85,
-        "y": -6.26,
-        "z": 47.07
+        "x": -17.37,
+        "y": 5.04,
+        "z": -4.44
       },
       "trailAnchor": {
-        "d": 58.3,
-        "lat": -2,
-        "alt": 0.64
+        "d": 39.0,
+        "lat": 2.8,
+        "alt": 1.56
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/silla-rota.glb",
@@ -594,7 +600,8 @@
       "conservation": "Modelo 3D del equipo",
       "curiosity": "",
       "audioFreq": 330,
-      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026)."
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
+      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): en campo la silla esta en el Tramo 2 (d 58,3 de su trazado), que salio del selector. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 3,5 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
     },
     {
       "id": "poi-letrero-flecha",
@@ -602,16 +609,16 @@
       "category": "curiosidades",
       "commonName": "La montaña es vida",
       "scientificName": "Panel con flecha",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -14.52,
+        "y": 5.52,
+        "z": 9.07
       },
       "trailAnchor": {
-        "d": 12,
-        "lat": -1,
-        "alt": 0.8
+        "d": 18.0,
+        "lat": -2.1,
+        "alt": 0.77
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/letrero-flecha.glb",
@@ -629,7 +636,8 @@
       "conservation": "Modelo 3D del equipo",
       "curiosity": "Una de las dos frases del panel es un agradecimiento: «GRACIAS POR CUIDARLA !!».",
       "audioFreq": 330,
-      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026)."
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
+      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): este letrero no aparece en ningun tramo grabado, asi que no marca donde esta en campo. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 4 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
     }
   ]
 }
