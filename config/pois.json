@@ -390,15 +390,15 @@
       "category": "curiosidades",
       "commonName": "Banca vieja",
       "scientificName": "Banca de madera con techo",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-t1",
       "anchor": {
-        "x": -77.3,
-        "y": -27.47,
-        "z": -90.09
+        "x": -3.93,
+        "y": 2.16,
+        "z": 0.83
       },
       "trailAnchor": {
-        "d": 153,
-        "lat": -2.8,
+        "d": 1,
+        "lat": -1.2,
         "alt": 0.71
       },
       "distanceMeters": 0,
@@ -417,7 +417,8 @@
       "conservation": "Modelo 3D del equipo",
       "curiosity": "",
       "audioFreq": 330,
-      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026)."
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
+      "anchorNote": "Aproximado: la banca queda unos metros mas abajo, fuera de lo que reconstruyo Luma; se pone al arranque del Tramo 1 de subida, el punto cubierto mas cercano."
     },
     {
       "id": "poi-letrero-observatorio-de-aves",
@@ -425,15 +426,15 @@
       "category": "curiosidades",
       "commonName": "Observatorio de aves",
       "scientificName": "Letrero interpretativo",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-t1",
       "anchor": {
-        "x": -72.29,
-        "y": -27.26,
-        "z": -88.69
+        "x": -5.62,
+        "y": 2.71,
+        "z": -1.4
       },
       "trailAnchor": {
-        "d": 153,
-        "lat": 2.3,
+        "d": 2.5,
+        "lat": 1.2,
         "alt": 0.9
       },
       "distanceMeters": 0,
@@ -452,7 +453,8 @@
       "conservation": "Modelo 3D del equipo",
       "curiosity": "El letrero lo ubica a 270 m del mirador Santa Ana.",
       "audioFreq": 330,
-      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026)."
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
+      "anchorNote": "Aproximado: el letrero queda unos metros mas abajo, fuera de lo que reconstruyo Luma; se pone al arranque del Tramo 1 de subida, el punto cubierto mas cercano."
     },
     {
       "id": "poi-letrero-prohibido-el-paso",
