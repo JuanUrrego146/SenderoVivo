@@ -77,6 +77,23 @@
       "version": "Luma"
     },
     {
+      "id": "sendero-01-polycam",
+      "order": 91.5,
+      "render": "sendero-polycam",
+      "name": "Cumbre (Polycam)",
+      "zona": "Cumbre",
+      "version": "Polycam",
+      "sogUrl": "assets/scenes/sendero-01-polycam/meta.json",
+      "lodUrl": "assets/scenes/sendero-01-polycam-stream/lod-meta.json",
+      "movilSogUrl": "assets/scenes/sendero-01-polycam-movil/meta.json",
+      "trackUrl": "config/track-sendero-01.json",
+      "baked": true,
+      "clearColorToken": "--sv-escena-cielo-nublado",
+      "captureDate": "2026-09-16 (celular; Cumbre)",
+      "note": "Cumbre reconstruida por Polycam (Gaussian Splat, prueba Business) desde 992 fotos 4K elegidas por nitidez, para compararla con Luma y con la nuestra. Se abre con ?render=sendero-polycam. En la prueba contra fotos reales sale mas nitida que la de Luma (varianza del laplaciano 0,48 de la foto contra 0,27).",
+      "coordenadasNota": "Horneada en el marco de siempre: arriba = -Y de Polycam, encaje en planta (correlacion 0,64) y ICP con escala (4,52). El afinado con PnP no mejoro el desfase y se descarto. Mismo trazado y mismos POI que la Cumbre de Luma."
+    },
+    {
       "id": "sendero-01-t1",
       "order": 93,
       "render": "sendero-t1",
