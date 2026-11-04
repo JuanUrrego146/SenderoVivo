@@ -52,6 +52,13 @@ export class TourEngine {
         this.gpsTrack = options.gpsTrack ?? null;
 
         this._input = { forward: 0, strafe: 0, fast: false };
+        // Joystick en pantalla (celular): ejes analógicos de -1 a 1, aparte de _input para
+        // que soltar el dedo que mira (touchend del canvas) no apague el avance del pulgar.
+        this._stick = { forward: 0, strafe: 0 };
+        this._lookPointer = null;
+        // Punto de arranque sobre el trazado, recortado a su largo.
+        const largo = this.trailPath.isUsable ? this.trailPath.totalLength() : 0;
+        this.state.distance = Math.max(0, Math.min(Number(options.startDistance) || 0, largo));
         /** Desplazamiento lateral actual dentro del corredor. */
         this.lateral = 0;
         this.strafeSpeed = options.strafeSpeed ?? 0.8;
@@ -116,8 +123,8 @@ export class TourEngine {
         if (this._enabled || !this.trailPath.isUsable) return false;
         this._enabled = true;
 
-        // Orientación inicial: mirando hacia donde avanza el sendero.
-        this.trailPath.directionAt(0, this._dir);
+        // Orientación inicial: mirando hacia donde avanza el sendero en el punto de arranque.
+        this.trailPath.directionAt(this.state.distance, this._dir);
         this.state.yaw = Math.atan2(-this._dir.x, -this._dir.z) / RAD;
 
         this.trailPath.positionAt(this.state.distance, this._currentPos);
@@ -183,22 +190,31 @@ export class TourEngine {
             if (k === 'a' || k === 'arrowleft' || k === 'd' || k === 'arrowright') this._input.strafe = 0;
             if (!e.shiftKey) this._input.fast = false;
         };
-        this._pointerDown = () => { this._looking = true; };
-        this._pointerUp = () => { this._looking = false; };
+        // Solo mira el puntero que se apoyó en la escena: el pulgar sobre el joystick
+        // también genera pointermove en window y no debe girar la vista.
+        this._pointerDown = (e) => { this._looking = true; this._lookPointer = e.pointerId; };
+        this._pointerUp = (e) => {
+            if (e.pointerId !== this._lookPointer) return;
+            this._looking = false;
+            this._lookPointer = null;
+        };
         this._pointerMove = (e) => {
-            if (!this._looking) return;
+            if (!this._looking || e.pointerId !== this._lookPointer) return;
             this.state.yaw -= e.movementX * this.lookSensitivity;
             this.state.pitch -= e.movementY * this.lookSensitivity;
             this.state.pitch = Math.max(-this.pitchDownLimit, Math.min(this.pitchLimit, this.state.pitch));
         };
-        // Táctil: un dedo mira, dos dedos avanzan.
+        // Táctil: un dedo mira, dos dedos avanzan. Se cuentan solo los dedos sobre la
+        // escena (targetTouches): el pulgar del joystick no suma un segundo dedo.
         this._touchStart = (e) => {
-            if (e.touches.length === 1) { this._looking = true; this._lastTouch = e.touches[0]; }
-            if (e.touches.length === 2) this._input.forward = 1;
+            const dedos = e.targetTouches;
+            if (dedos.length === 1) { this._looking = true; this._lastTouch = dedos[0]; }
+            if (dedos.length === 2) this._input.forward = 1;
         };
         this._touchMove = (e) => {
-            if (!this._looking || e.touches.length !== 1) return;
-            const t = e.touches[0];
+            const dedos = e.targetTouches;
+            if (!this._looking || dedos.length !== 1) return;
+            const t = dedos[0];
             if (this._lastTouch) {
                 this.state.yaw -= (t.clientX - this._lastTouch.clientX) * this.lookSensitivity;
                 this.state.pitch -= (t.clientY - this._lastTouch.clientY) * this.lookSensitivity;
@@ -233,27 +249,31 @@ export class TourEngine {
     _update(dt) {
         // Cinturón extra para cualquier entrada (táctil incluida) cuando no hay reversa.
         if (this.forwardOnly && this._input.forward < 0) this._input.forward = 0;
-        if (this._input.forward !== 0) {
+        // Teclado, flechas y dos dedos mandan; si no hay ninguno, manda el joystick.
+        let avance = this._input.forward || this._stick.forward;
+        if (this.forwardOnly && avance < 0) avance = 0;
+        const lateral = this._input.strafe || this._stick.strafe;
+        if (avance !== 0) {
             const baseSpeed =
     this.speed * (this._input.fast ? this.fastMultiplier : 1);
 
 // SW-17: desacelerar únicamente al avanzar hacia un POI.
 // Si el usuario retrocede, conserva la velocidad normal.
 const poiMultiplier =
-    this._input.forward > 0
+    avance > 0
         ? this._getPoiSpeedMultiplier()
         : 1;
 
 const speed = baseSpeed * poiMultiplier;
 
-this.state.distance += this._input.forward * speed * dt;
+this.state.distance += avance * speed * dt;
             // El recorte a los extremos lo hace positionAt: no se sale del tramo.
             this.state.distance = Math.max(0, Math.min(this.state.distance, this.trailPath.totalLength()));
             this._emitProgress();
         }
-        if (this._input.strafe !== 0) {
+        if (lateral !== 0) {
             const r = this.trailPath.corridorRadius;
-            this.lateral += this._input.strafe * this.strafeSpeed * dt;
+            this.lateral += lateral * this.strafeSpeed * dt;
             this.lateral = Math.max(-r, Math.min(r, this.lateral));   // el margen del corredor
         }
 
@@ -284,6 +304,16 @@ this.state.distance += this._input.forward * speed * dt;
     release(action) {
         if (action === 'forward' || action === 'back') this._input.forward = 0;
         if (action === 'left' || action === 'right') this._input.strafe = 0;
+    }
+
+    /**
+     * Joystick en pantalla: avance y paso lateral analógicos, cada uno de -1 a 1.
+     * El corredor y forwardOnly se aplican en _update igual que con el teclado.
+     */
+    setStick(forward = 0, strafe = 0) {
+        const recortar = (v) => Math.max(-1, Math.min(1, Number(v) || 0));
+        this._stick.forward = recortar(forward);
+        this._stick.strafe = recortar(strafe);
     }
 
     _emitProgress() {

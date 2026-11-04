@@ -148,6 +148,8 @@
   ],
   "eyeHeight": 0.85,
   "corridorRadius": 1.5,
+  "startDistance": 15.0,
+  "startDistanceNote": "El recorrido arranca en el centro de la Cumbre y no en la entrada: d = 15 m es el punto del trazado mas cercano al centro en planta de lo reconstruido a menos de 6 m del camino (mediana de las gaussianas opacas: Luma d = 15,0, Polycam d = 15,8; centroide del trazado d = 14,8). Desde ahi se camina hacia la entrada o hacia la plataforma.",
   "eyeHeightNote": "Los puntos van a 0,6 m del suelo, donde el visor pone las flechas; 0,85 m mas arriba quedan los ojos a la altura a la que se grabo (1,45 m).",
   "points": []
 }
