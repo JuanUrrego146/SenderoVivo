@@ -249,10 +249,14 @@ export class TourEngine {
     _update(dt) {
         // Cinturón extra para cualquier entrada (táctil incluida) cuando no hay reversa.
         if (this.forwardOnly && this._input.forward < 0) this._input.forward = 0;
-        // Teclado, flechas y dos dedos mandan; si no hay ninguno, manda el joystick.
-        let avance = this._input.forward || this._stick.forward;
+        // Teclado, flechas y dos dedos mandan (relativos al camino); si no hay ninguno,
+        // manda el joystick, que es relativo a la vista.
+        let avance = this._input.forward;
+        let lateral = this._input.strafe;
+        if (!avance && !lateral && (this._stick.forward || this._stick.strafe)) {
+            ({ avance, lateral } = this._stickSobreElCamino());
+        }
         if (this.forwardOnly && avance < 0) avance = 0;
-        const lateral = this._input.strafe || this._stick.strafe;
         if (avance !== 0) {
             const baseSpeed =
     this.speed * (this._input.fast ? this.fastMultiplier : 1);
@@ -307,7 +311,29 @@ this.state.distance += avance * speed * dt;
     }
 
     /**
-     * Joystick en pantalla: avance y paso lateral analógicos, cada uno de -1 a 1.
+     * El joystick mueve hacia donde mira el visitante: arriba es la dirección de la
+     * vista y los lados son su derecha e izquierda. Ese movimiento en el plano se
+     * descompone sobre el camino: la parte a lo largo del trazado es el avance (se
+     * retrocede si se mira hacia atrás) y la parte de lado es el paso lateral, que
+     * _update sigue recortando al corredor (RF-004).
+     */
+    _stickSobreElCamino() {
+        const y = this.state.yaw * RAD;
+        // Vista y derecha horizontales de la cámara (misma convención que start()).
+        const fx = -Math.sin(y), fz = -Math.cos(y);
+        const rx = Math.cos(y), rz = -Math.sin(y);
+        const mx = this._stick.forward * fx + this._stick.strafe * rx;
+        const mz = this._stick.forward * fz + this._stick.strafe * rz;
+        this.trailPath.directionAt(this.state.distance, this._dir);
+        const largo = Math.hypot(this._dir.x, this._dir.z) || 1;
+        const tx = this._dir.x / largo, tz = this._dir.z / largo;
+        // Lateral positivo = derecha del avance, la misma perpendicular que usa _update.
+        return { avance: mx * tx + mz * tz, lateral: mx * -tz + mz * tx };
+    }
+
+    /**
+     * Joystick en pantalla: ejes analógicos de -1 a 1 en el marco de la vista
+     * (forward = hacia donde se mira, strafe = a la derecha de la vista).
      * El corredor y forwardOnly se aplican en _update igual que con el teclado.
      */
     setStick(forward = 0, strafe = 0) {
