@@ -129,7 +129,7 @@
       "note": "Sendero real grabado con celular (la Insta360 no sirvio). Se abre con ?render=sendero-t2. COLMAP registro 10044 de 10213 cuadros elegidos por nitidez (4K, o 720p en las tomas que solo llegaron en .MP4);Brush 150 mil pasos a 1920 px, creciendo hasta el paso 100 mil, con techo de 3 M; limpieza medida (agujas p99,7 y alfa > 0,01): 3,00 M a 2,97 M de gaussianas. Antes de entrenar: personas enmascaradas (YOLO11x-seg) y exposicion igualada entre pasadas con los puntos 3D que comparten, enmascarando lo quemado en las tomas sobreexpuestas.",
       "coordenadasNota": "Horneada (baked): el archivo ya esta en coordenadas del mundo, en metros y con +Y arriba. Arriba = la direccion mas perpendicular a los ejes X de todas las camaras (van sin alabeo); escala = altura de las pasadas a la altura del pecho llevada a 1,45 m; origen en el suelo bajo el primer cuadro de la pasada central de ida. El trazado sale de esas mismas camaras.",
       "zona": "Tramo 2",
-      "version": "Nuestra"
+      "version": "COLMAP"
     },
     {
       "id": "sendero-01-nuestra",
@@ -137,7 +137,7 @@
       "render": "sendero-nuestra",
       "name": "Cumbre (nuestra)",
       "zona": "Cumbre",
-      "version": "Nuestra",
+      "version": "COLMAP",
       "sogUrl": "assets/scenes/sendero-01/meta.json",
       "lodUrl": "assets/scenes/sendero-01-stream/lod-meta.json",
       "movilSogUrl": "assets/scenes/sendero-01-movil/meta.json",
@@ -153,7 +153,7 @@
       "render": "sendero-t1-nuestra",
       "name": "Tramo 1 (nuestra)",
       "zona": "Tramo 1",
-      "version": "Nuestra",
+      "version": "COLMAP",
       "sogUrl": "assets/scenes/sendero-01/meta.json",
       "lodUrl": "assets/scenes/sendero-01-stream/lod-meta.json",
       "movilSogUrl": "assets/scenes/sendero-01-movil/meta.json",

@@ -1,6 +1,6 @@
 /*
  * Selector del sendero real: zona (Cumbre, Tramo 1, Tramo 2) y versión de la
- * reconstrucción (Nuestra, Luma, Polycam), para recorrer cada tramo y comparar
+ * reconstrucción (COLMAP, que es la nuestra, Luma y Polycam), para recorrer cada tramo y comparar
  * las técnicas en el mismo lugar.
  *
  * Se arma solo con los campos `zona` y `version` de config/scenes.json: agregar
@@ -56,25 +56,38 @@ async function montarSelectorSendero() {
     const zonas = [...new Set(delSendero.map(s => s.zona))];
     const versiones = delSendero.filter(s => s.zona === actual.zona).map(s => s.version);
 
-    const contenedor = document.createElement('div');
-    contenedor.className = 'selector-sendero';
-    contenedor.appendChild(grupo('Zona del sendero', zonas, actual.zona, zona => {
-        const misma = delSendero.find(s => s.zona === zona && s.version === actual.version);
-        irA((misma || delSendero.find(s => s.zona === zona)).render);
-    }));
-    contenedor.appendChild(grupo('Versión de la reconstrucción', versiones, actual.version, version => {
-        irA(delSendero.find(s => s.zona === actual.zona && s.version === version).render);
-    }));
+    const armar = clase => {
+        const contenedor = document.createElement('div');
+        contenedor.className = 'selector-sendero ' + clase;
+        contenedor.appendChild(grupo('Zona del sendero', zonas, actual.zona, zona => {
+            const misma = delSendero.find(s => s.zona === zona && s.version === actual.version);
+            irA((misma || delSendero.find(s => s.zona === zona)).render);
+        }));
+        contenedor.appendChild(grupo('Versión de la reconstrucción', versiones, actual.version, version => {
+            irA(delSendero.find(s => s.zona === actual.zona && s.version === version).render);
+        }));
+        return contenedor;
+    };
 
+    // PC: dentro de la barra superior, antes del conmutador de técnica.
     const barra = document.querySelector('.command-bar-right');
-    const deckTecnica = barra && barra.querySelector('.render-toggle-deck');
-    if (!barra) return;
-    // En el sendero, COLMAP / Luma del parque no aplican: se ocultan esos dos botones
-    // y queda el de sonido ambiental.
-    if (deckTecnica) {
-        deckTecnica.querySelectorAll('.render-btn[data-render]').forEach(b => { b.hidden = true; });
+    if (barra) {
+        const deckTecnica = barra.querySelector('.render-toggle-deck');
+        // En el sendero, COLMAP / Luma del parque no aplican: se ocultan esos dos botones
+        // y queda el de sonido ambiental.
+        if (deckTecnica) {
+            deckTecnica.querySelectorAll('.render-btn[data-render]').forEach(b => { b.hidden = true; });
+        }
+        barra.insertBefore(armar('selector-sendero-pc'), deckTecnica || barra.firstChild);
     }
-    barra.insertBefore(contenedor, deckTecnica || barra.firstChild);
+
+    // Celular (menos de 640 px): la barra de PC se oculta entera, así que el selector
+    // va también debajo de la píldora del título de la barra móvil.
+    const barraMovil = document.getElementById('mobile-top-bar');
+    if (barraMovil) {
+        barraMovil.classList.add('con-selector-sendero');
+        barraMovil.appendChild(armar('selector-sendero-movil'));
+    }
 }
 
 if (document.readyState === 'loading') {
