@@ -875,14 +875,22 @@
     gap: 6px;
 }
 
+/* Compacto: una sola fila (zonas y versiones) cuando cabe, dos cuando no. */
 .selector-sendero-movil {
     justify-content: center;
+    gap: 4px;
+}
+
+.selector-sendero-movil .render-toggle-deck {
+    padding: 2px;
+    gap: 0;
 }
 
 .selector-sendero-movil .render-btn {
-    min-height: 34px;
-    padding: 6px 10px;
-    font-size: 11.5px;
+    min-height: 30px;
+    padding: 4px 7px;
+    font-size: 10.5px;
+    white-space: nowrap;
 }
 
 /* Joystick para caminar desde el celular (src/views/JoystickView.js) */
@@ -3347,7 +3355,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-vis
 
     #mobile-details-card {
         position: absolute !important;
-        bottom: calc(max(10px, env(safe-area-inset-bottom, 10px)) + 58px) !important;
+        /* 8 px encima de la barra de navegación medida (src/ui/acomodoMovil.js);
+           sin medición, el valor de antes. */
+        bottom: calc(var(--sv-tope-nav-movil, calc(max(10px, env(safe-area-inset-bottom, 10px)) + 58px)) + 8px) !important;
         left: 12px !important;
         right: 12px !important;
         z-index: 35 !important;

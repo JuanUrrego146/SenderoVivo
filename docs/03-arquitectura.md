@@ -776,6 +776,8 @@ Forma real vigente (el prototipo ya lo consume):
 > `TourEngine.setStick`, que lo combina con el teclado y aplica el corredor y `forwardOnly`. El motor
 > cuenta solo los dedos que tocan la escena (`targetTouches`) y gira la vista solo con el puntero que
 > se apoyó en ella, para que el pulgar del joystick no mire ni cuente como segundo dedo.
+> `src/ui/acomodoMovil.js` mide lo que ocupa la barra de navegación móvil y lo publica en
+> `--sv-tope-nav-movil`; la tarjeta "Detalles del sendero" va 8 px encima y el joystick 12 px encima de ella.
 
 ---
 
