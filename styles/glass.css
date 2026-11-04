@@ -868,11 +868,21 @@
     gap: 6px;
 }
 
-@media (max-width: 639px) {
-    .selector-sendero .render-btn {
-        padding: 5px 8px;
-        font-size: 10.5px;
-    }
+/* En celular el selector va debajo de la píldora del título (#mobile-top-bar) */
+#mobile-top-bar.con-selector-sendero {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+}
+
+.selector-sendero-movil {
+    justify-content: center;
+}
+
+.selector-sendero-movil .render-btn {
+    min-height: 34px;
+    padding: 6px 10px;
+    font-size: 11.5px;
 }
 
 .command-actions-cluster {
