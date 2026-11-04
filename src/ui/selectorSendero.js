@@ -1,11 +1,12 @@
 /*
- * Selector del sendero real: zona (Cumbre, Tramo 1, Tramo 2) y versión de la
+ * Selector de zona (Parque de prueba, Cumbre, Tramo 1, Tramo 2) y versión de la
  * reconstrucción (COLMAP, que es la nuestra, Luma y Polycam), para recorrer cada tramo y comparar
  * las técnicas en el mismo lugar.
  *
  * Se arma solo con los campos `zona` y `version` de config/scenes.json: agregar
- * una versión o una zona no toca código. Aparece únicamente cuando ?render= abre
- * una escena del sendero; en el parque de prueba sigue el conmutador COLMAP / Luma.
+ * una versión o una zona no toca código. Reemplaza al conmutador COLMAP / Luma del
+ * parque, que ahora es una zona más: así se llega al parque y a sus seis letreros
+ * desde cualquier escena del sendero.
  * Cambiar de zona conserva la versión si esa zona la tiene.
  */
 const SCENES_CONFIG_URL = 'config/scenes.json';
@@ -40,8 +41,12 @@ function grupo(etiqueta, opciones, activa, alElegir) {
 }
 
 async function montarSelectorSendero() {
-    const render = new URLSearchParams(window.location.search).get('render');
-    if (!render) return;
+    // Sin ?render= la app abre el parque: COLMAP en escritorio y Luma en celular
+    // (la misma regla que resolveSceneUrl en src/controllers/main.js).
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('sog') || params.has('editor')) return;
+    const esMovil = window.matchMedia('(max-width: 640px)').matches;
+    const render = params.get('render') || (esMovil ? 'luma' : 'colmap');
     let escenas;
     try {
         escenas = (await (await fetch(SCENES_CONFIG_URL)).json()).scenes || [];
