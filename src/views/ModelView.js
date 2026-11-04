@@ -33,6 +33,18 @@ export class ModelView {
 
         this.container.innerHTML = '';
 
+        /*
+         * Mientras la ficha 3D está abierta, la escena del sendero (PlayCanvas,
+         * ~1 M de gaussianas) deja de dibujarse: en el iPhone las dos escenas a la
+         * vez agotan la memoria gráfica y el visor del modelo queda en negro.
+         * El recorrido sigue vivo; destroy() la reanuda.
+         */
+        const app = window.senderoApp;
+        if (app && this._autoRenderPrevio === undefined) {
+            this._autoRenderPrevio = app.autoRender;
+            app.autoRender = false;
+        }
+
 
         /*
          * =====================================================
@@ -79,7 +91,23 @@ export class ModelView {
 
         model.setAttribute(
             'alt',
-            'Modelo 3D de la golondrina plomiza'
+            'Modelo 3D del punto de interés'
+        );
+
+        /*
+         * Luz: entorno neutro explícito y exposición más alta. Varias texturas
+         * (observatorio, servicios ambientales, banca, silla) tienen color base
+         * medio de 0,12 a 0,26 y con exposición 1 sobre fondo casi negro se veían
+         * negras en el celular.
+         */
+        model.setAttribute(
+            'environment-image',
+            'neutral'
+        );
+
+        model.setAttribute(
+            'tone-mapping',
+            'neutral'
         );
 
         model.setAttribute(
@@ -104,7 +132,7 @@ export class ModelView {
 
         model.setAttribute(
             'exposure',
-            '1'
+            '1.6'
         );
 
         model.setAttribute(
@@ -136,8 +164,9 @@ export class ModelView {
         model.style.display =
             'block';
 
+        // Fondo claro de la paleta: los modelos de madera oscura se pierden en negro.
         model.style.background =
-            '#101510';
+            'var(--sv-surface-inset-solid)';
 
         model.style.borderRadius =
             '16px';
@@ -362,6 +391,14 @@ export class ModelView {
      */
 
     destroy() {
+
+        // La escena del sendero vuelve a dibujarse al cerrar la ficha.
+        const app = window.senderoApp;
+        if (app && this._autoRenderPrevio !== undefined) {
+            app.autoRender = this._autoRenderPrevio;
+            app.renderNextFrame = true;
+            this._autoRenderPrevio = undefined;
+        }
 
         if (
             this.model
