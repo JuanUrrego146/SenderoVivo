@@ -37,6 +37,10 @@ export class TourEngine {
         // Tope propio del picado hacia abajo: muy cerca del suelo el splatting se ve
         // como brochazos, y algunas escenas piden no dejar meter la camara ahi.
         this.pitchDownLimit = options.pitchDownLimit ?? this.pitchLimit;
+        // Tope del giro de la cabeza respecto a la dirección del camino en el punto actual
+        // (grados a cada lado). En tramos estrechos la reconstrucción solo vio el camino de
+        // frente: girar más allá muestra la vegetación pegada al costado como agujas.
+        this.yawLimit = Number.isFinite(options.yawLimit) ? options.yawLimit : null;
                 // SW-17: desaceleración al acercarse a un punto de interés.
         this.poiSlowdownDistance = options.poiSlowdownDistance ?? 1.2;
         this.poiMinimumSpeedMultiplier =
@@ -295,6 +299,8 @@ this.state.distance += avance * speed * dt;
         }
         this._targetPos.y += this.state.eyeHeight;
 
+        if (this.yawLimit !== null) this._recortarGiro();
+
         const t = Math.min(1, this.smoothing * dt);
         this._currentPos.lerp(this._currentPos, this._targetPos, t);
         this.camera.setPosition(this._currentPos);
@@ -312,6 +318,16 @@ this.state.distance += avance * speed * dt;
     release(action) {
         if (action === 'forward' || action === 'back') this._input.forward = 0;
         if (action === 'left' || action === 'right') this._input.strafe = 0;
+    }
+
+    /** Deja la vista a ±yawLimit grados de la dirección del camino en el punto actual. */
+    _recortarGiro() {
+        this.trailPath.directionAt(this.state.distance, this._dir);
+        const camino = Math.atan2(-this._dir.x, -this._dir.z) / RAD;
+        const rel = ((this.state.yaw - camino) % 360 + 540) % 360 - 180;   // de -180 a 180
+        const tope = this.yawLimit;
+        if (rel > tope) this.state.yaw = camino + tope;
+        else if (rel < -tope) this.state.yaw = camino - tope;
     }
 
     /**
