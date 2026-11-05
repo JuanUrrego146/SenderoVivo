@@ -667,6 +667,49 @@ p99,7 = −1,5607 y alfa > 0,05 → quitó solo el **3,65 %** → 4,82 M de gaus
 > costado izquierdo y el fondo entero de la escena. La neblina y el cielo se controlan con
 > `opacity`; lo lejano no molesta: pesa poco y da profundidad real.
 
+### 12.4.1 Limpieza para recorrer las escenas de la nube (Luma y Polycam, 05/11)
+
+Las escenas de Luma y Polycam se entrenaron para verse desde las cámaras de su video o
+de sus fotos; el visitante, en cambio, gira la cabeza en cualquier punto del corredor. Los
+defectos que eso destapa se midieron dibujando cada escena desde el trazado en cuatro
+direcciones y hacia el cielo (`scripts/escenas/nube/diagnostico.py`, fondo magenta donde
+no hay nada) y se corrigen con cuatro pasos sobre el PLY ya horneado, todos en
+`scripts/escenas/nube/` (copia versionada de
+`E:\SenderoNube\scripts\`, donde están los PLY). Cada paso se comprobó contra 8 fotos reales de la Cumbre con
+`evaluar.py`: el PSNR no baja (14,58 a 14,57 dB), es decir, no se borra nada que exista.
+
+```bash
+PY=/e/SenderoCelular/venv/Scripts/python.exe          # trae open3d y torch
+T=config/track-sendero-01.json
+# 1) Motas lejanas: gaussianas de menos de 1 m, entre 30 y 900 m del camino, con menos de
+#    4 vecinas opacas a 0,5 m. Contra el cielo se ven como puntos oscuros sueltos.
+$PY -I quitar_motas.py final/cumbre.ply $T lc_1.ply 30 0 4 1.0
+# 2) Burbujas de cielo (solo Polycam): gaussianas claras no verdes a más de 3 m sobre el camino.
+$PY -I quitar_burbujas.py final/cumbre_polycam_afinada.ply $T pc_1.ply 3 0.45
+# 3) Pasillo y flotantes: lo que cae en el volumen de la cabeza del visitante (corredor más
+#    0,25 m, de 0,9 a 1,9 m sobre el suelo) y las agujas sueltas (eje mayor más de 6 veces el
+#    mediano, de más de 0,1 m y opacidad menor a 0,8).
+$PY -I limpiar_escena.py lc_1.ply $T 1.5 luma_limpia.ply 0.25 6 0.1 0.8
+# 4) Mezcla por distancia al camino con el color de Polycam igualado al de Luma.
+$PY -I mezclar.py polycam_limpia.ply luma_limpia.ply $T 15 2 polycam_v3.ply   # Polycam hasta 15 m
+$PY -I mezclar.py polycam_limpia.ply luma_limpia.ply $T 6 3 mixta_v2.ply      # Polycam hasta 4,5 m
+# 5) Empaque con tope de escala fijo: en Luma las gaussianas más grandes son la cúpula del
+#    cielo (50.000 de unos 20 m a 1 km), no agujas, y el p99,7 se las comería.
+CAP=3.2 OPMIN=-4.595 bash /e/SenderoCelular/fase5.sh polycam_v3.ply <trabajo> <repo> sendero-01-polycam-v3
+```
+
+En el Tramo 1 el corredor mide 0,7 m y los pasamanos quedan a la altura de la cadera, así
+que el pasillo solo se abre a la altura de la cara (margen 0,05 m, de 1,2 a 1,9 m sobre el
+suelo), se quitan además las gaussianas de más de 2,7 m que no son cielo y el tope de
+empaque sube a 3,35 porque esa escena está escalada por 13,3. Lo que no se puede limpiar es
+la vegetación pegada al costado, que la cámara de Luma nunca vio de lado: por eso la escena
+declara `yawLimit` y el visor no deja girar la cabeza más de 45 grados respecto al camino.
+
+Dos comprobaciones hechas en el visor que ahorran tiempo: PlayCanvas 2.21 no aplica a las
+gaussianas ni `nearClip` ni `farClip` de la cámara (con el corte lejano en 20 m sigue
+dibujando la ciudad), así que ni las astillas pegadas a la cara ni el cielo se arreglan desde
+la cámara: se arreglan en los datos.
+
 ### 12.5 Nivelación y publicación
 
 Medir el `sceneUp` (§16), anotarlo en `config/scenes.json`, verificar en el visor local y
