@@ -717,6 +717,23 @@ gaussianas ni `nearClip` ni `farClip` de la cámara (con el corte lejano en 20 m
 dibujando la ciudad), así que ni las astillas pegadas a la cara ni el cielo se arreglan desde
 la cámara: se arreglan en los datos.
 
+### 12.4.2 Reentrenar la Cumbre con las fotos ubicadas en la escena (06/11, descartado por ahora)
+
+Luma y Polycam se entrenaron con cuadros a 720p, aunque 6 de las 13 tomas de la Cumbre están grabadas en 4K. Para
+aprovecharlas hacen falta poses coherentes con la escena, y las de COLMAP quedan a 1 a 2 m de la Polycam y discrepan
+entre pasadas. `registrar_fotos2.py` ubica cada foto en el marco de la Polycam: una semilla contra el dibujo de la
+escena y desde ahí foto contra foto (SIFT), subiendo los puntos a 3D con la profundidad de la escena dibujada desde la
+foto vecina ya ubicada. Ubicó 760 de 992 cuadros en 70 minutos, con error de reproyección mediano de 0,92 px a 1280
+de ancho. `armar_dataset_brush.py` arma con eso un dataset para Brush (fotos 4K reducidas a 1920, máscaras de cielo,
+lejanía y personas) y `comparar_poses.py` mide cada escena contra las fotos desde esas poses.
+
+Resultados, medidos contra 16 cuadros que Brush no vio: afinar la Polycam con Brush baja la nitidez a menos de la
+mitad y borra la cúpula de cielo; entrenarla desde cero con las 699 fotos (30.000 pasos, 2,9 M de gaussianas) sube el
+PSNR de 16,5 a 22,5 dB pero se ve peor: el mirador sale con doble borde y los árboles corridos, porque las pasadas no
+calzan al centímetro y Brush promedia la diferencia. El PSNR premia ese borroso, así que se decidió por inspección
+visual y la Polycam sigue siendo la escena publicada. El camino que queda es procesar de nuevo en Polycam con los
+cuadros en 4K, para que su propio ajuste de cámaras haga coherentes las pasadas.
+
 ### 12.5 Nivelación y publicación
 
 Medir el `sceneUp` (§16), anotarlo en `config/scenes.json`, verificar en el visor local y
