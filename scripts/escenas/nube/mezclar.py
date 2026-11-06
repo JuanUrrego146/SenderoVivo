@@ -1,15 +1,17 @@
 """Mezcla dos escenas encajadas de la misma zona: la cercana (Polycam, más nítida de cerca) hasta un radio
 del camino y la lejana (Luma, mejor de lejos) desde ahí, con una franja de transición donde cada
 gaussiana sale de una u otra al azar en proporción a la distancia (sin corte de golpe).
-Antes iguala el color de la cercana a la lejana: media y dispersión por canal de las gaussianas opacas
-a menos de 6 m del camino, que es la misma zona en las dos (tambien escala los armónicos de orden 1-3).
-uso: mezclar.py <cercana.ply> <lejana.ply> <track.json> <radio_m> <franja_m> <salida.ply>"""
+Opcionalmente (color=si) iguala el color de la cercana a la lejana: media y dispersión por canal de las gaussianas
+opacas a menos de 6 m del camino. OJO: en la Cumbre eso volvió gris blanquecino el piso de Polycam, que sin tocar ya
+coincide con las fotos reales (hojarasca café): por defecto no se iguala.
+uso: mezclar.py <cercana.ply> <lejana.ply> <track.json> <radio_m> <franja_m> <salida.ply> [color=no|si]"""
 import sys, os, json, numpy as np
 from scipy.spatial import cKDTree
 sys.path.insert(0, os.path.dirname(__file__))
 import splat
 
 CER, LEJ, TRACK, RADIO, FRANJA, OUT = sys.argv[1:7]
+IGUALAR = len(sys.argv) > 7 and sys.argv[7] == 'si'
 RADIO, FRANJA = float(RADIO), float(FRANJA)
 C0 = 0.28209479177387814
 ce = splat.leer(CER); le = splat.leer(LEJ)
@@ -25,12 +27,14 @@ def stats(g, d):
     rgb = 0.5 + C0 * g['dc'][m]
     return rgb.mean(0), rgb.std(0)
 mc, sc = stats(ce, dce); ml, sl = stats(le, dle)
-k = sl / sc
-print('color cercana media %s disp %s -> lejana media %s disp %s' % (mc.round(3), sc.round(3), ml.round(3), sl.round(3)))
-rgb = 0.5 + C0 * ce['dc']
-ce['dc'] = (((rgb - mc) * k + ml) - 0.5) / C0
-nr = ce['rest'].shape[1] // 3
-ce['rest'] = (ce['rest'].reshape(-1, 3, nr) * k[None, :, None]).reshape(-1, 3 * nr)
+print('color cercana media %s disp %s | lejana media %s disp %s' % (mc.round(3), sc.round(3), ml.round(3), sl.round(3)))
+if IGUALAR:
+    k = sl / sc
+    rgb = 0.5 + C0 * ce['dc']
+    ce['dc'] = (((rgb - mc) * k + ml) - 0.5) / C0
+    nr = ce['rest'].shape[1] // 3
+    ce['rest'] = (ce['rest'].reshape(-1, 3, nr) * k[None, :, None]).reshape(-1, 3 * nr)
+    print('color igualado a la lejana')
 
 # armónicos: misma cantidad de coeficientes en las dos
 nmax = max(ce['rest'].shape[1], le['rest'].shape[1])

@@ -348,6 +348,16 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     // mueve y gira la cámara: el módulo de audio no necesita tocarla (invariante 12).
     camera.addComponent('audiolistener');
     app.root.addChild(camera);
+    // Campo de vision segun la orientacion de la pantalla. PlayCanvas fija 45 grados en vertical:
+    // en un celular en vertical eso deja unos 21 grados de ancho, la escena se ve ampliada casi
+    // tres veces respecto a como se grabo y cada gaussiana se nota como un brochazo. En pantallas
+    // verticales se abre a 62 grados (unos 31 de ancho); en horizontal se conserva el de siempre.
+    const ajustarCampoDeVision = () => {
+        const aspecto = window.innerWidth / Math.max(1, window.innerHeight);
+        camera.camera.fov = aspecto < 1 ? 62 : 45;
+    };
+    ajustarCampoDeVision();
+    window.addEventListener('resize', ajustarCampoDeVision);
 
     const splat = new Entity('scene');
     // Nivelación: la reconstrucción sale en orientación arbitraria porque COLMAP no

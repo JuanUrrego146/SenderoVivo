@@ -783,6 +783,8 @@ Forma real vigente (el prototipo ya lo consume):
 > se apoyó en ella, para que el pulgar del joystick no mire ni cuente como segundo dedo.
 > `src/ui/acomodoMovil.js` mide lo que ocupa la barra de navegación móvil y lo publica en
 > `--sv-tope-nav-movil`; la tarjeta "Detalles del sendero" va 8 px encima y el joystick 12 px encima de ella.
+>
+> El campo de visión depende de la orientación de la pantalla (`main.js`, al iniciar y en cada `resize`): 45 grados en vertical cuando la pantalla es horizontal y 62 cuando es vertical. Con 45 en un celular en vertical el ancho visible era de unos 21 grados y la escena se veía ampliada casi tres veces respecto a como se grabó. Las escenas de la Cumbre declaran además `pitchDownLimit` 30: el piso a menos de 2 m de los pies es lo más borroso de las reconstrucciones.
 
 ---
 
