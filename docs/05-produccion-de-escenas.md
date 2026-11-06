@@ -717,22 +717,65 @@ gaussianas ni `nearClip` ni `farClip` de la cámara (con el corte lejano en 20 m
 dibujando la ciudad), así que ni las astillas pegadas a la cara ni el cielo se arreglan desde
 la cámara: se arreglan en los datos.
 
-### 12.4.2 Reentrenar la Cumbre con las fotos ubicadas en la escena (06/11, descartado por ahora)
+### 12.4.2 Reconstrucción propia de la Cumbre con COLMAP, Brush y las fotos 360 (06/11)
 
-Luma y Polycam se entrenaron con cuadros a 720p, aunque 6 de las 13 tomas de la Cumbre están grabadas en 4K. Para
-aprovecharlas hacen falta poses coherentes con la escena, y las de COLMAP quedan a 1 a 2 m de la Polycam y discrepan
-entre pasadas. `registrar_fotos2.py` ubica cada foto en el marco de la Polycam: una semilla contra el dibujo de la
-escena y desde ahí foto contra foto (SIFT), subiendo los puntos a 3D con la profundidad de la escena dibujada desde la
-foto vecina ya ubicada. Ubicó 760 de 992 cuadros en 70 minutos, con error de reproyección mediano de 0,92 px a 1280
-de ancho. `armar_dataset_brush.py` arma con eso un dataset para Brush (fotos 4K reducidas a 1920, máscaras de cielo,
-lejanía y personas) y `comparar_poses.py` mide cada escena contra las fotos desde esas poses.
+La Cumbre propia (`?render=sendero-propia`) supera en nitidez a Luma y a Polycam: dibujadas en primera persona desde
+11 puntos del trazado (ojos a 0,85 m, hacia adelante y hacia atrás, `comparar_recorrido.py`), la varianza del
+laplaciano tiene mediana 430 contra 255 de Polycam y 257 de Luma, y es mayor en los 11 puntos. Dos causas explicaban
+por qué COLMAP salía mal en esta zona y las dos están medidas:
 
-Resultados, medidos contra 16 cuadros que Brush no vio: afinar la Polycam con Brush baja la nitidez a menos de la
-mitad y borra la cúpula de cielo; entrenarla desde cero con las 699 fotos (30.000 pasos, 2,9 M de gaussianas) sube el
-PSNR de 16,5 a 22,5 dB pero se ve peor: el mirador sale con doble borde y los árboles corridos, porque las pasadas no
-calzan al centímetro y Brush promedia la diferencia. El PSNR premia ese borroso, así que se decidió por inspección
-visual y la Polycam sigue siendo la escena publicada. El camino que queda es procesar de nuevo en Polycam con los
-cuadros en 4K, para que su propio ajuste de cámaras haga coherentes las pasadas.
+- **El lente.** Las 13 tomas son del gran angular del iPhone (COLMAP lo estima en 101 grados de ancho, igual que en
+  el Tramo 1). Con una cámara por toma, en 5 de las 13 se equivocaba (77 a 87 grados) y eso corría esas fotos metros a
+  lo largo de su eje. Se usa una sola cámara SIMPLE_RADIAL compartida por resolución: f 1590 de partida a 3840 de
+  ancho y 530 a 1280.
+- **La ida y la vuelta.** Miran en sentidos opuestos y casi no comparten vistas: el alineador global las deja con
+  escalas distintas (3,29 contra 2,10) y `pose_prior_mapper` las parte en dos modelos. Las 296 vistas rectilíneas de
+  las panorámicas de la Insta360 que caen en la Cumbre (`vistas-sol` p0285 a p0309 y `vistas-llovizna` l0001 a
+  l0012, generadas con `scripts/captura360/vistas.py`) ven hacia los dos lados desde el mismo punto y las unen: 15
+  panorámicas emparejan con ambas en 846 pares verificados y la alineación queda en un solo modelo de 1.130 imágenes
+  con 0,93 px de error medio.
+
+```bash
+PY="/e/SenderoCelular/venv/Scripts/python.exe -I"; N=scripts/escenas/nube; C=C:/Users/Juan/Tools/colmap/bin/colmap.exe
+# 1) Cuadros crudos (no los corregidos del COLMAP viejo) y una mascara por foto: COLMAP 4.1.1 se SALTA la foto si
+#    falta su mascara. Las personas salen de frames_personas (YOLO).
+$PY $N/propia_preparar.py E:/SenderoNube/propia
+# 2) Vistas 360 de la Cumbre: carpa azul tapada por color (estaba ese dia en el claro) y personas con YOLO.
+$PY $N/propia_360.py E:/SenderoNube/propia
+$PY $N/propia_personas360.py E:/SenderoNube/propia yolo11x-seg.pt cpu
+# 3) Rasgos con una camara compartida por grupo (4K, 720p y 360).
+$C feature_extractor --image_list_path lista_4k.txt --ImageReader.single_camera 1 --ImageReader.camera_model SIMPLE_RADIAL \
+   --ImageReader.camera_params 1590,1920,1080,0 --ImageReader.mask_path masks --FeatureExtraction.max_image_size 3200 ...
+# 4) Anclas y pares: 457 posiciones conocidas (registrar_fotos2.py contra la Polycam, solo tomas de lente correcto)
+#    van a la tabla pose_priors con 0,5 m de desviacion; pares dentro de cada toma, entre tomas por cercania y
+#    direccion de vista, y por tiempo proporcional para la toma sin posiciones.
+$PY $N/propia_priores_pares.py db.db poses_cumbre.json pares.txt 0.5 8
+$C matches_importer --match_list_path pares.txt --match_type pairs ...
+# 5) Las vistas 360 contra todo por similitud (indice con 3000 rasgos: con todos tarda una hora solo en indexar).
+$C vocab_tree_matcher --VocabTreeMatching.match_list_path lista_360.txt --VocabTreeMatching.num_images 60 \
+   --VocabTreeMatching.max_num_features 3000 ...
+# 6) Mapper con anclas sobre la mitad de los cuadros (uno de cada dos) mas las vistas 360, con ajustes globales
+#    espaciados: 70 minutos. Con los 1.981 cuadros y el alineador global se cae por memoria o se queda horas.
+$C pose_prior_mapper --Mapper.image_list_path lista_mitad360.txt --use_robust_loss_on_prior_position 1 \
+   --Mapper.ba_global_frames_ratio 1.3 --Mapper.ba_global_points_ratio 1.3 --Mapper.ba_global_max_num_iterations 30 ...
+$PY $N/propia_verificar.py sparse_q/1 poses_cumbre.json          # fotos por toma, lente, distancia a las anclas
+# 7) Conjunto de Brush: fotos sin distorsion (4K a 1920), mascara de personas, cielo y lejania. Cielo = parece cielo en
+#    la foto Y mira por encima del horizonte Y la Mixta no cubre; lejos = opaco a mas de 60 m en la Mixta. Sin la
+#    condicion del horizonte se tapaba la hojarasca clara del piso.
+$PY $N/propia_dataset.py sparse_qv images masks mixta_v4.ply track-sendero-01.json ds_todo 1920 40
+# 8) Brush 30.000 pasos con tope de 2,5 M de gaussianas: sin tope pasa de 3,5 M, llena los 8 GB y se arrastra.
+brush_app ds_todo --total-steps 30000 --max-resolution 1920 --max-splats 2500000 --eval-split-every 20 ...
+# 9) Mismas limpiezas que Polycam (burbujas 7,1 %, flotantes alargados 11,2 %) y Luma limpia desde 15 m.
+$PY $N/quitar_burbujas.py ...; $PY $N/limpiar_escena.py ... perfil ...; $PY $N/mezclar.py propia_limpia.ply luma_limpia.ply $T 15 2 propia.ply no
+CAP=3.2 OPMIN=-4.595 bash /e/SenderoCelular/fase5.sh propia.ply <trabajo> <repo> sendero-01-propia
+```
+
+Dos cuidados que costaron tiempo: Brush y COLMAP no pueden usar la GPU a la vez (Brush se cae con «Parent device is
+lost»), y unir la ida y la vuelta a mano no funciona: con una similitud por anclas queda a 1-3 grados (las anclas de
+la vuelta tienen ese ruido) y con geometría epipolar sola la solución degenera (traslado de 43 m). La primera prueba,
+entrenar solo con las fotos ubicadas contra la Polycam y los lentes viejos, salía con doble borde por el lente
+equivocado de esas 5 tomas; `registrar_fotos2.py`, `armar_dataset_brush.py` y `comparar_poses.py` quedan como
+herramientas para medir una escena contra las fotos.
 
 ### 12.5 Nivelación y publicación
 
