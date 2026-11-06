@@ -198,6 +198,7 @@ async function resolveSceneUrl() {
                 sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
                 eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
                 pitchDownLimit: match.pitchDownLimit, baked: !!match.baked,
+                yawLimit: match.yawLimit,
                 clearColorToken: match.clearColorToken
             };
         }
@@ -214,6 +215,7 @@ async function resolveSceneUrl() {
                     sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
                     eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
                     pitchDownLimit: match.pitchDownLimit, baked: !!match.baked,
+                    yawLimit: match.yawLimit,
                     clearColorToken: match.clearColorToken
                 };
             }
@@ -507,7 +509,7 @@ async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
 
 async function setUpNavigation(app, camera, sceneOpts = {}) {
     // Metadatos de la escena activa (config/scenes.json): restricciones y trazado propio.
-    const { forwardOnly = false, eyeHeight: sceneEyeHeight, trackUrl: sceneTrackUrl, pitchDownLimit } = sceneOpts;
+    const { forwardOnly = false, eyeHeight: sceneEyeHeight, trackUrl: sceneTrackUrl, pitchDownLimit, yawLimit } = sceneOpts;
     const isEditor = new URLSearchParams(window.location.search).has('editor');
     const { trail, gpsTrack } = await loadTrail(sceneTrackUrl ?? TRACK_CONFIG_URL);
 
@@ -547,6 +549,8 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
         forwardOnly,
         // Tope del picado hacia abajo: evita meter la camara donde el splat se ve mal.
         pitchDownLimit,
+        // Tope del giro de la cabeza respecto al camino (tramos estrechos, config/scenes.json).
+        yawLimit,
         // Algunos trazados no arrancan en su primer punto (config/track-*.json, startDistance).
         startDistance: trail.startDistance ?? 0,
         gpsTrack
