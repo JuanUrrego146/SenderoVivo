@@ -284,10 +284,12 @@ this.state.distance += avance * speed * dt;
             this._emitProgress();
         }
         if (lateral !== 0) {
-            const r = this.trailPath.corridorRadius;
             this.lateral += lateral * this.strafeSpeed * dt;
-            this.lateral = Math.max(-r, Math.min(r, this.lateral));   // el margen del corredor
         }
+        // El margen del corredor se aplica en cada cuadro: puede cambiar de ancho a lo largo
+        // del trazado (corridorLeft / corridorRight) y al avanzar hay que quedar dentro.
+        const corredor = this.trailPath.corridorAt(this.state.distance);
+        this.lateral = Math.max(-corredor.left, Math.min(corredor.right, this.lateral));
 
         // La posición SIEMPRE sale del trazado más el margen lateral permitido: es RF-004.
         this.trailPath.positionAt(this.state.distance, this._targetPos);

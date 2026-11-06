@@ -201,6 +201,34 @@ export class TrailModel {
     }
 
     /**
+     * Margen lateral permitido en una distancia: { left, right } en metros.
+     * Si el trazado trae corridorLeft / corridorRight (un valor por punto, medido como el
+     * espacio libre a la altura de la cabeza), se interpolan entre puntos; si no, los dos
+     * lados valen corridorRadius.
+     */
+    corridorAt(distance) {
+        const izq = this.corridorLeft;
+        const der = this.corridorRight;
+        if (
+            !this.isUsable ||
+            !Array.isArray(izq) || !Array.isArray(der) ||
+            izq.length !== this.waypoints.length ||
+            der.length !== this.waypoints.length
+        ) {
+            return { left: this.corridorRadius, right: this.corridorRadius };
+        }
+        const d = Math.max(0, Math.min(distance, this.totalLength()));
+        let i = 1;
+        while (i < this.cumulative.length - 1 && this.cumulative[i] < d) i++;
+        const largo = this.cumulative[i] - this.cumulative[i - 1];
+        const t = largo > 0 ? (d - this.cumulative[i - 1]) / largo : 0;
+        return {
+            left: izq[i - 1] + (izq[i] - izq[i - 1]) * t,
+            right: der[i - 1] + (der[i] - der[i - 1]) * t
+        };
+    }
+
+    /**
      * Calcula la distancia sobre el trazado
      * correspondiente al punto más cercano.
      */
