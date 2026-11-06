@@ -695,12 +695,14 @@ $PY -I espacio_libre.py $T track_con_perfil.json 0.85 1.5 pc_1.ply lc_1.ply
 #    menor a 0,8). Con un radio fijo de 1,5 m se agujereaban arbustos del borde que se ven
 #    desde lejos; con el perfil solo se abre un túnel donde el trazado los atraviesa (d 26 a 34).
 $PY -I limpiar_escena.py lc_1.ply track_con_perfil.json perfil luma_limpia.ply 0.25 6 0.1 0.8
-# 5) Mezcla por distancia al camino con el color de Polycam igualado al de Luma.
-$PY -I mezclar.py polycam_limpia.ply luma_limpia.ply $T 15 2 polycam_v3.ply   # Polycam hasta 15 m
-$PY -I mezclar.py polycam_limpia.ply luma_limpia.ply $T 6 3 mixta_v2.ply      # Polycam hasta 4,5 m
+# 5) Mezcla por distancia al camino. El color de Polycam se deja tal cual: dibujada desde las
+#    camaras de las fotos reales coincide con la hojarasca cafe del piso, y Luma la da mas gris;
+#    igualarla a Luma (ultimo argumento "si") vuelve el piso gris blanquecino.
+$PY -I mezclar.py polycam_limpia.ply luma_limpia.ply $T 15 2 polycam_v5.ply no   # Polycam hasta 15 m
+$PY -I mezclar.py polycam_limpia.ply luma_limpia.ply $T 6 3 mixta_v4.ply no     # Polycam hasta 4,5 m
 # 6) Empaque con tope de escala fijo: en Luma las gaussianas más grandes son la cúpula del
 #    cielo (50.000 de unos 20 m a 1 km), no agujas, y el p99,7 se las comería.
-CAP=3.2 OPMIN=-4.595 bash /e/SenderoCelular/fase5.sh polycam_v3.ply <trabajo> <repo> sendero-01-polycam-v3
+CAP=3.2 OPMIN=-4.595 bash /e/SenderoCelular/fase5.sh polycam_v5.ply <trabajo> <repo> sendero-01-polycam-v5
 ```
 
 En el Tramo 1 el corredor mide 0,7 m y los pasamanos quedan a la altura de la cadera, así
