@@ -497,6 +497,10 @@ async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
         const cfg = await response.json();
         const path = new TrailModel(cfg.sceneWaypoints || [],cfg.corridorRadius ?? 1.5);
         path.eyeHeight = cfg.eyeHeight ?? 0;
+        // Espacio libre medido a cada lado de cada punto (opcional): el corredor deja de ser
+        // fijo y el visitante no puede meter la cabeza en los arbustos que invaden el camino.
+        path.corridorLeft = Array.isArray(cfg.corridorLeft) ? cfg.corridorLeft : null;
+        path.corridorRight = Array.isArray(cfg.corridorRight) ? cfg.corridorRight : null;
         // Punto de arranque sobre el trazado (metros desde su primer punto); 0 si no se declara.
         path.startDistance = Number.isFinite(cfg.startDistance) ? cfg.startDistance : 0;
         // Mismo cfg ya leido y parseado: un solo fetch de track.json, dos modelos.

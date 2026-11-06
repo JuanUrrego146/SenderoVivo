@@ -686,14 +686,19 @@ T=config/track-sendero-01.json
 $PY -I quitar_motas.py final/cumbre.ply $T lc_1.ply 30 0 4 1.0
 # 2) Burbujas de cielo (solo Polycam): gaussianas claras no verdes a más de 3 m sobre el camino.
 $PY -I quitar_burbujas.py final/cumbre_polycam_afinada.ply $T pc_1.ply 3 0.45
-# 3) Pasillo y flotantes: lo que cae en el volumen de la cabeza del visitante (corredor más
-#    0,25 m, de 0,9 a 1,9 m sobre el suelo) y las agujas sueltas (eje mayor más de 6 veces el
-#    mediano, de más de 0,1 m y opacidad menor a 0,8).
-$PY -I limpiar_escena.py lc_1.ply $T 1.5 luma_limpia.ply 0.25 6 0.1 0.8
-# 4) Mezcla por distancia al camino con el color de Polycam igualado al de Luma.
+# 3) Espacio libre a cada lado de cada punto, a la altura de la cabeza, sobre las dos escenas
+#    (el menor): se guarda en el track como corridorLeft / corridorRight y el visor limita el
+#    paso lateral a eso, así nadie mete la cabeza en un arbusto que invade el camino.
+$PY -I espacio_libre.py $T track_con_perfil.json 0.85 1.5 pc_1.ply lc_1.ply
+# 4) Pasillo y flotantes: lo que cae dentro de ese espacio más 0,25 m, de 0,9 a 1,9 m sobre el
+#    suelo, y las agujas sueltas (eje mayor más de 6 veces el mediano, de más de 0,1 m y opacidad
+#    menor a 0,8). Con un radio fijo de 1,5 m se agujereaban arbustos del borde que se ven
+#    desde lejos; con el perfil solo se abre un túnel donde el trazado los atraviesa (d 26 a 34).
+$PY -I limpiar_escena.py lc_1.ply track_con_perfil.json perfil luma_limpia.ply 0.25 6 0.1 0.8
+# 5) Mezcla por distancia al camino con el color de Polycam igualado al de Luma.
 $PY -I mezclar.py polycam_limpia.ply luma_limpia.ply $T 15 2 polycam_v3.ply   # Polycam hasta 15 m
 $PY -I mezclar.py polycam_limpia.ply luma_limpia.ply $T 6 3 mixta_v2.ply      # Polycam hasta 4,5 m
-# 5) Empaque con tope de escala fijo: en Luma las gaussianas más grandes son la cúpula del
+# 6) Empaque con tope de escala fijo: en Luma las gaussianas más grandes son la cúpula del
 #    cielo (50.000 de unos 20 m a 1 km), no agujas, y el p99,7 se las comería.
 CAP=3.2 OPMIN=-4.595 bash /e/SenderoCelular/fase5.sh polycam_v3.ply <trabajo> <repo> sendero-01-polycam-v3
 ```

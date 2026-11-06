@@ -767,6 +767,11 @@ Forma real vigente (el prototipo ya lo consume):
 > día de la captura y alimenta a `TrailDataLayer`. **`eyeHeight`** levanta la cámara sobre los
 > puntos marcados; **`corridorRadius`** es el margen lateral permitido (RF-004 sin camisa de
 > fuerza). Se calibran en vivo con R/F y se anotan aquí.
+> **`corridorLeft`** y **`corridorRight`** (opcionales, un valor por punto de `sceneWaypoints`) reemplazan
+> a `corridorRadius` cuando están: es el espacio libre medido a cada lado a la altura de la cabeza
+> (`scripts/escenas/nube/espacio_libre.py`). `TrailModel.corridorAt(d)` los interpola y `TourEngine`
+> recorta el paso lateral a ese margen en cada cuadro, así el visitante no mete la cabeza en los arbustos
+> que invaden el camino.
 > **`startDistance`** (opcional, en metros desde el primer punto) es dónde arranca el recorrido;
 > sin él arranca en el primer punto. La Cumbre (`config/track-sendero-01.json`) arranca en su centro,
 > d = 15 m, y desde ahí se camina hacia la entrada o hacia la plataforma.

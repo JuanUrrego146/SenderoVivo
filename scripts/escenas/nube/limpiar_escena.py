@@ -11,7 +11,10 @@ from scipy.spatial import cKDTree
 sys.path.insert(0, os.path.dirname(__file__))
 import splat
 
-ENT, TRACK, CORR, SAL = sys.argv[1], sys.argv[2], float(sys.argv[3]), sys.argv[4]
+ENT, TRACK, SAL = sys.argv[1], sys.argv[2], sys.argv[4]
+# corredor: un radio fijo en metros, o "perfil" para usar corridorLeft / corridorRight del track (un valor por punto)
+PERFIL = sys.argv[3] == "perfil"
+CORR = 0.0 if PERFIL else float(sys.argv[3])
 MARGEN = float(sys.argv[5]) if len(sys.argv) > 5 else 0.25
 RAZON = float(sys.argv[6]) if len(sys.argv) > 6 else 8.0
 LARGO = float(sys.argv[7]) if len(sys.argv) > 7 else 0.15
@@ -22,9 +25,19 @@ ALTA = float(sys.argv[10]) if len(sys.argv) > 10 else 1.30
 
 g = splat.leer(ENT)
 n0 = len(g["xyz"])
-w = np.array([[p["x"], p["y"], p["z"]] for p in json.load(open(TRACK))["sceneWaypoints"]])
+cfg = json.load(open(TRACK, encoding="utf-8"))
+w = np.array([[p["x"], p["y"], p["z"]] for p in cfg["sceneWaypoints"]])
 L = np.r_[0, np.cumsum(np.linalg.norm(np.diff(w, axis=0), axis=1))]
-den = np.c_[[np.interp(np.arange(0, L[-1], 0.05), L, w[:, k]) for k in range(3)]].T
+dsd = np.arange(0, L[-1], 0.05)
+den = np.c_[[np.interp(dsd, L, w[:, k]) for k in range(3)]].T
+# tangente horizontal y perpendicular derecha (convención de TourEngine) en cada punto denso
+tan = np.gradient(den, axis=0); tan[:, 1] = 0; tan /= np.linalg.norm(tan, axis=1, keepdims=True)
+nder = np.c_[-tan[:, 2], np.zeros(len(tan)), tan[:, 0]]
+if PERFIL:
+    izq_d = np.interp(dsd, L, np.array(cfg["corridorLeft"], float))
+    der_d = np.interp(dsd, L, np.array(cfg["corridorRight"], float))
+else:
+    izq_d = der_d = np.full(len(dsd), CORR)
 TT = cKDTree(den[:, [0, 2]])
 es = np.sort(np.exp(g["escala"]), axis=1)[:, ::-1]
 op = splat.sigmoide(g["opacidad"].ravel())
@@ -35,7 +48,12 @@ if MARGEN >= 0:
     dist, idx = TT.query(g["xyz"][:, [0, 2]], k=8)
     alcance = np.minimum(es[:, 0], 0.5)
     sobre = g["xyz"][:, 1][:, None] - den[idx, 1]             # altura sobre el trazado
-    dentro = ((dist - alcance[:, None]) < CORR + MARGEN) & (sobre + alcance[:, None] > BAJA) & (sobre - alcance[:, None] < ALTA)
+    # desplazamiento lateral con signo respecto a cada punto cercano: positivo a la derecha
+    rel = g["xyz"][:, None, :] - den[idx]
+    lat = (rel * nder[idx]).sum(-1)
+    tope = np.where(lat >= 0, der_d[idx], izq_d[idx]) + MARGEN
+    dentro = ((np.abs(lat) - alcance[:, None]) < tope) & ((dist - alcance[:, None]) < tope) & \
+             (sobre + alcance[:, None] > BAJA) & (sobre - alcance[:, None] < ALTA)
     pasillo = dentro.any(axis=1)
     quitar |= pasillo
     print("pasillo: %d gaussianas dentro del volumen de la cabeza (%.2f %%)" % (pasillo.sum(), 100 * pasillo.mean()))
