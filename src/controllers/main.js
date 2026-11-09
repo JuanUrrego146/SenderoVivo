@@ -25,6 +25,7 @@ import { GpsTrack } from '../models/GpsTrack.js';
 import { SceneCatalog } from '../models/SceneCatalog.js';
 import { TourEngine } from './TourEngine.js';
 import { TrailRecorder } from './TrailRecorder.js';
+import { PoiPositioner } from './PoiPositioner.js';
 import { TrailArrowsView } from '../views/TrailArrowsView.js';
 import { JoystickView } from '../views/JoystickView.js';
 import { PoiManager } from './PoiManager.js';
@@ -524,8 +525,21 @@ async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
 async function setUpNavigation(app, camera, sceneOpts = {}) {
     // Metadatos de la escena activa (config/scenes.json): restricciones y trazado propio.
     const { forwardOnly = false, eyeHeight: sceneEyeHeight, trackUrl: sceneTrackUrl, pitchDownLimit, yawLimit } = sceneOpts;
-    const isEditor = new URLSearchParams(window.location.search).has('editor');
+    const params = new URLSearchParams(window.location.search);
+    const isEditor = params.has('editor');
+    const isPoiEditor = params.has('poiEditor') || params.has('poi-editor');
     const { trail, gpsTrack } = await loadTrail(sceneTrackUrl ?? TRACK_CONFIG_URL);
+
+    if (isPoiEditor) {
+        enableFreeFlight(camera);
+        const sceneId = params.get('render') || params.get('sog') || 'la-cumbre';
+        window.senderoPoiPositioner = new PoiPositioner(app, camera, trail, sceneId);
+        showHint(
+            '<strong>HERRAMIENTA UBICAR POIS (SW-30)</strong><br>' +
+            'Vuela con <strong>W A S D</strong> · Presiona <strong>P</strong> o el botón para marcar coordenadas.'
+        );
+        return;
+    }
 
     if (isEditor) {
         enableFreeFlight(camera);
@@ -575,17 +589,17 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
     new JoystickView(app);
     app.on('trail:joystick', ({ forward, strafe }) => tour.setStick(forward, strafe));
     // Flechas dentro de la escena, sobre el camino: se tocan para avanzar.
-   window.senderoMarkers = new TrailArrowsView(
-    app,
-    camera,
-    tour,
-    {
-        stepDistance: 3.2,
-        size: 1.1,
-        groundOffset: -0.6,
-        onlyVisible: true
-    }
-);
+    window.senderoMarkers = new TrailArrowsView(
+        app,
+        camera,
+        tour,
+        {
+            stepDistance: 3.2,
+            size: 1.1,
+            groundOffset: -0.6,
+            onlyVisible: true
+        }
+    );
     // Las flechas solo emiten solicitudes; TourEngine ejecuta el movimiento.
     app.on('trail:request-walk', ({ direction }) => {
         tour.press(direction > 0 ? 'forward' : 'back');
