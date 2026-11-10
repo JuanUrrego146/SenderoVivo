@@ -15,6 +15,7 @@ export class SceneView {
         this.baked = !!options.baked;
 
         this.splatBudget = options.splatBudget ?? 3500000;
+        this.graphicsBackend = this.app.graphicsDevice?.isWebGPU ? 'webgpu' : 'webgl2';
 
         this.splat = null;
     }

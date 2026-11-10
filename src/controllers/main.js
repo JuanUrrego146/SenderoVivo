@@ -14,11 +14,14 @@ import {
     AssetListLoader,
     Color,
     Entity,
+    DEVICETYPE_WEBGL2,
+    DEVICETYPE_WEBGPU,
     FILLMODE_FILL_WINDOW,
     RESOLUTION_AUTO,
     Quat,
     Vec2,
-    Vec3
+    Vec3,
+    createGraphicsDevice
 } from 'playcanvas';
 import { TrailModel } from '../models/TrailModel.js';
 import { GpsTrack } from '../models/GpsTrack.js';
@@ -33,7 +36,7 @@ import { ShellView } from '../views/ShellView.js';
 import { HudView } from '../views/HudView.js';
 import { DataController } from './DataController.js';
 import AudioController from './AudioController.js';
-import { detectFromDevice } from '../models/QualityProfile.js';
+import { detectFromDevice, detectWebGPU } from '../models/QualityProfile.js';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
 const SCENES_CONFIG_URL = 'config/scenes.json';
@@ -288,18 +291,24 @@ async function loadWorldModel(app, { url, position = new Vec3(0, 0, 0), rotation
 async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     let poiDiagnosticsVisible = false;
     const qualityProfile = detectFromDevice();
+    const webgpuAvailable = await detectWebGPU();
     const canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
 
-    const app = new Application(canvas, {
-        graphicsDeviceOptions: {
-            antialias: qualityProfile.antialias,
-            // En portatiles con dos GPU, pedir la dedicada (sin esto algunos navegadores
-            // eligen la integrada y el visor va a tirones sin razon aparente).
-            powerPreference: 'high-performance'
-        }
-        
+    const graphicsDevice = await createGraphicsDevice(canvas, {
+        deviceTypes: webgpuAvailable
+            ? [DEVICETYPE_WEBGPU, DEVICETYPE_WEBGL2]
+            : [DEVICETYPE_WEBGL2],
+        antialias: qualityProfile.antialias,
+        // En portatiles con dos GPU, pedir la dedicada (sin esto algunos navegadores
+        // eligen la integrada y el visor va a tirones sin razon aparente).
+        powerPreference: 'high-performance'
     });
+    document.body.appendChild(canvas);
+    const app = new Application(canvas, { graphicsDevice });
+    const graphicsBackend = graphicsDevice.isWebGPU ? 'webgpu' : 'webgl2';
+    qualityProfile.webgpuAvailable = webgpuAvailable;
+    qualityProfile.graphicsBackend = graphicsBackend;
+
     const shellView = new ShellView();
     window.senderoShellView = shellView;
     app.setCanvasFillMode(FILLMODE_FILL_WINDOW);
@@ -310,6 +319,7 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     // Expuesta para inspeccion y capturas desde la consola del navegador.
     window.senderoApp = app;
     window.senderoQualityProfile = qualityProfile;
+    window.senderoGraphicsBackend = graphicsBackend;
     window.addEventListener('resize', () => app.resizeCanvas());
 
     const assets = [
