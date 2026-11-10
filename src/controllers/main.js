@@ -32,7 +32,7 @@ import { PoiCardView } from '../views/PoiCardView.js';
 import { ShellView } from '../views/ShellView.js';
 import { HudView } from '../views/HudView.js';
 import { DataController } from './DataController.js';
-import AmbienceController from './AmbienceController.js';
+import AudioController from './AudioController.js';
 import { detectFromDevice } from '../models/QualityProfile.js';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
@@ -449,15 +449,16 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
             showError(error.message);
         }
     }
-    // Ambientacion sonora (AmbienceController de David). Se instancia y se deja
+    // Ambientacion sonora. Se instancia y se deja
     // expuesta, pero NO suena: load() solo lee config/soundscape.json y no crea
     // ni AudioContext ni elemento de audio. El arranque nace siempre de un toque
     // del visitante, desde la pestana «Sonidos» del cascaron (src/ui/shell.js).
     // RNF-008 e invariante 6.
-    const ambience = new AmbienceController(app);
+    const ambience = new AudioController(app, camera, qualityProfile);
     window.senderoAmbience = ambience;
     try {
         await ambience.load();
+        window.dispatchEvent(new Event('sendero:audio-ready'));
     } catch (error) {
         console.warn('No se pudo leer el contrato de ambientacion:', error);
     }

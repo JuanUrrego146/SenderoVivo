@@ -175,7 +175,7 @@ Nombres en **inglés**, según la convención del proyecto.
 | `CameraRig` | **disuelto** | Sus responsabilidades viven dentro de `TourEngine`. Si S4 exige separarlo, se extrae entonces |
 | `PoiManager`, `PoiCard`, `ModelViewer` | **[existe]** | `src/poi/PoiManager.js`, `src/poi/PoiCard.js`, `src/poi/ModelViewer.js` |
 | `TrailDataLayer`, `GpsTrack` | [previsto] | `src/data/` — David |
-| `AmbienceController`, `SpatialAudioSource`, `AudioPlayer` | **[existe]** / [previsto] | `AmbienceController` en `src/audio/AmbienceController.js`; `SpatialAudioSource` y `AudioPlayer` siguen [previsto] |
+| `AudioController` | **[existe]** | `src/controllers/AudioController.js`; gestiona el lecho, las fuentes HRTF declaradas en `soundscape.json` y el límite de `QualityProfile` |
 | `QualityProfile`, `LodController` | [previsto] | `src/engine/` — Alejandra |
 | `HudView` | [previsto] | `src/ui/` — Juan pinta, Eybar/Alberto diseñan. El prototipo tiene un HUD provisional dentro del hint |
 | `WorldModel` | **[huérfano]** | `src/WorldModel.js`, nadie lo importa; `main.js:249` usa su propia `loadWorldModel()`. Se elimina en SW-02 (#77) |
@@ -286,7 +286,7 @@ classDiagram
         +applyProfile(profile) void
     }
 
-    class AmbienceController {
+    class AudioController {
         -boolean started
         -boolean muted
         +startOnUserGesture() void
@@ -363,10 +363,10 @@ classDiagram
     PoiManager ..> TourEngine : pide guardar y restaurar camara
     TourEngine --> LodController : configura
     LodController --> QualityProfile : lee
-    AmbienceController --> SpatialAudioSource : activa por distancia
-    AmbienceController --> SoundSourceDescriptor : gestiona
-    AmbienceController ..> QualityProfile : respeta maxSpatialAudioSources
-    AmbienceController ..> TourEngine : escucha tour:progress
+    AudioController --> SpatialAudioSource : activa por distancia
+    AudioController --> SoundSourceDescriptor : gestiona
+    AudioController ..> QualityProfile : respeta maxSpatialAudioSources
+    AudioController ..> TourEngine : sigue cámara y listener
 ```
 
 ### 3.1 Las tres capas: Modelo, Vista y Controlador
@@ -392,7 +392,7 @@ carpetas es trabajo de SW-02, SW-03 y SW-04; aquí solo se decide el reparto.
 | `src/poi/PoiManager.js` | Mixta | decide qué POI se abre = Controlador; crea las entidades de los marcadores = Vista. Se parte entre SW-03 y SW-04 | decisión → `src/controllers/` (#81); marcadores → `src/views/` (#79) |
 | `src/poi/PoiCard.js` | Vista | la ficha en DOM. Ya se comporta como Vista: dispara `poi:request-close` y no cierra nada | `src/views/` (SW-03, #79) |
 | `src/poi/ModelViewer.js` | Vista | visor 3D dentro de la ficha | `src/views/` (SW-03, #79) |
-| `src/audio/AmbienceController.js` | Controlador | decide qué suena; no pinta | `src/controllers/` (SW-04, #81) |
+| `src/controllers/AudioController.js` | Controlador | decide qué suena; no pinta | ya integrado |
 | `src/ui/shell.js` | Vista | overlay, HUD y pestañas. Hoy incumple la capa: ver la nota de deuda | `src/views/` (SW-03, #79) |
 | `src/app/main.js` | Controlador | arranque y cableado de todo | `src/controllers/` (SW-04, #81) |
 | `src/WorldModel.js` | ninguna | código muerto, ver la nota de deuda | se elimina en SW-02 (#77) |
@@ -434,7 +434,7 @@ Estos cuatro incumplimientos están declarados y fechados, no descubiertos: son 
 - **`TrailPath.clampToTrail()` es el guardián de RF-004.** Ninguna posición llega a la cámara sin pasar por ahí. Es lo que impide el movimiento libre dentro de una reserva protegida.
 - **`DataController` no calcula en la Vista.** Recibe `tour:progress`, consulta `GpsTrack`, estima el tiempo al siguiente POI teniendo en cuenta la pendiente y entrega valores listos a `HudView`. Esto permite probar la capa de datos sin motor.
 - **`PoiDescriptor` se construye únicamente desde `pois.json`** (RF-021, RNF-009): añadir un POI no toca código. Lo mismo vale para `SoundSourceDescriptor` y `soundscape.json`.
-- **`AmbienceController` no toca la cámara.** El oyente del audio espacial es la cámara activa, que ya mueve `TourEngine`; la espacialización se actualiza sola. El audio escucha `tour:progress` para decidir qué fuentes activar por distancia.
+- **`AudioController` no mueve la cámara.** El oyente del audio espacial es la cámara activa, que ya mueve `TourEngine`; el controlador actualiza el listener Web Audio con su posición y orientación y activa las fuentes más cercanas sin superar `maxSpatialAudioSources`.
 - **`LodController` es el único que escribe `lodBaseDistance` y `lodMultiplier`** (RF-027). Los lee de `QualityProfile`, no los codifica.
 - **`ModelViewer.playIdle()` arranca la animación al abrir la ficha** (RF-029). Es la única animación que corre sin gesto del usuario, y se permite porque es visual: la regla de "nada automático" es del audio (RNF-008).
 
@@ -871,7 +871,7 @@ SenderoVivo/
 │   └── sync-github.mjs         DEPRECADO (13/08)
 ├── src/
 │   ├── controllers/             Juan:      main.js (orquestación), TourEngine, TrailRecorder,
-│   │                                       PoiManager, AmbienceController — capa de
+│   │                                       PoiManager, AudioController — capa de
 │   │                                       orquestación (SW-04, #81)
 │   ├── engine/                  Alejandra: TrailPath, TrailMarkers, SceneLoader [existen]
 │   │                                       QualityProfile, LodController [previstos]

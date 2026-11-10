@@ -576,6 +576,8 @@ function selectHotspot(id) {
 
     if (!item) return;
 
+    guardarEstadoRecorridoFicha();
+
     // Cerrar el panel de catálogo o pestañas si estaba desplegado
     const tabContainer = document.getElementById('tab-panel-container');
     if (tabContainer && !tabContainer.classList.contains('hidden')) {
@@ -717,6 +719,9 @@ function selectHotspot(id) {
  * Si ShellView no está disponible, la cerramos directamente.
  */
 function closeBottomSheet() {
+    restaurarEstadoRecorridoFicha();
+    detenerAudioEspecie();
+
     const shellView =
         window.senderoShellView;
 
@@ -1231,6 +1236,7 @@ function playSynthBeep(freq = 440) {
 
 function playSpeciesSound(freq = 440) {
     try {
+        detenerAudioEspecie();
         initAudioContext();
 
         /*
@@ -1275,6 +1281,7 @@ function playSpeciesSound(freq = 440) {
             osc.start(inicio);
 
             osc.stop(inicio + 0.18);
+            registrarOsciladorEspecie(osc);
         });
 
     } catch {
@@ -1373,7 +1380,10 @@ function refrescarControlAmbiente() {
 function alternarAmbiente() {
     if (!ambienteDisponible()) return;
 
-    window.senderoAmbience.toggle();
+    const resultado = window.senderoAmbience.toggle();
+    if (resultado && typeof resultado.catch === 'function') {
+        resultado.catch(error => console.warn('No se pudo iniciar el ambiente:', error));
+    }
 
     /*
      * play() es asíncrono.
@@ -1390,17 +1400,52 @@ function alternarAmbiente() {
    ========================================================================== */
 
 let audioEspecie = null;
+let osciladoresEspecie = [];
 
 
 function detenerAudioEspecie() {
-    if (!audioEspecie) return;
-
-    try {
-        audioEspecie.pause();
-        audioEspecie.currentTime = 0;
-    } catch {
-        // No hacer nada.
+    if (audioEspecie) {
+        try {
+            audioEspecie.pause();
+            audioEspecie.currentTime = 0;
+        } catch {
+            // No hacer nada.
+        }
+        audioEspecie = null;
     }
+
+    osciladoresEspecie.forEach(oscillator => {
+        try {
+            oscillator.stop();
+        } catch {
+            // El oscilador puede haber terminado antes de cerrar la ficha.
+        }
+    });
+    osciladoresEspecie = [];
+}
+
+function registrarOsciladorEspecie(oscillator) {
+    osciladoresEspecie.push(oscillator);
+    oscillator.addEventListener('ended', () => {
+        osciladoresEspecie = osciladoresEspecie.filter(item => item !== oscillator);
+    });
+}
+
+let estadoRecorridoFicha = null;
+
+function guardarEstadoRecorridoFicha() {
+    const tour = window.senderoTour;
+    if (!estadoRecorridoFicha && tour && typeof tour.saveState === 'function') {
+        estadoRecorridoFicha = tour.saveState();
+    }
+}
+
+function restaurarEstadoRecorridoFicha() {
+    const tour = window.senderoTour;
+    if (estadoRecorridoFicha && tour && typeof tour.restoreState === 'function') {
+        tour.restoreState(estadoRecorridoFicha);
+    }
+    estadoRecorridoFicha = null;
 }
 
 
@@ -1503,7 +1548,10 @@ function verModelo3D(id) {
 
 function toggleAmbientAudio() {
     if (window.senderoAmbience && typeof window.senderoAmbience.toggle === 'function') {
-        window.senderoAmbience.toggle();
+        const resultado = window.senderoAmbience.toggle();
+        if (resultado && typeof resultado.catch === 'function') {
+            resultado.catch(error => console.warn('No se pudo iniciar el ambiente:', error));
+        }
         setTimeout(updateAmbientAudioButtons, 300);
     } else {
         window.__ambientMuted = !window.__ambientMuted;
@@ -1512,9 +1560,13 @@ function toggleAmbientAudio() {
 }
 
 function updateAmbientAudioButtons() {
+    let storedMuted = false;
+    try {
+        storedMuted = window.localStorage.getItem('sendero.audioMuted') === 'true';
+    } catch (e) {}
     const isPlaying = (window.senderoAmbience && typeof window.senderoAmbience.isPlaying === 'function')
         ? window.senderoAmbience.isPlaying()
-        : !window.__ambientMuted;
+        : !window.__ambientMuted && !storedMuted;
 
     const btnPc = document.getElementById('btn-ambient-audio-toggle');
     const btnM = document.getElementById('btn-ambient-audio-toggle-m');
@@ -1533,6 +1585,8 @@ function updateAmbientAudioButtons() {
         btnM.title = isPlaying ? 'Silenciar sonido de bosque' : 'Activar sonido de bosque';
     }
 }
+
+window.addEventListener('sendero:audio-ready', updateAmbientAudioButtons);
 
 /* ==========================================================================
    ÁLBUM DE BIODIVERSIDAD (PANTALLA INICIAL)

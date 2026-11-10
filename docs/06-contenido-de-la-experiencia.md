@@ -519,7 +519,7 @@ textual), RNF-001 (rendimiento).
 
 | Pieza | Carpeta | Dueño |
 |---|---|---|
-| `AmbienceController`, lecho continuo, arranque por gesto, silencio | `src/audio/` | **David Beltrán** |
+| `AudioController`, lecho continuo, fuentes HRTF, arranque por gesto, silencio | `src/controllers/` | **David Beltrán** |
 | `SpatialAudioSource`, fuente puntual HRTF anclada al tramo | `src/audio/` | **David Beltrán** |
 | `AudioPlayer`, narración y canto de la ficha | `src/audio/` | **David Beltrán** |
 | Perfil de audio por dispositivo (nº de fuentes) | `src/engine/QualityProfile` | **Alejandra Chambueta** |
