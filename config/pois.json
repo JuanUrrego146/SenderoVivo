@@ -252,7 +252,7 @@
       "conservation": "Verificado",
       "curiosity": "Es una de las pocas golondrinas residentes en la cordillera; anida en taludes y barrancos a lo largo de senderos y valles altoandinos.",
       "audioFreq": 760,
-      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): el parque de prueba salio del selector. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 3,5 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
+      "anchorNote": "Ubicación provisional de demostración en La Cumbre: asignada a la zona despejada del trazado (d=29.5 m) para la visualización del modelo 3D de fauna, a la espera de la delimitación de su zona de avistamiento definitiva en campo."
     },
     {
       "id": "poi-muro-antiguo",
@@ -360,7 +360,7 @@
       "curiosity": "Cada flecha trae el nombre del destino en español y en inglés.",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): este letrero no aparece en ningun tramo grabado, asi que no marca donde esta en campo. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 4 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
+      "anchorNote": "Ubicación provisional en La Cumbre: permanece aquí debido a que este letrero de señalización se ubica físicamente en el tramo de acceso/intersección que falta por grabar en las próximas capturas de campo."
     },
     {
       "id": "poi-letrero-bosque-alto-andino",
@@ -396,7 +396,7 @@
       "curiosity": "El letrero indica que desde ese punto falta 1.125 m al Mirador Santa Ana y 212 m al Tanque Nuevo Usaquén.",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): este letrero no aparece en ningun tramo grabado, asi que no marca donde esta en campo. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 4 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
+      "anchorNote": "Ubicación provisional en La Cumbre: permanece aquí porque este letrero interpretativo está ubicado físicamente en el tramo de Bosque Alto Andino (hacia Tanque Nuevo Usaquén) pendiente por grabar."
     },
     {
       "id": "poi-banca-vieja",
@@ -432,7 +432,7 @@
       "curiosity": "",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Aproximado: la banca queda unos metros mas abajo, fuera de lo que reconstruyo Luma; se pone al arranque del Tramo 1 de subida, el punto cubierto mas cercano."
+      "anchorNote": "Ubicación aproximada en Tramo 1: se sitúa al inicio del tramo reconstruido (d=1 m) debido a que su posición real en campo está unos metros más abajo, fuera de la captura 3D actual."
     },
     {
       "id": "poi-letrero-observatorio-de-aves",
@@ -468,7 +468,7 @@
       "curiosity": "El letrero lo ubica a 270 m del mirador Santa Ana.",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Aproximado: el letrero queda unos metros mas abajo, fuera de lo que reconstruyo Luma; se pone al arranque del Tramo 1 de subida, el punto cubierto mas cercano."
+      "anchorNote": "Ubicación aproximada en Tramo 1: ubicada al arranque de la escena (d=2.5 m) por estar su posición real de campo unos metros más abajo, fuera del tramo reconstruido por Luma."
     },
     {
       "id": "poi-letrero-prohibido-el-paso",
@@ -504,7 +504,7 @@
       "curiosity": "El logotipo del letrero trae la leyenda «Agua y alcantarillado de Bogotá».",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): este letrero no aparece en ningun tramo grabado, asi que no marca donde esta en campo. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 4 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
+      "anchorNote": "Ubicación provisional en La Cumbre: permanece aquí porque este letrero de restricción del Acueducto se encuentra en el tramo de acceso a infraestructura E.A.B. pendiente por grabar."
     },
     {
       "id": "poi-letrero-bosque-andino-y-pinos",
@@ -540,7 +540,7 @@
       "curiosity": "El letrero indica que desde ese punto falta 736 m al Tanque Nuevo Usaquén y 2.075 m al Mirador Santa Ana.",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): este letrero no aparece en ningun tramo grabado, asi que no marca donde esta en campo. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 4 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
+      "anchorNote": "Ubicación provisional en La Cumbre: permanece aquí debido a que este letrero interpretativo está ubicado en el tramo de enlace al circuito de Pinos, pendiente por capturar en campo."
     },
     {
       "id": "poi-letrero-servicios-ambientales",
@@ -576,7 +576,7 @@
       "curiosity": "Según el letrero, desde ese punto falta 613 m al Mirador Santa Ana.",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): este letrero no aparece en ningun tramo grabado, asi que no marca donde esta en campo. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 4 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
+      "anchorNote": "Ubicación provisional en La Cumbre: permanece aquí porque este letrero interpretativo corresponde al tramo superior del sendero (hacia Mirador Santa Ana), pendiente por grabar."
     },
     {
       "id": "poi-silla-rota",
@@ -612,7 +612,7 @@
       "curiosity": "",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): en campo la silla esta en el Tramo 2 (d 58,3 de su trazado), que salio del selector. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 3,5 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
+      "anchorNote": "Ubicación provisional en La Cumbre: en campo se encuentra ubicada en el Tramo 2 (d=58.3 m), tramo que aún no ha sido grabado ni integrado en el visor."
     },
     {
       "id": "poi-letrero-flecha",
@@ -647,7 +647,8 @@
       "conservation": "Modelo 3D del equipo",
       "curiosity": "Una de las dos frases del panel es un agradecimiento: «GRACIAS POR CUIDARLA !!».",
       "audioFreq": 330,
-      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026)."
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
+      "anchorNote": "Ubicación provisional en La Cumbre: se mantiene aquí a la espera de la verificación fotográfica y captura del tramo de señalización donde se encuentra instalado."
     }
   ]
 }
