@@ -1165,130 +1165,24 @@ function initRenderModelMobile() {
    SINTETIZADOR
    ========================================================================== */
 
-let audioCtx = null;
-
-
-function initAudioContext() {
-    if (!audioCtx) {
-        audioCtx =
-            new (
-                window.AudioContext ||
-                window.webkitAudioContext
-            )();
-    }
-
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
-}
-
-
 function playSynthBeep(freq = 440) {
-    try {
-        initAudioContext();
-
-        const osc =
-            audioCtx.createOscillator();
-
-        const gain =
-            audioCtx.createGain();
-
-        osc.type = 'sine';
-
-        osc.frequency.setValueAtTime(
-            freq,
-            audioCtx.currentTime
-        );
-
-        gain.gain.setValueAtTime(
-            0.0001,
-            audioCtx.currentTime
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.06,
-            audioCtx.currentTime + 0.02
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.0001,
-            audioCtx.currentTime + 0.28
-        );
-
-        osc
-            .connect(gain)
-            .connect(audioCtx.destination);
-
-        osc.start();
-
-        osc.stop(
-            audioCtx.currentTime + 0.3
-        );
-
-    } catch {
-        /*
-         * Si el navegador no permite audio,
-         * no rompe la aplicación.
-         */
-    }
+    const controlador = window.senderoAmbience;
+    if (!controlador || typeof controlador.playTone !== 'function') return;
+    controlador.playTone('shell-beep', freq, {
+        owner: 'shell-ui',
+        priority: 1
+    }).catch(error => console.warn('No se pudo reproducir el aviso sonoro:', error));
 }
 
 
 function playSpeciesSound(freq = 440) {
-    try {
-        detenerAudioEspecie();
-        initAudioContext();
-
-        /*
-         * Trino provisional.
-         */
-        [0, 0.18, 0.36].forEach((t, i) => {
-            const osc =
-                audioCtx.createOscillator();
-
-            const gain =
-                audioCtx.createGain();
-
-            const inicio =
-                audioCtx.currentTime + t;
-
-            osc.type = 'triangle';
-
-            osc.frequency.setValueAtTime(
-                freq * (1 + 0.12 * (2 - i)),
-                inicio
-            );
-
-            gain.gain.setValueAtTime(
-                0.0001,
-                inicio
-            );
-
-            gain.gain.exponentialRampToValueAtTime(
-                0.08,
-                inicio + 0.03
-            );
-
-            gain.gain.exponentialRampToValueAtTime(
-                0.0001,
-                inicio + 0.16
-            );
-
-            osc
-                .connect(gain)
-                .connect(audioCtx.destination);
-
-            osc.start(inicio);
-
-            osc.stop(inicio + 0.18);
-            registrarOsciladorEspecie(osc);
-        });
-
-    } catch {
-        /*
-         * Sin audio no se rompe nada.
-         */
-    }
+    const controlador = window.senderoAmbience;
+    if (!controlador || typeof controlador.playTone !== 'function') return;
+    detenerAudioEspecie();
+    controlador.playTone('shell-poi-tone', freq, {
+        owner: 'shell-poi',
+        priority: 2
+    }).catch(error => console.warn('No se pudo reproducir el tono de especie:', error));
 }
 
 
@@ -1399,36 +1293,11 @@ function alternarAmbiente() {
    SONIDO POR ESPECIE
    ========================================================================== */
 
-let audioEspecie = null;
-let osciladoresEspecie = [];
-
-
 function detenerAudioEspecie() {
-    if (audioEspecie) {
-        try {
-            audioEspecie.pause();
-            audioEspecie.currentTime = 0;
-        } catch {
-            // No hacer nada.
-        }
-        audioEspecie = null;
+    const controlador = window.senderoAmbience;
+    if (controlador && typeof controlador.stopOwner === 'function') {
+        controlador.stopOwner('shell-poi');
     }
-
-    osciladoresEspecie.forEach(oscillator => {
-        try {
-            oscillator.stop();
-        } catch {
-            // El oscilador puede haber terminado antes de cerrar la ficha.
-        }
-    });
-    osciladoresEspecie = [];
-}
-
-function registrarOsciladorEspecie(oscillator) {
-    osciladoresEspecie.push(oscillator);
-    oscillator.addEventListener('ended', () => {
-        osciladoresEspecie = osciladoresEspecie.filter(item => item !== oscillator);
-    });
 }
 
 let estadoRecorridoFicha = null;
@@ -1467,20 +1336,13 @@ function sonarEspecie(id) {
         return;
     }
 
+    const controlador = window.senderoAmbience;
+    if (!controlador) return;
     detenerAudioEspecie();
-
-    audioEspecie =
-        new Audio(item.birdCallUrl);
-
-    audioEspecie.play().catch(() => {
-        /*
-         * Si falla el archivo,
-         * usamos el tono provisional.
-         */
-        playSpeciesSound(
-            item.audioFreq || 440
-        );
-    });
+    controlador.playClip('shell-poi-bird', item.birdCallUrl, {
+        owner: 'shell-poi',
+        priority: 2
+    }).catch(() => playSpeciesSound(item.audioFreq || 440));
 }
 
 
@@ -1495,17 +1357,14 @@ function sonarNarracion(id) {
         return;
     }
 
+    const controlador = window.senderoAmbience;
+    if (!controlador) return;
     detenerAudioEspecie();
-
-    audioEspecie =
-        new Audio(item.narrationUrl);
-
-    audioEspecie.play().catch(error => {
-        console.warn(
-            'Narración no disponible:',
-            item.narrationUrl,
-            error
-        );
+    controlador.playClip('shell-poi-narration', item.narrationUrl, {
+        owner: 'shell-poi',
+        priority: 3
+    }).catch(error => {
+        console.warn('Narración no disponible:', item.narrationUrl, error);
     });
 }
 

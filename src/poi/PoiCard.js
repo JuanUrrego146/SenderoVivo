@@ -7,6 +7,7 @@ export class PoiCard {
         this.modelViewer = null;
         this.cantoAudio = null;
         this.narracionAudio = null;
+        this.audioOwner = null;
         this._onKeyDown = this._onKeyDown.bind(this);
 
         this._onOpen = this._onOpen.bind(this);
@@ -248,80 +249,66 @@ export class PoiCard {
             return;
         }
 
-        this.cantoAudio = cantoUrl ? new Audio(cantoUrl) : null;
-        this.narracionAudio = narracionUrl ? new Audio(narracionUrl) : null;
+        const audio = window.senderoAmbience;
+        const owner = `poi:${poi?.id || 'ficha'}`;
+        const cantoKey = `${owner}:canto`;
+        const narracionKey = `${owner}:narracion`;
+        this.audioOwner = owner;
 
-        if (this.cantoAudio) this.cantoAudio.preload = 'auto';
-        if (this.narracionAudio) this.narracionAudio.preload = 'auto';
-
-        if (cantoButton && this.cantoAudio) {
+        if (cantoButton && cantoUrl && audio) {
             cantoButton.addEventListener('click', async (event) => {
                 event.preventDefault();
                 event.stopPropagation();
 
-                if (this.narracionAudio) {
-                    this.narracionAudio.pause();
-                    this.narracionAudio.currentTime = 0;
+                if (audio.isClipPlaying(narracionKey)) {
+                    audio.stopClip(narracionKey);
                     if (narracionButton) {
                         narracionButton.innerHTML = '<i class="fa-solid fa-headphones"></i> <span>Escuchar narración</span>';
                     }
                 }
 
-                if (!this.cantoAudio.paused) {
-                    this.cantoAudio.pause();
-                    this.cantoAudio.currentTime = 0;
+                if (audio.isClipPlaying(cantoKey)) {
+                    audio.stopClip(cantoKey);
                     cantoButton.innerHTML = '<i class="fa-solid fa-volume-high"></i> <span>Escuchar canto</span>';
                     return;
                 }
 
                 try {
-                    await this.cantoAudio.play();
-                    cantoButton.innerHTML = '<i class="fa-solid fa-pause"></i> <span>Pausar canto</span>';
+                    const started = await audio.playClip(cantoKey, cantoUrl, { owner, priority: 2 });
+                    if (started) cantoButton.innerHTML = '<i class="fa-solid fa-pause"></i> <span>Pausar canto</span>';
                 } catch (error) {
                     console.error('No se pudo reproducir canto:', error);
                 }
             });
 
-            this.cantoAudio.addEventListener('ended', () => {
-                if (cantoButton) {
-                    cantoButton.innerHTML = '<i class="fa-solid fa-volume-high"></i> <span>Escuchar canto</span>';
-                }
-            });
         }
 
-        if (narracionButton && this.narracionAudio) {
+        if (narracionButton && narracionUrl && audio) {
             narracionButton.addEventListener('click', async (event) => {
                 event.preventDefault();
                 event.stopPropagation();
 
-                if (this.cantoAudio) {
-                    this.cantoAudio.pause();
-                    this.cantoAudio.currentTime = 0;
+                if (audio.isClipPlaying(cantoKey)) {
+                    audio.stopClip(cantoKey);
                     if (cantoButton) {
                         cantoButton.innerHTML = '<i class="fa-solid fa-volume-high"></i> <span>Escuchar canto</span>';
                     }
                 }
 
-                if (!this.narracionAudio.paused) {
-                    this.narracionAudio.pause();
-                    this.narracionAudio.currentTime = 0;
+                if (audio.isClipPlaying(narracionKey)) {
+                    audio.stopClip(narracionKey);
                     narracionButton.innerHTML = '<i class="fa-solid fa-headphones"></i> <span>Escuchar narración</span>';
                     return;
                 }
 
                 try {
-                    await this.narracionAudio.play();
-                    narracionButton.innerHTML = '<i class="fa-solid fa-pause"></i> <span>Pausar narración</span>';
+                    const started = await audio.playClip(narracionKey, narracionUrl, { owner, priority: 3 });
+                    if (started) narracionButton.innerHTML = '<i class="fa-solid fa-pause"></i> <span>Pausar narración</span>';
                 } catch (error) {
                     console.error('No se pudo reproducir narración:', error);
                 }
             });
 
-            this.narracionAudio.addEventListener('ended', () => {
-                if (narracionButton) {
-                    narracionButton.innerHTML = '<i class="fa-solid fa-headphones"></i> <span>Escuchar narración</span>';
-                }
-            });
         }
     }
 
@@ -338,16 +325,9 @@ export class PoiCard {
             this.modelViewer = null;
         }
 
-        if (this.cantoAudio) {
-            this.cantoAudio.pause();
-            this.cantoAudio.currentTime = 0;
-            this.cantoAudio = null;
-        }
-
-        if (this.narracionAudio) {
-            this.narracionAudio.pause();
-            this.narracionAudio.currentTime = 0;
-            this.narracionAudio = null;
+        if (this.audioOwner && window.senderoAmbience) {
+            window.senderoAmbience.stopOwner(this.audioOwner);
+            this.audioOwner = null;
         }
 
         if (this.element) {

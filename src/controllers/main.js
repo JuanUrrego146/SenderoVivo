@@ -411,6 +411,15 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     // La escena solo se revela cuando ya se ve bien: nada de mostrarla borrosa.
     await waitForStableRender(app);
     await setUpNavigation(app, camera, sceneOpts);
+    const ambience = new AudioController(app, camera, qualityProfile);
+    window.senderoAmbience = ambience;
+    try {
+        await ambience.load();
+        window.senderoAudioDiagnostics = ambience.getDiagnostics();
+        window.dispatchEvent(new Event('sendero:audio-ready'));
+    } catch (error) {
+        console.warn('No se pudo leer el contrato de ambientacion:', error);
+    }
     // ===== Integracion de Alejandra (dev/alejandra-chambueta): =====
     // modelo 3D anclado al mundo + sistema de POIs con ficha (src/poi/).
     try {
@@ -429,7 +438,7 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     }
     if (window.senderoTour) {
         const poiManager = new PoiManager(app, camera, window.senderoTour);
-        const poiCard = new PoiCardView(app);
+        const poiCard = new PoiCardView(app, ambience);
         const dataController = new DataController(app, window.senderoTour.gpsTrack, new HudView());
         window.senderoDataController = dataController;
         window.senderoPoiManager = poiManager;
@@ -464,14 +473,6 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     // ni AudioContext ni elemento de audio. El arranque nace siempre de un toque
     // del visitante, desde la pestana «Sonidos» del cascaron (src/ui/shell.js).
     // RNF-008 e invariante 6.
-    const ambience = new AudioController(app, camera, qualityProfile);
-    window.senderoAmbience = ambience;
-    try {
-        await ambience.load();
-        window.dispatchEvent(new Event('sendero:audio-ready'));
-    } catch (error) {
-        console.warn('No se pudo leer el contrato de ambientacion:', error);
-    }
     if (sceneOpts.stream) {
         // El sorter del render unificado solo dispara su PRIMER ordenamiento
         // cuando la camara SE MUEVE despues de que el mundo streamed esta listo

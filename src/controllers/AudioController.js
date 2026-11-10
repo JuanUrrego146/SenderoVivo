@@ -16,8 +16,12 @@ export default class AudioController {
         this.ambienceUrl = null;
         this.ambienceNote = '';
         this.audioEl = null;
+        this._audioContext = null;
+        this.masterGain = null;
         this.ambienceGain = null;
         this.sources = [];
+        this.activeClips = new Map();
+        this.diagnostics = [];
         this.loaded = false;
         this.started = false;
         this.muted = this._readMuted();
@@ -71,7 +75,7 @@ export default class AudioController {
         this.audioEl = audio;
         const context = this.audioElContext();
         this.ambienceGain = context.createGain();
-        context.createMediaElementSource(audio).connect(this.ambienceGain).connect(context.destination);
+        context.createMediaElementSource(audio).connect(this.ambienceGain).connect(this.masterGain);
     }
 
     audioElContext() {
@@ -79,6 +83,8 @@ export default class AudioController {
             const Context = window.AudioContext || window.webkitAudioContext;
             if (!Context) throw new Error('El navegador no soporta Web Audio API.');
             this._audioContext = new Context();
+            this.masterGain = this._audioContext.createGain();
+            this.masterGain.connect(this._audioContext.destination);
         }
         return this._audioContext;
     }
@@ -100,7 +106,7 @@ export default class AudioController {
         panner.positionY.value = source.anchor.y;
         panner.positionZ.value = source.anchor.z;
         const gain = context.createGain();
-        context.createMediaElementSource(audio).connect(panner).connect(gain).connect(context.destination);
+        context.createMediaElementSource(audio).connect(panner).connect(gain).connect(this.masterGain);
         source.audio = audio;
         source.panner = panner;
         source.gain = gain;
@@ -117,11 +123,11 @@ export default class AudioController {
                 cameraPosition.z - source.anchor.z
             );
         });
-        const limit = this.qualityProfile?.maxSpatialAudioSources ?? 0;
+        const limit = this._sourceLimit();
         const active = this.sources
             .filter(source => source.distance <= (source.maxDistance ?? 25))
             .sort((a, b) => a.distance - b.distance)
-            .slice(0, limit);
+            .slice(0, Math.max(0, limit - this.activeClips.size - (this.audioEl && !this.audioEl.paused ? 1 : 0)));
         const activeSet = new Set(active);
         this.sources.forEach(source => {
             if (!source.audio) return;
@@ -178,6 +184,7 @@ export default class AudioController {
         await this._ensureAmbience();
         if (this.audioEl) await this.audioEl.play();
         this._updateSources();
+        this._updateDucking();
     }
 
     async play() {
@@ -197,6 +204,7 @@ export default class AudioController {
                 source.active = false;
             }
         });
+        this.stopOwner();
     }
 
     toggle() {
@@ -217,5 +225,164 @@ export default class AudioController {
 
     isMuted() {
         return this.muted;
+    }
+
+    _sourceLimit() {
+        return Math.max(0, this.qualityProfile?.maxSpatialAudioSources ?? 0);
+    }
+
+    _updateDucking() {
+        if (!this.ambienceGain || !this._audioContext) return;
+        const target = this.activeClips.size ? 0.25 : 1;
+        this.ambienceGain.gain.setTargetAtTime(target, this._audioContext.currentTime, 0.04);
+        if (typeof window !== 'undefined') {
+            window.senderoAudioDiagnostics = this.getDiagnostics();
+        }
+    }
+
+    _recordDiagnostic(message) {
+        this.diagnostics.push({
+            message,
+            activeSources: this._activeSourceCount(),
+            limit: this._sourceLimit()
+        });
+        if (this.diagnostics.length > 20) this.diagnostics.shift();
+        if (typeof window !== 'undefined') {
+            window.senderoAudioDiagnostics = this.getDiagnostics();
+        }
+    }
+
+    _stopClip(key) {
+        const clip = this.activeClips.get(key);
+        if (!clip) return;
+        if (clip.audio) {
+            clip.audio.pause();
+            clip.audio.currentTime = 0;
+        } else {
+            try { clip.oscillator.stop(); } catch (error) {}
+        }
+        this.activeClips.delete(key);
+        this._updateDucking();
+    }
+
+    _makeRoom(priority) {
+        const limit = this._sourceLimit();
+        const current = this._activeSourceCount();
+        if (current < limit) return true;
+
+        const candidates = [...this.activeClips.values()]
+            .sort((a, b) => a.priority - b.priority);
+        const candidate = candidates[0];
+        if (candidate && candidate.priority <= priority) {
+            this._stopClip(candidate.key);
+            this._recordDiagnostic(`Fuente desplazada por ${candidate.key}.`);
+            return true;
+        }
+        const spatial = this.sources.find(source => source.active);
+        if (!candidate && spatial && priority > 1) {
+            spatial.audio.pause();
+            spatial.active = false;
+            this._recordDiagnostic(`Fuente espacial desplazada por una fuente de prioridad ${priority}.`);
+            return true;
+        }
+        if (!candidate || candidate.priority > priority) {
+            this._recordDiagnostic('Fuente descartada por superar el límite de calidad.');
+            return false;
+        }
+    }
+
+    async playClip(key, url, {
+        owner = 'global',
+        priority = 2,
+        loop = false,
+        onEnded = null
+    } = {}) {
+        if (!url || this.muted) return false;
+        if (!this.loaded) await this.load();
+        if (!this.started) await this.resume();
+        if (this.activeClips.has(key)) this._stopClip(key);
+        if (!this._makeRoom(priority)) return false;
+
+        const audio = new Audio(url);
+        audio.loop = loop;
+        audio.preload = 'auto';
+        audio.crossOrigin = 'anonymous';
+        const context = this.audioElContext();
+        const gain = context.createGain();
+        context.createMediaElementSource(audio).connect(gain).connect(this.masterGain);
+        const clip = { key, owner, priority, audio };
+        this.activeClips.set(key, clip);
+        this._updateDucking();
+        audio.addEventListener('ended', () => {
+            if (this.activeClips.get(key) === clip) {
+                this.activeClips.delete(key);
+                this._updateDucking();
+            }
+            if (onEnded) onEnded();
+        }, { once: true });
+
+        try {
+            await audio.play();
+            return true;
+        } catch (error) {
+            this._stopClip(key);
+            throw error;
+        }
+    }
+
+    async playTone(key, frequency = 440, { owner = 'global', priority = 2 } = {}) {
+        if (this.muted) return false;
+        if (!this.started) await this.resume();
+        if (this.activeClips.has(key)) this._stopClip(key);
+        if (!this._makeRoom(priority)) return false;
+        const context = this.audioElContext();
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        oscillator.type = 'triangle';
+        oscillator.frequency.value = frequency;
+        gain.gain.setValueAtTime(0.0001, context.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.08, context.currentTime + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.18);
+        oscillator.connect(gain).connect(this.masterGain);
+        const clip = { key, owner, priority, oscillator, audio: null };
+        this.activeClips.set(key, clip);
+        this._updateDucking();
+        oscillator.addEventListener('ended', () => {
+            if (this.activeClips.get(key) === clip) {
+                this.activeClips.delete(key);
+                this._updateDucking();
+            }
+        }, { once: true });
+        oscillator.start();
+        oscillator.stop(context.currentTime + 0.2);
+        return true;
+    }
+
+    stopClip(key) {
+        this._stopClip(key);
+    }
+
+    stopOwner(owner) {
+        for (const [key, clip] of this.activeClips) {
+            if (!owner || clip.owner === owner) this._stopClip(key);
+        }
+    }
+
+    isClipPlaying(key) {
+        return this.activeClips.has(key);
+    }
+
+    getDiagnostics() {
+        return {
+            limit: this._sourceLimit(),
+            active: this._activeSourceCount(),
+            events: [...this.diagnostics]
+        };
+    }
+
+    _activeSourceCount() {
+        return this.activeClips.size
+            + (this.audioEl && !this.audioEl.paused ? 1 : 0)
+            + this.sources.filter(source => source.active).length;
     }
 }
