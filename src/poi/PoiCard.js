@@ -15,7 +15,6 @@ export class PoiCard {
         app.on('poi:open', this._onOpen);
         app.on('poi:close', this._onClose);
 
-        console.log('PoiCard listo con sistema de tokens unificado');
     }
 
     _onKeyDown(event) {
@@ -26,8 +25,6 @@ export class PoiCard {
     }
 
     async _onOpen(poi) {
-        console.log('ABRIENDO FICHA POI:', poi);
-
         // Limpiar ficha anterior si existía
         this._remove();
 
@@ -329,7 +326,6 @@ export class PoiCard {
     }
 
     _onClose() {
-        console.log('FICHA POI CERRADA');
         window.removeEventListener('keydown', this._onKeyDown);
         this._remove();
     }

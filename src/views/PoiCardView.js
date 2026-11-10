@@ -24,7 +24,6 @@ export class PoiCardView {
         app.on('poi:open', this._onOpen);
         app.on('poi:close', this._onClose);
 
-        console.log('PoiCardView listo con tokens unificados');
     }
 
     _onKeyDown(event) {
@@ -35,8 +34,6 @@ export class PoiCardView {
     }
 
     async _onOpen(poi) {
-        console.log('ABRIENDO FICHA POI:', poi);
-
         // Limpiar ficha anterior si existía
         this._remove();
 
@@ -526,11 +523,6 @@ export class PoiCardView {
                         text;
 
 
-                    console.log(
-                        'Transcripción cargada correctamente:',
-                        transcriptUrl
-                    );
-
 
                 } catch (error) {
 
@@ -549,7 +541,6 @@ export class PoiCardView {
     }
 
     _onClose() {
-        console.log('FICHA POI CERRADA');
         window.removeEventListener('keydown', this._onKeyDown);
         this._remove();
     }
