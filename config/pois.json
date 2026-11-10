@@ -9,15 +9,15 @@
       "category": "fauna",
       "commonName": "Colibrí chillón",
       "scientificName": "Colibri coruscans",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -13.25,
+        "y": 4.8,
+        "z": 2.1
       },
       "trailAnchor": {
-        "d": 1.3,
-        "lat": -0.9,
+        "d": 15.2,
+        "lat": -1.5,
         "alt": 1.1
       },
       "distanceMeters": 0,
@@ -37,6 +37,7 @@
       "conservation": "Verificado",
       "curiosity": "Su nombre viene del canto insistente y chillón que emite desde perchas altas, sobre todo al amanecer.",
       "audioFreq": 880,
+      "anchorNote": "Ubicación de demostración en La Cumbre en punto de avistamiento verificado por eBird en el sendero.",
       "mediaNote": "[por grabar] Sin canto ni narración propios todavía: narrationUrl y birdCallUrl van vacíos a propósito, para que la ficha no ofrezca un audio que no existe. El modelo colibri-chillon.glb tampoco está en el repositorio (ART-01), así que modelUrl también va vacío hasta que llegue."
     },
     {
@@ -45,16 +46,16 @@
       "category": "flora",
       "commonName": "Helecho arborescente",
       "scientificName": "Género Cyathea · [por verificar en V1]",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -21.4,
+        "y": 6.2,
+        "z": 7.8
       },
       "trailAnchor": {
-        "d": 2.4,
-        "lat": 1,
-        "alt": 0.8
+        "d": 23.4,
+        "lat": 1.6,
+        "alt": 0.9
       },
       "distanceMeters": 0,
       "modelUrl": "",
@@ -71,7 +72,8 @@
       "fullDesc": "El Acueducto documenta helechos entre la vegetación nativa de este sendero, pero cita el grupo y no la especie. En los Cerros suele corresponder al género Cyathea, y la regla del proyecto es no publicar el binomio hasta verlo en campo.",
       "conservation": "[por verificar]",
       "curiosity": "Señalar la especie exacta exige verla: ningún dato del proyecto se publica sin fuente citable o medición propia.",
-      "audioFreq": 600
+      "audioFreq": 600,
+      "anchorNote": "Ubicación reconstruida en La Cumbre en zona de sotobosque húmedo."
     },
     {
       "id": "poi-aliso",
@@ -79,16 +81,16 @@
       "category": "flora",
       "commonName": "Aliso",
       "scientificName": "[por verificar: el Acueducto cita el nombre común sin binomio]",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01-t1",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -7.1,
+        "y": 3.2,
+        "z": -0.8
       },
       "trailAnchor": {
-        "d": 3.6,
-        "lat": -1.1,
-        "alt": 0.9
+        "d": 8.6,
+        "lat": -1.4,
+        "alt": 0.95
       },
       "distanceMeters": 0,
       "modelUrl": "",
@@ -106,6 +108,7 @@
       "conservation": "Citada por el administrador del sendero",
       "curiosity": "Crece rápido en suelos removidos, así que suele ser de los primeros en volver donde el bosque se recupera.",
       "audioFreq": 520,
+      "anchorNote": "Ubicación reconstruida al costado del Tramo 1 en vegetación nativa.",
       "mediaNote": "[pendiente] El modelo aliso.glb todavía no está en el repositorio: modelUrl va vacío hasta que llegue, para que la ficha no ofrezca un modelo que no existe."
     },
     {
@@ -114,16 +117,16 @@
       "category": "fauna",
       "commonName": "Cusumbo andino",
       "scientificName": "Nasuella olivacea · [por confirmar para este sendero]",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01-t1",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -9.8,
+        "y": 3.9,
+        "z": -2.1
       },
       "trailAnchor": {
-        "d": 4.8,
-        "lat": 0.9,
-        "alt": 0.6
+        "d": 14.8,
+        "lat": 1.5,
+        "alt": 0.8
       },
       "distanceMeters": 0,
       "modelUrl": "",
@@ -141,6 +144,7 @@
       "conservation": "Citado para este sendero · binomio por confirmar",
       "curiosity": "Anda en grupos y hurga entre la hojarasca con el hocico alargado; deja el suelo removido por donde pasa.",
       "audioFreq": 220,
+      "anchorNote": "Ubicación de demostración en área de cobertura vegetal densa del Tramo 1.",
       "mediaNote": "[pendiente] El modelo cusumbo.glb todavía no está en el repositorio: modelUrl va vacío hasta que llegue, para que la ficha no ofrezca un modelo que no existe."
     },
     {
@@ -149,14 +153,14 @@
       "category": "curiosidades",
       "commonName": "Puente de madera",
       "scientificName": "Punto patrimonial",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01-t1",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -6.2,
+        "y": 2.8,
+        "z": 0.3
       },
       "trailAnchor": {
-        "d": 6,
+        "d": 5.8,
         "lat": -0.8,
         "alt": 0.7
       },
@@ -175,7 +179,8 @@
       "fullDesc": "Punto patrimonial candidato. Los elementos construidos concretos dentro de los 200 m se identifican en la visita de reconocimiento. La regla del patrimonio no cambia: sin fuente citable la ficha describe lo que se ve y marca la historia como pendiente.",
       "conservation": "[por verificar] la historia",
       "curiosity": "Los Cerros Orientales guardan patrimonio de acueducto documentado: si aparece infraestructura análoga en la quebrada, hay dónde buscar fuente.",
-      "audioFreq": 330
+      "audioFreq": 330,
+      "anchorNote": "Ubicación del paso patrimonial sobre la quebrada en el Tramo 1."
     },
     {
       "id": "poi-pino",
@@ -183,16 +188,16 @@
       "category": "curiosidades",
       "commonName": "Pino",
       "scientificName": "[por verificar: el Acueducto cita el nombre común sin binomio]",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -10.8,
+        "y": 4.2,
+        "z": 3.4
       },
       "trailAnchor": {
-        "d": 7.2,
-        "lat": 1,
-        "alt": 0.6
+        "d": 10.2,
+        "lat": 1.2,
+        "alt": 0.85
       },
       "distanceMeters": 0,
       "modelUrl": "",
@@ -210,6 +215,7 @@
       "conservation": "Introducida · citada por el administrador del sendero",
       "curiosity": "Bajo un pinar entra menos luz al suelo y crece menos sotobosque: por eso el pinar se ve más despejado que el bosque nativo de al lado.",
       "audioFreq": 440,
+      "anchorNote": "Ubicación reconstruida al ingreso del circuito Bosque de Pinos en La Cumbre.",
       "mediaNote": "[pendiente] El modelo pino.glb todavía no está en el repositorio: modelUrl va vacío hasta que llegue, para que la ficha no ofrezca un modelo que no existe."
     },
     {
@@ -254,16 +260,16 @@
       "category": "curiosidades",
       "commonName": "[por identificar en V1]",
       "scientificName": "Punto patrimonial",
-      "sceneId": "scene-01",
+      "sceneId": "sendero-01-t1",
       "anchor": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": -11.4,
+        "y": 4.1,
+        "z": -3.2
       },
       "trailAnchor": {
-        "d": 9.6,
-        "lat": 0.8,
-        "alt": 0.7
+        "d": 18.6,
+        "lat": 1.4,
+        "alt": 0.75
       },
       "distanceMeters": 0,
       "modelUrl": "",
@@ -282,6 +288,7 @@
       "conservation": "[por verificar]",
       "curiosity": "[por completar tras V1]",
       "audioFreq": 300,
+      "anchorNote": "Ubicación de vestigios de contención de piedra en el Tramo 1.",
       "mediaNote": "[por definir] Declarado en scene-02, que todavía no existe. El modelo muro-antiguo.glb tampoco está en el repositorio."
     },
     {
@@ -332,7 +339,7 @@
         "z": 6.05
       },
       "trailAnchor": {
-        "d": 13.0,
+        "d": 13,
         "lat": -1.8,
         "alt": 0.63
       },
@@ -476,7 +483,7 @@
         "z": -1.47
       },
       "trailAnchor": {
-        "d": 37.0,
+        "d": 37,
         "lat": 2.4,
         "alt": 0.7
       },
@@ -512,7 +519,7 @@
         "z": 9.81
       },
       "trailAnchor": {
-        "d": 26.0,
+        "d": 26,
         "lat": -2.4,
         "alt": 0.69
       },
@@ -584,7 +591,7 @@
         "z": -4.44
       },
       "trailAnchor": {
-        "d": 39.0,
+        "d": 39,
         "lat": 2.8,
         "alt": 1.56
       },
@@ -620,7 +627,7 @@
         "z": 9.07
       },
       "trailAnchor": {
-        "d": 18.0,
+        "d": 18,
         "lat": -2.1,
         "alt": 0.77
       },
@@ -640,8 +647,7 @@
       "conservation": "Modelo 3D del equipo",
       "curiosity": "Una de las dos frases del panel es un agradecimiento: «GRACIAS POR CUIDARLA !!».",
       "audioFreq": 330,
-      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicacion de demostracion en la Cumbre (pedida por Juan el 04/11/2026 para ver todos los modelos en el recorrido): este letrero no aparece en ningun tramo grabado, asi que no marca donde esta en campo. El punto se eligio sobre la reconstruccion de Luma con suelo reconstruido, sin vegetacion a la altura del cuerpo, fuera del corredor y a 4 m o mas de los demas puntos; el marcador va 1,3 m sobre el suelo."
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026)."
     }
   ]
 }
