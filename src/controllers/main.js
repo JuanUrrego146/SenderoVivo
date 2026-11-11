@@ -357,13 +357,15 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     // mueve y gira la cámara: el módulo de audio no necesita tocarla (invariante 12).
     camera.addComponent('audiolistener');
     app.root.addChild(camera);
-    // Campo de vision segun la orientacion de la pantalla. PlayCanvas fija 45 grados en vertical:
-    // en un celular en vertical eso deja unos 21 grados de ancho, la escena se ve ampliada casi
-    // tres veces respecto a como se grabo y cada gaussiana se nota como un brochazo. En pantallas
-    // verticales se abre a 62 grados (unos 31 de ancho); en horizontal se conserva el de siempre.
+    // Campo de vision segun la orientacion de la pantalla. El sendero se grabo con el gran angular
+    // del celular (101 grados de ancho, 68 de alto). Con los 45 grados en vertical que PlayCanvas
+    // trae por omision la escena se ve ampliada 1,65 veces respecto a como se grabo (casi tres
+    // veces en un celular en vertical) y cada gaussiana se nota como un brochazo. En horizontal se
+    // abre a 58 grados (unos 89 de ancho en 16:9, lo habitual en primera persona: ampliacion 1,2)
+    // y en pantallas verticales a 62 (unos 31 de ancho).
     const ajustarCampoDeVision = () => {
         const aspecto = window.innerWidth / Math.max(1, window.innerHeight);
-        camera.camera.fov = aspecto < 1 ? 62 : 45;
+        camera.camera.fov = aspecto < 1 ? 62 : 58;
     };
     ajustarCampoDeVision();
     window.addEventListener('resize', ajustarCampoDeVision);
