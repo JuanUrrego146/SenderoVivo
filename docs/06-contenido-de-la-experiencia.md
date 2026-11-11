@@ -505,6 +505,57 @@ lo que más fácilmente se hace mal en V3, así que va escrito.
 cantos de otra región. Si un canto no se logra grabar, la ficha lo dice y no suena. Es la misma
 regla de "nada inventado" aplicada al oído.
 
+### C.5.1 Convención del catálogo y entrega pendiente
+
+Las rutas de audio de una ficha son relativas a la raíz del sitio y siempre apuntan al archivo
+que está comprometido en el repositorio. La convención es:
+
+| Campo | Ruta y nombre esperado |
+|---|---|
+| `narrationUrl` | `assets/audio/<slug>-narracion.mp3` |
+| `birdCallUrl` | `assets/audio/Audios Pajaros/<nombre entregado>.mp3` |
+| `transcriptUrl` | `assets/text/<slug>-transcripcion.txt` |
+
+`<slug>` es el identificador estable del POI en minúsculas, sin tildes y con guiones. Los
+archivos de canto de `Audios Pajaros` conservan el nombre de entrega porque ese nombre es el
+que figura en [`CREDITOS_Y_LICENCIAS.md`](../assets/audio/Audios%20Pajaros/CREDITOS_Y_LICENCIAS.md);
+no se crea un alias en la configuración. Un campo vacío significa que el archivo todavía no
+está entregado y evita que la ficha lo prometa.
+
+Los archivos que ya puede usar el catálogo son:
+
+- `poi-colibri-chillon.birdCallUrl` →
+  `assets/audio/Audios Pajaros/Colibri-Chillon_1.mp3`.
+- `poi-golondrina-plomiza.narrationUrl` →
+  `assets/audio/golondrina-narracion.mp3`.
+- `poi-golondrina-plomiza.birdCallUrl` →
+  `assets/audio/Audios Pajaros/Golondrina High Final_1.mp3`.
+
+Este es el inventario de entrega para ART-09 (narración y transcripción) y ART-10 (cantos).
+El nombre indicado es el que debe tener el archivo cuando se incorpore; mientras tanto, el
+campo correspondiente permanece vacío en `config/pois.json`.
+
+| Punto | Narración | Transcripción | Canto |
+|---|---|---|---|
+| Colibrí chillón (`poi-colibri-chillon`) | `colibri-chillon-narracion.mp3` | `colibri-chillon-transcripcion.txt` | Entregado: `Colibri-Chillon_1.mp3` |
+| Helecho arborescente (`poi-helecho-arborescente`) | `helecho-arborescente-narracion.mp3` | `helecho-arborescente-transcripcion.txt` | No aplica |
+| Aliso (`poi-aliso`) | `aliso-narracion.mp3` | `aliso-transcripcion.txt` | No aplica |
+| Cusumbo andino (`poi-cusumbo`) | `cusumbo-narracion.mp3` | `cusumbo-transcripcion.txt` | `cusumbo-canto.mp3` |
+| Puente de madera (`poi-puente-madera`) | `puente-madera-narracion.mp3` | `puente-madera-transcripcion.txt` | No aplica |
+| Pino (`poi-pino`) | `pino-narracion.mp3` | `pino-transcripcion.txt` | No aplica |
+| Golondrina plomiza (`poi-golondrina-plomiza`) | Entregada: `golondrina-narracion.mp3` | `golondrina-plomiza-transcripcion.txt` | Entregado: `Golondrina High Final_1.mp3` |
+| Muro antiguo (`poi-muro-antiguo`) | `muro-antiguo-narracion.mp3` | `muro-antiguo-transcripcion.txt` | No aplica |
+| Tablero informativo (`poi-tablero-informativo`) | `tablero-informativo-narracion.mp3` | `tablero-informativo-transcripcion.txt` | No aplica |
+| Poste de indicaciones (`poi-letrero-indicaciones`) | `letrero-indicaciones-narracion.mp3` | `letrero-indicaciones-transcripcion.txt` | No aplica |
+| Bosque alto andino (`poi-letrero-bosque-alto-andino`) | `letrero-bosque-alto-andino-narracion.mp3` | `letrero-bosque-alto-andino-transcripcion.txt` | No aplica |
+| Banca vieja (`poi-banca-vieja`) | `banca-vieja-narracion.mp3` | `banca-vieja-transcripcion.txt` | No aplica |
+| Observatorio de aves (`poi-letrero-observatorio-de-aves`) | `letrero-observatorio-de-aves-narracion.mp3` | `letrero-observatorio-de-aves-transcripcion.txt` | No aplica |
+| Prohibido el paso (`poi-letrero-prohibido-el-paso`) | `letrero-prohibido-el-paso-narracion.mp3` | `letrero-prohibido-el-paso-transcripcion.txt` | No aplica |
+| Bosque andino y bosque de pinos (`poi-letrero-bosque-andino-y-pinos`) | `letrero-bosque-andino-y-pinos-narracion.mp3` | `letrero-bosque-andino-y-pinos-transcripcion.txt` | No aplica |
+| Servicios ambientales (`poi-letrero-servicios-ambientales`) | `letrero-servicios-ambientales-narracion.mp3` | `letrero-servicios-ambientales-transcripcion.txt` | No aplica |
+| Silla rota (`poi-silla-rota`) | `silla-rota-narracion.mp3` | `silla-rota-transcripcion.txt` | No aplica |
+| La montaña es vida (`poi-letrero-flecha`) | `letrero-flecha-narracion.mp3` | `letrero-flecha-transcripcion.txt` | No aplica |
+
 ## C.6 Requerimientos que esto crea
 
 | ID | Requerimiento |
