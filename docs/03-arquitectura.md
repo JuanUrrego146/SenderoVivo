@@ -785,6 +785,10 @@ Forma real vigente (el prototipo ya lo consume):
 > `--sv-tope-nav-movil`; la tarjeta "Detalles del sendero" va 8 px encima y el joystick 12 px encima de ella.
 >
 > El campo de visión depende de la orientación de la pantalla (`main.js`, al iniciar y en cada `resize`): 45 grados en vertical cuando la pantalla es horizontal y 62 cuando es vertical. Con 45 en un celular en vertical el ancho visible era de unos 21 grados y la escena se veía ampliada casi tres veces respecto a como se grabó. Las escenas de la Cumbre declaran además `pitchDownLimit` 30: el piso a menos de 2 m de los pies es lo más borroso de las reconstrucciones.
+>
+> Una escena puede declarar `skyboxUrl` (`config/scenes.json`): un equirectangular de 2 por 1 con el cielo real, que `cargarFondo360()` en `main.js` convierte una sola vez en el fondo de la escena. Sale de una panorámica de la Insta360 ubicada por COLMAP en el marco de la escena (`scripts/escenas/nube/propia_fondo360.py`) y deja solo el cielo (`propia_cielo360.py`): el fondo está en el infinito, así que un árbol fotografiado desde un punto quedaría pintado en el cielo y quieto al caminar. Donde la reconstrucción no tiene nada se ve ese cielo en lugar del color plano de `clearColorToken`. PlayCanvas 2.21 muestrea el equirectangular con la longitud invertida, por eso el archivo se guarda volteado.
+>
+> El paso de una zona a la siguiente lo arma `src/ui/conexionesSendero.js` con `trail.conexiones` de `config/scenes.json`: por zona, en qué extremo del trazado aparece el botón (`en`), a qué zona lleva y en qué extremo de ella arranca el visitante (`llegada`). El módulo solo lee la distancia recorrida del motor; el cambio de escena recarga la página con `?render=` y `?llegada=inicio|fin`, y `main.js` usa ese parámetro como punto de arranque (quien llega por el final queda mirando hacia el tramo). Se conserva la versión de la reconstrucción si la zona de destino la tiene, y si la escena de destino es `forwardOnly` se llega por su inicio.
 
 ---
 

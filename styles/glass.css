@@ -893,6 +893,40 @@
     white-space: nowrap;
 }
 
+/* Paso a la zona siguiente del sendero (src/ui/conexionesSendero.js): aparece al llegar a un
+   extremo del trazado que conecta con otra zona. */
+.conexion-sendero {
+    position: fixed;
+    left: 50%;
+    bottom: 96px;
+    transform: translateX(-50%);
+    z-index: 35;
+    min-height: 44px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--sv-primary);
+    background: var(--sv-primary);
+    color: var(--sv-text-inverse);
+    font-family: var(--sv-font-body);
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: var(--sv-surface-shadow), 0 0 14px var(--sv-primary-glow);
+    cursor: pointer;
+}
+
+.conexion-sendero[hidden] {
+    display: none;
+}
+
+/* En celular va por encima del joystick y del panel de detalles. */
+@media (max-width: 640px) {
+    .conexion-sendero {
+        bottom: 250px;
+        font-size: 13px;
+    }
+}
+
 /* Joystick para caminar desde el celular (src/views/JoystickView.js) */
 .sv-joystick {
     display: none;
