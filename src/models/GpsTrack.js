@@ -7,8 +7,8 @@
  *
  * Contrato:
  *  - Si track.points tiene datos, usa esos (altitud real en msnm, distancia en m)
- *  - Si track.points está vacío, devuelve null para altitud y usa sceneWaypoints
- *    como aproximación hasta que llegue el track GPS real (CAM-02, V1).
+ *  - Si track.points está vacío, devuelve null para las métricas que requieren
+ *    GPS y no inventa una distancia a partir de sceneWaypoints.
  *
  * USO:
  *  const gps = new GpsTrack(trackJsonObject);
@@ -44,8 +44,7 @@ export class GpsTrack {
 
     /**
      * Distancia total del recorrido en metros.
-     * Si hay datos GPS, la última entrada.
-     * Si no, aproximación basada en sceneWaypoints.
+     * Si no hay datos GPS, devuelve 0 para indicar que la métrica no está disponible.
      */
     totalDistance() {
         if (this.points.length > 0) {
@@ -53,17 +52,7 @@ export class GpsTrack {
             return last.distance || 0;
         }
 
-        // Aproximación sin datos reales: sumar distancias euclidianas en escena
-        let total = 0;
-        for (let i = 1; i < this.sceneWaypoints.length; i++) {
-            const p0 = this.sceneWaypoints[i - 1];
-            const p1 = this.sceneWaypoints[i];
-            const dx = p1.x - p0.x;
-            const dy = p1.y - p0.y;
-            const dz = p1.z - p0.z;
-            total += Math.sqrt(dx * dx + dy * dy + dz * dz);
-        }
-        return total;
+        return 0;
     }
 
     /**

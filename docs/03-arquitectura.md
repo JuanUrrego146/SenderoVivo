@@ -767,6 +767,10 @@ Forma real vigente (el prototipo ya lo consume):
 > día de la captura y alimenta a `TrailDataLayer`. **`eyeHeight`** levanta la cámara sobre los
 > puntos marcados; **`corridorRadius`** es el margen lateral permitido (RF-004 sin camisa de
 > fuerza). Se calibran en vivo con R/F y se anotan aquí.
+> Si `points` está vacío, el HUD muestra `—` para las métricas GPS: `GpsTrack` no aproxima
+> distancias sumando `sceneWaypoints`, porque esas coordenadas están en unidades del motor.
+> Para añadir una captura parcial se puede segmentar `config/track.json` con
+> `node scripts/segmentar-gpx.cjs`, declarando en la nota del archivo los límites del GPX.
 > **`corridorLeft`** y **`corridorRight`** (opcionales, un valor por punto de `sceneWaypoints`) reemplazan
 > a `corridorRadius` cuando están: es el espacio libre medido a cada lado a la altura de la cabeza
 > (`scripts/escenas/nube/espacio_libre.py`). `TrailModel.corridorAt(d)` los interpola y `TourEngine`

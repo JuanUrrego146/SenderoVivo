@@ -3,7 +3,7 @@
   "capturedOn": "2026-09-16 (Tramo 1)",
   "source": "trayectoria del video de vista previa de Luma, que va por encima del camino; piso medido debajo de cada punto",
   "distanceUnit": "meters",
-  "note": "Trazado del Tramo 1 de SUBIDA: arranca abajo y termina cerca de la plataforma de la Cumbre. En planta sigue la trayectoria del video de vista previa de Luma; la altura sale del piso medido dibujando hacia abajo desde cada punto. Cada punto se corrio de lado hacia el espacio libre y luego hacia el centro de la escalera donde la baranda quedaba encima (0,5 m al comienzo, 0,9 m al final). Se recortaron 3 m al inicio y 15 m al final, donde la reconstruccion se pierde. Coordenadas en metros del motor (escena horneada, +Y arriba).",
+  "note": "Trazado del Tramo 1 de SUBIDA: arranca abajo y termina cerca de la plataforma de la Cumbre. En planta sigue la trayectoria del video de vista previa de Luma; la altura sale del piso medido dibujando hacia abajo desde cada punto. Cada punto se corrio de lado hacia el espacio libre y luego hacia el centro de la escalera donde la baranda quedaba encima (0,5 m al comienzo, 0,9 m al final). Se recortaron 3 m al inicio y 15 m al final, donde la reconstruccion se pierde. Coordenadas en metros del motor (escena horneada, +Y arriba). GPS: segmento Tramo 1 del archivo config/track.json; cubre los metros 70.000-140.000 del GPX (longitud 70.000 m).",
   "sceneWaypoints": [
     {
       "x": -3.041,
@@ -274,5 +274,455 @@
   "corridorProfileNote": "Espacio libre a cada lado de cada punto, a la altura de la cabeza, medido sobre la escena de Luma con scripts/escenas/nube/espacio_libre.py (mismo metodo que la Cumbre, con tope en corridorRadius = 0,7 m). En 11 de los 37 puntos queda menos de 0,5 m a la izquierda: ahi el visor no deja correrse hacia la vegetacion.",
   "eyeHeightNote": "Los puntos van a 0,6 m del suelo, donde el visor pone las flechas; 0,85 m mas arriba quedan los ojos a 1,45 m, la altura a la que se grabo.",
   "corridorNote": "Corredor de 0,7 m a cada lado: son escaleras con baranda y la reconstruccion solo aguanta cerca del camino.",
-  "points": []
+  "points": [
+    {
+      "distance": 0,
+      "altitude": 2678.447550371156,
+      "lat": 4.692958989077413,
+      "lon": -74.02503473838813,
+      "time": "2026-09-16T14:55:32.120Z"
+    },
+    {
+      "distance": 0.829,
+      "altitude": 2678.517,
+      "lat": 4.692964,
+      "lon": -74.0250292,
+      "time": "2026-09-16T14:55:33Z"
+    },
+    {
+      "distance": 1.759,
+      "altitude": 2678.751,
+      "lat": 4.6929683,
+      "lon": -74.025022,
+      "time": "2026-09-16T14:55:34Z"
+    },
+    {
+      "distance": 2.695,
+      "altitude": 2679.084,
+      "lat": 4.6929739,
+      "lon": -74.0250157,
+      "time": "2026-09-16T14:55:35Z"
+    },
+    {
+      "distance": 3.623,
+      "altitude": 2679.12,
+      "lat": 4.6929794,
+      "lon": -74.0250094,
+      "time": "2026-09-16T14:55:36Z"
+    },
+    {
+      "distance": 4.545,
+      "altitude": 2679.229,
+      "lat": 4.6929832,
+      "lon": -74.025002,
+      "time": "2026-09-16T14:55:37Z"
+    },
+    {
+      "distance": 5.452,
+      "altitude": 2679.281,
+      "lat": 4.6929884,
+      "lon": -74.0249957,
+      "time": "2026-09-16T14:55:38Z"
+    },
+    {
+      "distance": 6.369,
+      "altitude": 2679.378,
+      "lat": 4.6929928,
+      "lon": -74.0249887,
+      "time": "2026-09-16T14:55:39Z"
+    },
+    {
+      "distance": 7.28,
+      "altitude": 2679.487,
+      "lat": 4.6929971,
+      "lon": -74.0249817,
+      "time": "2026-09-16T14:55:40Z"
+    },
+    {
+      "distance": 8.223,
+      "altitude": 2679.612,
+      "lat": 4.6930007,
+      "lon": -74.024974,
+      "time": "2026-09-16T14:55:41Z"
+    },
+    {
+      "distance": 9.137,
+      "altitude": 2679.791,
+      "lat": 4.6930039,
+      "lon": -74.0249664,
+      "time": "2026-09-16T14:55:42Z"
+    },
+    {
+      "distance": 10.025,
+      "altitude": 2679.876,
+      "lat": 4.6930076,
+      "lon": -74.0249593,
+      "time": "2026-09-16T14:55:43Z"
+    },
+    {
+      "distance": 10.918,
+      "altitude": 2680.055,
+      "lat": 4.6930112,
+      "lon": -74.0249521,
+      "time": "2026-09-16T14:55:44Z"
+    },
+    {
+      "distance": 11.83,
+      "altitude": 2680.147,
+      "lat": 4.6930148,
+      "lon": -74.0249447,
+      "time": "2026-09-16T14:55:45Z"
+    },
+    {
+      "distance": 13.484,
+      "altitude": 2680.3271,
+      "lat": 4.6930207,
+      "lon": -74.024931,
+      "time": "2026-09-16T14:55:46Z"
+    },
+    {
+      "distance": 14.689,
+      "altitude": 2680.58,
+      "lat": 4.6930247,
+      "lon": -74.0249209,
+      "time": "2026-09-16T14:55:47Z"
+    },
+    {
+      "distance": 15.422,
+      "altitude": 2680.81,
+      "lat": 4.693027,
+      "lon": -74.0249147,
+      "time": "2026-09-16T14:55:48Z"
+    },
+    {
+      "distance": 15.667,
+      "altitude": 2680.948,
+      "lat": 4.6930277,
+      "lon": -74.0249126,
+      "time": "2026-09-16T14:55:49Z"
+    },
+    {
+      "distance": 15.906,
+      "altitude": 2681.143,
+      "lat": 4.6930285,
+      "lon": -74.0249106,
+      "time": "2026-09-16T14:55:50Z"
+    },
+    {
+      "distance": 16.629,
+      "altitude": 2681.3271,
+      "lat": 4.6930308,
+      "lon": -74.0249045,
+      "time": "2026-09-16T14:55:51Z"
+    },
+    {
+      "distance": 17.87,
+      "altitude": 2681.499,
+      "lat": 4.6930344,
+      "lon": -74.0248939,
+      "time": "2026-09-16T14:55:52Z"
+    },
+    {
+      "distance": 19.63,
+      "altitude": 2681.657,
+      "lat": 4.6930393,
+      "lon": -74.0248788,
+      "time": "2026-09-16T14:55:53Z"
+    },
+    {
+      "distance": 20.676,
+      "altitude": 2681.805,
+      "lat": 4.6930418,
+      "lon": -74.0248697,
+      "time": "2026-09-16T14:55:54Z"
+    },
+    {
+      "distance": 21.621,
+      "altitude": 2682.007,
+      "lat": 4.693045,
+      "lon": -74.0248618,
+      "time": "2026-09-16T14:55:55Z"
+    },
+    {
+      "distance": 22.558,
+      "altitude": 2682.114,
+      "lat": 4.693048,
+      "lon": -74.0248539,
+      "time": "2026-09-16T14:55:56Z"
+    },
+    {
+      "distance": 23.501,
+      "altitude": 2682.236,
+      "lat": 4.6930509,
+      "lon": -74.0248459,
+      "time": "2026-09-16T14:55:57Z"
+    },
+    {
+      "distance": 24.437,
+      "altitude": 2682.374,
+      "lat": 4.6930536,
+      "lon": -74.0248379,
+      "time": "2026-09-16T14:55:58Z"
+    },
+    {
+      "distance": 25.374,
+      "altitude": 2682.4521,
+      "lat": 4.693056,
+      "lon": -74.0248298,
+      "time": "2026-09-16T14:55:59Z"
+    },
+    {
+      "distance": 26.368,
+      "altitude": 2682.605,
+      "lat": 4.6930582,
+      "lon": -74.0248211,
+      "time": "2026-09-16T14:56:00Z"
+    },
+    {
+      "distance": 27.65,
+      "altitude": 2682.7021,
+      "lat": 4.6930594,
+      "lon": -74.0248096,
+      "time": "2026-09-16T14:56:01Z"
+    },
+    {
+      "distance": 28.715,
+      "altitude": 2682.875,
+      "lat": 4.6930614,
+      "lon": -74.0248002,
+      "time": "2026-09-16T14:56:02Z"
+    },
+    {
+      "distance": 30.02,
+      "altitude": 2683.091,
+      "lat": 4.6930627,
+      "lon": -74.0247885,
+      "time": "2026-09-16T14:56:03Z"
+    },
+    {
+      "distance": 31.313,
+      "altitude": 2683.1921,
+      "lat": 4.693064,
+      "lon": -74.0247769,
+      "time": "2026-09-16T14:56:04Z"
+    },
+    {
+      "distance": 32.678,
+      "altitude": 2683.332,
+      "lat": 4.6930645,
+      "lon": -74.0247646,
+      "time": "2026-09-16T14:56:05Z"
+    },
+    {
+      "distance": 34.045,
+      "altitude": 2683.562,
+      "lat": 4.6930655,
+      "lon": -74.0247523,
+      "time": "2026-09-16T14:56:06Z"
+    },
+    {
+      "distance": 35.244,
+      "altitude": 2683.645,
+      "lat": 4.6930671,
+      "lon": -74.0247416,
+      "time": "2026-09-16T14:56:07Z"
+    },
+    {
+      "distance": 36.711,
+      "altitude": 2683.852,
+      "lat": 4.6930681,
+      "lon": -74.0247284,
+      "time": "2026-09-16T14:56:08Z"
+    },
+    {
+      "distance": 38.049,
+      "altitude": 2684.0042,
+      "lat": 4.6930694,
+      "lon": -74.0247164,
+      "time": "2026-09-16T14:56:09Z"
+    },
+    {
+      "distance": 39.401,
+      "altitude": 2684.0571,
+      "lat": 4.6930716,
+      "lon": -74.0247044,
+      "time": "2026-09-16T14:56:10Z"
+    },
+    {
+      "distance": 40.724,
+      "altitude": 2684.256,
+      "lat": 4.6930734,
+      "lon": -74.0246926,
+      "time": "2026-09-16T14:56:11Z"
+    },
+    {
+      "distance": 42.053,
+      "altitude": 2684.48,
+      "lat": 4.6930749,
+      "lon": -74.0246807,
+      "time": "2026-09-16T14:56:12Z"
+    },
+    {
+      "distance": 43.347,
+      "altitude": 2684.55,
+      "lat": 4.6930762,
+      "lon": -74.0246691,
+      "time": "2026-09-16T14:56:13Z"
+    },
+    {
+      "distance": 44.614,
+      "altitude": 2684.621,
+      "lat": 4.6930771,
+      "lon": -74.0246577,
+      "time": "2026-09-16T14:56:14Z"
+    },
+    {
+      "distance": 45.902,
+      "altitude": 2684.8281,
+      "lat": 4.6930777,
+      "lon": -74.0246461,
+      "time": "2026-09-16T14:56:15Z"
+    },
+    {
+      "distance": 47.233,
+      "altitude": 2684.919,
+      "lat": 4.6930782,
+      "lon": -74.0246341,
+      "time": "2026-09-16T14:56:16Z"
+    },
+    {
+      "distance": 48.608,
+      "altitude": 2685.058,
+      "lat": 4.6930788,
+      "lon": -74.0246217,
+      "time": "2026-09-16T14:56:17Z"
+    },
+    {
+      "distance": 49.999,
+      "altitude": 2685.226,
+      "lat": 4.6930807,
+      "lon": -74.0246093,
+      "time": "2026-09-16T14:56:18Z"
+    },
+    {
+      "distance": 51.373,
+      "altitude": 2685.326,
+      "lat": 4.6930829,
+      "lon": -74.0245971,
+      "time": "2026-09-16T14:56:19Z"
+    },
+    {
+      "distance": 52.751,
+      "altitude": 2685.478,
+      "lat": 4.6930853,
+      "lon": -74.0245849,
+      "time": "2026-09-16T14:56:20Z"
+    },
+    {
+      "distance": 54.117,
+      "altitude": 2685.667,
+      "lat": 4.6930881,
+      "lon": -74.0245729,
+      "time": "2026-09-16T14:56:21Z"
+    },
+    {
+      "distance": 55.466,
+      "altitude": 2685.767,
+      "lat": 4.6930911,
+      "lon": -74.0245611,
+      "time": "2026-09-16T14:56:22Z"
+    },
+    {
+      "distance": 56.803,
+      "altitude": 2685.8792,
+      "lat": 4.6930944,
+      "lon": -74.0245495,
+      "time": "2026-09-16T14:56:23Z"
+    },
+    {
+      "distance": 58.146,
+      "altitude": 2685.965,
+      "lat": 4.6930982,
+      "lon": -74.024538,
+      "time": "2026-09-16T14:56:24Z"
+    },
+    {
+      "distance": 59.464,
+      "altitude": 2686.001,
+      "lat": 4.6931022,
+      "lon": -74.0245268,
+      "time": "2026-09-16T14:56:25Z"
+    },
+    {
+      "distance": 60.753,
+      "altitude": 2686.081,
+      "lat": 4.6931065,
+      "lon": -74.024516,
+      "time": "2026-09-16T14:56:26Z"
+    },
+    {
+      "distance": 62.093,
+      "altitude": 2686.093,
+      "lat": 4.6931099,
+      "lon": -74.0245044,
+      "time": "2026-09-16T14:56:27Z"
+    },
+    {
+      "distance": 63.394,
+      "altitude": 2685.959,
+      "lat": 4.6931137,
+      "lon": -74.0244933,
+      "time": "2026-09-16T14:56:28Z"
+    },
+    {
+      "distance": 64.537,
+      "altitude": 2685.857,
+      "lat": 4.6931189,
+      "lon": -74.0244844,
+      "time": "2026-09-16T14:56:29Z"
+    },
+    {
+      "distance": 65.658,
+      "altitude": 2685.875,
+      "lat": 4.6931242,
+      "lon": -74.0244758,
+      "time": "2026-09-16T14:56:30Z"
+    },
+    {
+      "distance": 66.765,
+      "altitude": 2686.003,
+      "lat": 4.6931296,
+      "lon": -74.0244674,
+      "time": "2026-09-16T14:56:31Z"
+    },
+    {
+      "distance": 67.935,
+      "altitude": 2685.9631,
+      "lat": 4.6931351,
+      "lon": -74.0244584,
+      "time": "2026-09-16T14:56:32Z"
+    },
+    {
+      "distance": 68.901,
+      "altitude": 2685.874,
+      "lat": 4.6931404,
+      "lon": -74.0244515,
+      "time": "2026-09-16T14:56:33Z"
+    },
+    {
+      "distance": 69.929,
+      "altitude": 2685.842,
+      "lat": 4.6931457,
+      "lon": -74.0244439,
+      "time": "2026-09-16T14:56:34Z"
+    },
+    {
+      "distance": 70,
+      "altitude": 2685.8518664850135,
+      "lat": 4.69314608692098,
+      "lon": -74.02444339055404,
+      "time": "2026-09-16T14:56:34.064Z"
+    }
+  ],
+  "sceneDistanceMapping": "proportional"
 }

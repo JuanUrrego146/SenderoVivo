@@ -5,7 +5,11 @@ Todos los audios recopilados provienen de grabaciones de campo con licencias abi
 Cada espécimen cuenta con su archivo de audio original de alta fidelidad y su versión en **.mp4** lista para ser integrada en el proyecto.
 
 ---
-nota de david: del carpitero y pibi ahumado tenemos audios propios sin embargo quedan como segunda opcion ya que no son nitidos  ademas de que los que son aptos para ambos uso comercial como personal fueron convertidos  a mp3 
+nota de david: del carpintero/colibri chillon y pibi ahumado tenemos audios propios sin embargo quedan como segunda opcion ya que no son nitidos  ademas de que los que son aptos para ambos uso comercial como personal fueron convertidos  a mp3  se omitieron los de mp4 
+
+ACTUALEMNTE AUDIO DE PRUEBA 1 ES EL PRUEBA ANTERIOR QUE TENIAMOS ANTES DEL REFACTOR 
+ 
+ EL ARCHIVO AUDIODEPRUEBA.MP3 ES DE AUTORIA NUESTRA /se dejo el mismo nombre para no afectar rutas de navegacion
 
 ## 📋 Resumen Rápido de Uso (Personal vs Comercial)
 
