@@ -6,13 +6,13 @@
     "startAltitudeMeters": 2712,
     "elevationGainMeters": null,
     "averageSlopePercent": null,
-    "conexionesNota": "Paso de una zona a la siguiente (src/ui/conexionesSendero.js): al llegar al extremo `en` del trazado de una zona aparece un boton que lleva a `zona`, arrancando en su extremo `llegada`. El sendero sube del Tramo 2 al Tramo 1 y de ahi a la Cumbre; la escalera del Tramo 1 desemboca junto a la plataforma del mirador, que es el final del trazado de la Cumbre.",
+    "conexionesNota": "Paso de una zona a la siguiente (src/ui/conexionesSendero.js): al llegar al extremo `en` del trazado de una zona aparece un boton que lleva a `zona`, arrancando en su extremo `llegada`. El sendero sube del Tramo 2 al Tramo 1 y de ahi a la Cumbre; la escalera del Tramo 1 llega al extremo de abajo del camino del claro, que es el inicio del trazado de la Cumbre.",
     "conexiones": {
       "Tramo 1": [
-        { "en": "fin", "zona": "Cumbre", "llegada": "fin", "texto": "Subir a la Cumbre" }
+        { "en": "fin", "zona": "Cumbre", "llegada": "inicio", "texto": "Subir a la Cumbre" }
       ],
       "Cumbre": [
-        { "en": "fin", "zona": "Tramo 1", "llegada": "fin", "texto": "Bajar al Tramo 1" }
+        { "en": "inicio", "zona": "Tramo 1", "llegada": "fin", "texto": "Bajar al Tramo 1" }
       ]
     }
   },

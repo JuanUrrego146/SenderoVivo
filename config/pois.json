@@ -225,9 +225,9 @@
         "z": 4.1
       },
       "trailAnchor": {
-        "d": 29.5,
-        "lat": -1.8,
-        "alt": 1.24
+        "d": 32.6,
+        "lat": 3.56,
+        "alt": 0.29
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/512/golondrina-plomiza.glb",
@@ -297,9 +297,9 @@
         "z": -4.76
       },
       "trailAnchor": {
-        "d": 7,
-        "lat": 7.6,
-        "alt": 1.9
+        "d": 1.0,
+        "lat": 3.81,
+        "alt": 2.07
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/512/tablero-informativo.glb",
@@ -332,9 +332,9 @@
         "z": 6.05
       },
       "trailAnchor": {
-        "d": 13.0,
-        "lat": -1.8,
-        "alt": 0.63
+        "d": 8.8,
+        "lat": -4.28,
+        "alt": -0.08
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/512/letrero-indicaciones.glb",
@@ -368,9 +368,9 @@
         "z": 10.02
       },
       "trailAnchor": {
-        "d": 21.5,
-        "lat": -1.8,
-        "alt": 0.64
+        "d": 32.1,
+        "lat": -3.45,
+        "alt": -0.38
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/512/letrero-bosque-alto-andino.glb",
@@ -476,9 +476,9 @@
         "z": -1.47
       },
       "trailAnchor": {
-        "d": 37.0,
-        "lat": 2.4,
-        "alt": 0.7
+        "d": 14.0,
+        "lat": -0.23,
+        "alt": -0.46
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/512/letrero-prohibido-el-paso.glb",
@@ -512,9 +512,9 @@
         "z": 9.81
       },
       "trailAnchor": {
-        "d": 26.0,
-        "lat": -2.4,
-        "alt": 0.69
+        "d": 37.1,
+        "lat": -0.49,
+        "alt": -0.53
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/512/letrero-bosque-andino-y-pinos.glb",
@@ -548,9 +548,9 @@
         "z": 2.56
       },
       "trailAnchor": {
-        "d": 34.5,
-        "lat": 2.4,
-        "alt": 0.73
+        "d": 26.2,
+        "lat": 1.67,
+        "alt": -0.17
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/512/letrero-servicios-ambientales.glb",
@@ -584,9 +584,9 @@
         "z": -4.44
       },
       "trailAnchor": {
-        "d": 39.0,
-        "lat": 2.8,
-        "alt": 1.56
+        "d": 16.9,
+        "lat": -1.32,
+        "alt": 0.03
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/512/silla-rota.glb",
@@ -620,9 +620,9 @@
         "z": 9.07
       },
       "trailAnchor": {
-        "d": 18.0,
-        "lat": -2.1,
-        "alt": 0.77
+        "d": 28.0,
+        "lat": -4.91,
+        "alt": -0.03
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/512/letrero-flecha.glb",

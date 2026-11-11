@@ -1,157 +1,150 @@
 {
   "version": 2,
   "capturedOn": "2026-09-16 (Cumbre)",
-  "source": "camaras de COLMAP de la pasada central de ida, hasta la plataforma (39 m), corridas de lado hacia el espacio libre de la escena de Luma",
+  "source": "camaras de la alineacion propia de la Cumbre (COLMAP con una camara compartida y las vistas 360 como puente)",
   "distanceUnit": "meters",
-  "note": "Trazado de la Cumbre: los primeros 39 m del trazado anterior, que salia de las camaras de la pasada central de ida. Cada punto se corrio de lado (mediana 0,22 m, maximo 1,5 m) hacia donde la escena de Luma no tiene vegetacion a la altura del cuerpo y de los ojos. Coordenadas en metros del motor (escena horneada, +Y arriba).",
+  "note": "Trazado de la Cumbre por donde caminaron las camaras. El camino principal es la mediana de los centros de camara de las 13 tomas por metro de avance (22,5 m, del extremo de abajo, donde llega la escalera del Tramo 1, al de arriba); la camara mas cercana queda a 0,10 m de mediana y 0,16 m de maximo, contra 1,2 a 5,8 m del trazado anterior. A los 9.5 m sale el ramal a la plataforma del mirador (hasta donde se grabo la toma de orbitacion) y vuelve al camino 0,8 m mas adelante; el regreso va corrido hasta 0,3 m para no pisar la ida. El ramal entra por el lado sin baranda: en el tubo del cuerpo no hay gaussianas opacas. Cada punto va 0,85 m por debajo de la altura mediana de las camaras, asi los ojos quedan a la altura a la que se grabo. Coordenadas en metros del motor (escena horneada, +Y arriba).",
   "sceneWaypoints": [
     {
-      "x": -0.167,
-      "y": 0.604,
-      "z": 0.16
+      "x": -6.457,
+      "y": 1.734,
+      "z": -2.032
     },
     {
-      "x": -1.525,
-      "y": 1.009,
-      "z": 0.636
+      "x": -7.628,
+      "y": 2.291,
+      "z": -1.278
     },
     {
-      "x": -2.88,
-      "y": 1.47,
-      "z": 1.079
+      "x": -8.802,
+      "y": 2.814,
+      "z": -0.504
     },
     {
-      "x": -4.24,
-      "y": 1.988,
-      "z": 1.428
+      "x": -10.0,
+      "y": 3.306,
+      "z": 0.252
     },
     {
-      "x": -5.551,
-      "y": 2.522,
-      "z": 1.918
+      "x": -11.207,
+      "y": 3.76,
+      "z": 1.018
     },
     {
-      "x": -6.863,
-      "y": 3.023,
-      "z": 2.438
+      "x": -12.428,
+      "y": 4.187,
+      "z": 1.778
     },
     {
-      "x": -8.205,
-      "y": 3.457,
-      "z": 2.946
+      "x": -13.646,
+      "y": 4.585,
+      "z": 2.558
     },
     {
-      "x": -9.555,
-      "y": 3.834,
-      "z": 3.472
+      "x": -14.049,
+      "y": 4.711,
+      "z": 2.826
     },
     {
-      "x": -10.907,
-      "y": 4.193,
-      "z": 4.009
+      "x": -14.405,
+      "y": 4.771,
+      "z": 1.377
     },
     {
-      "x": -12.267,
-      "y": 4.516,
-      "z": 4.553
+      "x": -14.761,
+      "y": 4.83,
+      "z": -0.071
     },
     {
-      "x": -13.414,
-      "y": 4.881,
-      "z": 5.585
+      "x": -15.117,
+      "y": 4.89,
+      "z": -1.519
     },
     {
-      "x": -14.639,
-      "y": 5.181,
-      "z": 6.605
+      "x": -15.473,
+      "y": 4.95,
+      "z": -2.967
     },
     {
-      "x": -15.999,
-      "y": 5.388,
-      "z": 7.545
+      "x": -15.828,
+      "y": 5.01,
+      "z": -4.415
     },
     {
-      "x": -17.488,
-      "y": 5.592,
-      "z": 7.891
+      "x": -15.249,
+      "y": 4.95,
+      "z": -3.022
     },
     {
-      "x": -18.873,
-      "y": 5.862,
-      "z": 8.225
+      "x": -14.832,
+      "y": 4.89,
+      "z": -1.589
     },
     {
-      "x": -20.381,
-      "y": 6.145,
-      "z": 8.159
+      "x": -14.476,
+      "y": 4.83,
+      "z": -0.141
     },
     {
-      "x": -21.947,
-      "y": 6.461,
-      "z": 8.131
+      "x": -14.181,
+      "y": 4.771,
+      "z": 1.322
     },
     {
-      "x": -23.488,
-      "y": 6.783,
-      "z": 7.779
+      "x": -14.691,
+      "y": 4.907,
+      "z": 3.26
     },
     {
-      "x": -23.573,
-      "y": 6.789,
-      "z": 7.511
+      "x": -15.651,
+      "y": 5.183,
+      "z": 3.924
     },
     {
-      "x": -22.63,
-      "y": 6.444,
-      "z": 6.512
+      "x": -16.868,
+      "y": 5.49,
+      "z": 4.747
     },
     {
-      "x": -21.586,
-      "y": 6.098,
-      "z": 5.485
+      "x": -18.11,
+      "y": 5.764,
+      "z": 5.541
     },
     {
-      "x": -20.595,
-      "y": 5.75,
-      "z": 4.424
+      "x": -19.38,
+      "y": 6.031,
+      "z": 6.293
     },
     {
-      "x": -19.824,
-      "y": 5.399,
-      "z": 3.186
+      "x": -20.665,
+      "y": 6.307,
+      "z": 7.015
     },
     {
-      "x": -19.042,
-      "y": 5.046,
-      "z": 1.948
+      "x": -21.956,
+      "y": 6.609,
+      "z": 7.717
     },
     {
-      "x": -18.301,
-      "y": 4.692,
-      "z": 0.674
+      "x": -23.241,
+      "y": 6.931,
+      "z": 8.419
     },
     {
-      "x": -17.582,
-      "y": 4.337,
-      "z": -0.709
+      "x": -24.513,
+      "y": 7.269,
+      "z": 9.139
     },
     {
-      "x": -18.361,
-      "y": 4.144,
-      "z": -1.694
-    },
-    {
-      "x": -19.57,
-      "y": 4.036,
-      "z": -2.575
+      "x": -24.973,
+      "y": 7.393,
+      "z": 9.403
     }
   ],
   "eyeHeight": 0.85,
   "corridorRadius": 1.5,
   "corridorLeft": [
     1.4,
-    0.9,
-    1.25,
     1.4,
     1.4,
     1.4,
@@ -159,21 +152,22 @@
     1.4,
     1.4,
     1.4,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
     1.4,
     1.4,
-    1.3,
     1.4,
     1.4,
     1.4,
     1.4,
     1.4,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.55,
     1.4,
     1.4,
     1.4
@@ -187,30 +181,29 @@
     1.4,
     1.4,
     1.4,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
     1.4,
     1.4,
     1.4,
     1.4,
+    1.35,
     1.4,
+    1.35,
+    1.15,
     1.4,
-    1.4,
-    1.4,
-    1.4,
-    0.2,
-    0.2,
-    0.2,
-    1.4,
-    0.2,
-    0.2,
-    1.4,
-    1.4,
-    0.75,
-    0.6,
-    0.4
+    1.4
   ],
-  "corridorProfileNote": "Espacio libre a cada lado de cada punto, a la altura de la cabeza (scripts/escenas/nube/espacio_libre.py sobre la Cumbre de Polycam y la de Luma, el menor de los dos): la cabeza es un cilindro de 0,25 m de radio desde 0,5 m por debajo hasta 0,3 m por encima de los ojos y choca si toca 4 o mas gaussianas opacas; se resta 0,10 m y el minimo es 0,20 m. El visor limita el paso lateral a este perfil en vez de a corridorRadius. Entre d 26 y 34 el trazado atraviesa la vegetacion de la cima y el perfil queda en 0,20 m: ahi la limpieza abre un tunel estrecho a la altura de la cabeza.",
-  "startDistance": 15.0,
-  "startDistanceNote": "El recorrido arranca en el centro de la Cumbre y no en la entrada: d = 15 m es el punto del trazado mas cercano al centro en planta de lo reconstruido a menos de 6 m del camino (mediana de las gaussianas opacas: Luma d = 15,0, Polycam d = 15,8; centroide del trazado d = 14,8). Desde ahi se camina hacia la entrada o hacia la plataforma.",
-  "eyeHeightNote": "Los puntos van a 0,6 m del suelo, donde el visor pone las flechas; 0,85 m mas arriba quedan los ojos a la altura a la que se grabo (1,45 m).",
+  "corridorProfileNote": "Espacio libre a cada lado de cada punto, a la altura de la cabeza (scripts/escenas/nube/espacio_libre.py sobre las cuatro versiones de la Cumbre a la vez: propia, Polycam, Luma y Mixta; la cabeza es un cilindro de 0,25 m de radio desde 0,5 m por debajo hasta 0,3 m por encima de los ojos y choca si toca 4 o mas gaussianas opacas). Sobre el camino real hay 1,15 m o mas en todos los puntos (tope de la medicion: 1,4 m). En el ramal de la plataforma se limita a 0,7 m, porque las barandas quedan por debajo de la cabeza y la medicion no las ve.",
+  "startDistance": 9.5,
+  "startDistanceNote": "El recorrido arranca en el cruce del camino con el ramal de la plataforma, en el centro del claro. Desde ahi se entra al mirador, se sube al extremo de arriba o se baja hacia la escalera del Tramo 1.",
+  "eyeHeightNote": "Los puntos van 0,85 m por debajo de las camaras; los ojos quedan a la altura a la que se grabo.",
   "points": []
 }
