@@ -14,9 +14,16 @@ import {
     AssetListLoader,
     Color,
     Entity,
+    EnvLighting,
     FILLMODE_FILL_WINDOW,
     RESOLUTION_AUTO,
     Quat,
+    Texture,
+    TEXTUREPROJECTION_EQUIRECT,
+    PIXELFORMAT_SRGBA8,
+    ADDRESS_REPEAT,
+    ADDRESS_CLAMP_TO_EDGE,
+    FILTER_LINEAR,
     Vec2,
     Vec3
 } from 'playcanvas';
@@ -199,7 +206,8 @@ async function resolveSceneUrl() {
                 eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
                 pitchDownLimit: match.pitchDownLimit, baked: !!match.baked,
                 yawLimit: match.yawLimit,
-                clearColorToken: match.clearColorToken
+                clearColorToken: match.clearColorToken,
+                skyboxUrl: match.skyboxUrl, skyboxYaw: match.skyboxYaw
             };
         }
     }
@@ -216,7 +224,8 @@ async function resolveSceneUrl() {
                     eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
                     pitchDownLimit: match.pitchDownLimit, baked: !!match.baked,
                     yawLimit: match.yawLimit,
-                    clearColorToken: match.clearColorToken
+                    clearColorToken: match.clearColorToken,
+                    skyboxUrl: match.skyboxUrl, skyboxYaw: match.skyboxYaw
                 };
             }
         }
@@ -348,16 +357,23 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     // mueve y gira la cámara: el módulo de audio no necesita tocarla (invariante 12).
     camera.addComponent('audiolistener');
     app.root.addChild(camera);
-    // Campo de vision segun la orientacion de la pantalla. PlayCanvas fija 45 grados en vertical:
-    // en un celular en vertical eso deja unos 21 grados de ancho, la escena se ve ampliada casi
-    // tres veces respecto a como se grabo y cada gaussiana se nota como un brochazo. En pantallas
-    // verticales se abre a 62 grados (unos 31 de ancho); en horizontal se conserva el de siempre.
+    // Campo de vision segun la orientacion de la pantalla. El sendero se grabo con el gran angular
+    // del celular (101 grados de ancho, 68 de alto). Con los 45 grados en vertical que PlayCanvas
+    // trae por omision la escena se ve ampliada 1,65 veces respecto a como se grabo (casi tres
+    // veces en un celular en vertical) y cada gaussiana se nota como un brochazo. En horizontal se
+    // abre a 58 grados (unos 89 de ancho en 16:9, lo habitual en primera persona: ampliacion 1,2)
+    // y en pantallas verticales a 62 (unos 31 de ancho).
     const ajustarCampoDeVision = () => {
         const aspecto = window.innerWidth / Math.max(1, window.innerHeight);
-        camera.camera.fov = aspecto < 1 ? 62 : 45;
+        camera.camera.fov = aspecto < 1 ? 62 : 58;
     };
     ajustarCampoDeVision();
     window.addEventListener('resize', ajustarCampoDeVision);
+    // Fondo de cielo real (skyboxUrl en config/scenes.json): el cielo de una panoramica de la
+    // Insta360 tomada en la misma zona, en el marco de la escena con la orientacion que le dio
+    // COLMAP. Donde la reconstruccion no tiene nada (claros del dosel) se ve ese cielo en lugar del
+    // color plano de fondo. Solo cielo: el fondo esta en el infinito y un arbol quedaria quieto.
+    if (sceneOpts.skyboxUrl) cargarFondo360(app, sceneOpts.skyboxUrl, sceneOpts.skyboxYaw || 0);
 
     const splat = new Entity('scene');
     // Nivelación: la reconstrucción sale en orientación arbitraria porque COLMAP no
@@ -525,6 +541,8 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
     // Metadatos de la escena activa (config/scenes.json): restricciones y trazado propio.
     const { forwardOnly = false, eyeHeight: sceneEyeHeight, trackUrl: sceneTrackUrl, pitchDownLimit, yawLimit } = sceneOpts;
     const isEditor = new URLSearchParams(window.location.search).has('editor');
+    // Extremo del trazado por el que llega quien viene de otra zona (src/ui/conexionesSendero.js).
+    const llegada = new URLSearchParams(window.location.search).get('llegada');
     const { trail, gpsTrack } = await loadTrail(sceneTrackUrl ?? TRACK_CONFIG_URL);
 
     if (isEditor) {
@@ -566,10 +584,15 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
         // Tope del giro de la cabeza respecto al camino (tramos estrechos, config/scenes.json).
         yawLimit,
         // Algunos trazados no arrancan en su primer punto (config/track-*.json, startDistance).
-        startDistance: trail.startDistance ?? 0,
+        // Al llegar desde otra zona (src/ui/conexionesSendero.js, ?llegada=inicio|fin) se arranca
+        // en ese extremo: el motor recorta la distancia al largo del trazado.
+        startDistance: llegada === 'fin' ? Infinity : (llegada === 'inicio' ? 0 : (trail.startDistance ?? 0)),
         gpsTrack
     });
     tour.start();
+    // Quien llega por el final del trazado viene de la zona siguiente: mira hacia el tramo, no
+    // hacia el borde. Solo si la escena deja girar (sin forwardOnly ni tope de giro).
+    if (llegada === 'fin' && !forwardOnly && !yawLimit) tour.state.yaw += 180;
     window.senderoTour = tour;
     // Joystick en pantalla para celular: la Vista solo publica los ejes y el motor mueve.
     new JoystickView(app);
@@ -634,3 +657,28 @@ async function main() {
 }
 
 main();
+
+/**
+ * Carga un equirectangular (2:1, +Y arriba) como fondo de la escena. La textura se convierte a
+ * cubemap una sola vez y se libera; el giro (grados) corrige la convencion de longitud si hace falta.
+ */
+function cargarFondo360(app, url, giro) {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+        const fuente = new Texture(app.graphicsDevice, {
+            name: 'fondo360', width: img.width, height: img.height, format: PIXELFORMAT_SRGBA8,
+            mipmaps: false, projection: TEXTUREPROJECTION_EQUIRECT,
+            addressU: ADDRESS_REPEAT, addressV: ADDRESS_CLAMP_TO_EDGE,
+            minFilter: FILTER_LINEAR, magFilter: FILTER_LINEAR
+        });
+        fuente.setSource(img);
+        app.scene.skybox = EnvLighting.generateSkyboxCubemap(fuente, 1024);
+        app.scene.skyboxMip = 0;
+        app.scene.skyboxRotation = new Quat().setFromEulerAngles(0, giro, 0);
+        fuente.destroy();
+        window.senderoFondo360 = { url, giro };
+    };
+    img.onerror = () => console.warn('No se pudo cargar el fondo 360', url);
+    img.src = url;
+}
