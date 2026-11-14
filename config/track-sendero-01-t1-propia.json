@@ -1,7 +1,7 @@
 {
   "eyeHeight": 0.85,
   "source": "camaras de la alineacion propia (COLMAP con una camara compartida y las vistas 360 como puente): mediana de todas las tomas por metro de avance sobre la toma t1_CentroCentro_Devuelta",
-  "note": "Trazado por donde caminaron las camaras: mediana de los centros de camara de todas las tomas a menos de 1.5 m de la toma de referencia, por metro de avance, suavizada y remuestreada cada 1.5 m. Cada punto va 0.85 m por debajo de la altura mediana de las camaras, asi los ojos quedan a la altura a la que se grabo. Coordenadas en metros del motor (escena horneada, +Y arriba).",
+  "note": "Trazado por donde caminaron las camaras: mediana de los centros de camara de todas las tomas a menos de 1.5 m de la toma de referencia, por metro de avance, suavizada y remuestreada cada 1.5 m. Cada punto va 0.85 m por debajo de la altura mediana de las camaras, asi los ojos quedan a la altura a la que se grabo. Coordenadas en metros del motor (escena horneada, +Y arriba). El trazado termina 2,2 m antes del ultimo cuadro de la toma de referencia: en esos metros ya no hay fotos tomadas desde mas adelante y la vista se emborrona.",
   "sceneWaypoints": [
     {
       "x": -0.0,
@@ -229,14 +229,9 @@
       "z": -1.699
     },
     {
-      "x": -64.585,
-      "y": 25.731,
-      "z": -0.953
-    },
-    {
-      "x": -65.882,
-      "y": 25.881,
-      "z": -0.19
+      "x": -63.991,
+      "y": 25.658,
+      "z": -1.292
     }
   ],
   "corridorRadius": 1.5,
@@ -287,8 +282,7 @@
     0.6,
     0.55,
     0.3,
-    0.2,
-    0.45
+    0.25
   ],
   "corridorRight": [
     0.25,
@@ -336,7 +330,6 @@
     0.6,
     0.6,
     0.4,
-    0.45,
-    0.6
+    0.43
   ]
 }
