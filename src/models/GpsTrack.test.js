@@ -99,8 +99,8 @@ const emptyTrack = new GpsTrack({
 assert(emptyTrack.altitudeAt(0) === null, 'altitudeAt() = null sin datos GPS');
 assert(emptyTrack.cumulativeElevation(0) === null, 'cumulativeElevation() = null sin datos');
 assert(emptyTrack.slopeAt(0) === null, 'slopeAt() = null sin datos');
-assert(emptyTrack.totalDistance() > 0, 'totalDistance() = ~50 (escena)');
-assert(emptyTrack.distanceTraveled(25) === 25, 'distanceTraveled(25) = 25 (funciona igual)');
+assert(emptyTrack.totalDistance() === 0, 'totalDistance() = 0 sin datos GPS');
+assert(emptyTrack.distanceTraveled(25) === 0, 'distanceTraveled(25) = 0 sin datos GPS');
 
 // Test 8: clamping de distancia
 console.log('\n📌 Clamping de distancia');

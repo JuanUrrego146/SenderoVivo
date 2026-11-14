@@ -222,7 +222,7 @@ Cada carpeta tiene un dueño. Tocar la carpeta de otro se avisa en la issue **an
 | `src/engine/` | **Alejandra Chambueta** | `TourEngine`, `SceneLoader`, `TrailPath`, `CameraRig`, `QualityProfile`, `LodController` |
 | `src/poi/` | **David Beltrán** | `PoiManager`, `PoiCard`, `ModelViewer` |
 | `src/data/` | **David Beltrán** | `TrailDataLayer`, `GpsTrack` |
-| `src/audio/` | **David Beltrán** | `AmbienceController`, `SpatialAudioSource`, `AudioPlayer` |
+| `src/controllers/` | **David Beltrán** | `AudioController` (lecho y fuentes espaciales HRTF) |
 | `src/app/` | **Juan Urrego** | Arranque, cableado, onboarding, estados globales |
 | `src/ui/` | **Juan Urrego** (implementa) | `HudView` y shell, a partir del diseño de Eybar y Alberto |
 | `styles/` | **Eybar Viasus** + **Alberto Alemán** | Tokens de color, tipografía, componentes |

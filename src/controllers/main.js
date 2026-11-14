@@ -15,6 +15,8 @@ import {
     Color,
     Entity,
     EnvLighting,
+    DEVICETYPE_WEBGL2,
+    DEVICETYPE_WEBGPU,
     FILLMODE_FILL_WINDOW,
     RESOLUTION_AUTO,
     Quat,
@@ -31,7 +33,8 @@ import {
     CULLFACE_NONE,
     PRIMITIVE_TRIANGLES,
     Vec2,
-    Vec3
+    Vec3,
+    createGraphicsDevice
 } from 'playcanvas';
 import { TrailModel } from '../models/TrailModel.js';
 import { GpsTrack } from '../models/GpsTrack.js';
@@ -46,8 +49,8 @@ import { PoiCardView } from '../views/PoiCardView.js';
 import { ShellView } from '../views/ShellView.js';
 import { HudView } from '../views/HudView.js';
 import { DataController } from './DataController.js';
-import AmbienceController from './AmbienceController.js';
-import { detectFromDevice } from '../models/QualityProfile.js';
+import AudioController from './AudioController.js';
+import { detectFromDevice, detectWebGPU } from '../models/QualityProfile.js';
 
 const CAMERA_CONTROLS_URL = 'https://cdn.jsdelivr.net/npm/playcanvas@2.21.3/scripts/esm/camera-controls.mjs';
 const SCENES_CONFIG_URL = 'config/scenes.json';
@@ -304,18 +307,24 @@ async function loadWorldModel(app, { url, position = new Vec3(0, 0, 0), rotation
 async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     let poiDiagnosticsVisible = false;
     const qualityProfile = detectFromDevice();
+    const webgpuAvailable = await detectWebGPU();
     const canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
 
-    const app = new Application(canvas, {
-        graphicsDeviceOptions: {
-            antialias: qualityProfile.antialias,
-            // En portatiles con dos GPU, pedir la dedicada (sin esto algunos navegadores
-            // eligen la integrada y el visor va a tirones sin razon aparente).
-            powerPreference: 'high-performance'
-        }
-        
+    const graphicsDevice = await createGraphicsDevice(canvas, {
+        deviceTypes: webgpuAvailable
+            ? [DEVICETYPE_WEBGPU, DEVICETYPE_WEBGL2]
+            : [DEVICETYPE_WEBGL2],
+        antialias: qualityProfile.antialias,
+        // En portatiles con dos GPU, pedir la dedicada (sin esto algunos navegadores
+        // eligen la integrada y el visor va a tirones sin razon aparente).
+        powerPreference: 'high-performance'
     });
+    document.body.appendChild(canvas);
+    const app = new Application(canvas, { graphicsDevice });
+    const graphicsBackend = graphicsDevice.isWebGPU ? 'webgpu' : 'webgl2';
+    qualityProfile.webgpuAvailable = webgpuAvailable;
+    qualityProfile.graphicsBackend = graphicsBackend;
+
     const shellView = new ShellView();
     window.senderoShellView = shellView;
     app.setCanvasFillMode(FILLMODE_FILL_WINDOW);
@@ -326,6 +335,7 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     // Expuesta para inspeccion y capturas desde la consola del navegador.
     window.senderoApp = app;
     window.senderoQualityProfile = qualityProfile;
+    window.senderoGraphicsBackend = graphicsBackend;
     window.addEventListener('resize', () => app.resizeCanvas());
 
     const assets = [
@@ -427,6 +437,15 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     // La escena solo se revela cuando ya se ve bien: nada de mostrarla borrosa.
     await waitForStableRender(app);
     await setUpNavigation(app, camera, sceneOpts);
+    const ambience = new AudioController(app, camera, qualityProfile);
+    window.senderoAmbience = ambience;
+    try {
+        await ambience.load();
+        window.senderoAudioDiagnostics = ambience.getDiagnostics();
+        window.dispatchEvent(new Event('sendero:audio-ready'));
+    } catch (error) {
+        console.warn('No se pudo leer el contrato de ambientacion:', error);
+    }
     // ===== Integracion de Alejandra (dev/alejandra-chambueta): =====
     // modelo 3D anclado al mundo + sistema de POIs con ficha (src/poi/).
     try {
@@ -445,7 +464,7 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     }
     if (window.senderoTour) {
         const poiManager = new PoiManager(app, camera, window.senderoTour);
-        const poiCard = new PoiCardView(app);
+        const poiCard = new PoiCardView(app, ambience);
         const dataController = new DataController(app, window.senderoTour.gpsTrack, new HudView());
         window.senderoDataController = dataController;
         window.senderoPoiManager = poiManager;
@@ -475,18 +494,11 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
             showError(error.message);
         }
     }
-    // Ambientacion sonora (AmbienceController de David). Se instancia y se deja
+    // Ambientacion sonora. Se instancia y se deja
     // expuesta, pero NO suena: load() solo lee config/soundscape.json y no crea
     // ni AudioContext ni elemento de audio. El arranque nace siempre de un toque
     // del visitante, desde la pestana «Sonidos» del cascaron (src/ui/shell.js).
     // RNF-008 e invariante 6.
-    const ambience = new AmbienceController(app);
-    window.senderoAmbience = ambience;
-    try {
-        await ambience.load();
-    } catch (error) {
-        console.warn('No se pudo leer el contrato de ambientacion:', error);
-    }
     if (sceneOpts.stream) {
         // El sorter del render unificado solo dispara su PRIMER ordenamiento
         // cuando la camara SE MUEVE despues de que el mundo streamed esta listo

@@ -205,6 +205,14 @@ WebGL no tiene cómputo de propósito general, así que el ordenamiento por prof
 
 **Decisión:** apuntamos a WebGPU cuando el dispositivo lo soporte, con **repliegue automático a WebGL**. No podemos exigir WebGPU porque RNF-004 pide versiones vigentes de Chrome, Safari y Firefox en escritorio y móvil, y el repliegue es justamente lo que protege ese requisito. Queda como tarea de validación temprana en S3.
 
+**Implementación en el visor:** antes de crear la aplicación se comprueba
+`navigator.gpu.requestAdapter()`. Si no hay adaptador, PlayCanvas crea directamente un
+dispositivo WebGL2; si WebGPU está anunciado pero falla al inicializarse, la fábrica de
+PlayCanvas intenta WebGL2 automáticamente. La aplicación solo se inicia después de que uno
+de los dos dispositivos se haya creado, por lo que la negociación no revela un canvas negro.
+El backend efectivo queda expuesto como `window.senderoGraphicsBackend` (`webgpu` o
+`webgl2`) para diagnóstico.
+
 ### 6.5 Streamed SOG (plan de choque de peso)
 
 Si el peso o el rendimiento no cierran, existe **Streamed SOG**: se pregeneran versiones del splat a distintos niveles de detalle, se organizan en un árbol espacial descrito por un `.lod-meta.json`, y el motor carga y descarga niveles según la distancia de cámara. Solo se mantiene en memoria lo necesario para el punto de vista actual. SplatTransform puede generar los niveles automáticamente a partir de un splat de alta calidad, y activarlo no requiere configuración extra: basta cargar el asset en el componente `gsplat`.

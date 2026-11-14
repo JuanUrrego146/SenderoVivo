@@ -491,8 +491,6 @@ export class PoiManager {
         const markerStyle =
             markerStyles[poi.type] ||
             markerStyles.flora;
-        console.log('SW-10 POI:', poi.type, markerStyle);    
-
 
         button.style.position =
             'fixed';
@@ -504,7 +502,7 @@ export class PoiManager {
             markerStyle.size;
 
         button.style.border =
-            '2px solid var(--sv-primary, #386641)';
+            '2px solid var(--sv-primary)';
 
         button.style.borderRadius =
             markerStyle.borderRadius;
@@ -513,7 +511,7 @@ export class PoiManager {
             markerStyle.clipPath;
 
         button.style.background =
-            'var(--sv-surface-solid, #E9D8C4)';
+            'var(--sv-surface-solid)';
 
         button.style.color =
             markerStyle.color;

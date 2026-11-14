@@ -793,7 +793,7 @@ torcida. Receta completa: [`05-produccion-de-escenas.md`](05-produccion-de-escen
 - [ ] Verificado que no rompe los 30 fps.
 
 **Subtareas**
-- David Beltrán, `AmbienceController`: lecho continuo, arranque por gesto, silencio y persistencia.
+- David Beltrán, `AudioController`: lecho continuo, fuentes HRTF, arranque por gesto, silencio y persistencia.
 - David Beltrán, `SpatialAudioSource` con HRTF, modelo de distancia y respeto del presupuesto.
 - Juan Urrego, Publicar `soundscape.json` y validar el esquema.
 - Eybar Viasus, Diseñar el control de silencio y el botón de inicio.

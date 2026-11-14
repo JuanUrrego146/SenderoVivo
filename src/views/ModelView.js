@@ -10,12 +10,6 @@ export class ModelView {
 
     async load(url) {
 
-        console.log('=================================');
-        console.log('MODELO 3D');
-        console.log('Cargando:', url);
-        console.log('=================================');
-
-
         /*
          * =====================================================
          * CARGAR MODEL-VIEWER
@@ -70,12 +64,6 @@ export class ModelView {
                 url,
                 window.location.href
             ).href;
-
-
-        console.log(
-            'GLB:',
-            modelUrl
-        );
 
 
         /*
@@ -185,18 +173,6 @@ export class ModelView {
             'load',
             () => {
 
-                console.log(
-                    '================================='
-                );
-
-                console.log(
-                    '✅ MODELO 3D VISIBLE'
-                );
-
-                console.log(
-                    '================================='
-                );
-
             }
         );
 
@@ -289,11 +265,6 @@ export class ModelView {
         );
 
 
-        console.log(
-            'Elemento <model-viewer> agregado al DOM'
-        );
-
-
         return model;
     }
 
@@ -315,10 +286,6 @@ export class ModelView {
                 'model-viewer'
             )
         ) {
-
-            console.log(
-                'Model Viewer ya disponible'
-            );
 
             return;
         }
@@ -363,9 +330,6 @@ export class ModelView {
             );
 
 
-            console.log(
-                'Cargando librería Model Viewer...'
-            );
         }
 
 
@@ -378,9 +342,6 @@ export class ModelView {
         );
 
 
-        console.log(
-            '✅ Model Viewer listo'
-        );
     }
 
 

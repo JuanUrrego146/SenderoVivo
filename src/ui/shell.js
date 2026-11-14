@@ -576,6 +576,8 @@ function selectHotspot(id) {
 
     if (!item) return;
 
+    guardarEstadoRecorridoFicha();
+
     // Cerrar el panel de catálogo o pestañas si estaba desplegado
     const tabContainer = document.getElementById('tab-panel-container');
     if (tabContainer && !tabContainer.classList.contains('hidden')) {
@@ -717,6 +719,9 @@ function selectHotspot(id) {
  * Si ShellView no está disponible, la cerramos directamente.
  */
 function closeBottomSheet() {
+    restaurarEstadoRecorridoFicha();
+    detenerAudioEspecie();
+
     const shellView =
         window.senderoShellView;
 
@@ -1160,128 +1165,24 @@ function initRenderModelMobile() {
    SINTETIZADOR
    ========================================================================== */
 
-let audioCtx = null;
-
-
-function initAudioContext() {
-    if (!audioCtx) {
-        audioCtx =
-            new (
-                window.AudioContext ||
-                window.webkitAudioContext
-            )();
-    }
-
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
-}
-
-
 function playSynthBeep(freq = 440) {
-    try {
-        initAudioContext();
-
-        const osc =
-            audioCtx.createOscillator();
-
-        const gain =
-            audioCtx.createGain();
-
-        osc.type = 'sine';
-
-        osc.frequency.setValueAtTime(
-            freq,
-            audioCtx.currentTime
-        );
-
-        gain.gain.setValueAtTime(
-            0.0001,
-            audioCtx.currentTime
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.06,
-            audioCtx.currentTime + 0.02
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.0001,
-            audioCtx.currentTime + 0.28
-        );
-
-        osc
-            .connect(gain)
-            .connect(audioCtx.destination);
-
-        osc.start();
-
-        osc.stop(
-            audioCtx.currentTime + 0.3
-        );
-
-    } catch {
-        /*
-         * Si el navegador no permite audio,
-         * no rompe la aplicación.
-         */
-    }
+    const controlador = window.senderoAmbience;
+    if (!controlador || typeof controlador.playTone !== 'function') return;
+    controlador.playTone('shell-beep', freq, {
+        owner: 'shell-ui',
+        priority: 1
+    }).catch(error => console.warn('No se pudo reproducir el aviso sonoro:', error));
 }
 
 
 function playSpeciesSound(freq = 440) {
-    try {
-        initAudioContext();
-
-        /*
-         * Trino provisional.
-         */
-        [0, 0.18, 0.36].forEach((t, i) => {
-            const osc =
-                audioCtx.createOscillator();
-
-            const gain =
-                audioCtx.createGain();
-
-            const inicio =
-                audioCtx.currentTime + t;
-
-            osc.type = 'triangle';
-
-            osc.frequency.setValueAtTime(
-                freq * (1 + 0.12 * (2 - i)),
-                inicio
-            );
-
-            gain.gain.setValueAtTime(
-                0.0001,
-                inicio
-            );
-
-            gain.gain.exponentialRampToValueAtTime(
-                0.08,
-                inicio + 0.03
-            );
-
-            gain.gain.exponentialRampToValueAtTime(
-                0.0001,
-                inicio + 0.16
-            );
-
-            osc
-                .connect(gain)
-                .connect(audioCtx.destination);
-
-            osc.start(inicio);
-
-            osc.stop(inicio + 0.18);
-        });
-
-    } catch {
-        /*
-         * Sin audio no se rompe nada.
-         */
-    }
+    const controlador = window.senderoAmbience;
+    if (!controlador || typeof controlador.playTone !== 'function') return;
+    detenerAudioEspecie();
+    controlador.playTone('shell-poi-tone', freq, {
+        owner: 'shell-poi',
+        priority: 2
+    }).catch(error => console.warn('No se pudo reproducir el tono de especie:', error));
 }
 
 
@@ -1373,7 +1274,10 @@ function refrescarControlAmbiente() {
 function alternarAmbiente() {
     if (!ambienteDisponible()) return;
 
-    window.senderoAmbience.toggle();
+    const resultado = window.senderoAmbience.toggle();
+    if (resultado && typeof resultado.catch === 'function') {
+        resultado.catch(error => console.warn('No se pudo iniciar el ambiente:', error));
+    }
 
     /*
      * play() es asíncrono.
@@ -1389,18 +1293,28 @@ function alternarAmbiente() {
    SONIDO POR ESPECIE
    ========================================================================== */
 
-let audioEspecie = null;
-
-
 function detenerAudioEspecie() {
-    if (!audioEspecie) return;
-
-    try {
-        audioEspecie.pause();
-        audioEspecie.currentTime = 0;
-    } catch {
-        // No hacer nada.
+    const controlador = window.senderoAmbience;
+    if (controlador && typeof controlador.stopOwner === 'function') {
+        controlador.stopOwner('shell-poi');
     }
+}
+
+let estadoRecorridoFicha = null;
+
+function guardarEstadoRecorridoFicha() {
+    const tour = window.senderoTour;
+    if (!estadoRecorridoFicha && tour && typeof tour.saveState === 'function') {
+        estadoRecorridoFicha = tour.saveState();
+    }
+}
+
+function restaurarEstadoRecorridoFicha() {
+    const tour = window.senderoTour;
+    if (estadoRecorridoFicha && tour && typeof tour.restoreState === 'function') {
+        tour.restoreState(estadoRecorridoFicha);
+    }
+    estadoRecorridoFicha = null;
 }
 
 
@@ -1422,20 +1336,13 @@ function sonarEspecie(id) {
         return;
     }
 
+    const controlador = window.senderoAmbience;
+    if (!controlador) return;
     detenerAudioEspecie();
-
-    audioEspecie =
-        new Audio(item.birdCallUrl);
-
-    audioEspecie.play().catch(() => {
-        /*
-         * Si falla el archivo,
-         * usamos el tono provisional.
-         */
-        playSpeciesSound(
-            item.audioFreq || 440
-        );
-    });
+    controlador.playClip('shell-poi-bird', item.birdCallUrl, {
+        owner: 'shell-poi',
+        priority: 2
+    }).catch(() => playSpeciesSound(item.audioFreq || 440));
 }
 
 
@@ -1450,17 +1357,14 @@ function sonarNarracion(id) {
         return;
     }
 
+    const controlador = window.senderoAmbience;
+    if (!controlador) return;
     detenerAudioEspecie();
-
-    audioEspecie =
-        new Audio(item.narrationUrl);
-
-    audioEspecie.play().catch(error => {
-        console.warn(
-            'Narración no disponible:',
-            item.narrationUrl,
-            error
-        );
+    controlador.playClip('shell-poi-narration', item.narrationUrl, {
+        owner: 'shell-poi',
+        priority: 3
+    }).catch(error => {
+        console.warn('Narración no disponible:', item.narrationUrl, error);
     });
 }
 
@@ -1503,7 +1407,10 @@ function verModelo3D(id) {
 
 function toggleAmbientAudio() {
     if (window.senderoAmbience && typeof window.senderoAmbience.toggle === 'function') {
-        window.senderoAmbience.toggle();
+        const resultado = window.senderoAmbience.toggle();
+        if (resultado && typeof resultado.catch === 'function') {
+            resultado.catch(error => console.warn('No se pudo iniciar el ambiente:', error));
+        }
         setTimeout(updateAmbientAudioButtons, 300);
     } else {
         window.__ambientMuted = !window.__ambientMuted;
@@ -1512,9 +1419,13 @@ function toggleAmbientAudio() {
 }
 
 function updateAmbientAudioButtons() {
+    let storedMuted = false;
+    try {
+        storedMuted = window.localStorage.getItem('sendero.audioMuted') === 'true';
+    } catch (e) {}
     const isPlaying = (window.senderoAmbience && typeof window.senderoAmbience.isPlaying === 'function')
         ? window.senderoAmbience.isPlaying()
-        : !window.__ambientMuted;
+        : !window.__ambientMuted && !storedMuted;
 
     const btnPc = document.getElementById('btn-ambient-audio-toggle');
     const btnM = document.getElementById('btn-ambient-audio-toggle-m');
@@ -1533,6 +1444,8 @@ function updateAmbientAudioButtons() {
         btnM.title = isPlaying ? 'Silenciar sonido de bosque' : 'Activar sonido de bosque';
     }
 }
+
+window.addEventListener('sendero:audio-ready', updateAmbientAudioButtons);
 
 /* ==========================================================================
    ÁLBUM DE BIODIVERSIDAD (PANTALLA INICIAL)
