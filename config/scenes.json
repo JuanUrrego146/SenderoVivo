@@ -8,6 +8,9 @@
     "averageSlopePercent": null,
     "conexionesNota": "Paso de una zona a la siguiente (src/ui/conexionesSendero.js): al llegar al extremo `en` del trazado de una zona aparece un boton que lleva a `zona`, arrancando en su extremo `llegada`. El sendero sube del Tramo 2 al Tramo 1 y de ahi a la Cumbre; la escalera del Tramo 1 llega al extremo de abajo del camino del claro, que es el inicio del trazado de la Cumbre.",
     "conexiones": {
+      "Tramo 2": [
+        { "en": "fin", "zona": "Tramo 1", "llegada": "inicio", "texto": "Subir al Tramo 1" }
+      ],
       "Tramo 1": [
         { "en": "fin", "zona": "Cumbre", "llegada": "inicio", "texto": "Subir a la Cumbre" }
       ],
@@ -186,10 +189,10 @@
       "forwardOnlyNote": "La escena se entreno solo con las tomas que suben: se recorre de abajo hacia la Cumbre y el visor no deja retroceder.",
       "yawLimit": 30,
       "yawLimitNote": "Tope del giro de la cabeza respecto a la direccion del camino (grados a cada lado). Mas alla la vista sale de lo que grabaron las tomas de subida y aparecen agujas y zonas vacias.",
-      "pitchDownLimit": 60,
-      "pitchDownLimitNote": "Tope del picado hacia abajo (grados), el mismo del Tramo 1 de Luma: se ven los escalones sin meter la camara en el piso.",
+      "pitchDownLimit": 45,
+      "pitchDownLimitNote": "Tope del picado hacia abajo (grados). Las camaras caminaron mirando hacia adelante y el piso junto a los pies solo se vio de refilon: mas abajo la vista se llena de la capa base, que tiene el color del piso pero no su detalle.",
       "captureDate": "2026-09-16 (celular; Tramo 1)",
-      "note": "Tramo 1 reconstruido por el equipo con COLMAP 4.1.1 y Brush desde 1.114 cuadros de las cinco tomas de celular que suben (2 por segundo). La ida y la vuelta de un tramo no se pudieron atar con este material (cada sentido ve caras distintas de casi todo), asi que la escena se entreno con un solo sentido y se recorre solo hacia arriba con el giro limitado: mirando hacia atras, un modelo de un sentido se deshace en agujas. Brush a 1920 de ancho, 30.000 pasos, armonicos de grado 1 y 5 millones de gaussianas por trozo, en 3 trozos de 25 m con 6 m de solape. La limpieza solo despeja el pasillo por donde pasa la cabeza del visitante (quedan 9,8 millones; el empaque conserva los 8 millones que mas ocupan en pantalla desde el recorrido): los filtros de la Cumbre (burbujas de cielo, flotantes alargados, manchas lejanas) quitan terreno real en un tramo de ladera, bajaban 2 dB y abrian huecos en el 27,9 % de los pixeles. Contra 8 fotos que el entrenamiento no vio, a 1280 px: PSNR 20,7 dB y 0,1 % de pixeles sin cubrir. El fondo (domoUrl) es de dos tonos, cielo arriba y suelo abajo, porque las panoramicas 360 del tramo no estan ubicadas en la escena. Se abre con ?render=sendero-t1-propia.",
+      "note": "Tramo 1 reconstruido por el equipo con COLMAP 4.1.1 y Brush desde 1.114 cuadros de las cinco tomas de celular que suben (2 por segundo). La ida y la vuelta de un tramo no se pudieron atar con este material (cada sentido ve caras distintas de casi todo), asi que la escena se entreno con un solo sentido y se recorre solo hacia arriba con el giro limitado: mirando hacia atras, un modelo de un sentido se deshace en agujas. Brush a 1920 de ancho, 30.000 pasos, armonicos de grado 1 y 5 millones de gaussianas por trozo, en 3 trozos de 25 m con 6 m de solape. La limpieza solo despeja el pasillo por donde pasa la cabeza del visitante (quedan 9,8 millones; el empaque conserva los 8 millones que mas ocupan en pantalla desde el recorrido y quita las gaussianas gigantes, que de lado son agujas): los filtros de la Cumbre (burbujas de cielo, flotantes alargados, manchas lejanas) quitan terreno real en un tramo de ladera. Bajo el piso va una capa base (scripts/escenas/nube/capa_base_piso.py): 43.825 gaussianas planas, 5 cm por debajo del terreno y con el color del piso de cada punto, sin tocar nada de lo entrenado. Hace falta porque las camaras caminaron mirando hacia adelante y Brush dejo el piso hecho de gaussianas tenues que solo cierran vistas de refilon: sin ella, mirando 45 grados hacia abajo desde el recorrido quedaba traslucido el 51,2 % de la mitad de abajo de la vista (se veia el fondo), y con ella el 0,1 %; en la vista normal, de 4,9 % a 0,0 %. Medido sobre lo publicado contra 8 fotos que el entrenamiento no vio, a 1280 px: PSNR 19,8 dB y 0,1 % de pixeles sin cubrir. El fondo (domoUrl) es de dos tonos, cielo arriba y suelo abajo, porque las panoramicas 360 del tramo no estan ubicadas en la escena. Se abre con ?render=sendero-t1-propia.",
       "coordenadasNota": "Horneada en un marco propio (metros, +Y arriba): la vertical sale de los ejes X de las camaras y la escala de igualar el largo de la toma central a los 76 m del tramo (las camaras quedan a 1,13-1,54 m del piso segun la toma). Queda cerca del marco de la escena de Luma pero no encima, asi que usa su propio trazado (72 m, por donde caminaron las camaras, sin los ultimos 2,2 m de la toma, donde ya no hay fotos de mas adelante y la vista se emborrona) y todavia no muestra los dos POI del tramo, cuyos anclajes estan medidos sobre el trazado de Luma."
     },
     {
@@ -206,6 +209,30 @@
       "captureDate": "2026-09-23 (celular; Tramo 2)",
       "note": "Sendero real grabado con celular (la Insta360 no sirvio). Se abre con ?render=sendero-t2. COLMAP registro 10044 de 10213 cuadros elegidos por nitidez (4K, o 720p en las tomas que solo llegaron en .MP4);Brush 150 mil pasos a 1920 px, creciendo hasta el paso 100 mil, con techo de 3 M; limpieza medida (agujas p99,7 y alfa > 0,01): 3,00 M a 2,97 M de gaussianas. Antes de entrenar: personas enmascaradas (YOLO11x-seg) y exposicion igualada entre pasadas con los puntos 3D que comparten, enmascarando lo quemado en las tomas sobreexpuestas.",
       "coordenadasNota": "Horneada (baked): el archivo ya esta en coordenadas del mundo, en metros y con +Y arriba. Arriba = la direccion mas perpendicular a los ejes X de todas las camaras (van sin alabeo); escala = altura de las pasadas a la altura del pecho llevada a 1,45 m; origen en el suelo bajo el primer cuadro de la pasada central de ida. El trazado sale de esas mismas camaras."
+    },
+    {
+      "id": "sendero-02-propia",
+      "domoUrl": "assets/fondos/tramo2-fondo.jpg",
+      "order": 94.5,
+      "render": "sendero-t2-propia",
+      "name": "Tramo 2 (reconstruccion propia)",
+      "zona": "Tramo 2",
+      "version": "Propia",
+      "sogUrl": "assets/scenes/sendero-02-propia/meta.json",
+      "lodUrl": "assets/scenes/sendero-02-propia-stream/lod-meta.json",
+      "movilSogUrl": "assets/scenes/sendero-02-propia-movil/meta.json",
+      "trackUrl": "config/track-sendero-02-propia.json",
+      "baked": true,
+      "clearColorToken": "--sv-escena-cielo-nublado",
+      "forwardOnly": true,
+      "forwardOnlyNote": "La escena se entreno solo con las tomas que miran cuesta arriba: se recorre de abajo hacia el Tramo 1 y el visor no deja retroceder.",
+      "yawLimit": 30,
+      "yawLimitNote": "Tope del giro de la cabeza respecto a la direccion del camino (grados a cada lado). Mas alla la vista sale de lo que grabaron las tomas de subida y aparecen agujas y zonas vacias.",
+      "pitchDownLimit": 45,
+      "pitchDownLimitNote": "Tope del picado hacia abajo (grados). Las camaras caminaron mirando hacia adelante y el piso junto a los pies solo se vio de refilon: mas abajo la vista se llena de la capa base, que tiene el color del piso pero no su detalle.",
+      "captureDate": "2026-09-23 (celular; Tramo 2)",
+      "note": "Tramo 2 reconstruido por el equipo con COLMAP 4.1.1 y Brush desde 1.531 cuadros de las siete tomas de celular que miran cuesta arriba. La ida y la vuelta de un tramo no se pudieron atar con este material (cada sentido ve caras distintas de casi todo), asi que la escena se entreno con un solo sentido y se recorre solo hacia arriba con el giro limitado: mirando hacia atras, un modelo de un sentido se deshace en agujas. Brush a 1920 de ancho, 30.000 pasos, armonicos de grado 1 y 5 millones de gaussianas por trozo, en 7 trozos de 23 m con 6 m de solape. La limpieza solo despeja el pasillo por donde pasa la cabeza del visitante (quedan 24,9 millones; el empaque conserva los 15 millones que mas ocupan en pantalla desde el recorrido y quita las gaussianas gigantes, que de lado son agujas). Bajo el piso va una capa base (scripts/escenas/nube/capa_base_piso.py): 86.072 gaussianas planas, 5 cm por debajo del terreno y con el color del piso de cada punto, sin tocar nada de lo entrenado. Hace falta porque las camaras caminaron mirando hacia adelante y Brush dejo el piso hecho de gaussianas tenues que solo cierran vistas de refilon: sin ella, mirando 45 grados hacia abajo desde el recorrido quedaba traslucido el 16,8 % de la mitad de abajo de la vista (se veia el fondo), y con ella el 0,3 %; en la vista normal, de 2,7 % a 0,0 %. Medido sobre lo publicado contra 8 fotos que el entrenamiento no vio, a 1280 px: PSNR 19,8 dB y 2,3 % de pixeles sin cubrir. El fondo (domoUrl) es de dos tonos, cielo arriba y suelo abajo, porque las panoramicas 360 del tramo no estan ubicadas en la escena. Se abre con ?render=sendero-t2-propia.",
+      "coordenadasNota": "Horneada en el marco de la alineacion propia del Tramo 2 (metros, +Y arriba), cercano al de la escena sendero-02 pero no identico (1 m de error mediano al alinear contra ella). Usa su propio trazado, que sigue a las camaras de la toma central de subida (148,7 m, sin los ultimos 2,5 m de la toma, donde ya no hay fotos de mas adelante y la vista se emborrona)."
     },
     {
       "id": "sendero-01-nuestra",

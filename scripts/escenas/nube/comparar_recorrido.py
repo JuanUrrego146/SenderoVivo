@@ -53,13 +53,15 @@ for nombre, ply in escenas:
     o = g["opacidad"].ravel(); ok = np.isfinite(o) & np.isfinite(g["escala"]).all(1)
     g = {k: v[ok] for k, v in g.items()}; g["opacidad"] = np.clip(g["opacidad"], -12, 12)
     G = render.a_gpu(g)
-    col = []; nits = []
+    col = []; nits = []; sinc = []
     for i, Rw, t in poses:
         if FONDO_IM is None:
-            img, _, _ = render.render(G, Rw, t, f, f, W / 2, H / 2, W, H, fondo=(1, 0, 1))
+            img, alfa, _ = render.render(G, Rw, t, f, f, W / 2, H / 2, W, H, fondo=(1, 0, 1))
         else:
             img, alfa, _ = render.render(G, Rw, t, f, f, W / 2, H / 2, W, H, fondo=(0, 0, 0))
             img = np.clip(img + (1 - alfa[..., None]) * fondo_de(Rw), 0, 1)
+        # traslucido en la mitad de abajo de la vista (el piso y lo cercano): pixeles con alfa menor a 0,9
+        sinc.append(100 * float((np.asarray(alfa)[H // 2:] < 0.9).mean()))
         im = (img[..., ::-1] * 255).astype(np.uint8).copy()
         nit = cv2.Laplacian(cv2.cvtColor(im, cv2.COLOR_BGR2GRAY), cv2.CV_64F).var()
         cv2.putText(im, "%s  punto %d  nitidez %.0f" % (nombre, i, nit), (8, 22), 0, 0.6, (0, 255, 255), 2)
@@ -67,5 +69,6 @@ for nombre, ply in escenas:
     cols.append(col)
     del G
     print(nombre, "listo; nitidez por punto:", " ".join("%.0f" % x for x in nits), "| mediana %.0f" % np.median(nits), flush=True)
+    print(nombre, "mitad de abajo con alfa < 0,9 (%):", " ".join("%.1f" % x for x in sinc), "| media %.1f" % np.mean(sinc), flush=True)
 cv2.imwrite(OUT, np.vstack([np.hstack([c[k] for c in cols]) for k in range(len(poses))]), [cv2.IMWRITE_JPEG_QUALITY, 92])
 print("hoja:", OUT)

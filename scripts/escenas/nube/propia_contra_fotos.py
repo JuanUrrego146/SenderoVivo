@@ -15,6 +15,7 @@ import splat, render, colmapbin
 
 DS, ANCHO, CADA, MAXF, OUT = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]), sys.argv[5]
 cands = [a.split("=", 1) for a in sys.argv[6:]]
+FONDO = tuple(float(x) for x in os.environ["FONDO_RGB"].split(",")) if os.environ.get("FONDO_RGB") else None
 cams = {}
 for l in open(os.path.join(DS, "sparse/0/cameras.txt")):
     p = l.split()
@@ -64,10 +65,12 @@ for nombre, ply in cands:
     G = render.a_gpu(limpio(splat.leer(ply)))
     for n in filas:
         R, t, fx, fy, cx, cy, w, h, foto, mk = datos[n]
-        img, alfa, _ = render.render(G, R, t, fx, fy, cx, cy, w, h, fondo=(1, 0, 1))
+        img, alfa, _ = render.render(G, R, t, fx, fy, cx, cy, w, h, fondo=FONDO or (1, 0, 1))
         dib = (np.clip(img, 0, 1)[..., ::-1] * 255).astype(np.uint8)
         val = mk > 0
-        m = val & (alfa > 0.95)
+        # con FONDO_RGB el PSNR cuenta TODOS los pixeles validos, con ese color donde la escena es traslucida (lo que
+        # veria el visitante); sin el, solo los pixeles donde la escena es opaca, y los huecos no penalizan
+        m = val if FONDO else val & (alfa > 0.95)
         a = dib[m].astype(np.float64); b = foto[m].astype(np.float64); aj = np.empty_like(a)
         for k in range(3):
             A = np.c_[a[:, k], np.ones(len(a))]; aj[:, k] = A @ np.linalg.lstsq(A, b[:, k], rcond=None)[0]
