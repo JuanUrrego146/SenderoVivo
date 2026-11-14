@@ -717,12 +717,29 @@ gaussianas ni `nearClip` ni `farClip` de la cámara (con el corte lejano en 20 m
 dibujando la ciudad), así que ni las astillas pegadas a la cara ni el cielo se arreglan desde
 la cámara: se arreglan en los datos.
 
-### 12.4.2 Reconstrucción propia de la Cumbre con COLMAP, Brush y las fotos 360 (06/11)
+### 12.4.2 Reconstrucción propia de la Cumbre con COLMAP, Brush y las fotos 360 (13/11)
 
-La Cumbre propia (`?render=sendero-propia`) supera en nitidez a Luma y a Polycam: dibujadas en primera persona desde
-11 puntos del trazado (ojos a 0,85 m, hacia adelante y hacia atrás, `comparar_recorrido.py`), la varianza del
-laplaciano tiene mediana 430 contra 255 de Polycam y 257 de Luma, y es mayor en los 11 puntos. Dos causas explicaban
-por qué COLMAP salía mal en esta zona y las dos están medidas:
+La Cumbre propia (`?render=sendero-propia`) se publica en tres capas, porque ningún entrenamiento único resolvía a la
+vez lo que está al lado del camino, los árboles de más allá y el cielo:
+
+- **Lo cercano**, hasta 15 m del trazado: Brush a 1920 de ancho, 30.000 pasos, armónicos esféricos de grado 1 y tope
+  de 5 millones de gaussianas, con 992 cuadros de exposición igualada, personas tapadas y cielo transparente (la
+  máscara va en el canal alfa de cada foto).
+- **El campo medio**, de 15 a 160 m: un segundo entrenamiento propio con lo cercano y el cielo tapados en las fotos,
+  para que todas sus gaussianas vayan a los árboles de más allá. Tras quitar agujas y manchas quedan 0,74 millones
+  en esa franja, 2,8 veces las que había cuando esa franja se tomaba de Luma.
+- **Lo lejano y el cielo**: una foto envolvente real (`assets/fondos/cumbre-lejos.jpg`, 8192 × 4096, campo `domoUrl`
+  de la escena) que la app pinta en una esfera que sigue a la cámara (`cargarDomoLejano` en
+  `src/controllers/main.js`). El cielo sale de las 17 panorámicas 360 registradas, donde al menos dos coinciden, y se
+  lleva en Lab al color del cielo del celular porque el crudo de la Insta360 sale lila (R 238, G 236, B 245); el
+  valle con la ciudad sale de la panorámica que está sobre la plataforma del mirador.
+
+Dibujada en primera persona desde 6 puntos del trazado (ojos a 0,85 m, campo de 58 grados y el fondo detrás,
+`comparar_recorrido.py ... fov=58 fondo360=...`), la nitidez (varianza del laplaciano) supera a la versión anterior en
+los 29 puntos medidos: mediana 812 contra 741 hacia adelante, 780 contra 622 hacia atrás, 685 contra 515 a la derecha,
+817 contra 541 a la izquierda y 961 contra 751 mirando hacia arriba.
+
+Dos causas explicaban por qué COLMAP salía mal en esta zona y las dos están medidas:
 
 - **El lente.** Las 13 tomas son del gran angular del iPhone (COLMAP lo estima en 101 grados de ancho, igual que en
   el Tramo 1). Con una cámara por toma, en 5 de las 13 se equivocaba (77 a 87 grados) y eso corría esas fotos metros a
@@ -733,10 +750,11 @@ por qué COLMAP salía mal en esta zona y las dos están medidas:
   las panorámicas de la Insta360 que caen en la Cumbre (`vistas-sol` p0285 a p0309 y `vistas-llovizna` l0001 a
   l0012, generadas con `scripts/captura360/vistas.py`) ven hacia los dos lados desde el mismo punto y las unen: 15
   panorámicas emparejan con ambas en 846 pares verificados y la alineación queda en un solo modelo de 1.130 imágenes
-  con 0,93 px de error medio.
+  con 0,93 px de error medio. Esto funciona en la Cumbre porque es un claro abierto; en los tramos no (§12.4.3).
 
 ```bash
 PY="/e/SenderoCelular/venv/Scripts/python.exe -I"; N=scripts/escenas/nube; C=C:/Users/Juan/Tools/colmap/bin/colmap.exe
+T=config/track-sendero-01.json
 # 1) Cuadros crudos (no los corregidos del COLMAP viejo) y una mascara por foto: COLMAP 4.1.1 se SALTA la foto si
 #    falta su mascara. Las personas salen de frames_personas (YOLO).
 $PY $N/propia_preparar.py E:/SenderoNube/propia
@@ -762,20 +780,181 @@ $PY $N/propia_verificar.py sparse_q/1 poses_cumbre.json          # fotos por tom
 # 7) Conjunto de Brush: fotos sin distorsion (4K a 1920), mascara de personas, cielo y lejania. Cielo = parece cielo en
 #    la foto Y mira por encima del horizonte Y la Mixta no cubre; lejos = opaco a mas de 60 m en la Mixta. Sin la
 #    condicion del horizonte se tapaba la hojarasca clara del piso.
-$PY $N/propia_dataset.py sparse_qv images masks mixta_v4.ply track-sendero-01.json ds_todo 1920 40
-# 8) Brush 30.000 pasos con tope de 2,5 M de gaussianas: sin tope pasa de 3,5 M, llena los 8 GB y se arrastra.
-brush_app ds_todo --total-steps 30000 --max-resolution 1920 --max-splats 2500000 --eval-split-every 20 ...
-# 9) Mismas limpiezas que Polycam (burbujas 7,1 %, flotantes alargados 11,2 %) y Luma limpia desde 15 m.
-$PY $N/quitar_burbujas.py ...; $PY $N/limpiar_escena.py ... perfil ...; $PY $N/mezclar.py propia_limpia.ply luma_limpia.ply $T 15 2 propia.ply no
-CAP=3.2 OPMIN=-4.595 bash /e/SenderoCelular/fase5.sh propia.ply <trabajo> <repo> sendero-01-propia
+$PY $N/propia_dataset.py sparse_qv images masks mixta_v4.ply $T ds_todo 1920 40
+# 8) Exposicion igualada entre tomas (ganancia por foto sacada de los pares de COLMAP, sin su deriva lenta) y la
+#    mascara al canal alfa: Brush deja transparente lo que la foto trae transparente.
+$PY $N/propia_ganancias_sin_deriva.py ganancias.json ganancias_sd.json 0.06 0.25 4
+$PY $N/propia_aplicar_ganancias.py ds_todo ganancias_sd.json 1.5
+$PY $N/propia_ds_alfa.py ds_todo masks ds_alfa 4
+# 9) Capa cercana: unos 50 minutos en la 3060 Ti. Con grado 3 de armonicos no caben 5 M en 8 GB.
+brush_app ds_alfa --total-steps 30000 --max-resolution 1920 --max-splats 5000000 --sh-degree 1 \
+   --growth-stop-iter 18000 --eval-split-every 20
+# 10) Limpieza de la capa cercana (burbujas de cielo, pasillo, flotantes alargados) y tallado: se va la gaussiana
+#     cuyo peso pintado cae sobre todo en el cielo de las fotos.
+$PY $N/quitar_burbujas.py ...; $PY $N/limpiar_escena.py ... perfil ...
+$PY $N/tallar_cielo_gpu.py ds_alfa cerca_limpia.ply cerca.ply 0.5 640 300 1
+# 11) Campo medio: las mismas fotos con lo que la capa cercana ya cubre a menos de 13 m del trazado y el cielo
+#     tapados; mismo Brush; de su resultado solo se usa lo que queda a mas de 15 m.
+$PY $N/propia_ds_medio.py ds_alfa cerca.ply $T ds_medio 13 480
+brush_app ds_medio --total-steps 30000 --max-resolution 1920 --max-splats 5000000 --sh-degree 1 ...
+$PY $N/tallar_cielo.py ds_alfa medio.ply medio_limpio.ply 3 0.25 2 400
+$PY $N/mezclar.py cerca.ply medio_limpio.ply $T 15 3 v4.ply no
+$PY $N/tallar_cielo_gpu.py ds_alfa v4.ply v4_t.ply 0.5 640 300 1
+# 12) Fondo lejano: cielo de todas las panoramicas registradas, tono de referencia del cielo del celular (B,G,R) y
+#     ventana del valle (longitud 166 a -140 grados, latitud -9 a 13) tomada de la panoramica de la plataforma.
+$PY $N/domo_lejos.py sparse_q/1 images_color360 masks p0309 lejos_cumbre 8192 90 216,209,197 166,-140,-9,13
+# 13) Empaque. splat-transform fijo en la 3.10.3: la 3.11.1 escribe un SOG sin quats.webp que PlayCanvas 2.21.3 no abre.
+CAP=3.2 OPMIN=-4.595 bash /e/SenderoCelular/fase5.sh v4_t.ply <trabajo> <repo> sendero-01-propia-v4
 ```
 
-Dos cuidados que costaron tiempo: Brush y COLMAP no pueden usar la GPU a la vez (Brush se cae con «Parent device is
-lost»), y unir la ida y la vuelta a mano no funciona: con una similitud por anclas queda a 1-3 grados (las anclas de
-la vuelta tienen ese ruido) y con geometría epipolar sola la solución degenera (traslado de 43 m). La primera prueba,
-entrenar solo con las fotos ubicadas contra la Polycam y los lentes viejos, salía con doble borde por el lente
-equivocado de esas 5 tomas; `registrar_fotos2.py`, `armar_dataset_brush.py` y `comparar_poses.py` quedan como
-herramientas para medir una escena contra las fotos.
+Cuidados que costaron tiempo. Brush y COLMAP no pueden usar la GPU a la vez (Brush se cae con «Parent device is
+lost»). Unir la ida y la vuelta a mano no funciona: con una similitud por anclas queda a 1-3 grados (las anclas de la
+vuelta tienen ese ruido) y con geometría epipolar sola la solución degenera (traslado de 43 m). Entrenar con las fotos
+de un cielo opaco deja una cúpula de gaussianas claras que desde abajo se ve como manchas: por eso el cielo va
+transparente y lo pone la foto envolvente. El peso de `--match-alpha-weight` de Brush es 0,1 por omisión: sobre el
+cielo transparente al entrenamiento le da igual pintar negro, y esas manchas las quita el tallado. PlayCanvas ignora
+los planos de recorte para las gaussianas, así que toda limpieza se hace en el archivo. `registrar_fotos2.py`,
+`armar_dataset_brush.py` y `comparar_poses.py` quedan como herramientas para medir una escena contra las fotos.
+
+### 12.4.3 Tramos de un solo sentido: Tramo 1 y Tramo 2 propios (14/11)
+
+En los tramos la ida y la vuelta no se pueden atar con el material grabado, y está medido por cuatro caminos. Con
+SIFT, el Tramo 2 solo empareja los dos sentidos en un punto (141 parejas en el metro 115). Con ALIKED y LightGlue,
+150 de 15.557 pares pasan de 50 coincidencias y 123 caen en un mismo sector; los pares de 15 a 30 coincidencias
+«verificadas» son azar. Con las panorámicas 360 de puente, 5 pares fuertes de 29.932 en el Tramo 2, y en el Tramo 1
+casi solo empareja una de las dos lentes. Y ubicar las fotos de un sentido contra el modelo del otro, o enderezar el
+piso para emparejarlo visto desde arriba, da 3 o 4 coincidencias válidas. La causa es física: en un corredor de
+bosque cada sentido ve la cara opuesta de casi todo. Lo que sí los ataría es grabar girando despacio sobre el sitio
+cada 10 a 15 m.
+
+Un modelo entrenado con un sentido, visto hacia atrás, se deshace en agujas y vacíos. Por eso cada tramo se entrena
+solo con las tomas que suben y la escena lleva `forwardOnly` (no se retrocede) y `yawLimit` de 30 grados por lado; el
+giro completo de RF-005 no se cumple en los tramos.
+
+```bash
+D=<conjunto en el SSD>; B=C:/Users/Juan/Tools/brush/brush_app.exe
+# 1) Modelo de COLMAP solo con los cuadros del sentido que sube y una camara compartida (como en la Cumbre).
+#    Tramo 1: 1.126 cuadros, 268.339 puntos, 1,15 px. Tramo 2: 1.531 vistas de 7 tomas.
+$C mapper --Mapper.image_list_path lista_sube.txt ...
+# 2) Marco en metros y con +Y arriba. El Tramo 1 no tiene anclas fiables contra la escena de Luma (las 4 que habia
+#    calzan entre si pero con una escala 4,5 veces mayor: la toma central mediria 354 m): la vertical sale de los
+#    ejes X de las camaras y la escala de igualar el largo de la toma central a los 76 m del tramo.
+$PY $N/t1_marco_propio.py sparse_d t1_CentroCentro_Devuelta curva_luma.json marco_p
+$C model_transformer --input_path sparse_d --output_path sparse_dm --transform_path marco_p/sim3.txt
+# 3) Trazado por donde caminaron las camaras (mediana de las tomas por metro de avance, ojos a 0,85 m).
+$PY $N/propia_trazado_camaras.py sparse_dm t1_CentroCentro_Devuelta <trazado_guia.json> track.json track.png 1.5 1.5 0.85
+# 4) Conjunto: fotos sin distorsion a 1920, cielo y personas a la mascara, exposicion igualada, mascara al alfa y
+#    reparto en trozos a lo largo del trazado con 6 m de solape (3 trozos de 25 m en el Tramo 1, 7 de 23 m en el 2).
+CIELO_CRECER=1 $PY $N/t2_dataset.py sparse_dm images masks $D/base 1920
+$PY $N/propia_ganancias_sin_deriva.py ganancias.json ganancias_sd.json 0.06 0.25 4
+$PY $N/propia_aplicar_ganancias.py $D/base ganancias_sd.json 1.5
+$PY $N/propia_ds_alfa.py $D/base masks $D/alfa 4
+$PY $N/propia_trozos.py $D/alfa track.json 3 6 $D/t
+# 5) Un Brush por trozo, de 47 a 65 minutos cada uno, y union cortando cada trozo en la mitad de su solape.
+$B $D/t_0 --total-steps 30000 --max-resolution 1920 --max-splats 5000000 --sh-degree 1 --growth-stop-iter 18000 ...
+$PY $N/propia_unir_trozos.py track.json $D/t_trozos.json 3 unida.ply brush_u0/u0_30000.ply brush_u1/... brush_u2/...
+# 6) Limpieza SUAVE: solo se despeja el pasillo por donde pasa la cabeza del visitante (perfil de espacio libre de
+#    espacio_libre.py; el 0 final apaga el filtro de flotantes alargados).
+$PY $N/espacio_libre.py track.json track_p.json 0.85 0.7 unida.ply
+$PY $N/limpiar_escena.py unida.ply track_p.json perfil limpia.ply 0.25 0
+# 7) Medida contra las fotos que el entrenamiento no vio (una de cada 20) y hojas en primera persona con la vista
+#    normal (picado de 10 grados) y mirando al piso (45 grados). Las hojas informan que parte de la mitad de abajo de
+#    la vista queda traslucida (alfa menor a 0,9). Con FONDO_RGB el PSNR cuenta tambien los pixeles traslucidos.
+$PY $N/propia_contra_fotos.py $D/alfa 1280 20 8 ev.jpg propia=limpia.ply
+$PY $N/comparar_recorrido.py track_p.json 8 1 10 hoja_p10.jpg propia=limpia.ply
+$PY $N/comparar_recorrido.py track_p.json 8 1 45 hoja_p45.jpg propia=limpia.ply
+# 8) Lo que se publica: sin las gaussianas gigantes (ejes de mas de 24 m, que de lado son agujas), con las NMAX que
+#    mas ocupan en pantalla desde el recorrido (8 M en el Tramo 1, 15 M en el Tramo 2) y con la capa base bajo el piso.
+node scripts/escenas/filtrar.js limpia.ply limpio.ply 3.2 -4.595
+$PY $N/muestrear_recorrido.py limpio.ply track_p.json base.ply 8000000
+$PY $N/t2_terreno.py unida.ply $D/alfa terreno.npz 3.0 0.1 1.0 0.1 3
+$PY $N/capa_base_piso.py base.ply terreno.npz final.ply 0.05 0.065 0.985 track=track_p.json
+# 9) Empaque: niveles de detalle en streaming, respaldo de escritorio de 3,5 M por puntaje y celular por FUSION
+#    (el nivel del 10 % en el Tramo 2, 1,5 M; fusion al 15 % en el Tramo 1, 1,2 M). Las medidas del paso 7 se repiten
+#    sobre final.ply: la escena completa del Tramo 2 (25 M) no cabe en 8 GB al dibujarla de lado.
+npx --yes @playcanvas/splat-transform@3.10.3 -w final.ply -d 50% lod1.ply          # y lo mismo al 25 % y al 10 %
+npx --yes @playcanvas/splat-transform@3.10.3 -w final.ply -l 0 lod1.ply -l 1 lod2.ply -l 2 lod3.ply -l 3 \
+   assets/scenes/<id>-stream/lod-meta.json --filter-nan
+$PY $N/muestrear_recorrido.py final.ply track_p.json escritorio.ply 3500000
+npx --yes @playcanvas/splat-transform@3.10.3 -w lod3.ply assets/scenes/<id>-movil/meta.json
+# 10) Fondo de dos tonos (cielo arriba, color del suelo abajo) para domoUrl: las panoramicas 360 de los tramos no
+#     estan ubicadas en la escena y no sirven de fondo fotografico.
+$PY $N/fondo_tramo.py limpia.ply track_p.json cielo_media.json assets/fondos/<tramo>-fondo.jpg 4
+```
+
+**La limpieza de la Cumbre daña los tramos.** Los filtros de burbujas de cielo, flotantes alargados y manchas
+lejanas se afinaron en un claro nublado; en una ladera de bosque quitan terreno real. Medido en el Tramo 1 contra 8
+fotos no vistas, a 1280 px:
+
+| Paso de limpieza | PSNR | Píxeles sin cubrir |
+|---|---|---|
+| Escena recién unida | 21,33 dB | 0,1 % |
+| Tras burbujas de cielo | 19,31 dB | sin medir |
+| Tras pasillo y flotantes alargados | 18,21 dB | 0,8 % |
+| Tras `limpiar_lejos.py` | sin medir | 27,9 % |
+| Limpieza suave (solo pasillo) | 20,66 dB | 0,1 % |
+
+La regla para un tramo es la limpieza suave; no hace falta reentrenar para corregir una escena limpiada de más.
+
+**El piso es traslúcido visto desde arriba, y por eso lleva una capa base.** Las escenas de Brush están hechas de
+gaussianas tenues apiladas: en el Tramo 2 el 69 % tiene alfa menor a 0,2 y solo el 0,9 % pasa de 0,9. Las cámaras
+caminaron mirando hacia adelante y vieron el piso de refilón; en esos rayos la pila es larga y el piso cierra. Quien
+mira hacia abajo la cruza casi de frente: la profundidad óptica vertical del piso (`opacar_piso.py` sin salida la
+mide) tiene mediana 2,05 sobre el camino del Tramo 2 (alfa 0,87) y 0,71 entre 1,5 y 3 m a los lados; en el Tramo 1,
+1,90 y 0,79. Lo que tapaba esos claros era un velo de gaussianas gigantes y tenues (1.359 en el Tramo 2, con ejes de
+más de 24 m y alfa mediana de 0,09) que `filtrar.js` quita al empacar porque de lado se ven como agujas: sin ellas,
+los píxeles sin cubrir contra las fotos pasan de 1,4 % a 5,1 % en el Tramo 2 y de 0,1 % a 1,9 % en el Tramo 1. Y
+desde el recorrido, que es lo que ve el visitante, la mitad de abajo de la vista quedaba traslúcida así:
+
+| Escena empacada | Vista normal (picado 10°) | Mirando al piso (picado 45°) |
+|---|---|---|
+| Tramo 2 sin capa base | 2,7 % | 16,8 % |
+| Tramo 2 con capa base | 0,0 % | 0,3 % |
+| Tramo 1 sin capa base | 4,9 % | 51,2 % |
+| Tramo 1 con capa base | 0,0 % | 0,1 % |
+
+`t2_terreno.py` saca de la escena un mapa de alturas del corredor (celdas de 10 cm a menos de 3 m de las cámaras,
+percentil 10 de la altura de las gaussianas de cada celda; como control, las cámaras quedan a 1,11 m del piso en el
+Tramo 2 y a 1,29 m en el Tramo 1) y `capa_base_piso.py` pone bajo ese terreno una lámina de discos opacos, uno por
+celda, 5 cm por debajo, acostados sobre la pendiente y con el color del fondo de la capa del piso en ese punto,
+evaluado con los armónicos de grado 1 en la dirección de quien camina. Son 86.072 gaussianas en el Tramo 2 y 43.825
+en el Tramo 1; no se cambia ninguna gaussiana entrenada. La capa base no inventa detalle: donde el piso real era
+traslúcido se ve su color sin textura, y por eso las dos escenas llevan `pitchDownLimit` de 45 grados. Tres caminos
+que no sirvieron, con su medida: reducir por fusión con `splat-transform -d` en vez de por puntaje (5,4 % sin cubrir
+contra 5,5 %), compensar la opacidad tras reducir (`compensar_opacidad.py`: el recorte no pierde fuerza, cociente
+1,000) y subir la opacidad de las gaussianas del piso (`opacar_piso.py`: de 16,8 % a 10,8 % mirando al piso, y quema
+lo claro). Tampoco era un problema de máscaras: `t2_piso_no_cielo.py` encontró piso marcado como cielo en 1 vista de
+1.531. Lo que lo resolvería de raíz es grabar una pasada mirando al piso.
+
+La Cumbre tiene el mismo piso: sobre lo publicado, la mitad de abajo de la vista queda traslúcida en 28,1 % con picado
+de 10 grados y en 53,6 % con el tope de 30 de esa escena. Ahí lo que se ve a través es la parte baja de la foto
+envolvente, que es lisa y del color del suelo, y por eso no se nota. Con capa base (medidas en la escala de esa
+escena, donde las cámaras quedan a 2,5 unidades del piso: `t2_terreno.py ... 6.0 0.2 2.0 0.1 3 5.0` y
+`capa_base_piso.py ... 0.10 0.13 0.985 3 1.2 0.24 0.50 0.08 picado=90`) baja a 1,1 % y 0,0 %, pero en imágenes fijas
+no se ve mejor (nitidez mediana de 696 contra 813 con el fondo detrás) y no se publicó.
+
+**Para celular se reduce por fusión, no por puntaje.** Con un tope de 1,2 a 1,5 millones para un tramo de 72 a 149 m
+queda entre el 8 y el 15 % de las gaussianas. `muestrear_recorrido.py` se queda con las de mayor puntaje y a esa
+proporción deja manchas y agujas; `splat-transform -d` funde vecinas y deja la escena borrosa pero entera. Nitidez
+mediana desde el recorrido: 129 contra 51 en el Tramo 1 y 247 contra 146 en el Tramo 2. En el respaldo de escritorio
+(3,5 M) dan lo mismo (452 contra 443).
+
+**El final del trazado se recorta.** En el último metro y medio de una toma ya no hay fotos tomadas desde más
+adelante y el costado se emborrona: el trazado del Tramo 1 termina 2,2 m antes del último cuadro (72,0 m) y el del Tramo 2, 2,5 m antes (148,7 m). Hay
+que mirar en la app el final de cada tramo con la carga por niveles ya asentada antes de darlo por bueno.
+
+**Trampas de COLMAP 4.1.1 en el Tramo 1.** La base tiene las vistas 360 declaradas como rig y eso rompe el trabajo
+sobre modelos parciales: `mapper --input_path` registra todo y se cae al guardar («Sensor (CAMERA, 3) not found in
+the rig» con vistas 360 en el modelo; «image 1 in frame 1 does not exist» sin ellas), y `point_triangulator` muere
+en silencio. Las poses finales quedan en `frames.bin` aunque `images.bin` salga vacío: `t1_recuperar_frames.py` las
+pasa a texto y `triangular_propio.py` triangula los puntos sin COLMAP en un minuto. El mapeador normaliza el modelo
+tras cada ajuste global, así que continuar un modelo no conserva su marco.
+
+Resultados sobre lo publicado, contra 8 fotos que el entrenamiento no vio a 1280 px. Tramo 1
+(`?render=sendero-t1-propia`): 8 millones de gaussianas más la capa base, 19,8 dB y 0,1 % de píxeles sin cubrir;
+nitidez mediana desde el recorrido de 714 en la vista normal y de 258 mirando al piso. Tramo 2
+(`?render=sendero-t2-propia`): 15 millones más la capa base, 19,8 dB y 2,3 % sin cubrir; nitidez mediana de 1.441 y de
+539.
 
 ### 12.5 Nivelación y publicación
 
