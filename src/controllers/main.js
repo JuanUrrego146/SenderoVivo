@@ -24,6 +24,12 @@ import {
     ADDRESS_REPEAT,
     ADDRESS_CLAMP_TO_EDGE,
     FILTER_LINEAR,
+    FILTER_LINEAR_MIPMAP_LINEAR,
+    Mesh,
+    MeshInstance,
+    StandardMaterial,
+    CULLFACE_NONE,
+    PRIMITIVE_TRIANGLES,
     Vec2,
     Vec3
 } from 'playcanvas';
@@ -207,7 +213,7 @@ async function resolveSceneUrl() {
                 pitchDownLimit: match.pitchDownLimit, baked: !!match.baked,
                 yawLimit: match.yawLimit,
                 clearColorToken: match.clearColorToken,
-                skyboxUrl: match.skyboxUrl, skyboxYaw: match.skyboxYaw
+                skyboxUrl: match.skyboxUrl, skyboxYaw: match.skyboxYaw, domoUrl: match.domoUrl
             };
         }
     }
@@ -225,7 +231,7 @@ async function resolveSceneUrl() {
                     pitchDownLimit: match.pitchDownLimit, baked: !!match.baked,
                     yawLimit: match.yawLimit,
                     clearColorToken: match.clearColorToken,
-                    skyboxUrl: match.skyboxUrl, skyboxYaw: match.skyboxYaw
+                    skyboxUrl: match.skyboxUrl, skyboxYaw: match.skyboxYaw, domoUrl: match.domoUrl
                 };
             }
         }
@@ -374,6 +380,9 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     // COLMAP. Donde la reconstruccion no tiene nada (claros del dosel) se ve ese cielo en lugar del
     // color plano de fondo. Solo cielo: el fondo esta en el infinito y un arbol quedaria quieto.
     if (sceneOpts.skyboxUrl) cargarFondo360(app, sceneOpts.skyboxUrl, sceneOpts.skyboxYaw || 0);
+    // Fondo lejano fotografico (domoUrl): cielo y paisaje lejano reales de las panoramicas, a toda
+    // resolucion, en una esfera que sigue a la camara. Las gaussianas quedan solo para lo cercano.
+    if (sceneOpts.domoUrl) cargarDomoLejano(app, camera, sceneOpts.domoUrl);
 
     const splat = new Entity('scene');
     // Nivelación: la reconstrucción sale en orientación arbitraria porque COLMAP no
@@ -657,6 +666,98 @@ async function main() {
 }
 
 main();
+
+/**
+ * Fondo lejano fotografico: un equirectangular (2:1, +Y arriba, SIN voltear: columna
+ * u = 0,5 + atan2(x, z) / 2 pi, fila v = 0,5 - asin(y) / pi, en el marco de la escena) pegado por
+ * dentro a una esfera que sigue a la camara, asi que queda en el infinito. Lo arma
+ * scripts/escenas/nube/domo_lejos.py con el cielo y el paisaje lejano de las panoramicas 360; lo
+ * cercano no va ahi porque quedaria quieto al caminar. A diferencia de skyboxUrl no pasa por el
+ * cubemap del motor: la foto se ve a su resolucion y con sus colores en cualquier equipo. Se dibuja
+ * antes que las gaussianas y no escribe profundidad, de modo que todo lo demas queda delante.
+ */
+function cargarDomoLejano(app, camera, url) {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+        const device = app.graphicsDevice;
+        const esMovil = window.matchMedia('(max-width: 640px)').matches;
+        const tope = Math.min(device.maxTextureSize || 4096, esMovil ? 4096 : 8192);
+        let fuente = img;
+        let ancho = img.width;
+        let alto = img.height;
+        if (ancho > tope) {
+            alto = Math.round(alto * tope / ancho);
+            ancho = tope;
+            const lienzo = document.createElement('canvas');
+            lienzo.width = ancho;
+            lienzo.height = alto;
+            lienzo.getContext('2d').drawImage(img, 0, 0, ancho, alto);
+            fuente = lienzo;
+        }
+        const textura = new Texture(device, {
+            name: 'domo-lejano', width: ancho, height: alto, format: PIXELFORMAT_SRGBA8,
+            mipmaps: true, flipY: false, anisotropy: 4,
+            addressU: ADDRESS_REPEAT, addressV: ADDRESS_CLAMP_TO_EDGE,
+            minFilter: FILTER_LINEAR_MIPMAP_LINEAR, magFilter: FILTER_LINEAR
+        });
+        textura.setSource(fuente);
+
+        const columnas = 96;
+        const filas = 48;
+        const radio = 400;
+        const posiciones = [];
+        const uvs = [];
+        const indices = [];
+        for (let i = 0; i <= filas; i++) {
+            const v = i / filas;
+            const lat = (0.5 - v) * Math.PI;
+            for (let j = 0; j <= columnas; j++) {
+                const u = j / columnas;
+                const lon = (u - 0.5) * 2 * Math.PI;
+                posiciones.push(
+                    radio * Math.cos(lat) * Math.sin(lon),
+                    radio * Math.sin(lat),
+                    radio * Math.cos(lat) * Math.cos(lon)
+                );
+                uvs.push(u, v);
+            }
+        }
+        for (let i = 0; i < filas; i++) {
+            for (let j = 0; j < columnas; j++) {
+                const a = i * (columnas + 1) + j;
+                const b = a + columnas + 1;
+                indices.push(a, b, a + 1, a + 1, b, b + 1);
+            }
+        }
+        const malla = new Mesh(device);
+        malla.setPositions(posiciones);
+        malla.setUvs(0, uvs);
+        malla.setIndices(indices);
+        malla.update(PRIMITIVE_TRIANGLES);
+
+        const material = new StandardMaterial();
+        material.diffuse = new Color(0, 0, 0);
+        material.emissive = new Color(1, 1, 1);
+        material.emissiveMap = textura;
+        material.useLighting = false;
+        material.useSkybox = false;
+        material.useFog = false;
+        material.cull = CULLFACE_NONE;
+        material.depthWrite = false;
+        material.update();
+
+        const instancia = new MeshInstance(malla, material);
+        instancia.cull = false;
+        const domo = new Entity('domo-lejano');
+        domo.addComponent('render', { meshInstances: [instancia], castShadows: false, receiveShadows: false });
+        app.root.addChild(domo);
+        app.on('update', () => domo.setPosition(camera.getPosition()));
+        window.senderoDomoLejano = { url, ancho, alto };
+    };
+    img.onerror = () => console.warn('No se pudo cargar el fondo lejano', url);
+    img.src = url;
+}
 
 /**
  * Carga un equirectangular (2:1, +Y arriba) como fondo de la escena. La textura se convierte a
