@@ -42,7 +42,7 @@ def a_gpu(g, dev="cuda"):
 
 
 @torch.no_grad()
-def render(G, R, tv, fx, fy, cx, cy, W, H, fondo=(0, 0, 0), tope_radio=256):
+def render(G, R, tv, fx, fy, cx, cy, W, H, fondo=(0, 0, 0), tope_radio=256, acum=None):
     dev = G["xyz"].device
     R = torch.as_tensor(R, dtype=torch.float32, device=dev); tv = torch.as_tensor(tv, dtype=torch.float32, device=dev)
     pc = G["xyz"] @ R.T + tv
@@ -87,6 +87,9 @@ def render(G, R, tv, fx, fy, cx, cy, W, H, fondo=(0, 0, 0), tope_radio=256):
     img = torch.zeros(H, W, 3, device=dev); alfa = torch.zeros(H, W, device=dev); prof = torch.zeros(H, W, device=dev)
     py, px = torch.meshgrid(torch.arange(TS, device=dev), torch.arange(TS, device=dev), indexing="ij")
     px = px.reshape(-1).float() + 0.5; py = py.reshape(-1).float() + 0.5
+    if acum is not None:      # acum = dict(mascara (H,W) bool, w_m (N), w_t (N)): suma por gaussiana el peso con que
+        mk = torch.zeros(th * TS, tw * TS, device=dev); mk[:H, :W] = acum["mascara"].float()      # pinta dentro de la
+        vl = torch.zeros(th * TS, tw * TS, device=dev); vl[:H, :W] = 1                             # mascara y en total
     lim = limites.tolist()
     for k in range(tw * th):
         i0, i1 = lim[k], lim[k + 1]
@@ -102,6 +105,10 @@ def render(G, R, tv, fx, fy, cx, cy, W, H, fondo=(0, 0, 0), tope_radio=256):
             al = torch.where((pw <= 0) & (al >= 1 / 255), al, torch.zeros_like(al))
             Tc = torch.cumprod(torch.cat([torch.ones(TS * TS, 1, device=dev), 1 - al[:, :-1]], 1), 1) * trans[:, None]
             wgt = Tc * al
+            if acum is not None:
+                mm = mk[ty_ * TS:ty_ * TS + TS, tx_ * TS:tx_ * TS + TS].reshape(-1)
+                vv = vl[ty_ * TS:ty_ * TS + TS, tx_ * TS:tx_ * TS + TS].reshape(-1)
+                acum["w_m"].index_add_(0, idx[g], mm @ wgt); acum["w_t"].index_add_(0, idx[g], vv @ wgt)
             acc += wgt @ col[g]; dep += wgt @ z[g]
             trans = trans * torch.prod(1 - al, 1)
             if trans.max() < 1e-4: break
