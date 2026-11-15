@@ -308,10 +308,15 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     let poiDiagnosticsVisible = false;
     const qualityProfile = detectFromDevice();
     const webgpuAvailable = await detectWebGPU();
+    // WebGPU solo se pide con ?webgpu=1. Con WebGPU el fondo lejano de la Cumbre propia
+    // (domoUrl) sale negro y el ordenamiento descarta 82.192 gaussianas de esa escena
+    // ("sortKey overflow"); con WebGL2 las dos cosas salen bien. Hasta corregirlo,
+    // el visor arranca en WebGL2 aunque el navegador tenga WebGPU.
+    const useWebGPU = webgpuAvailable && new URLSearchParams(window.location.search).has('webgpu');
     const canvas = document.createElement('canvas');
 
     const graphicsDevice = await createGraphicsDevice(canvas, {
-        deviceTypes: webgpuAvailable
+        deviceTypes: useWebGPU
             ? [DEVICETYPE_WEBGPU, DEVICETYPE_WEBGL2]
             : [DEVICETYPE_WEBGL2],
         antialias: qualityProfile.antialias,
