@@ -85,6 +85,36 @@ function validatePoi(poi) {
         });
     }
 
+    // Ubicaciones del POI en otras escenas con trazado propio (SceneCatalog.filterPois).
+    if (hasField(poi, 'placements')) {
+        if (!Array.isArray(poi.placements)) {
+            issues.push({ poiId, field: 'placements', message: 'debe ser un arreglo', severity: 'error' });
+        } else {
+            poi.placements.forEach((placement, index) => {
+                const invalid = [];
+                if (!placement || typeof placement !== 'object' || Array.isArray(placement)) {
+                    invalid.push('un objeto con sceneId, trailAnchor y anchor');
+                } else {
+                    if (!isNonEmptyString(placement.sceneId)) invalid.push('sceneId (texto)');
+                    if (!isValidField(placement.trailAnchor, COMMON_FIELDS.trailAnchor)) {
+                        invalid.push(`trailAnchor (${COMMON_FIELDS.trailAnchor})`);
+                    }
+                    if (!isValidField(placement.anchor, COMMON_FIELDS.anchor)) {
+                        invalid.push(`anchor (${COMMON_FIELDS.anchor})`);
+                    }
+                }
+                if (invalid.length) {
+                    issues.push({
+                        poiId,
+                        field: `placements[${index}]`,
+                        message: `debe traer ${invalid.join(', ')}`,
+                        severity: 'error'
+                    });
+                }
+            });
+        }
+    }
+
     return issues;
 }
 

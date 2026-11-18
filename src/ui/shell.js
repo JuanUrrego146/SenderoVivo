@@ -65,7 +65,7 @@ function limpiarAltitud(id, alt) {
         if (id === 'poi-cusumbo') return '2.650 – 3.250 msnm';
         if (id === 'poi-puente-madera') return '2.712 msnm';
         if (id === 'poi-pino') return '2.600 – 3.100 msnm';
-        return '2.600 – 3.200 msnm';
+        return '';
     }
     return alt;
 }

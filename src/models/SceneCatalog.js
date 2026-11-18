@@ -99,11 +99,44 @@ export class SceneCatalog {
     }
 
     /**
-     * Deja solo los POI cuya escena usa este trazado (RF-006: cada marcador se
-     * mide sobre el trazado donde se ve). Las escenas con el mismo trazado
-     * comparten POI, como scene-01 y su técnica alterna scene-01-luma.
+     * Deja solo los POI que tienen una ubicación sobre este trazado (RF-006: cada
+     * marcador se mide sobre el trazado donde se ve).
+     *
+     * Un POI trae su ubicación principal (sceneId, trailAnchor, anchor) y, si está
+     * también en otra versión de la zona con trazado propio, un arreglo opcional
+     * placements: [{ sceneId, trailAnchor, anchor }] con su ubicación en esas
+     * escenas. Se recorre la principal y luego las de placements, y gana la primera
+     * cuyo trazado es el abierto: el mismo objeto si es la principal, o una copia
+     * con esa ubicación si viene de placements. Es una copia para no mutar el POI
+     * original, que comparten PoiManager y shell.js. Sin ninguna ubicación sobre
+     * este trazado, el POI no sale.
+     *
+     * Las escenas con el mismo trazado comparten ubicación, como scene-01 y su
+     * técnica alterna scene-01-luma.
      */
     filterPois(pois, trackUrl = this.activeTrackUrl()) {
-        return pois.filter(poi => this.trackUrlOf(poi.sceneId) === trackUrl);
+        const visible = [];
+
+        for (const poi of pois) {
+
+            if (this.trackUrlOf(poi.sceneId) === trackUrl) {
+                visible.push(poi);
+                continue;
+            }
+
+            const placement = (Array.isArray(poi.placements) ? poi.placements : [])
+                .find(item => item && this.trackUrlOf(item.sceneId) === trackUrl);
+
+            if (placement) {
+                visible.push({
+                    ...poi,
+                    sceneId: placement.sceneId,
+                    trailAnchor: placement.trailAnchor,
+                    anchor: placement.anchor
+                });
+            }
+        }
+
+        return visible;
     }
 }

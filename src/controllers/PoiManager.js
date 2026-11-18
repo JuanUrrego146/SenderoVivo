@@ -201,18 +201,45 @@ export class PoiManager {
             this.pois.forEach(
                 poi => {
 
-                    if (
-                        !scenes.getById(poi.sceneId)
-                    ) {
+                    /*
+                     * El sceneId principal y el de cada ubicación
+                     * de placements tienen que ser escenas reales.
+                     */
 
-                        this.diagnostics.push({
-                            poiId: poi.id,
-                            field: 'sceneId',
-                            message:
-                                'no corresponde a ninguna escena de config/scenes.json',
-                            severity: 'warning'
-                        });
-                    }
+                    const sceneIds = [
+                        [
+                            'sceneId',
+                            poi.sceneId
+                        ],
+                        ...(
+                            Array.isArray(poi.placements)
+                                ? poi.placements.map(
+                                    (placement, index) => [
+                                        `placements[${index}].sceneId`,
+                                        placement?.sceneId
+                                    ]
+                                )
+                                : []
+                        )
+                    ];
+
+                    sceneIds.forEach(
+                        ([field, sceneId]) => {
+
+                            if (
+                                !scenes.getById(sceneId)
+                            ) {
+
+                                this.diagnostics.push({
+                                    poiId: poi.id,
+                                    field,
+                                    message:
+                                        'no corresponde a ninguna escena de config/scenes.json',
+                                    severity: 'warning'
+                                });
+                            }
+                        }
+                    );
                 }
             );
 
