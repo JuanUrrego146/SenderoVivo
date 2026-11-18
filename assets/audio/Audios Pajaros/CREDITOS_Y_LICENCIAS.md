@@ -295,3 +295,25 @@ ACTUALEMNTE AUDIO DE PRUEBA 1 ES EL PRUEBA ANTERIOR QUE TENIAMOS ANTES DEL REFAC
     - **Grabado por:** Noah Frade (@noaboa)
     - **Localidad:** Homestead, FL, EE. UU.
     - **Observación original:** [https://www.inaturalist.org/observations/404767624](https://www.inaturalist.org/observations/404767624)
+
+---
+
+## Versiones para el audio espacial
+
+Para la ambientación sonora en 3D (`config/soundscape.json`), once cantos de esta carpeta se derivaron y se guardaron en `assets/audio/espacial/`. Cada archivo derivado es mono, lleva un filtro paso alto en 300 Hz y está normalizado a -23 LUFS, con `ffmpeg -ac 1 -af "highpass=f=300,loudnorm=I=-23:TP=-2:LRA=11" -ar 44100 -c:a libmp3lame -b:a 96k`. Conservan la licencia y la atribución de su original: el autor, la localidad y la observación de iNaturalist de cada grabación están arriba, en el detalle por espécimen. Las fichas siguen usando el original (`birdCallUrl`); la versión derivada es solo para el audio espacial.
+
+| Archivo derivado (`assets/audio/espacial/`) | Original (`assets/audio/Audios Pajaros/`) | Licencia del original |
+| :--- | :--- | :---: |
+| `colibri-chillon.mp3` | `Colibri-Chillon_1.mp3` | **CC-BY 4.0** |
+| `golondrina-plomiza.mp3` | `Golondrina High Final_1.mp3` | **CC-BY-NC 4.0** |
+| `aguililla-de-swainson.mp3` | `Aguililla-de-Swainson_1.mp3` | **CC0 1.0** |
+| `copeton.mp3` | `Copeton RIGG_1.mp3` | **CC-BY 4.0** |
+| `tucan-andino.mp3` | `Tucan RIGG_1.mp3` | **CC-BY 4.0** |
+| `carpintero-candela.mp3` | `Carpintero candela Colaptes rivolii_2.mp3` | **CC-BY 4.0** |
+| `cucarachero-rufo.mp3` | `Cucarachero-rufo-Cinnycerthia-Unirufa_1.mp3` | **CC-BY 4.0** |
+| `pibi-ahumado.mp3` | `Pibí-ahumado-Contopus-fumigatus_1.mp3` | **CC-BY 4.0** |
+| `saltapared-comun.mp3` | `Saltapared-Común-Sureño-Troglodytes-musculus_1.mp3` | **CC-BY 4.0** |
+| `vireo-ojirrojo.mp3` | `Vireo-Ojos-Rojos-High-Poly_1.mp3` | **CC-BY-NC 4.0** |
+| `colibri-nuca-blanca.mp3` | `Nuca-Blanca-RIGG_1.mp3` | **CC-BY 4.0** |
+
+Dos de estos originales son CC-BY-NC (la golondrina y el vireo), así que sus versiones derivadas no se pueden usar en un producto comercial. Si el proyecto se monetiza, esas dos especies tienen otra grabación CC0 o CC-BY en este mismo catálogo (`Golondrina High Final_2` y `Vireo Ojos Rojos High Poly_2`), y habría que derivar de ella.

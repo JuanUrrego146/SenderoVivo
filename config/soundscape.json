@@ -1,21 +1,151 @@
 {
   "version": 1,
-  "note": "Contrato de la ambientación sonora (docs/06-contenido-de-la-experiencia.md §C.8). El lecho y las fuentes se graban en V3; añadir una fuente no toca código (RNF-009). Las fuentes espacializables se graban EN MONO.",
+  "note": "Contrato de la ambientación sonora (docs/06-contenido-de-la-experiencia.md §C.8). El lecho es estéreo y no posicional. Cada fuente espacial suena en mono por HRTF desde la posición del medallón de su POI (poiId) en la escena abierta, o desde anchor si trae sceneId en vez de poiId; intervalSeconds hace que cante, calle un rato al azar entre esos dos valores y vuelva a cantar. Añadir una fuente no toca código (RNF-009).",
   "ambienceUrl": "assets/audio/AudioPrueba.mp3",
-  "ambienceNote": "[por grabar en V3] Lecho ambiente estéreo del bosque, bucle limpio de 2-3 min sin eventos reconocibles.",
+  "ambienceNote": "Lecho propio de David Beltrán (34,6 s, estéreo). La especificación pide 2 a 3 minutos en bucle limpio: queda pendiente para la visita V3.",
   "sources": [
     {
-      "id": "golondrina-plomiza",
-      "url": "assets/audio/golondrina-canto.mp3",
-      "anchor": {
-        "x": -22.76,
-        "y": 6.69,
-        "z": 4.1
-      },
-      "loop": true,
-      "refDistance": 2,
-      "maxDistance": 25,
-      "distanceModel": "inverse"
+      "id": "canto-colibri-chillon",
+      "label": "Colibrí chillón",
+      "poiId": "poi-colibri-chillon",
+      "url": "assets/audio/espacial/colibri-chillon.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [
+        15,
+        35
+      ]
+    },
+    {
+      "id": "canto-golondrina-plomiza",
+      "label": "Golondrina plomiza",
+      "poiId": "poi-golondrina-plomiza",
+      "url": "assets/audio/espacial/golondrina-plomiza.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "canto-aguililla-de-swainson",
+      "label": "Aguililla de Swainson",
+      "poiId": "poi-aguililla-de-swainson",
+      "url": "assets/audio/espacial/aguililla-de-swainson.mp3",
+      "refDistance": 8,
+      "maxDistance": 60,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [
+        25,
+        50
+      ]
+    },
+    {
+      "id": "canto-copeton",
+      "label": "Copetón",
+      "poiId": "poi-copeton",
+      "url": "assets/audio/espacial/copeton.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "canto-tucan-andino",
+      "label": "Tucán andino celeste",
+      "poiId": "poi-tucan-andino",
+      "url": "assets/audio/espacial/tucan-andino.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "canto-carpintero-candela",
+      "label": "Carpintero candela",
+      "poiId": "poi-carpintero-candela",
+      "url": "assets/audio/espacial/carpintero-candela.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "canto-cucarachero-rufo",
+      "label": "Cucarachero rufo",
+      "poiId": "poi-cucarachero-rufo",
+      "url": "assets/audio/espacial/cucarachero-rufo.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "canto-pibi-ahumado",
+      "label": "Pibí ahumado",
+      "poiId": "poi-pibi-ahumado",
+      "url": "assets/audio/espacial/pibi-ahumado.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [
+        15,
+        35
+      ]
+    },
+    {
+      "id": "canto-saltapared-comun",
+      "label": "Saltapared común",
+      "poiId": "poi-saltapared-comun",
+      "url": "assets/audio/espacial/saltapared-comun.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [
+        8,
+        20
+      ]
+    },
+    {
+      "id": "canto-vireo-ojirrojo",
+      "label": "Vireo ojirrojo",
+      "poiId": "poi-vireo-ojirrojo",
+      "url": "assets/audio/espacial/vireo-ojirrojo.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [
+        15,
+        35
+      ]
+    },
+    {
+      "id": "canto-colibri-nuca-blanca",
+      "label": "Colibrí nuca blanca",
+      "poiId": "poi-colibri-nuca-blanca",
+      "url": "assets/audio/espacial/colibri-nuca-blanca.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [
+        8,
+        20
+      ]
     }
   ]
 }

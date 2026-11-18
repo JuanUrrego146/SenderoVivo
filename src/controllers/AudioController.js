@@ -1,9 +1,24 @@
 import { Soundscape } from '../models/Soundscape.js';
+import { SceneCatalog } from '../models/SceneCatalog.js';
 
 const MUTE_STORAGE_KEY = 'sendero.audioMuted';
 
+// Ganancia de las fuentes espaciales mientras suena un audio de ficha (igual que el lecho).
+const DUCKED_GAIN = 0.25;
+// Cada cuánto se refresca window.senderoAudioDiagnostics desde el cuadro (ms).
+const DIAGNOSTICS_EVERY_MS = 250;
+
 function isPosition(value) {
     return value && [value.x, value.y, value.z].every(Number.isFinite);
+}
+
+/** [min, max] en segundos de intervalSeconds, o null si la fuente suena en bucle continuo. */
+function intervalOf(source) {
+    const interval = source.intervalSeconds;
+    if (!Array.isArray(interval) || interval.length !== 2) return null;
+    const [min, max] = interval;
+    if (!Number.isFinite(min) || !Number.isFinite(max) || min < 0 || max < min) return null;
+    return [min, max];
 }
 
 export default class AudioController {
@@ -22,6 +37,8 @@ export default class AudioController {
         this.sources = [];
         this.activeClips = new Map();
         this.diagnostics = [];
+        this._scenes = null;
+        this._diagnosticsAt = 0;
         this.loaded = false;
         this.started = false;
         this.muted = this._readMuted();
@@ -34,8 +51,9 @@ export default class AudioController {
         const config = await this.soundscape.load();
         this.ambienceUrl = this.soundscape.getAmbienceUrl();
         this.ambienceNote = this.soundscape.ambienceNote || '';
+        const openTrackUrl = await this._openTrackCatalog();
         this.sources = this.soundscape.getSources()
-            .filter(source => isPosition(source.anchor) && source.url)
+            .filter(source => this._keepSource(source, openTrackUrl))
             .map(source => ({
                 ...source,
                 distance: Infinity,
@@ -43,10 +61,60 @@ export default class AudioController {
                 panner: null,
                 gain: null,
                 loading: null,
-                active: false
+                active: false,
+                wanted: false,
+                timer: null
             }));
         this.loaded = true;
         return config;
+    }
+
+    /**
+     * Catálogo de escenas y trazado que abre el visor. Si config/scenes.json no se puede
+     * leer, devuelve null y las fuentes con sceneId se conservan todas.
+     */
+    async _openTrackCatalog() {
+        try {
+            const scenes = new SceneCatalog();
+            await scenes.load();
+            this._scenes = scenes;
+            return scenes.activeTrackUrl();
+        } catch (error) {
+            console.warn('No se pudo leer el catálogo de escenas; no se filtran las fuentes sonoras por escena:', error);
+            this._scenes = null;
+            return null;
+        }
+    }
+
+    /**
+     * Una fuente con poiId se conserva aunque no traiga anchor: su posición sale del
+     * medallón del POI en la escena abierta. Una con sceneId y anchor se conserva solo si
+     * esa escena usa el trazado abierto. Una sin poiId ni sceneId no sabe dónde suena.
+     */
+    _keepSource(source, openTrackUrl) {
+        if (!source.url) return false;
+        if (source.poiId) return true;
+        if (source.sceneId && isPosition(source.anchor)) {
+            return !this._scenes || !openTrackUrl ||
+                this._scenes.trackUrlOf(source.sceneId) === openTrackUrl;
+        }
+        console.warn(`La fuente sonora ${source.id || source.url} no trae poiId ni sceneId con anchor; se descarta.`);
+        return false;
+    }
+
+    /**
+     * Posición de una fuente con poiId: el anchor del POI ya filtrado a la escena (con la
+     * ubicación de su placements aplicada). window.senderoPoiManager nace después de este
+     * controlador, por eso se busca aquí y no en load(). Si el POI no está en esta escena,
+     * la fuente no suena.
+     */
+    _resolveAnchor(source) {
+        if (isPosition(source.anchor)) return true;
+        if (!source.poiId) return false;
+        const poi = window.senderoPoiManager?.pois?.find(item => item.id === source.poiId);
+        if (!poi || !isPosition(poi.anchor)) return false;
+        source.anchor = { x: poi.anchor.x, y: poi.anchor.y, z: poi.anchor.z };
+        return true;
     }
 
     _readMuted() {
@@ -92,11 +160,16 @@ export default class AudioController {
     async _ensureSource(source) {
         if (source.audio) return;
         const audio = new Audio(source.url);
-        audio.loop = source.loop !== false;
+        // Una fuente con intervalSeconds canta a ratos: va sin bucle y _scheduleSong decide cuándo.
+        audio.loop = !intervalOf(source) && source.loop !== false;
         audio.preload = 'auto';
         audio.crossOrigin = 'anonymous';
         const context = this.audioElContext();
         const panner = context.createPanner();
+        // HRTF espacializa un canal: el audio entra en mono (docs/06 §C.5).
+        panner.channelCount = 1;
+        panner.channelCountMode = 'explicit';
+        panner.channelInterpretation = 'speakers';
         panner.panningModel = 'HRTF';
         panner.distanceModel = source.distanceModel || 'inverse';
         panner.refDistance = Number.isFinite(source.refDistance) ? source.refDistance : 2;
@@ -106,7 +179,14 @@ export default class AudioController {
         panner.positionY.value = source.anchor.y;
         panner.positionZ.value = source.anchor.z;
         const gain = context.createGain();
+        // Si ya suena un audio de ficha, la fuente nace atenuada.
+        gain.gain.value = this.activeClips.size ? DUCKED_GAIN : 1;
         context.createMediaElementSource(audio).connect(panner).connect(gain).connect(this.masterGain);
+        if (intervalOf(source)) {
+            audio.addEventListener('ended', () => {
+                if (source.active) this._scheduleSong(source, false);
+            });
+        }
         source.audio = audio;
         source.panner = panner;
         source.gain = gain;
@@ -114,39 +194,84 @@ export default class AudioController {
 
     _updateSources() {
         if (!this.started || this.muted || !this.camera || !this.sources.length) return;
+        // Solo suenan las fuentes cuyo POI está en la escena abierta (anchor resuelto).
+        const placed = this.sources.filter(source => this._resolveAnchor(source));
+        if (!placed.length) return;
         this._updateListener();
         const cameraPosition = this.camera.getPosition();
-        this.sources.forEach(source => {
+        placed.forEach(source => {
             source.distance = Math.hypot(
                 cameraPosition.x - source.anchor.x,
                 cameraPosition.y - source.anchor.y,
                 cameraPosition.z - source.anchor.z
             );
         });
-        const limit = this._sourceLimit();
-        const active = this.sources
+        // RNF-016 limita las fuentes espaciales: ni el lecho ni los audios de la ficha, que
+        // no son espaciales, descuentan del límite.
+        const active = placed
             .filter(source => source.distance <= (source.maxDistance ?? 25))
             .sort((a, b) => a.distance - b.distance)
-            .slice(0, Math.max(0, limit - this.activeClips.size - (this.audioEl && !this.audioEl.paused ? 1 : 0)));
+            .slice(0, this._sourceLimit());
         const activeSet = new Set(active);
         this.sources.forEach(source => {
-            if (!source.audio) return;
-            if (!activeSet.has(source) && source.active) {
-                source.audio.pause();
-                source.active = false;
-            }
+            source.wanted = activeSet.has(source);
+            if (!source.wanted && source.active) this._deactivateSource(source);
         });
         active.forEach(source => {
-            if (source.loading) return;
+            if (source.active || source.loading) return;
             source.loading = this._ensureSource(source)
                 .then(() => {
-                    if (!this.started || this.muted || !activeSet.has(source)) return;
-                    source.audio.play().then(() => { source.active = true; }).catch(error => {
-                        console.warn(`No se pudo reproducir la fuente ${source.id || source.url}:`, error);
-                    });
+                    if (!this.started || this.muted || !source.wanted) return;
+                    this._activateSource(source);
                 })
                 .catch(error => console.warn(`No se pudo preparar la fuente ${source.id || source.url}:`, error))
                 .finally(() => { source.loading = null; });
+        });
+        this._publishDiagnostics();
+    }
+
+    /**
+     * La fuente entra en el conjunto activo. En bucle continuo suena de inmediato; con
+     * intervalSeconds el primer canto sale tras un retardo al azar entre 0 y max.
+     */
+    _activateSource(source) {
+        source.active = true;
+        if (intervalOf(source)) {
+            this._scheduleSong(source, true);
+        } else {
+            this._playSource(source);
+        }
+    }
+
+    /** La fuente sale del conjunto activo: se cancela su temporizador y se pausa. */
+    _deactivateSource(source) {
+        clearTimeout(source.timer);
+        source.timer = null;
+        source.active = false;
+        if (source.audio) {
+            source.audio.pause();
+        }
+    }
+
+    /**
+     * Programa el siguiente canto: el primero entre 0 y max segundos; los demás, después de
+     * terminar el anterior, entre min y max.
+     */
+    _scheduleSong(source, first) {
+        const [min, max] = intervalOf(source);
+        clearTimeout(source.timer);
+        const seconds = first ? Math.random() * max : min + Math.random() * (max - min);
+        source.timer = setTimeout(() => {
+            source.timer = null;
+            if (!source.active || !this.started || this.muted) return;
+            this._playSource(source);
+        }, seconds * 1000);
+    }
+
+    _playSource(source) {
+        source.audio.currentTime = 0;
+        source.audio.play().catch(error => {
+            console.warn(`No se pudo reproducir la fuente ${source.id || source.url}:`, error);
         });
     }
 
@@ -198,11 +323,9 @@ export default class AudioController {
             this.audioEl.currentTime = 0;
         }
         this.sources.forEach(source => {
-            if (source.audio) {
-                source.audio.pause();
-                source.audio.currentTime = 0;
-                source.active = false;
-            }
+            this._deactivateSource(source);
+            source.wanted = false;
+            if (source.audio) source.audio.currentTime = 0;
         });
         this.stopOwner();
     }
@@ -231,13 +354,21 @@ export default class AudioController {
         return Math.max(0, this.qualityProfile?.maxSpatialAudioSources ?? 0);
     }
 
+    /**
+     * Mientras suena un audio de ficha, el lecho y cada fuente espacial bajan a 0,25 para
+     * que la voz se entienda; al terminar, vuelven a 1.
+     */
     _updateDucking() {
-        if (!this.ambienceGain || !this._audioContext) return;
-        const target = this.activeClips.size ? 0.25 : 1;
-        this.ambienceGain.gain.setTargetAtTime(target, this._audioContext.currentTime, 0.04);
-        if (typeof window !== 'undefined') {
-            window.senderoAudioDiagnostics = this.getDiagnostics();
+        if (!this._audioContext) return;
+        const target = this.activeClips.size ? DUCKED_GAIN : 1;
+        const now = this._audioContext.currentTime;
+        if (this.ambienceGain) {
+            this.ambienceGain.gain.setTargetAtTime(target, now, 0.04);
         }
+        this.sources.forEach(source => {
+            if (source.gain) source.gain.gain.setTargetAtTime(target, now, 0.04);
+        });
+        this._publishDiagnostics(true);
     }
 
     _recordDiagnostic(message) {
@@ -247,9 +378,16 @@ export default class AudioController {
             limit: this._sourceLimit()
         });
         if (this.diagnostics.length > 20) this.diagnostics.shift();
-        if (typeof window !== 'undefined') {
-            window.senderoAudioDiagnostics = this.getDiagnostics();
-        }
+        this._publishDiagnostics(true);
+    }
+
+    /** Deja el diagnóstico en window.senderoAudioDiagnostics; desde el cuadro, a lo más cada 250 ms. */
+    _publishDiagnostics(force = false) {
+        if (typeof window === 'undefined') return;
+        const now = performance.now();
+        if (!force && now - this._diagnosticsAt < DIAGNOSTICS_EVERY_MS) return;
+        this._diagnosticsAt = now;
+        window.senderoAudioDiagnostics = this.getDiagnostics();
     }
 
     _stopClip(key) {
@@ -376,7 +514,16 @@ export default class AudioController {
         return {
             limit: this._sourceLimit(),
             active: this._activeSourceCount(),
-            events: [...this.diagnostics]
+            events: [...this.diagnostics],
+            // Fuentes espaciales de la escena abierta (las que ya tienen posición).
+            spatial: this.sources
+                .filter(source => this._resolveAnchor(source))
+                .map(source => ({
+                    id: source.id,
+                    poiId: source.poiId || null,
+                    active: source.active,
+                    distance: Number.isFinite(source.distance) ? Math.round(source.distance * 10) / 10 : null
+                }))
         };
     }
 

@@ -711,24 +711,33 @@ Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el produ
 ```json
 {
   "version": 1,
-  "ambienceUrl": "assets/audio/ambience-bed.mp3",
+  "ambienceUrl": "assets/audio/AudioPrueba.mp3",
   "sources": [
+    {
+      "id": "canto-tucan-andino",
+      "label": "Tucán andino celeste",
+      "poiId": "poi-tucan-andino",
+      "url": "assets/audio/espacial/tucan-andino.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [8, 20]
+    },
     {
       "id": "sound-stream-45",
       "label": "Cauce de la quebrada",
       "url": "assets/audio/stream-loop.mp3",
       "sceneId": "scene-01",
-      "distanceMeters": 45,
       "anchor": { "x": 0, "y": 0, "z": 0 },
-      "refDistanceMeters": 2,
-      "maxDistanceMeters": 25,
+      "refDistance": 2,
+      "maxDistance": 25,
       "loop": true
     }
   ]
 }
 ```
 
-> `ambienceUrl` es el lecho continuo: estéreo, **no posicional**. Cada entrada de `sources` es una fuente puntual espacializada con HRTF, grabada **en mono**. Las posiciones salen del mapa sonoro levantado en V1. `config/soundscape.json` **ya existe** como esqueleto con `sources` vacío. Diseño completo en [`06-contenido-de-la-experiencia.md`](06-contenido-de-la-experiencia.md) §C.
+> `ambienceUrl` es el lecho continuo: estéreo, **no posicional**. Cada entrada de `sources` es una fuente puntual espacializada con HRTF que entra **en mono**: `AudioController` fija `channelCount` 1 en el panner, y los cantos de `assets/audio/espacial/` se derivan de los originales (mono, paso alto en 300 Hz, -23 LUFS). Una fuente declara su lugar de una de dos formas: con `poiId`, y suena desde el medallón (`anchor`) de ese POI en la escena abierta, que sale de `senderoPoiManager.pois` ya filtrados a la escena (si el POI no está en ella, la fuente no suena); o con `sceneId` más `anchor`, y suena solo en las escenas que usan el mismo trazado que `sceneId`. Una fuente sin ninguna de las dos se descarta con un aviso por consola. `refDistance`, `maxDistance` y `rolloffFactor` dan la atenuación con el modelo `inverse`. `intervalSeconds: [min, max]` hace que la fuente cante a ratos: el primer canto sale tras un retardo al azar entre 0 y `max` segundos y los siguientes, entre `min` y `max` segundos después de terminar el anterior; sin él, suena en bucle. El límite `maxSpatialAudioSources` (RNF-016) cuenta solo las fuentes espaciales, no el lecho ni los audios de la ficha, y mientras suena un audio de ficha el lecho y las fuentes espaciales bajan a 0,25 de ganancia. `window.senderoAudioDiagnostics.spatial` lista las fuentes de la escena abierta con `{ id, poiId, active, distance }`. Diseño completo en [`06-contenido-de-la-experiencia.md`](06-contenido-de-la-experiencia.md) §C.
 
 ### Perfil automático de calidad
 
