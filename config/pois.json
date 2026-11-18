@@ -21,8 +21,8 @@
         "alt": 1.83
       },
       "distanceMeters": 0,
-      "modelUrl": "",
-      "idleAnimation": "idle-flap",
+      "modelUrl": "assets/models/v2/colibri-chillon.glb",
+      "idleAnimation": "Take 001",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "assets/audio/Audios Pajaros/Colibri-Chillon_1.mp3",
@@ -165,7 +165,7 @@
         "alt": 0.7
       },
       "distanceMeters": 0,
-      "modelUrl": "",
+      "modelUrl": "assets/models/v2/puente-principal.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -237,8 +237,8 @@
       },
       "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
       "distanceMeters": 0,
-      "modelUrl": "assets/models/512/golondrina-plomiza.glb",
-      "idleAnimation": "[pendiente: el .mb fuente no trae animación; RF-029 con Felipe]",
+      "modelUrl": "assets/models/v2/golondrina-plomiza.glb",
+      "idleAnimation": "Take 001",
       "narrationUrl": "assets/audio/golondrina-narracion.mp3",
       "transcriptUrl": "",
       "birdCallUrl": "assets/audio/Audios Pajaros/Golondrina High Final_1.mp3",
@@ -248,7 +248,7 @@
       "icon": "fa-dove",
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna nativa",
-      "shortDesc": "La única especie del catálogo con modelo 3D y audio propios.",
+      "shortDesc": "Golondrina de dorso negro azulado y vientre gris humo que vuela bajo sobre el camino.",
       "fullDesc": "El sendero registra dos golondrinas en eBird y ninguna otra: la ventriparda (Orochelidon murina) y la albiazul (Pygochelidon cyanoleuca). El binomio de la plomiza sale de una de esas dos y se cierra en ART-06. Canto grabado por Juan M. Atencio en Villa General Mitre, Buenos Aires (Argentina) y publicado en iNaturalist (observación 394727684) con licencia CC BY-NC 4.0.",
       "conservation": "Verificado",
       "curiosity": "Es una de las pocas golondrinas residentes en la cordillera; anida en taludes y barrancos a lo largo de senderos y valles altoandinos.",
@@ -310,7 +310,7 @@
         "alt": 2.07
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/512/tablero-informativo.glb",
+      "modelUrl": "assets/models/v2/tablero-informativo.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -345,7 +345,7 @@
         "alt": -0.08
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/512/letrero-indicaciones.glb",
+      "modelUrl": "assets/models/v2/letrero-indicaciones.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -381,7 +381,7 @@
         "alt": -0.38
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/512/letrero-bosque-alto-andino.glb",
+      "modelUrl": "assets/models/v2/letrero-bosque-alto-andino.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -417,7 +417,7 @@
         "alt": 0.71
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/512/banca-vieja.glb",
+      "modelUrl": "assets/models/v2/banca-vieja.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -453,7 +453,7 @@
         "alt": 0.9
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/512/letrero-observatorio-de-aves.glb",
+      "modelUrl": "assets/models/v2/letrero-observatorio-de-aves.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -489,7 +489,7 @@
         "alt": -0.46
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/512/letrero-prohibido-el-paso.glb",
+      "modelUrl": "assets/models/v2/letrero-prohibido-el-paso.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -525,7 +525,7 @@
         "alt": -0.53
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/512/letrero-bosque-andino-y-pinos.glb",
+      "modelUrl": "assets/models/v2/letrero-bosque-andino-y-pinos.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -561,7 +561,7 @@
         "alt": -0.17
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/512/letrero-servicios-ambientales.glb",
+      "modelUrl": "assets/models/v2/letrero-servicios-ambientales.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -597,7 +597,7 @@
         "alt": 0.84
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/512/silla-rota.glb",
+      "modelUrl": "assets/models/v2/silla-rota.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -633,7 +633,7 @@
         "alt": -0.03
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/512/letrero-flecha.glb",
+      "modelUrl": "assets/models/v2/letrero-flecha.glb",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "",
@@ -669,8 +669,8 @@
         "alt": 3.5
       },
       "distanceMeters": 0,
-      "modelUrl": "",
-      "idleAnimation": "",
+      "modelUrl": "assets/models/v2/aguililla-de-swainson.glb",
+      "idleAnimation": "Take 001",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "assets/audio/Audios Pajaros/Aguililla-de-Swainson_1.mp3",
@@ -706,8 +706,8 @@
         "alt": 1.68
       },
       "distanceMeters": 0,
-      "modelUrl": "",
-      "idleAnimation": "",
+      "modelUrl": "assets/models/v2/copeton.glb",
+      "idleAnimation": "Take 001",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "assets/audio/Audios Pajaros/Copeton RIGG_1.mp3",
@@ -743,8 +743,8 @@
         "alt": 1.98
       },
       "distanceMeters": 0,
-      "modelUrl": "",
-      "idleAnimation": "",
+      "modelUrl": "assets/models/v2/tucan-andino.glb",
+      "idleAnimation": "Take 001",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "assets/audio/Audios Pajaros/Tucan RIGG_1.mp3",
@@ -817,8 +817,8 @@
         "alt": 2.38
       },
       "distanceMeters": 0,
-      "modelUrl": "",
-      "idleAnimation": "",
+      "modelUrl": "assets/models/v2/cucarachero-rufo.glb",
+      "idleAnimation": "Take 001",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "assets/audio/Audios Pajaros/Cucarachero-rufo-Cinnycerthia-Unirufa_1.mp3",
@@ -854,8 +854,8 @@
         "alt": 2.06
       },
       "distanceMeters": 0,
-      "modelUrl": "",
-      "idleAnimation": "",
+      "modelUrl": "assets/models/v2/pibi-ahumado.glb",
+      "idleAnimation": "Take 001",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "assets/audio/Audios Pajaros/Pibí-ahumado-Contopus-fumigatus_1.mp3",
@@ -891,8 +891,8 @@
         "alt": 1.35
       },
       "distanceMeters": 0,
-      "modelUrl": "",
-      "idleAnimation": "",
+      "modelUrl": "assets/models/v2/saltapared-comun.glb",
+      "idleAnimation": "Take 001",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "assets/audio/Audios Pajaros/Saltapared-Común-Sureño-Troglodytes-musculus_1.mp3",
@@ -928,8 +928,8 @@
         "alt": 2.07
       },
       "distanceMeters": 0,
-      "modelUrl": "",
-      "idleAnimation": "",
+      "modelUrl": "assets/models/v2/vireo-ojirrojo.glb",
+      "idleAnimation": "Take 001",
       "narrationUrl": "",
       "transcriptUrl": "",
       "birdCallUrl": "assets/audio/Audios Pajaros/Vireo-Ojos-Rojos-High-Poly_1.mp3",
@@ -948,11 +948,11 @@
       "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
     },
     {
-      "id": "poi-colibri-nuca-blanca",
+      "id": "poi-atlapetes-nuquipalido",
       "type": "fauna",
       "category": "fauna",
-      "commonName": "Colibrí nuca blanca",
-      "scientificName": "Florisuga mellivora",
+      "commonName": "Atlapetes nuquipálido",
+      "scientificName": "Atlapetes pallidinucha",
       "sceneId": "sendero-01-t1-propia",
       "anchor": {
         "x": -45.62,
@@ -965,24 +965,24 @@
         "alt": 1.3
       },
       "distanceMeters": 0,
-      "modelUrl": "",
-      "idleAnimation": "",
+      "modelUrl": "assets/models/v2/atlapetes-nuquipalido.glb",
+      "idleAnimation": "Take 001",
       "narrationUrl": "",
       "transcriptUrl": "",
-      "birdCallUrl": "assets/audio/Audios Pajaros/Nuca-Blanca-RIGG_1.mp3",
+      "birdCallUrl": "",
       "altitudeRange": "",
-      "fieldIdTips": "[por completar]",
+      "fieldIdTips": "Lados de la cabeza negros, lista de la corona canela al frente y blanca hacia la nuca, partes inferiores amarillas.",
       "sightingTips": "[por completar]",
       "icon": "fa-dove",
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna",
-      "shortDesc": "Su canto suena desde este punto del recorrido.",
-      "fullDesc": "Canto grabado por Guillaume Delaitre en Régina (Guayana Francesa) y publicado en iNaturalist (observación 325943470) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "shortDesc": "Gorrión montés de los cerros: corona canela que se vuelve blanca en la nuca y vientre amarillo.",
+      "fullDesc": "Atlapetes de los bordes de bosque altoandino y de los matorrales de subpáramo de los Andes. El equipo lo modeló con el nombre «Nuca Blanca» y se pintó como la especie de los cerros orientales de Bogotá, con los lados de la cabeza negros, el dorso gris pizarra y las partes inferiores amarillas. Su registro en el sendero está por verificar contra la lista de eBird y su canto todavía no está en el catálogo.",
       "conservation": "Por verificar",
       "curiosity": "",
       "audioFreq": 700,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
-      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+      "mediaNote": "El canto que traía este punto era de Florisuga mellivora, un colibrí de tierras bajas, y no corresponde a esta especie: se retiró de la ficha y del audio espacial. Los archivos siguen en assets/audio/Audios Pajaros y en assets/audio/espacial, con sus créditos en CREDITOS_Y_LICENCIAS.md."
     }
   ]
 }
