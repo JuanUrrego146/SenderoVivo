@@ -8,7 +8,7 @@ export class ModelView {
     }
 
 
-    async load(url) {
+    async load(url, opciones = {}) {
 
         /*
          * =====================================================
@@ -132,6 +132,24 @@ export class ModelView {
             'reveal',
             'auto'
         );
+
+        /*
+         * Animación de reposo (RF-029): se declara por configuración con el
+         * nombre del clip que trae el propio modelo. Arranca sola y en bucle
+         * al abrir la ficha; un modelo sin ese clip simplemente queda quieto.
+         */
+        if (opciones.animacion) {
+
+            model.setAttribute(
+                'animation-name',
+                opciones.animacion
+            );
+
+            model.setAttribute(
+                'autoplay',
+                ''
+            );
+        }
 
 
         /*
