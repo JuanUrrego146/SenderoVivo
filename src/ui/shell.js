@@ -128,6 +128,7 @@ function desdeContrato(poi) {
 
         // Rutas reales declaradas en config/pois.json
         modelUrl: poi.modelUrl || '',
+        previewUrl: poi.previewUrl || '',
         narrationUrl: poi.narrationUrl || '',
         birdCallUrl: poi.birdCallUrl || ''
     };
@@ -280,7 +281,7 @@ function construirHotspots() {
                 </div>
                 <div class="poi-gem-body">
                     <div class="poi-gem-inner">
-                        <i class="fa-solid ${item.icon} poi-gem-icon"></i>
+                        ${figuraDelPunto(item, 'poi-gem-miniatura', 'poi-gem-icon', item.icon)}
                     </div>
                 </div>
                 <div class="poi-hologram-card">
@@ -456,9 +457,21 @@ function medallonHTML(item, tam = 'w-10 h-10') {
                 box-shadow: 0 0 10px ${theme.glow};
             "
         >
-            <i class="fa-solid ${item.icon || 'fa-seedling'} text-base"></i>
+            ${figuraDelPunto(item, 'medallon-miniatura', 'text-base', item.icon || 'fa-seedling')}
         </div>
     `;
+}
+
+/**
+ * Figura de un punto dentro de su medallón: la miniatura de su propio modelo 3D
+ * (previewUrl, un WebP de assets/models/v2/miniaturas/) o, si el punto no la tiene,
+ * el icono de su categoría. Cada sitio pasa la clase de glass.css que le corresponde.
+ */
+function figuraDelPunto(item, claseImagen, claseIcono, icono) {
+    if (item.previewUrl) {
+        return `<img src="${item.previewUrl}" alt="" loading="lazy" decoding="async" class="${claseImagen}">`;
+    }
+    return `<i class="fa-solid ${icono} ${claseIcono}"></i>`;
 }
 
 
@@ -1542,7 +1555,7 @@ function createAlbumCardHTML(item, idx) {
 
                 <!-- Medallón botánico central con icono representativo -->
                 <div class="album-card-medallion">
-                    <i class="fa-solid ${iconClass}"></i>
+                    ${figuraDelPunto(item, 'album-card-miniatura', '', iconClass)}
                 </div>
             </div>
 

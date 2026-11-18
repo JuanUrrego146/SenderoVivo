@@ -206,6 +206,39 @@
     filter: drop-shadow(0 0 10px var(--sv-primary-glow));
 }
 
+/* Miniaturas de los puntos: el propio modelo 3D (previewUrl en config/pois.json) en lugar
+   del icono. Son WebP de 256 px con fondo transparente y aire alrededor, de modo que
+   object-fit: contain los deja enteros, centrados y sin deformar a cualquier tamaño. */
+.poi-gem-miniatura,
+.medallon-miniatura,
+.album-card-miniatura {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.poi-gem-miniatura {
+    padding: 2px;
+    transition: transform 0.25s ease;
+}
+
+.poi-beacon:hover .poi-gem-miniatura {
+    transform: scale(1.1);
+}
+
+.medallon-miniatura {
+    padding: 2px;
+}
+
+.album-card-miniatura {
+    padding: 6px;
+}
+
 /* 4. Etiqueta Holográfica Flotante (Specimen Preview) en Beige */
 .poi-hologram-card {
     position: absolute;
