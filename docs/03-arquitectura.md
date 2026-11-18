@@ -178,7 +178,6 @@ Nombres en **inglés**, según la convención del proyecto.
 | `AudioController` | **[existe]** | `src/controllers/AudioController.js`; gestiona el lecho, las fuentes HRTF declaradas en `soundscape.json` y el límite de `QualityProfile` |
 | `QualityProfile`, `LodController` | [previsto] | `src/engine/` — Alejandra |
 | `HudView` | [previsto] | `src/ui/` — Juan pinta, Eybar/Alberto diseñan. El prototipo tiene un HUD provisional dentro del hint |
-| `WorldModel` | **[huérfano]** | `src/WorldModel.js`, nadie lo importa; `main.js:249` usa su propia `loadWorldModel()`. Se elimina en SW-02 (#77) |
 
 ```mermaid
 classDiagram
@@ -420,7 +419,6 @@ No existe `poi:selected`. El par real, ya en producción, es `poi:open` / `poi:c
 
 **Deuda conocida (26/08/2026):**
 
-- **`src/WorldModel.js` está huérfano y mal nombrado.** Nadie lo importa; `main.js:249` define su propia `loadWorldModel()` local. Pese al nombre, no es Modelo: crea `Entity` y la mete en la escena. Se elimina en SW-02 (#77).
 - **`src/ui/shell.js` habla por globales `window.sendero*` en vez de por eventos.** Se carga como script clásico (`index.html:433`, sin `type="module"`) y llama métodos de Controlador directamente (`window.senderoAmbience.toggle()`, `window.senderoPoiManager`, entre otros). Se resuelve en SW-04 (#81).
 - **`TrailMarkers` mezcla Vista y Controlador.** Crea las flechas (Vista) y además hace picking y mueve al visitante (Controlador). Se resuelve entre SW-03 (#79, flechas) y SW-04 (#81, picking y avance).
 - **`PoiManager` mezcla Vista y Controlador.** Decide qué POI se abre (Controlador) y crea las entidades de los marcadores (Vista). Se resuelve entre SW-04 (#81, decisión) y SW-03 (#79, marcadores).
