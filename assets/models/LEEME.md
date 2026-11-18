@@ -17,7 +17,49 @@ Se ven en el visor 3D de la ficha, no en la escena. Cada uno es un punto de inte
 | `silla-rota.glb` | Silla Rota.glb | 4055464 | `d3375da2e27116f7dc8d7e3df7fecfebf5019c881d006bed1b8f3ab9abbd1a4c` |
 | `letrero-flecha.glb` | Letrero flecha.glb | 1991796 | `63d1016b9586a58011ae6909bd45de972d7f778a0badd025c6d71e69c71a6b09` |
 
-Los diez suman 25.146.564 bytes. El visor de la ficha carga uno a la vez, así que no hace falta una versión más liviana.
+Los diez suman 25.146.564 bytes. Esos archivos de la raíz y sus copias con texturas a 512 de la carpeta `512/` se conservan tal como llegaron. La ficha de la app carga hoy los de la carpeta `v2/`.
+
+## La carpeta `v2/`: lo que carga la ficha
+
+`v2/` tiene veintitrés modelos: diez aves y trece objetos del sendero. Son versiones trabajadas en Blender a partir de los `.glb` de la carpeta compartida «Modelos glb» (subcarpetas «Aves» y «Puntos de interes»), que no se modificó. El proceso completo y sus decisiones están en `scripts/modelos/mejora/LEEME.md`.
+
+Las aves conservan el esqueleto de cuarenta y cuatro huesos y los pesos de los originales. Sobre la malla original llevan plumas reales: remeras y coberteras en las dos caras del ala, timoneras en la cola y plumas de contorno en todo el cuerpo, entre 2.170 y 3.991 plumas por ave. Todas comparten un atlas de plumas de 1024 por 1024 en gris con alfa y su mapa de normales, y el color de cada pluma va en el color de vértice según el plumaje de la especie. Las plumas usan alfa en modo MASK, sin mezcla de transparencias. Cada ave pesa entre 1,87 y 2,62 MB y usa dos texturas, de modo que no necesita una copia más liviana para el celular.
+
+La animación `Take 001` es la original, con un ajuste: el giro de codo, muñeca y dedos del ala quedó al 30 %. El aleteo se había hecho para un ala corta y, con remeras de largo real, en el punto bajo las alas se cruzaban bajo el cuerpo. El batido del hombro, la cabeza, las patas y la cola no cambiaron.
+
+Los objetos conservan sus materiales y sus coordenadas de textura. La malla se soldó, porque el exportador de Maya entregaba cada triángulo con sus tres vértices propios y por eso se veían facetados; se biselaron las aristas vivas, se recalcularon las normales y se horneó oclusión ambiental en el color de vértice, que da la sombra de contacto entre tablas, postes y techos. Las texturas van a 512 por 512, como las de la carpeta `512/`, con el color más nítido y con el relieve de la veta sumado al mapa de normales. En el puente y en el edificio el piso se recogió alrededor del objeto.
+
+La ficha reproduce sola y en bucle la animación de reposo de las aves (RF-029). El nombre del clip se declara en `config/pois.json`, en el campo `idleAnimation`, y `src/views/ModelView.js` lo pasa al visor.
+
+| Archivo en `v2/` | Bytes | sha256 |
+|---|---|---|
+| `aguililla-de-swainson.glb` | 1921096 | `b87d60837838bbdb47779b66a1d153e1b68c736bd225665a94accaba31752190` |
+| `atlapetes-nuquipalido.glb` | 2012300 | `09fc02a9cd318f7eef7d0e01e6de79d73faf3350933c962168ca4333a1ef226e` |
+| `banca-vieja.glb` | 1430180 | `b84f3e5e7551ae719ab01908c7d3023f0cbb4952adf43753ce33e04a396f0fd1` |
+| `colibri-chillon.glb` | 2045908 | `0aeb7e7a78e397a4c78adfd17a05068d845584d12fdc5cc769a3a4071b0b4251` |
+| `copeton.glb` | 1922500 | `4e93fc9a7d48bbee7e150ee8209c58fd0810c94ce2896dcc5d085f197959fcea` |
+| `cucarachero-rufo.glb` | 1870608 | `28025de8ad723e760738f4b084f8a25dc9ca7cf3e1f00323cef16459b8d1d840` |
+| `edificio.glb` | 2393504 | `214bd3d5d79c2f9f849cd47bf27dfdc1906d45cbd2dfd2dd0ca67dcb3e016ea4` |
+| `estructura-final.glb` | 1405436 | `3ecaf948699393b7a7a9151688157b41665dd3fc36a9f9c11f43bf1e81d44b71` |
+| `golondrina-plomiza.glb` | 2314840 | `6b69f909953a76d8eb05e3e218069f119dde663f98660c6e6741c1affa07794e` |
+| `letrero-bosque-alto-andino.glb` | 592636 | `a0af880437c019a336c7bd708aba55e0bec6042710119596d3afee6dfb8ce3ca` |
+| `letrero-bosque-andino-y-pinos.glb` | 587536 | `9a73ca304b6b06bc47512ca700b8dddf08446e5638f19902d0319f2a774ba8a3` |
+| `letrero-flecha.glb` | 357152 | `2db30e9f6c98941bc2b586e9fb2de8871a94bc2e7e8fcfbce65ab9a72e517c95` |
+| `letrero-indicaciones.glb` | 890224 | `56e8b6b1ea6c6123d8cc6fcf290e73b5e90fdd8ecbe68c60f87cb2e36cd29419` |
+| `letrero-observatorio-de-aves.glb` | 400032 | `97b0c1861dd9848b8a7471fa5c64ace4e30473e4735d586985a7f3c822ab746e` |
+| `letrero-prohibido-el-paso.glb` | 114224 | `1d66795c30419fa2f6e31e8287c67448b5d112146adb751a980d9a9b939d2c00` |
+| `letrero-servicios-ambientales.glb` | 397604 | `3711a7649a9d3d4b2850a5675708d47c70401733ac90bd17e6e506b61e6f319a` |
+| `pibi-ahumado.glb` | 2622176 | `e066f475c8bc743a0c4fbf84978a10ea58891421ad79671f31bdbfbf1c927d75` |
+| `puente-principal.glb` | 1051208 | `2a1cc88aaab5dd0228901459da47535021a399fa87419c2ceacb14047ac9d23c` |
+| `saltapared-comun.glb` | 2015832 | `e9638a28deee93f4d63b55e9442c586384c80421ac7060254969663d5886a6ca` |
+| `silla-rota.glb` | 524380 | `171a7c02ec305776e492fae42e2de07c8d3df77654a08d62705c59eaa99016f5` |
+| `tablero-informativo.glb` | 1928660 | `2e2ed28ef5b11c403b71f97cc931a507051468256006813682545f77f1191865` |
+| `tucan-andino.glb` | 2071452 | `41d19d16daa9f96fa2df6832cae80ef1dcad6782bea0ba622e8fa3d7cf5b9695` |
+| `vireo-ojirrojo.glb` | 1994320 | `0d30d7ad874c60e4a7bc93bcce51b7b7d59f89a56656cd7d921d8397c77f8f22` |
+
+Los veintitrés suman 32.863.808 bytes.
+
+Veintiún modelos están enlazados a su punto de interés en `config/pois.json`. `atlapetes-nuquipalido.glb` es el modelo que en la carpeta compartida se llama «Nuca»: tiene forma de atlapetes y se pintó como *Atlapetes pallidinucha*, el de los cerros orientales de Bogotá, y su punto pasó a llamarse `poi-atlapetes-nuquipalido`. `puente-principal.glb` va en `poi-puente-madera`. `edificio.glb` y `estructura-final.glb` no tienen todavía un punto de interés que los use. El carpintero candela tiene punto de interés y canto, pero no tiene modelo.
 
 ## Las texturas vienen completas, salvo Height
 
@@ -37,4 +79,4 @@ Revisado el 21/10/2026 en las pasadas centrales de los tres tramos grabados con 
 
 ## Reglas para tocar estos archivos
 
-Si un `.glb` cambia, va con nombre nuevo y nunca se sobrescribe, porque `_headers` cachea `/assets/models/*` durante una semana. Un modelo nuevo de la misma familia se declara en `config/pois.json` sin tocar código: se copia aquí y se añade su POI de tipo `patrimonio` con `modelUrl`, dejando la historia en `[por verificar]` mientras no haya fuente citable.
+Si un `.glb` cambia, va con nombre nuevo y nunca se sobrescribe, porque `_headers` cachea `/assets/models/*` durante una semana. Por eso las versiones trabajadas están en `v2/` y una versión posterior irá en `v3/`. Un modelo nuevo de la misma familia se declara en `config/pois.json` sin tocar código: se copia aquí y se añade su POI de tipo `patrimonio` con `modelUrl`, dejando la historia en `[por verificar]` mientras no haya fuente citable.

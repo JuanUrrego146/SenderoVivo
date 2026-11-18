@@ -927,8 +927,9 @@ SenderoVivo/
     │                           los .sog y .ply sueltos siguen ignorados
     ├── models/                 marcador-provisional.glb · golondrina-plomiza.glb (convertido
     │                           19/08 con scripts/modelos/) · golondrina-plomiza-fuente/ ·
-    │                           diez modelos de señalización y mobiliario de Alberto, que
-    │                           se ven en el visor 3D de la ficha (ver LEEME.md)
+    │                           diez modelos de señalización y mobiliario de Alberto ·
+    │                           512/ (copias con texturas a 512) · v2/ (diez aves con plumas
+    │                           y trece objetos mejorados: lo que carga la ficha, ver LEEME.md)
     ├── audio/
     └── text/
 ```
