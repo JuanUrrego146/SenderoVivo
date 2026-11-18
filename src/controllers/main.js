@@ -215,6 +215,7 @@ async function resolveSceneUrl() {
                 sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
                 eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
                 pitchDownLimit: match.pitchDownLimit, baked: !!match.baked,
+                pitchUpLimit: match.pitchUpLimit,
                 yawLimit: match.yawLimit,
                 clearColorToken: match.clearColorToken,
                 skyboxUrl: match.skyboxUrl, skyboxYaw: match.skyboxYaw, domoUrl: match.domoUrl
@@ -233,6 +234,7 @@ async function resolveSceneUrl() {
                     sceneUp: match.sceneUp, forwardOnly: !!match.forwardOnly,
                     eyeHeight: match.eyeHeight, trackUrl: match.trackUrl,
                     pitchDownLimit: match.pitchDownLimit, baked: !!match.baked,
+                    pitchUpLimit: match.pitchUpLimit,
                     yawLimit: match.yawLimit,
                     clearColorToken: match.clearColorToken,
                     skyboxUrl: match.skyboxUrl, skyboxYaw: match.skyboxYaw, domoUrl: match.domoUrl
@@ -556,6 +558,9 @@ async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
         path.corridorRight = Array.isArray(cfg.corridorRight) ? cfg.corridorRight : null;
         // Punto de arranque sobre el trazado (metros desde su primer punto); 0 si no se declara.
         path.startDistance = Number.isFinite(cfg.startDistance) ? cfg.startDistance : 0;
+        // Paradas de la navegación por puntos (opcional): distancias sobre el trazado donde la
+        // escena se midió más nítida. Sin ellas TourEngine las reparte de forma pareja.
+        path.stops = Array.isArray(cfg.stops) ? cfg.stops : null;
         // Mismo cfg ya leido y parseado: un solo fetch de track.json, dos modelos.
         const gpsTrack = new GpsTrack(cfg);
         return { trail: path, gpsTrack };
@@ -566,7 +571,7 @@ async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
 
 async function setUpNavigation(app, camera, sceneOpts = {}) {
     // Metadatos de la escena activa (config/scenes.json): restricciones y trazado propio.
-    const { forwardOnly = false, eyeHeight: sceneEyeHeight, trackUrl: sceneTrackUrl, pitchDownLimit, yawLimit } = sceneOpts;
+    const { forwardOnly = false, eyeHeight: sceneEyeHeight, trackUrl: sceneTrackUrl, pitchDownLimit, pitchUpLimit, yawLimit } = sceneOpts;
     const params = new URLSearchParams(window.location.search);
     const isEditor = params.has('editor');
     const isPoiEditor = params.has('poiEditor') || params.has('poi-editor');
@@ -621,6 +626,9 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
         forwardOnly,
         // Tope del picado hacia abajo: evita meter la camara donde el splat se ve mal.
         pitchDownLimit,
+        // Tope de la mirada hacia arriba (config/scenes.json): mas arriba de lo que vieron las
+        // fotos la reconstruccion no tiene nada fiable.
+        pitchUpLimit: Number.isFinite(pitchUpLimit) ? pitchUpLimit : undefined,
         // Tope del giro de la cabeza respecto al camino (tramos estrechos, config/scenes.json).
         yawLimit,
         // Algunos trazados no arrancan en su primer punto (config/track-*.json, startDistance).
@@ -649,17 +657,14 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
             onlyVisible: true
         }
     );
-    // Las flechas solo emiten solicitudes; TourEngine ejecuta el movimiento.
+    // Las flechas solo emiten solicitudes; TourEngine ejecuta el movimiento. Navegación por
+    // puntos: un toque en la flecha lleva hasta la parada siguiente, donde la flecha está
+    // dibujada, y ahí se detiene. Varios toques seguidos encadenan paradas.
     app.on('trail:request-walk', ({ direction }) => {
-        tour.press(direction > 0 ? 'forward' : 'back');
-    });
-
-    app.on('trail:request-stop', () => {
-        tour.release('forward');
-        tour.release('back');
+        tour.step(direction > 0 ? 1 : -1);
     });
     showHint(
-        'Toca las <strong>flechas del camino</strong> para avanzar · también <strong>W A S D</strong><br>' +
+        'Toca la <strong>flecha del camino</strong> para ir al siguiente punto · también <strong>W A S D</strong><br>' +
         '<strong>R</strong> subir la vista · <strong>F</strong> bajarla · arrastra para mirar en 360°<br>' +
         '<span id="hud-progress">0 % del recorrido</span> · ' +
         'altura <span id="hud-eye">' + (trail.eyeHeight ?? 0).toFixed(2) + '</span>'

@@ -136,7 +136,7 @@ function createArrowTexture(
         strokeColor;
 
     ctx.lineWidth =
-        8;
+        14;
 
     ctx.lineJoin =
         'round';
@@ -272,14 +272,24 @@ export class TrailArrowsView {
                 '--sv-green-300'
             );
 
+        /*
+         * Borde y tinte en blanco (--sv-text-inverse). Con el
+         * rediseño de la paleta, --sv-gray-050 pasó a ser el
+         * color del texto (oscuro) y como tinte del material
+         * apagaba la flecha hasta dejarla casi invisible sobre
+         * el piso. Con tinte blanco se ve el verde de la
+         * textura tal cual, y el borde blanco la separa de
+         * cualquier fondo.
+         */
+
         const arrowStroke =
             cssToken(
-                '--sv-scrim-550'
+                '--sv-text-inverse'
             );
 
         const materialColor =
             colorFromToken(
-                '--sv-gray-050'
+                '--sv-text-inverse'
             );
 
 
@@ -372,6 +382,28 @@ export class TrailArrowsView {
 
         /*
          * =====================================================
+         * AVISO DE LA PARADA SIGUIENTE
+         * =====================================================
+         *
+         * Cuando la flecha de avanzar queda fuera de la vista
+         * (el camino dobla, como al arrancar en la Cumbre, o
+         * se devuelve, como en el mirador) aparece un botón
+         * en el borde de la pantalla hacia donde está. Así
+         * siempre hay a la mano un control para seguir.
+         */
+
+        this._nextPosition =
+            new Vec3();
+
+        this._hasNext =
+            false;
+
+        this._aviso =
+            this._createOffscreenHint();
+
+
+        /*
+         * =====================================================
          * BIND
          * =====================================================
          */
@@ -450,7 +482,7 @@ export class TrailArrowsView {
             BLEND_NORMAL;
 
         material.opacity =
-            0.85;
+            0.95;
 
 
         /*
@@ -847,6 +879,9 @@ export class TrailArrowsView {
             return;
         }
 
+        this._hasNext =
+            false;
+
 
         const total =
             this.trail.totalLength();
@@ -881,10 +916,26 @@ export class TrailArrowsView {
              * Posición futura de la flecha.
              */
 
+            /*
+             * Navegación por puntos: la flecha se dibuja en la
+             * PARADA siguiente del recorrido (TourEngine.nextStop),
+             * que es a donde lleva un toque. Si el motor no las
+             * ofrece se usa el paso fijo de siempre.
+             */
+
+            const parada =
+                typeof this.tour.nextStop === 'function'
+                    ? this.tour.nextStop(
+                        marker.direction
+                    )
+                    : undefined;
+
             const target =
-                distance +
-                this.stepDistance *
-                marker.direction;
+                Number.isFinite(parada)
+                    ? parada
+                    : distance +
+                        this.stepDistance *
+                        marker.direction;
 
 
             /*
@@ -893,9 +944,16 @@ export class TrailArrowsView {
              */
 
             const outOfRange =
-                marker.direction > 0
-                    ? distance >= total - 0.05
-                    : distance <= 0.05;
+                parada === null ||
+                (
+                    marker.direction < 0 &&
+                    this.tour.forwardOnly === true
+                ) ||
+                (
+                    marker.direction > 0
+                        ? distance >= total - 0.05
+                        : distance <= 0.05
+                );
 
 
             marker.enabled =
@@ -951,6 +1009,17 @@ export class TrailArrowsView {
 
             pos.y +=
                 this.groundOffset;
+
+            if (
+                marker.direction > 0
+            ) {
+                this._hasNext =
+                    true;
+
+                this._nextPosition.copy(
+                    pos
+                );
+            }
 
 
             marker.setPosition(
@@ -1055,6 +1124,34 @@ export class TrailArrowsView {
 
             /*
              * =================================================
+             * FLECHAS ENCIMADAS
+             * =================================================
+             *
+             * Donde el trazado se devuelve sobre sí mismo (el
+             * ramal del mirador) la parada de adelante y la de
+             * atrás quedan en el mismo sitio. Ahí solo se deja
+             * la de avanzar: dos flechas encimadas confunden y
+             * la de atrás devolvería al visitante al mirador.
+             */
+
+            if (
+                marker.direction < 0 &&
+                this.markers[0] &&
+                this.markers[0] !== marker &&
+                this.markers[0].direction > 0 &&
+                this.markers[0].enabled &&
+                this.markers[0]
+                    .getPosition()
+                    .distance(pos) < 1.5
+            ) {
+                marker.enabled =
+                    false;
+                continue;
+            }
+
+
+            /*
+             * =================================================
              * HOVER
              * =================================================
              */
@@ -1066,7 +1163,7 @@ export class TrailArrowsView {
             marker.baseMaterial.opacity =
                 resaltada
                     ? 1
-                    : 0.85;
+                    : 0.95;
 
 
             marker.baseMaterial.update();
@@ -1088,6 +1185,141 @@ export class TrailArrowsView {
                 escala
             );
         }
+
+        this._updateOffscreenHint();
+    }
+
+
+    /*
+     * =========================================================
+     * AVISO DE LA PARADA SIGUIENTE (fuera de la vista)
+     * =========================================================
+     */
+
+    _createOffscreenHint() {
+
+        if (
+            typeof document === 'undefined'
+        ) {
+            return null;
+        }
+
+        const boton =
+            document.createElement('button');
+
+        boton.type = 'button';
+        boton.className = 'parada-fuera';
+        boton.hidden = true;
+        boton.setAttribute(
+            'aria-label',
+            'Ir al siguiente punto del recorrido'
+        );
+
+        /*
+         * Igual que las flechas: la Vista no camina,
+         * solo comunica la intención.
+         */
+
+        boton.addEventListener(
+            'click',
+            () => {
+                this.app.fire(
+                    'trail:request-walk',
+                    {
+                        index: 0,
+                        direction: 1
+                    }
+                );
+            }
+        );
+
+        document.body.appendChild(boton);
+
+        return boton;
+    }
+
+
+    _updateOffscreenHint() {
+
+        const boton =
+            this._aviso;
+
+        if (!boton) {
+            return;
+        }
+
+        const lobby =
+            document.getElementById('trail-lobby');
+
+        const explorando =
+            !lobby ||
+            lobby.classList.contains('lobby-hidden');
+
+        /*
+         * Mientras se camina hacia una parada no se muestra:
+         * la vista se está enderezando hacia el camino.
+         */
+
+        const viajando =
+            this.tour._meta !== null &&
+            this.tour._meta !== undefined;
+
+        let lado = null;
+
+        if (
+            this._hasNext &&
+            explorando &&
+            !viajando
+        ) {
+            const canvas =
+                this.app.graphicsDevice.canvas;
+
+            const screen =
+                this.camera.camera.worldToScreen(
+                    this._nextPosition
+                );
+
+            const dentro =
+                screen.z > 0 &&
+                screen.x > 48 &&
+                screen.x < canvas.clientWidth - 48 &&
+                screen.y > 0 &&
+                screen.y < canvas.clientHeight - 24;
+
+            if (!dentro) {
+                const hacia =
+                    this._towardMarker;
+
+                hacia.sub2(
+                    this._nextPosition,
+                    this.camera.getPosition()
+                );
+
+                lado =
+                    hacia.dot(this.camera.right) >= 0
+                        ? 'derecha'
+                        : 'izquierda';
+            }
+        }
+
+        if (lado === null) {
+            if (!boton.hidden) {
+                boton.hidden = true;
+            }
+            return;
+        }
+
+        if (boton.dataset.lado !== lado) {
+            boton.dataset.lado = lado;
+            boton.textContent =
+                lado === 'derecha'
+                    ? 'Siguiente punto ›'
+                    : '‹ Siguiente punto';
+        }
+
+        if (boton.hidden) {
+            boton.hidden = false;
+        }
     }
 
 
@@ -1098,6 +1330,11 @@ export class TrailArrowsView {
      */
 
     destroy() {
+
+        if (this._aviso) {
+            this._aviso.remove();
+            this._aviso = null;
+        }
 
         /*
          * Quitar actualización.

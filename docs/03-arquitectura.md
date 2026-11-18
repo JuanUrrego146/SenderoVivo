@@ -791,16 +791,29 @@ Forma real vigente (el prototipo ya lo consume):
 > **`startDistance`** (opcional, en metros desde el primer punto) es dónde arranca el recorrido;
 > sin él arranca en el primer punto. La Cumbre (`config/track-sendero-01.json`) arranca en su centro,
 > d = 15 m, y desde ahí se camina hacia la entrada o hacia la plataforma.
+> **`stops`** (opcional) son las PARADAS de la navegación por puntos, en metros desde el primer punto.
+> `TourEngine` mueve al visitante por el trazado pero solo lo deja quieto en ellas. Un toque en la flecha
+> del camino (`TrailArrowsView`, evento `trail:request-walk`) llama a `TourEngine.step` y lo lleva a la
+> parada siguiente con arranque y frenado suaves; varios toques seguidos encadenan paradas sin detenerse.
+> Con el avance sostenido (teclas, joystick, dos dedos) camina de corrido y al soltar sigue hasta la primera
+> parada en la que alcanza a frenar. Mientras camina, la vista acompaña las curvas del camino, y en el viaje
+> pedido con un toque se endereza hacia el sentido de marcha y vuelve al centro del corredor. La
+> desaceleración cerca de un POI (SW-17) se aplica al avance sostenido, no al viaje de parada a parada, que
+> ya frena al llegar. Las paradas se eligen midiendo (`scripts/escenas/nube/paradas_recorrido.py` dibuja la
+> escena cada 0,5 m del trazado y mide su nitidez); sin `stops` el motor las reparte cada 3,2 unidades. El
+> punto de arranque siempre es parada. La flecha se dibuja en la parada siguiente y, si queda fuera de la
+> vista (el camino dobla o se devuelve, como en el mirador), aparece en el borde de la pantalla el botón
+> «Siguiente punto», que pide el mismo paso.
 >
 > En celular (menos de 640 px) se camina además con un joystick en pantalla, `src/views/JoystickView.js`:
 > la Vista solo publica `trail:joystick` con `{ forward, strafe }` de -1 a 1 y `main.js` lo pasa a
-> `TourEngine.setStick`. El joystick, el teclado (W A S D y flechas) y el gesto de dos dedos son relativos a la vista: `TourEngine._haciaLaVista` avanza a velocidad completa por el trazado en el sentido hacia el que se mira (de regreso si se mira hacia atrás; solo cerca de la perpendicular baja de forma continua a 0) y lleva la parte de lado de la mirada al paso lateral. Las flechas del camino (`press`) siguen relativas al trazado y mandan sobre las demás entradas; el corredor y `forwardOnly` se aplican igual a todos. El motor
+> `TourEngine.setStick`. El joystick, el teclado (W A S D y flechas) y el gesto de dos dedos son relativos a la vista: `TourEngine._haciaLaVista` avanza a velocidad completa por el trazado en el sentido hacia el que se mira (de regreso si se mira hacia atrás; solo cerca de la perpendicular baja de forma continua a 0) y lleva la parte de lado de la mirada al paso lateral. `press` y `release` (avance sostenido relativo al trazado) mandan sobre las demás entradas; el corredor y `forwardOnly` se aplican igual a todos. El motor
 > cuenta solo los dedos que tocan la escena (`targetTouches`) y gira la vista solo con el puntero que
 > se apoyó en ella, para que el pulgar del joystick no mire ni cuente como segundo dedo.
 > `src/ui/acomodoMovil.js` mide lo que ocupa la barra de navegación móvil y lo publica en
 > `--sv-tope-nav-movil`; la tarjeta "Detalles del sendero" va 8 px encima y el joystick 12 px encima de ella.
 >
-> El campo de visión depende de la orientación de la pantalla (`main.js`, al iniciar y en cada `resize`): 45 grados en vertical cuando la pantalla es horizontal y 62 cuando es vertical. Con 45 en un celular en vertical el ancho visible era de unos 21 grados y la escena se veía ampliada casi tres veces respecto a como se grabó. Las escenas de la Cumbre declaran además `pitchDownLimit` 30: el piso a menos de 2 m de los pies es lo más borroso de las reconstrucciones.
+> El campo de visión depende de la orientación de la pantalla (`main.js`, al iniciar y en cada `resize`): 58 grados en vertical cuando la pantalla es horizontal (unos 89 de ancho en 16:9) y 62 cuando es vertical. El lente con que se grabó abre 101 grados de ancho y 68 de alto; con los 45 de PlayCanvas la escena se veía ampliada 1,65 veces. Las escenas de la Cumbre declaran además `pitchDownLimit` 30: el piso a menos de 2 m de los pies es lo más borroso de las reconstrucciones. Las escenas propias declaran `pitchUpLimit` (25 en la Cumbre, 20 en los tramos): las fotos miran hacia adelante y por encima de unos 35 grados sobre el horizonte la reconstrucción no tiene con qué afinarse, así que la mirada hacia arriba llega hasta donde se comprobó limpia.
 >
 > Una escena puede declarar `skyboxUrl` (`config/scenes.json`): un equirectangular de 2 por 1 con el cielo real, que `cargarFondo360()` en `main.js` convierte una sola vez en el fondo de la escena. Sale de una panorámica de la Insta360 ubicada por COLMAP en el marco de la escena (`scripts/escenas/nube/propia_fondo360.py`) y deja solo el cielo (`propia_cielo360.py`): el fondo está en el infinito, así que un árbol fotografiado desde un punto quedaría pintado en el cielo y quieto al caminar. Donde la reconstrucción no tiene nada se ve ese cielo en lugar del color plano de `clearColorToken`. PlayCanvas 2.21 muestrea el equirectangular con la longitud invertida, por eso el archivo se guarda volteado.
 >

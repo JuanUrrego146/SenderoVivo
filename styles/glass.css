@@ -927,6 +927,55 @@
     }
 }
 
+/* Aviso de la parada siguiente cuando su flecha queda fuera de la vista (src/views/TrailArrowsView.js):
+   un botón en el borde de la pantalla hacia donde sigue el camino. */
+.parada-fuera {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 35;
+    min-height: 44px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--sv-primary);
+    background: var(--sv-primary);
+    color: var(--sv-text-inverse);
+    font-family: var(--sv-font-body);
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: var(--sv-surface-shadow), 0 0 14px var(--sv-primary-glow);
+    cursor: pointer;
+}
+
+.parada-fuera[hidden] {
+    display: none;
+}
+
+.parada-fuera[data-lado="izquierda"] {
+    left: 18px;
+}
+
+.parada-fuera[data-lado="derecha"] {
+    right: 18px;
+}
+
+@media (max-width: 640px) {
+    .parada-fuera {
+        top: 42%;
+        font-size: 13px;
+        padding: 9px 14px;
+    }
+
+    .parada-fuera[data-lado="izquierda"] {
+        left: 10px;
+    }
+
+    .parada-fuera[data-lado="derecha"] {
+        right: 10px;
+    }
+}
+
 /* Joystick para caminar desde el celular (src/views/JoystickView.js) */
 .sv-joystick {
     display: none;
