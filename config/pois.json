@@ -1,7 +1,7 @@
 {
   "version": 2,
   "note": "Catálogo ÚNICO de puntos de interés. Unifica el catálogo de presentación que estaba escrito a mano en src/ui/shell.js (Eybar Viasus) con el contrato funcional de este archivo (Alejandra Chambueta). Añadir un POI no toca código (RF-021, RNF-009, invariante 3). Campos de presentación: category, icon, colorToken, typeLabel, shortDesc, fullDesc, conservation, curiosity, audioFreq. Campos funcionales: type, sceneId, anchor, trailAnchor, modelUrl, idleAnimation, narrationUrl, transcriptUrl, birdCallUrl. Los colores se declaran como TOKEN de styles/tokens.css, nunca como literal (invariante 14).",
-  "anchorNote": "trailAnchor sitúa el punto sobre el trazado de su escena (sceneId): d = distancia recorrida, lat = desplazamiento lateral, positivo a la derecha del avance, y alt = altura sobre el punto del trazado. Es el anclaje que usa hoy el visor, y cada escena muestra solo los POI de las escenas que comparten su trazado. anchor {x,y,z} es el contrato original en coordenadas de mundo, medido sobre la reconstrucción horneada de su escena en poi-silla-rota (Tramo 2), poi-banca-vieja, poi-letrero-observatorio-de-aves y poi-tablero-informativo (Cumbre y Tramo 1): las bancas con los puntos 3D de COLMAP dentro de su recuadro (centro en x y z, tablón superior en y) y los dos letreros triangulando un rasgo marcado en tres o cuatro cuadros. El medallón flota unos 0,3 m sobre el objeto. En los demás sigue en (0,0,0), [por medir en campo].",
+  "anchorNote": "trailAnchor sitúa el punto sobre el trazado de su escena (sceneId): d = distancia recorrida, lat = desplazamiento lateral, positivo a la derecha del avance, y alt = altura sobre el punto del trazado. Cada escena muestra solo los POI cuyo sceneId es el suyo o que la nombran en placements: [{sceneId, trailAnchor, anchor}]; las versiones de una zona no los comparten aunque compartan trazado. Por decisión de Juan del 18/11/2026 los puntos van solo en las versiones propias de la Cumbre (sendero-01-propia) y del Tramo 1 (sendero-01-t1-propia); el Tramo 2 queda por ahora sin puntos. anchor {x,y,z} es la posición del medallón en coordenadas de mundo de esa escena, la que calcula el visor; de ahí sale también el canto espacial de las aves. La nota anchorNote de cada POI dice si su ubicación está medida sobre la reconstrucción, es aproximada o es al azar.",
   "pois": [
     {
       "id": "poi-colibri-chillon",
@@ -9,16 +9,16 @@
       "category": "fauna",
       "commonName": "Colibrí chillón",
       "scientificName": "Colibri coruscans",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-propia",
       "anchor": {
-        "x": -12.62,
-        "y": 5.4,
-        "z": 6.73
+        "x": -11.93,
+        "y": 6.62,
+        "z": 0.26
       },
       "trailAnchor": {
-        "d": 25.24,
-        "lat": -4.14,
-        "alt": 0.43
+        "d": 11.49,
+        "lat": 2.67,
+        "alt": 1.83
       },
       "distanceMeters": 0,
       "modelUrl": "",
@@ -33,12 +33,12 @@
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna · Verificado en el sendero",
       "shortDesc": "El ave insignia del proyecto. POI confirmado del catálogo.",
-      "fullDesc": "Colibrí de verde iridiscente con parche azul violeta en la garganta. Vive entre 1.700 y 3.500 msnm, el único rango de altitud ya verificado del catálogo. Registrado en el propio sendero: eBird lo reporta en el punto Club La Aguadora / Sendero Santa Ana.",
+      "fullDesc": "Colibrí de verde iridiscente con parche azul violeta en la garganta. Vive entre 1.700 y 3.500 msnm, el único rango de altitud ya verificado del catálogo. Registrado en el propio sendero: eBird lo reporta en el punto Club La Aguadora / Sendero Santa Ana. Canto grabado por Henrry en El Carmen, Trujillo (Venezuela) y publicado en iNaturalist (observación 413336398) con licencia CC BY 4.0.",
       "conservation": "Verificado",
       "curiosity": "Su nombre viene del canto insistente y chillón que emite desde perchas altas, sobre todo al amanecer.",
       "audioFreq": 880,
-      "anchorNote": "Ubicación de demostración en La Cumbre en punto de avistamiento verificado por eBird en el sendero.",
-      "mediaNote": "[por grabar] Sin canto ni narración propios todavía: narrationUrl y birdCallUrl van vacíos a propósito, para que la ficha no ofrezca un audio que no existe. El modelo colibri-chillon.glb tampoco está en el repositorio (ART-01), así que modelUrl también va vacío hasta que llegue."
+      "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
     },
     {
       "id": "poi-helecho-arborescente",
@@ -46,7 +46,7 @@
       "category": "flora",
       "commonName": "Helecho arborescente",
       "scientificName": "Género Cyathea · [por verificar en V1]",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-propia",
       "anchor": {
         "x": -21.38,
         "y": 6.55,
@@ -81,15 +81,15 @@
       "category": "flora",
       "commonName": "Aliso",
       "scientificName": "[por verificar: el Acueducto cita el nombre común sin binomio]",
-      "sceneId": "sendero-01-t1",
+      "sceneId": "sendero-01-t1-propia",
       "anchor": {
-        "x": -11.27,
-        "y": 3.5,
-        "z": 1.77
+        "x": -10.15,
+        "y": 4.31,
+        "z": -2.68
       },
       "trailAnchor": {
-        "d": 8.6,
-        "lat": -1.4,
+        "d": 10.98,
+        "lat": -1.9,
         "alt": 0.95
       },
       "distanceMeters": 0,
@@ -108,7 +108,7 @@
       "conservation": "Citada por el administrador del sendero",
       "curiosity": "Crece rápido en suelos removidos, así que suele ser de los primeros en volver donde el bosque se recupera.",
       "audioFreq": 520,
-      "anchorNote": "Ubicación reconstruida al costado del Tramo 1 en vegetación nativa.",
+      "anchorNote": "Ubicación reconstruida al costado del Tramo 1 en vegetación nativa. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84), del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m.",
       "mediaNote": "[pendiente] El modelo aliso.glb todavía no está en el repositorio: modelUrl va vacío hasta que llegue, para que la ficha no ofrezca un modelo que no existe."
     },
     {
@@ -117,15 +117,15 @@
       "category": "fauna",
       "commonName": "Cusumbo andino",
       "scientificName": "Nasuella olivacea · [por confirmar para este sendero]",
-      "sceneId": "sendero-01-t1",
+      "sceneId": "sendero-01-t1-propia",
       "anchor": {
-        "x": -17.62,
-        "y": 4.6,
-        "z": -1.01
+        "x": -16.08,
+        "y": 6.92,
+        "z": -7.78
       },
       "trailAnchor": {
-        "d": 14.8,
-        "lat": 1.5,
+        "d": 18.75,
+        "lat": 1.9,
         "alt": 0.8
       },
       "distanceMeters": 0,
@@ -144,7 +144,7 @@
       "conservation": "Citado para este sendero · binomio por confirmar",
       "curiosity": "Anda en grupos y hurga entre la hojarasca con el hocico alargado; deja el suelo removido por donde pasa.",
       "audioFreq": 220,
-      "anchorNote": "Ubicación de demostración en área de cobertura vegetal densa del Tramo 1.",
+      "anchorNote": "Ubicación de demostración en área de cobertura vegetal densa del Tramo 1. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84), del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m.",
       "mediaNote": "[pendiente] El modelo cusumbo.glb todavía no está en el repositorio: modelUrl va vacío hasta que llegue, para que la ficha no ofrezca un modelo que no existe."
     },
     {
@@ -153,15 +153,15 @@
       "category": "curiosidades",
       "commonName": "Puente de madera",
       "scientificName": "Punto patrimonial",
-      "sceneId": "sendero-01-t1",
+      "sceneId": "sendero-01-t1-propia",
       "anchor": {
-        "x": -8.66,
-        "y": 3.03,
-        "z": 0.86
+        "x": -7.17,
+        "y": 2.96,
+        "z": -1.67
       },
       "trailAnchor": {
-        "d": 5.8,
-        "lat": -0.8,
+        "d": 7.35,
+        "lat": -1.9,
         "alt": 0.7
       },
       "distanceMeters": 0,
@@ -180,7 +180,7 @@
       "conservation": "[por verificar] la historia",
       "curiosity": "Los Cerros Orientales guardan patrimonio de acueducto documentado: si aparece infraestructura análoga en la quebrada, hay dónde buscar fuente.",
       "audioFreq": 330,
-      "anchorNote": "Ubicación del paso patrimonial sobre la quebrada en el Tramo 1."
+      "anchorNote": "Ubicación del paso patrimonial sobre la quebrada en el Tramo 1. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84), del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m."
     },
     {
       "id": "poi-pino",
@@ -188,7 +188,7 @@
       "category": "curiosidades",
       "commonName": "Pino",
       "scientificName": "[por verificar: el Acueducto cita el nombre común sin binomio]",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-propia",
       "anchor": {
         "x": -9.78,
         "y": 4.02,
@@ -224,17 +224,18 @@
       "category": "fauna",
       "commonName": "Golondrina plomiza",
       "scientificName": "[por verificar: HU-11.2, la fuente cita solo el nombre común]",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-propia",
       "anchor": {
-        "x": -22.76,
-        "y": 6.69,
-        "z": 4.1
+        "x": -18.18,
+        "y": 8.08,
+        "z": 8.64
       },
       "trailAnchor": {
-        "d": 32.6,
-        "lat": 3.56,
-        "alt": 0.29
+        "d": 30.77,
+        "lat": -2.68,
+        "alt": 2.03
       },
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
       "distanceMeters": 0,
       "modelUrl": "assets/models/512/golondrina-plomiza.glb",
       "idleAnimation": "[pendiente: el .mb fuente no trae animación; RF-029 con Felipe]",
@@ -248,11 +249,11 @@
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna nativa",
       "shortDesc": "La única especie del catálogo con modelo 3D y audio propios.",
-      "fullDesc": "El sendero registra dos golondrinas en eBird y ninguna otra: la ventriparda (Orochelidon murina) y la albiazul (Pygochelidon cyanoleuca). El binomio de la plomiza sale de una de esas dos y se cierra en ART-06.",
+      "fullDesc": "El sendero registra dos golondrinas en eBird y ninguna otra: la ventriparda (Orochelidon murina) y la albiazul (Pygochelidon cyanoleuca). El binomio de la plomiza sale de una de esas dos y se cierra en ART-06. Canto grabado por Juan M. Atencio en Villa General Mitre, Buenos Aires (Argentina) y publicado en iNaturalist (observación 394727684) con licencia CC BY-NC 4.0.",
       "conservation": "Verificado",
       "curiosity": "Es una de las pocas golondrinas residentes en la cordillera; anida en taludes y barrancos a lo largo de senderos y valles altoandinos.",
       "audioFreq": 760,
-      "anchorNote": "Ubicación provisional de demostración en La Cumbre: asignada a la zona despejada del trazado (d=32.6 m) para la visualización del modelo 3D de fauna, a la espera de la delimitación de su zona de avistamiento definitiva en campo."
+      "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo."
     },
     {
       "id": "poi-muro-antiguo",
@@ -260,15 +261,15 @@
       "category": "curiosidades",
       "commonName": "[por identificar en V1]",
       "scientificName": "Punto patrimonial",
-      "sceneId": "sendero-01-t1",
+      "sceneId": "sendero-01-t1-propia",
       "anchor": {
-        "x": -21.49,
-        "y": 4.79,
-        "z": -0.57
+        "x": -20.65,
+        "y": 8.74,
+        "z": -9.34
       },
       "trailAnchor": {
-        "d": 18.6,
-        "lat": 1.4,
+        "d": 23.56,
+        "lat": 1.9,
         "alt": 0.75
       },
       "distanceMeters": 0,
@@ -288,7 +289,7 @@
       "conservation": "[por verificar]",
       "curiosity": "[por completar tras V1]",
       "audioFreq": 300,
-      "anchorNote": "Ubicación de vestigios de contención de piedra en el Tramo 1.",
+      "anchorNote": "Ubicación de vestigios de contención de piedra en el Tramo 1. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84), del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m.",
       "mediaNote": "[por definir] Declarado en scene-02, que todavía no existe. El modelo muro-antiguo.glb tampoco está en el repositorio."
     },
     {
@@ -297,7 +298,7 @@
       "category": "curiosidades",
       "commonName": "Tablero informativo",
       "scientificName": "Tablero con techo de madera",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-propia",
       "anchor": {
         "x": -9.26,
         "y": 4.16,
@@ -332,7 +333,7 @@
       "category": "curiosidades",
       "commonName": "Poste de indicaciones",
       "scientificName": "Poste de madera con flechas",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-propia",
       "anchor": {
         "x": -11.16,
         "y": 4.45,
@@ -368,7 +369,7 @@
       "category": "curiosidades",
       "commonName": "Bosque alto andino",
       "scientificName": "Letrero interpretativo",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-propia",
       "anchor": {
         "x": -18.98,
         "y": 5.93,
@@ -404,15 +405,15 @@
       "category": "curiosidades",
       "commonName": "Banca vieja",
       "scientificName": "Banca de madera con techo",
-      "sceneId": "sendero-01-t1",
+      "sceneId": "sendero-01-t1-propia",
       "anchor": {
-        "x": -3.93,
-        "y": 2.16,
-        "z": 0.83
+        "x": 0.06,
+        "y": 1.54,
+        "z": -2.55
       },
       "trailAnchor": {
-        "d": 1,
-        "lat": -1.2,
+        "d": 1.0,
+        "lat": 1.9,
         "alt": 0.71
       },
       "distanceMeters": 0,
@@ -432,7 +433,7 @@
       "curiosity": "",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicación aproximada en Tramo 1: se sitúa al inicio del tramo reconstruido (d=1 m) debido a que su posición real en campo está unos metros más abajo, fuera de la captura 3D actual."
+      "anchorNote": "Ubicación aproximada al arranque del Tramo 1 propio: en campo está unos metros más abajo, en el empalme con el Tramo 2, fuera de la captura. Va con los lados de la subida, la banca a la derecha, como se ve en el cuadro 642 de t2_CentroCentro_Devuelta."
     },
     {
       "id": "poi-letrero-observatorio-de-aves",
@@ -440,15 +441,15 @@
       "category": "curiosidades",
       "commonName": "Observatorio de aves",
       "scientificName": "Letrero interpretativo",
-      "sceneId": "sendero-01-t1",
+      "sceneId": "sendero-01-t1-propia",
       "anchor": {
-        "x": -5.62,
-        "y": 2.71,
-        "z": -1.4
+        "x": -3.0,
+        "y": 2.03,
+        "z": 0.05
       },
       "trailAnchor": {
         "d": 2.5,
-        "lat": 1.2,
+        "lat": -1.9,
         "alt": 0.9
       },
       "distanceMeters": 0,
@@ -468,7 +469,7 @@
       "curiosity": "El letrero lo ubica a 270 m del mirador Santa Ana.",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicación aproximada en Tramo 1: ubicada al arranque de la escena (d=2.5 m) por estar su posición real de campo unos metros más abajo, fuera del tramo reconstruido por Luma."
+      "anchorNote": "Ubicación aproximada al arranque del Tramo 1 propio: en campo está unos metros más abajo, en el empalme con el Tramo 2, fuera de la captura. Va con los lados de la subida, el letrero a la izquierda, como se ve en el cuadro 642 de t2_CentroCentro_Devuelta."
     },
     {
       "id": "poi-letrero-prohibido-el-paso",
@@ -476,7 +477,7 @@
       "category": "curiosidades",
       "commonName": "Prohibido el paso",
       "scientificName": "Letrero del Acueducto",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-propia",
       "anchor": {
         "x": -15.34,
         "y": 4.43,
@@ -512,7 +513,7 @@
       "category": "curiosidades",
       "commonName": "Bosque andino y bosque de pinos",
       "scientificName": "Letrero interpretativo",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-propia",
       "anchor": {
         "x": -24.7,
         "y": 6.85,
@@ -548,7 +549,7 @@
       "category": "curiosidades",
       "commonName": "Servicios ambientales",
       "scientificName": "Letrero interpretativo",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-propia",
       "anchor": {
         "x": -16.62,
         "y": 5.02,
@@ -584,16 +585,16 @@
       "category": "curiosidades",
       "commonName": "Silla rota",
       "scientificName": "Banca de madera deteriorada",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-t1-propia",
       "anchor": {
-        "x": -17.37,
-        "y": 5.04,
-        "z": -4.44
+        "x": -3.1,
+        "y": 2.38,
+        "z": -4.39
       },
       "trailAnchor": {
-        "d": 16.9,
-        "lat": -1.32,
-        "alt": 0.03
+        "d": 4.5,
+        "lat": 2.2,
+        "alt": 0.84
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/512/silla-rota.glb",
@@ -612,7 +613,7 @@
       "curiosity": "",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicación provisional en La Cumbre: en campo se encuentra ubicada en el Tramo 2 (d=58.3 m), tramo que aún no ha sido grabado ni integrado en el visor."
+      "anchorNote": "Ubicación provisional al arranque del Tramo 1 propio, junto a la banca vieja: en campo está en el Tramo 2, que por ahora queda por fuera de la app. Su medida real, sobre sendero-02-propia, es d 107.36, lat 3.39, alt 0.84 y anchor (34.62, -6.49, 48.41), con los cuadros 492, 498 y 504 de t2_CentroCentro_Devuelta."
     },
     {
       "id": "poi-letrero-flecha",
@@ -620,7 +621,7 @@
       "category": "curiosidades",
       "commonName": "La montaña es vida",
       "scientificName": "Panel con flecha",
-      "sceneId": "sendero-01",
+      "sceneId": "sendero-01-propia",
       "anchor": {
         "x": -14.52,
         "y": 5.52,
@@ -649,6 +650,339 @@
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
       "anchorNote": "Ubicación provisional en La Cumbre: se mantiene aquí a la espera de la verificación fotográfica y captura del tramo de señalización donde se encuentra instalado."
+    },
+    {
+      "id": "poi-aguililla-de-swainson",
+      "type": "fauna",
+      "category": "fauna",
+      "commonName": "Aguililla de Swainson",
+      "scientificName": "Buteo swainsoni",
+      "sceneId": "sendero-01-propia",
+      "anchor": {
+        "x": -19.04,
+        "y": 8.28,
+        "z": 0.17
+      },
+      "trailAnchor": {
+        "d": 23.07,
+        "lat": 5.0,
+        "alt": 3.5
+      },
+      "distanceMeters": 0,
+      "modelUrl": "",
+      "idleAnimation": "",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "assets/audio/Audios Pajaros/Aguililla-de-Swainson_1.mp3",
+      "altitudeRange": "",
+      "fieldIdTips": "[por completar]",
+      "sightingTips": "[por completar]",
+      "icon": "fa-dove",
+      "colorToken": "--sv-water-400",
+      "typeLabel": "Avifauna",
+      "shortDesc": "Su canto suena desde este punto del recorrido.",
+      "fullDesc": "Canto grabado por Bob Lefebvre en Calgary, Alberta (Canadá) y publicado en iNaturalist (observación 393866214) con licencia CC0 1.0. La ficha de la especie está por completar.",
+      "conservation": "Por verificar",
+      "curiosity": "",
+      "audioFreq": 700,
+      "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+    },
+    {
+      "id": "poi-copeton",
+      "type": "fauna",
+      "category": "fauna",
+      "commonName": "Copetón",
+      "scientificName": "Zonotrichia capensis",
+      "sceneId": "sendero-01-propia",
+      "anchor": {
+        "x": -11.47,
+        "y": 5.02,
+        "z": -1.84
+      },
+      "trailAnchor": {
+        "d": 4.62,
+        "lat": 2.68,
+        "alt": 1.68
+      },
+      "distanceMeters": 0,
+      "modelUrl": "",
+      "idleAnimation": "",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "assets/audio/Audios Pajaros/Copeton RIGG_1.mp3",
+      "altitudeRange": "",
+      "fieldIdTips": "[por completar]",
+      "sightingTips": "[por completar]",
+      "icon": "fa-dove",
+      "colorToken": "--sv-water-400",
+      "typeLabel": "Avifauna",
+      "shortDesc": "Su canto suena desde este punto del recorrido.",
+      "fullDesc": "Canto grabado por Cristiane Colodel en Ipiranga, Paraná (Brasil) y publicado en iNaturalist (observación 412305713) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "conservation": "Por verificar",
+      "curiosity": "",
+      "audioFreq": 700,
+      "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+    },
+    {
+      "id": "poi-tucan-andino",
+      "type": "fauna",
+      "category": "fauna",
+      "commonName": "Tucán andino celeste",
+      "scientificName": "Andigena nigrirostris",
+      "sceneId": "sendero-01-t1-propia",
+      "anchor": {
+        "x": -29.57,
+        "y": 12.54,
+        "z": -4.55
+      },
+      "trailAnchor": {
+        "d": 32.81,
+        "lat": -2.4,
+        "alt": 1.98
+      },
+      "distanceMeters": 0,
+      "modelUrl": "",
+      "idleAnimation": "",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "assets/audio/Audios Pajaros/Tucan RIGG_1.mp3",
+      "altitudeRange": "",
+      "fieldIdTips": "[por completar]",
+      "sightingTips": "[por completar]",
+      "icon": "fa-dove",
+      "colorToken": "--sv-water-400",
+      "typeLabel": "Avifauna",
+      "shortDesc": "Su canto suena desde este punto del recorrido.",
+      "fullDesc": "Canto grabado por Christoph Moning en Riosucio, Caldas (Colombia) y publicado en iNaturalist (observación 158154192) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "conservation": "Por verificar",
+      "curiosity": "",
+      "audioFreq": 700,
+      "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+    },
+    {
+      "id": "poi-carpintero-candela",
+      "type": "fauna",
+      "category": "fauna",
+      "commonName": "Carpintero candela",
+      "scientificName": "Colaptes rivolii",
+      "sceneId": "sendero-01-t1-propia",
+      "anchor": {
+        "x": -62.44,
+        "y": 27.09,
+        "z": -5.91
+      },
+      "trailAnchor": {
+        "d": 68.39,
+        "lat": 3.35,
+        "alt": 1.91
+      },
+      "distanceMeters": 0,
+      "modelUrl": "",
+      "idleAnimation": "",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "assets/audio/Audios Pajaros/Carpintero candela Colaptes rivolii_2.mp3",
+      "altitudeRange": "",
+      "fieldIdTips": "[por completar]",
+      "sightingTips": "[por completar]",
+      "icon": "fa-dove",
+      "colorToken": "--sv-water-400",
+      "typeLabel": "Avifauna",
+      "shortDesc": "Su canto suena desde este punto del recorrido.",
+      "fullDesc": "Canto grabado por Andrés Ramírez-Barrera en Tibasosa, Boyacá (Colombia) y publicado en iNaturalist (observación 55966590) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "conservation": "Por verificar",
+      "curiosity": "",
+      "audioFreq": 700,
+      "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+    },
+    {
+      "id": "poi-cucarachero-rufo",
+      "type": "fauna",
+      "category": "fauna",
+      "commonName": "Cucarachero rufo",
+      "scientificName": "Cinnycerthia unirufa",
+      "sceneId": "sendero-01-t1-propia",
+      "anchor": {
+        "x": -36.33,
+        "y": 15.48,
+        "z": -4.41
+      },
+      "trailAnchor": {
+        "d": 39.33,
+        "lat": -3.01,
+        "alt": 2.38
+      },
+      "distanceMeters": 0,
+      "modelUrl": "",
+      "idleAnimation": "",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "assets/audio/Audios Pajaros/Cucarachero-rufo-Cinnycerthia-Unirufa_1.mp3",
+      "altitudeRange": "",
+      "fieldIdTips": "[por completar]",
+      "sightingTips": "[por completar]",
+      "icon": "fa-dove",
+      "colorToken": "--sv-water-400",
+      "typeLabel": "Avifauna",
+      "shortDesc": "Su canto suena desde este punto del recorrido.",
+      "fullDesc": "Canto grabado por Nicolás Baresch Uribe en San Francisco, Cundinamarca (Colombia) y publicado en iNaturalist (observación 257479477) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "conservation": "Por verificar",
+      "curiosity": "",
+      "audioFreq": 700,
+      "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+    },
+    {
+      "id": "poi-pibi-ahumado",
+      "type": "fauna",
+      "category": "fauna",
+      "commonName": "Pibí ahumado",
+      "scientificName": "Contopus fumigatus",
+      "sceneId": "sendero-01-t1-propia",
+      "anchor": {
+        "x": -20.07,
+        "y": 9.26,
+        "z": -4.43
+      },
+      "trailAnchor": {
+        "d": 21.5,
+        "lat": -3.13,
+        "alt": 2.06
+      },
+      "distanceMeters": 0,
+      "modelUrl": "",
+      "idleAnimation": "",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "assets/audio/Audios Pajaros/Pibí-ahumado-Contopus-fumigatus_1.mp3",
+      "altitudeRange": "",
+      "fieldIdTips": "[por completar]",
+      "sightingTips": "[por completar]",
+      "icon": "fa-dove",
+      "colorToken": "--sv-water-400",
+      "typeLabel": "Avifauna",
+      "shortDesc": "Su canto suena desde este punto del recorrido.",
+      "fullDesc": "Canto grabado por Henrry en Mosquey, Trujillo (Venezuela) y publicado en iNaturalist (observación 413340061) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "conservation": "Por verificar",
+      "curiosity": "",
+      "audioFreq": 700,
+      "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+    },
+    {
+      "id": "poi-saltapared-comun",
+      "type": "fauna",
+      "category": "fauna",
+      "commonName": "Saltapared común",
+      "scientificName": "Troglodytes musculus",
+      "sceneId": "sendero-01-t1-propia",
+      "anchor": {
+        "x": -55.41,
+        "y": 25.57,
+        "z": -3.27
+      },
+      "trailAnchor": {
+        "d": 63.68,
+        "lat": -2.75,
+        "alt": 1.35
+      },
+      "distanceMeters": 0,
+      "modelUrl": "",
+      "idleAnimation": "",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "assets/audio/Audios Pajaros/Saltapared-Común-Sureño-Troglodytes-musculus_1.mp3",
+      "altitudeRange": "",
+      "fieldIdTips": "[por completar]",
+      "sightingTips": "[por completar]",
+      "icon": "fa-dove",
+      "colorToken": "--sv-water-400",
+      "typeLabel": "Avifauna",
+      "shortDesc": "Su canto suena desde este punto del recorrido.",
+      "fullDesc": "Canto grabado por Celso Henrique Varela Rios en Campinas, São Paulo (Brasil) y publicado en iNaturalist (observación 413756938) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "conservation": "Por verificar",
+      "curiosity": "",
+      "audioFreq": 700,
+      "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+    },
+    {
+      "id": "poi-vireo-ojirrojo",
+      "type": "fauna",
+      "category": "fauna",
+      "commonName": "Vireo ojirrojo",
+      "scientificName": "Vireo olivaceus",
+      "sceneId": "sendero-01-t1-propia",
+      "anchor": {
+        "x": -5.43,
+        "y": 4.28,
+        "z": -5.76
+      },
+      "trailAnchor": {
+        "d": 7.16,
+        "lat": 2.71,
+        "alt": 2.07
+      },
+      "distanceMeters": 0,
+      "modelUrl": "",
+      "idleAnimation": "",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "assets/audio/Audios Pajaros/Vireo-Ojos-Rojos-High-Poly_1.mp3",
+      "altitudeRange": "",
+      "fieldIdTips": "[por completar]",
+      "sightingTips": "[por completar]",
+      "icon": "fa-dove",
+      "colorToken": "--sv-water-400",
+      "typeLabel": "Avifauna",
+      "shortDesc": "Su canto suena desde este punto del recorrido.",
+      "fullDesc": "Canto grabado por Francesca Venti en Fulks Run, Virginia (Estados Unidos) y publicado en iNaturalist (observación 405342873) con licencia CC BY-NC 4.0. La ficha de la especie está por completar.",
+      "conservation": "Por verificar",
+      "curiosity": "",
+      "audioFreq": 700,
+      "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+    },
+    {
+      "id": "poi-colibri-nuca-blanca",
+      "type": "fauna",
+      "category": "fauna",
+      "commonName": "Colibrí nuca blanca",
+      "scientificName": "Florisuga mellivora",
+      "sceneId": "sendero-01-t1-propia",
+      "anchor": {
+        "x": -45.62,
+        "y": 19.86,
+        "z": -4.5
+      },
+      "trailAnchor": {
+        "d": 50.91,
+        "lat": -3.28,
+        "alt": 1.3
+      },
+      "distanceMeters": 0,
+      "modelUrl": "",
+      "idleAnimation": "",
+      "narrationUrl": "",
+      "transcriptUrl": "",
+      "birdCallUrl": "assets/audio/Audios Pajaros/Nuca-Blanca-RIGG_1.mp3",
+      "altitudeRange": "",
+      "fieldIdTips": "[por completar]",
+      "sightingTips": "[por completar]",
+      "icon": "fa-dove",
+      "colorToken": "--sv-water-400",
+      "typeLabel": "Avifauna",
+      "shortDesc": "Su canto suena desde este punto del recorrido.",
+      "fullDesc": "Canto grabado por Guillaume Delaitre en Régina (Guayana Francesa) y publicado en iNaturalist (observación 325943470) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "conservation": "Por verificar",
+      "curiosity": "",
+      "audioFreq": 700,
+      "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
     }
   ]
 }

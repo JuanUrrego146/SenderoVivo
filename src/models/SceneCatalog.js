@@ -99,11 +99,90 @@ export class SceneCatalog {
     }
 
     /**
-     * Deja solo los POI cuya escena usa este trazado (RF-006: cada marcador se
-     * mide sobre el trazado donde se ve). Las escenas con el mismo trazado
-     * comparten POI, como scene-01 y su técnica alterna scene-01-luma.
+     * Id de la escena que abre el visor para esta dirección.
+     *
+     * Sigue el mismo orden que activeTrackUrl() (y que resolveSceneUrl() en
+     * src/controllers/main.js: si esa función cambia, esta cambia con ella), pero
+     * devuelve el id de la escena y no su trazado:
+     *   1. ?render= nombra una escena (la primera con ese render) que tiene sogUrl.
+     *   2. ?sog= coincide con el sogUrl de una escena.
+     *   3. En celular, la primera escena luma con sogUrl, por orden.
+     *   4. La primera escena por orden.
+     * Devuelve null si el catálogo no tiene ninguna escena.
      */
-    filterPois(pois, trackUrl = this.activeTrackUrl()) {
-        return pois.filter(poi => this.trackUrlOf(poi.sceneId) === trackUrl);
+    activeSceneId(
+        search = window.location.search,
+        isMobile = window.matchMedia('(max-width: 640px)').matches
+    ) {
+        const params = new URLSearchParams(search);
+
+        const render = params.get('render');
+        if (render) {
+            const match = this.scenes.find(scene => scene.render === render);
+            if (match && match.sogUrl) {
+                return match.id;
+            }
+        }
+
+        const override = params.get('sog');
+        if (override) {
+            const match = this.scenes.find(scene => scene.sogUrl === override);
+            if (match) {
+                return match.id;
+            }
+        }
+
+        const ordered = [...this.scenes].sort((a, b) => a.order - b.order);
+
+        if (isMobile) {
+            const light = ordered.find(scene => scene.render === 'luma' && scene.sogUrl);
+            if (light) {
+                return light.id;
+            }
+        }
+
+        return ordered[0]?.id ?? null;
+    }
+
+    /**
+     * Deja solo los POI que tienen una ubicación en la escena abierta (RF-006: cada
+     * marcador se mide sobre el trazado de la escena donde se ve).
+     *
+     * Cada escena muestra solo sus POI: las versiones de una zona no los comparten
+     * aunque compartan trazado (las cuatro de la Cumbre usan el mismo), así que se
+     * compara la escena exacta y no el trazado.
+     *
+     * Un POI trae su ubicación principal (sceneId, trailAnchor, anchor) y, si está
+     * también en otra escena, un arreglo opcional placements:
+     * [{ sceneId, trailAnchor, anchor }] con su ubicación en ellas. Se recorre la
+     * principal y luego las de placements, y gana la primera cuyo sceneId es el
+     * abierto: el mismo objeto si es la principal, o una copia con esa ubicación si
+     * viene de placements. Es una copia para no mutar el POI original, que comparten
+     * PoiManager y shell.js. Sin ninguna ubicación en esta escena, el POI no sale.
+     */
+    filterPois(pois, sceneId = this.activeSceneId()) {
+        const visible = [];
+
+        for (const poi of pois) {
+
+            if (poi.sceneId === sceneId) {
+                visible.push(poi);
+                continue;
+            }
+
+            const placement = (Array.isArray(poi.placements) ? poi.placements : [])
+                .find(item => item && item.sceneId === sceneId);
+
+            if (placement) {
+                visible.push({
+                    ...poi,
+                    sceneId: placement.sceneId,
+                    trailAnchor: placement.trailAnchor,
+                    anchor: placement.anchor
+                });
+            }
+        }
+
+        return visible;
     }
 }

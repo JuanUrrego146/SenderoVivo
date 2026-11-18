@@ -1,11 +1,16 @@
 /*
- * Selector de zona (Cumbre, Tramo 1) y versión de la reconstrucción (Luma, Polycam
- * y Mixta), para recorrer cada tramo y comparar las técnicas en el mismo lugar.
+ * Selector de zona del sendero (Cumbre, Tramo 1) y, cuando una zona tiene más de una,
+ * de versión de la reconstrucción, para recorrer cada tramo y comparar las técnicas
+ * en el mismo lugar.
  *
  * Se arma solo con los campos `zona` y `version` de config/scenes.json: agregar o
- * quitar una versión o una zona no toca código (el parque de prueba, el Tramo 2 y
- * nuestras versiones COLMAP no llevan zona y por eso no salen). Reemplaza al conmutador COLMAP / Luma.
- * Cambiar de zona conserva la versión si esa zona la tiene.
+ * quitar una versión o una zona no toca código. Una escena sin esos campos no sale
+ * (el parque de prueba, el Tramo 2, nuestras versiones COLMAP y las versiones de
+ * Luma, Polycam y Mixta de la Cumbre y el Tramo 1: siguen abriéndose por ?render=).
+ * El grupo de versiones aparece solo cuando la zona actual tiene más de una; hoy solo
+ * las versiones propias de la Cumbre y del Tramo 1 llevan `zona` y `version`, así que
+ * el selector ofrece las dos zonas y ningún grupo de versiones. Reemplaza al
+ * conmutador COLMAP / Luma. Cambiar de zona conserva la versión si esa zona la tiene.
  */
 const SCENES_CONFIG_URL = 'config/scenes.json';
 
@@ -66,9 +71,12 @@ async function montarSelectorSendero() {
             const misma = delSendero.find(s => s.zona === zona && s.version === actual.version);
             irA((misma || delSendero.find(s => s.zona === zona)).render);
         }));
-        contenedor.appendChild(grupo('Versión de la reconstrucción', versiones, actual.version, version => {
-            irA(delSendero.find(s => s.zona === actual.zona && s.version === version).render);
-        }));
+        // Con una sola versión por zona un grupo de un botón no deja elegir nada.
+        if (versiones.length > 1) {
+            contenedor.appendChild(grupo('Versión de la reconstrucción', versiones, actual.version, version => {
+                irA(delSendero.find(s => s.zona === actual.zona && s.version === version).render);
+            }));
+        }
         return contenedor;
     };
 

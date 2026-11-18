@@ -717,7 +717,7 @@ gaussianas ni `nearClip` ni `farClip` de la cámara (con el corte lejano en 20 m
 dibujando la ciudad), así que ni las astillas pegadas a la cara ni el cielo se arreglan desde
 la cámara: se arreglan en los datos.
 
-### 12.4.2 Reconstrucción propia de la Cumbre con COLMAP, Brush y las fotos 360 (13/11)
+### 12.4.2 Reconstrucción propia de la Cumbre con COLMAP, Brush y las fotos 360 (18/11)
 
 La Cumbre propia (`?render=sendero-propia`) se publica en tres capas, porque ningún entrenamiento único resolvía a la
 vez lo que está al lado del camino, los árboles de más allá y el cielo:
@@ -800,12 +800,28 @@ brush_app ds_medio --total-steps 30000 --max-resolution 1920 --max-splats 500000
 $PY $N/tallar_cielo.py ds_alfa medio.ply medio_limpio.ply 3 0.25 2 400
 $PY $N/mezclar.py cerca.ply medio_limpio.ply $T 15 3 v4.ply no
 $PY $N/tallar_cielo_gpu.py ds_alfa v4.ply v4_t.ply 0.5 640 300 1
-# 12) Fondo lejano: cielo de todas las panoramicas registradas, tono de referencia del cielo del celular (B,G,R) y
+# 12) Manchas de lo alto. Las fotos de celular llegan a unos 35 grados sobre el horizonte; mas arriba quedan manchas
+#     azul oscuro pegadas a las copas contra el cielo y motas sueltas. Se tallan con el cielo de las vistas 360
+#     registradas (138, varias mirando hacia arriba) y despues se quitan, a mas de 18 grados vistas desde el trazado,
+#     las azuladas y oscuras, las oscuras que ponen sobre ese cielo el 30 % o mas de lo que pintan y las aisladas.
+PESOS=pesos360.npz $PY $N/tallar_cielo_360.py sparse_q/1 images_color360 masks v4_t.ply v4_c360.ply 0.5 600 12 2
+AISR=0.6 AISN=14 $PY $N/quitar_azul_alto.py v4_t.ply $T v5.ply 18 0.38 0.03 0.015 pesos360.npz 0.3
+# 13) Fondo lejano: cielo de todas las panoramicas registradas, tono de referencia del cielo del celular (B,G,R) y
 #     ventana del valle (longitud 166 a -140 grados, latitud -9 a 13) tomada de la panoramica de la plataforma.
 $PY $N/domo_lejos.py sparse_q/1 images_color360 masks p0309 lejos_cumbre 8192 90 216,209,197 166,-140,-9,13
-# 13) Empaque. splat-transform fijo en la 3.10.3: la 3.11.1 escribe un SOG sin quats.webp que PlayCanvas 2.21.3 no abre.
-CAP=3.2 OPMIN=-4.595 bash /e/SenderoCelular/fase5.sh v4_t.ply <trabajo> <repo> sendero-01-propia-v4
+# 14) Empaque. splat-transform fijo en la 3.10.3: la 3.11.1 escribe un SOG sin quats.webp que PlayCanvas 2.21.3 no abre.
+CAP=3.2 OPMIN=-4.595 bash /e/SenderoCelular/fase5.sh v5.ply <trabajo> <repo> sendero-01-propia-v5
 ```
+
+**Lo alto de la Cumbre.** El visitante miraba hacia arriba y veía manchones azul oscuro con forma de agujas entre las
+copas y el cielo. Brush entrena con el cielo transparente y un peso bajo para la transparencia: sobre un píxel de
+cielo le da casi igual pintar algo oscuro que no pintar nada, y junto a las copas deja gaussianas oscuras con el tono
+del cielo de las fotos. El tallado con las fotos de celular no las alcanza, porque están por encima de su cuadro. El
+tallado con las vistas 360 solo quita las que pintan sobre todo cielo (2.978); lo que resuelve el problema es el
+color: a más de 18 grados sobre el horizonte, visto desde el trazado, el follaje es verde o pardo y esas manchas son
+azuladas y oscuras. `quitar_azul_alto.py` quita 51.002 por color, 1.556 oscuras por su peso sobre el cielo de las 360
+y 63.230 motas aisladas: 115.788 de 4,47 millones. Comprobado dibujando la escena en 8 puntos y 4 rumbos con la mirada
+12 y 25 grados hacia arriba, antes y después. La escena declara `pitchUpLimit` 25, que es hasta donde se comprobó.
 
 Cuidados que costaron tiempo. Brush y COLMAP no pueden usar la GPU a la vez (Brush se cae con «Parent device is
 lost»). Unir la ida y la vuelta a mano no funciona: con una similitud por anclas queda a 1-3 grados (las anclas de la
@@ -880,6 +896,9 @@ npx --yes @playcanvas/splat-transform@3.10.3 -w lod3.ply assets/scenes/<id>-movi
 # 10) Fondo de dos tonos (cielo arriba, color del suelo abajo) para domoUrl: las panoramicas 360 de los tramos no
 #     estan ubicadas en la escena y no sirven de fondo fotografico.
 $PY $N/fondo_tramo.py limpia.ply track_p.json cielo_media.json assets/fondos/<tramo>-fondo.jpg 4
+# 11) Paradas de la navegacion por puntos: cada 0,5 m se dibuja la escena en primera persona y se mide su nitidez;
+#     quedan como `stops` en el trazado las que maximizan esa medida con separaciones de 2,2 a 4,2 m.
+$PY $N/paradas_recorrido.py config/track-<id>.json final.ply paradas.json hoja=paradas.jpg
 ```
 
 **La limpieza de la Cumbre daña los tramos.** Los filtros de burbujas de cielo, flotantes alargados y manchas

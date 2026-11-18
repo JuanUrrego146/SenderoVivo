@@ -4,6 +4,8 @@
   "source": "camaras de la alineacion propia de la Cumbre (COLMAP con una camara compartida y las vistas 360 como puente)",
   "distanceUnit": "meters",
   "note": "Trazado de la Cumbre por donde caminaron las camaras. El camino principal es la mediana de los centros de camara de las 13 tomas por metro de avance (22,5 m, del extremo de abajo, donde llega la escalera del Tramo 1, al de arriba); la camara mas cercana queda a 0,10 m de mediana y 0,16 m de maximo, contra 1,2 a 5,8 m del trazado anterior. A los 9.5 m sale el ramal a la plataforma del mirador (hasta donde se grabo la toma de orbitacion) y vuelve al camino 0,8 m mas adelante; el regreso va corrido hasta 0,3 m para no pisar la ida. El ramal entra por el lado sin baranda: en el tubo del cuerpo no hay gaussianas opacas. Cada punto va 0,85 m por debajo de la altura mediana de las camaras, asi los ojos quedan a la altura a la que se grabo. Coordenadas en metros del motor (escena horneada, +Y arriba). GPS: segmento Cumbre del archivo config/track.json; cubre los metros 0.000-70.000 del GPX (longitud 70.000 m).",
+  "stops": [0.0, 4.0, 6.5, 9.0, 13.0, 17.0, 21.0, 25.0, 27.5, 30.0, 32.5, 35.0, 37.2],
+  "stopsNote": "Paradas de la navegacion por puntos (distancias sobre el trazado). El visitante camina de una a otra y solo se queda quieto en ellas. Se eligieron midiendo: cada 0,5 m se dibujo la escena sendero-01-propia en primera persona y se midio la nitidez; las paradas son el conjunto que maximiza esa medida con separaciones de 2,2 a 4,2 m (scripts/escenas/nube/paradas_recorrido.py). Nitidez mediana en las paradas 885 contra 866 en el resto del trazado.",
   "sceneWaypoints": [
     {
       "x": -6.457,

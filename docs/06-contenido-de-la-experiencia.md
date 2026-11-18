@@ -586,25 +586,33 @@ referencia:
 ```json
 {
   "version": 1,
-  "ambienceUrl": "assets/audio/ambience-bed.mp3",
+  "ambienceUrl": "assets/audio/AudioPrueba.mp3",
   "sources": [
+    {
+      "id": "canto-tucan-andino",
+      "label": "Tucán andino celeste",
+      "poiId": "poi-tucan-andino",
+      "url": "assets/audio/espacial/tucan-andino.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [8, 20]
+    },
     {
       "id": "sound-stream-45",
       "label": "Cauce de la quebrada",
       "url": "assets/audio/stream-loop.mp3",
       "sceneId": "scene-01",
-      "distanceMeters": 45,
       "anchor": { "x": 0, "y": 0, "z": 0 },
-      "refDistanceMeters": 2,
-      "maxDistanceMeters": 25,
+      "refDistance": 2,
+      "maxDistance": 25,
       "loop": true
     }
   ]
 }
 ```
 
-> `anchor` y `distanceMeters` quedan en `[por medir en campo]` hasta V1. Igual que los POIs:
-> **añadir una fuente sonora no toca código** (misma regla que RNF-009).
+> Una fuente declara su lugar con `poiId` (suena desde el medallón de ese POI en la escena abierta) o con `sceneId` más `anchor`, y `anchor` queda `[por medir en campo]` hasta V1 cuando se declara a mano. Los cantos de aves se derivan de los originales a mono y a -23 LUFS en `assets/audio/espacial/` (la ficha sigue usando el original), `intervalSeconds` los hace cantar a ratos y `refDistance`, `maxDistance` y `rolloffFactor` dan la atenuación; el detalle está en `03-arquitectura.md`. Igual que los POIs: **añadir una fuente sonora no toca código** (misma regla que RNF-009).
 
 ## C.9 Qué queda abierto
 

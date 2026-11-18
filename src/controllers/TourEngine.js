@@ -6,6 +6,11 @@
  * un poco a los lados para acercarse a mirar algo, pero nunca sale del camino
  * autorizado: el corredor es un margen, no una vía rígida.
  *
+ * Navegación por puntos: se camina de PARADA en parada (step, goTo) o de forma
+ * continua mientras se mantiene el avance; al soltar, el motor sigue hasta la
+ * parada siguiente. Las paradas son los puntos del trazado donde la escena se
+ * midió más nítida, así que el visitante solo se queda quieto donde se ve bien.
+ *
  * Invariante 1 del proyecto: la cámara la mueve únicamente este módulo.
  * Invariante 13: publica el evento 'tour:progress' con distanceMeters; los
  * demás módulos escuchan ese evento en vez de leer la cámara.
@@ -30,7 +35,9 @@ export class TourEngine {
         this.speed = options.speed ?? 1.2;          // unidades por segundo
         this.fastMultiplier = options.fastMultiplier ?? 3;
         this.lookSensitivity = options.lookSensitivity ?? 0.2;
-        this.pitchLimit = options.pitchLimit ?? 85;
+        // Tope de la mirada hacia arriba. Una escena puede pedir el suyo (pitchUpLimit en
+        // config/scenes.json): por encima de lo que vieron las fotos no hay nada bien reconstruido.
+        this.pitchLimit = options.pitchUpLimit ?? options.pitchLimit ?? 85;
         this.smoothing = options.smoothing ?? 12;
         // La escena activa puede no aguantar vistas en reversa; entonces solo se avanza.
         this.forwardOnly = options.forwardOnly ?? false;
@@ -65,6 +72,22 @@ export class TourEngine {
         // Punto de arranque sobre el trazado, recortado a su largo.
         const largo = this.trailPath.isUsable ? this.trailPath.totalLength() : 0;
         this.state.distance = Math.max(0, Math.min(Number(options.startDistance) || 0, largo));
+        // Navegación por puntos. El visitante se mueve por el trazado (RF-003, RF-004) pero solo
+        // se queda quieto en las PARADAS: los puntos donde la escena se midió más nítida (campo
+        // `stops` del trazado, de scripts/escenas/nube/paradas_recorrido.py). Si el trazado no
+        // las trae se reparten cada stopSpacing unidades. Entre una parada y otra la cámara
+        // pasa en movimiento, que es cuando menos se nota lo borroso de una reconstrucción.
+        this.stopSpacing = options.stopSpacing ?? 3.2;
+        this.cruiseSpeed = options.cruiseSpeed ?? this.speed * 1.8;   // marcha entre paradas
+        this.acceleration = options.acceleration ?? 3.0;              // arranque y frenado suaves
+        // La vista acompaña las curvas del camino mientras se camina (la mirada sigue libre).
+        this.followPath = options.followPath ?? true;
+        this.stops = this._armarParadas(options.stops ?? this.trailPath.stops, largo);
+        this._meta = null;        // distancia a la que se viaja; null = quieto
+        this._vel = 0;            // velocidad a lo largo del trazado (unidades/s, con signo)
+        this._sentido = 1;        // último sentido de marcha (+1 adelante, -1 atrás)
+        this._continuo = false;   // el visitante mantiene oprimido el avance
+        this._porPasos = false;   // el viaje lo pidió un toque: al andar la vista se endereza
         /** Desplazamiento lateral actual dentro del corredor. */
         this.lateral = 0;
         this.strafeSpeed = options.strafeSpeed ?? 0.8;
@@ -125,6 +148,191 @@ export class TourEngine {
     }
 
 
+    /** Distancia actual sobre el trazado (la leen las Vistas, p. ej. las flechas del camino). */
+    get distance() {
+        return this.state.distance;
+    }
+
+    /**
+     * Deja la lista de paradas ordenada, dentro del trazado y sin paradas pegadas.
+     * Los dos extremos siempre son parada; el punto de arranque lo es si no hay otra cerca.
+     */
+    _armarParadas(lista, largo) {
+        if (!(largo > 0)) return [0];
+        let paradas = Array.isArray(lista)
+            ? lista.map(Number).filter((d) => Number.isFinite(d) && d > 0.8 && d < largo - 0.8)
+            : [];
+        if (!Array.isArray(lista) || lista.length < 2) {
+            const n = Math.max(1, Math.round(largo / this.stopSpacing));
+            paradas = Array.from({ length: n - 1 }, (_, i) => ((i + 1) * largo) / n);
+        }
+        paradas.sort((a, b) => a - b);
+        const limpias = [0];
+        for (const d of paradas) {
+            if (d - limpias[limpias.length - 1] >= 0.8) limpias.push(d);
+        }
+        limpias.push(largo);
+        // El punto de arranque es donde el visitante se para por primera vez: es parada. Si ya
+        // hay una a menos de 0,8 (que no sea un extremo), esa se corre al arranque; así el
+        // primer paso hacia atrás no es un saltito de medio metro.
+        const arranque = this.state.distance;
+        let cerca = -1;
+        for (let i = 0; i < limpias.length; i++) {
+            if (Math.abs(limpias[i] - arranque) < 0.8 &&
+                (cerca < 0 || Math.abs(limpias[i] - arranque) < Math.abs(limpias[cerca] - arranque))) cerca = i;
+        }
+        if (cerca < 0) {
+            limpias.push(arranque);
+            limpias.sort((a, b) => a - b);
+        } else if (cerca > 0 && cerca < limpias.length - 1) {
+            limpias[cerca] = arranque;
+        }
+        return limpias;
+    }
+
+    /**
+     * Parada siguiente en un sentido (+1 adelante, -1 atrás) contando desde `desde`
+     * (por omisión, desde la parada a la que ya se viaja o desde la posición actual).
+     * Devuelve su distancia sobre el trazado o null si ya no hay más.
+     */
+    nextStop(direction, desde = this._meta ?? this.state.distance) {
+        const margen = 0.15;
+        if (direction > 0) {
+            for (const d of this.stops) if (d > desde + margen) return d;
+            return null;
+        }
+        for (let i = this.stops.length - 1; i >= 0; i--) {
+            if (this.stops[i] < desde - margen) return this.stops[i];
+        }
+        return null;
+    }
+
+    /**
+     * Navegación por puntos: camina hasta la parada siguiente en ese sentido y se detiene
+     * ahí. Si ya iba en viaje, el destino pasa a la parada que sigue (toques encadenados).
+     */
+    step(direction) {
+        const sentido = direction < 0 ? -1 : 1;
+        if (sentido < 0 && this.forwardOnly) return false;
+        const destino = this.nextStop(sentido);
+        if (destino === null) return false;
+        this._meta = destino;
+        this._sentido = sentido;
+        this._porPasos = true;
+        return true;
+    }
+
+    /** Camina hasta una distancia dada del trazado (recortada a sus extremos). */
+    goTo(distance) {
+        const largo = this.trailPath.totalLength();
+        const destino = Math.max(0, Math.min(Number(distance) || 0, largo));
+        if (this.forwardOnly && destino < this.state.distance) return false;
+        this._meta = destino;
+        this._sentido = destino >= this.state.distance ? 1 : -1;
+        this._porPasos = true;
+        return true;
+    }
+
+    /** Primera parada, en el sentido de marcha, en la que todavía se alcanza a frenar. */
+    _paradaParaFrenar() {
+        const largo = this.trailPath.totalLength();
+        const frenado = (this._vel * this._vel) / (2 * this.acceleration);
+        const desde = this.state.distance + this._sentido * 0.6 * frenado;
+        const margen = 0.15;
+        if (this._sentido > 0) {
+            for (const d of this.stops) if (d >= desde - margen) return d;
+            return largo;
+        }
+        for (let i = this.stops.length - 1; i >= 0; i--) {
+            if (this.stops[i] <= desde + margen) return this.stops[i];
+        }
+        return 0;
+    }
+
+    /**
+     * Avanza hacia this._meta con arranque y frenado suaves: la velocidad nunca pasa de
+     * `tope` ni de la que permite detenerse justo en el destino.
+     */
+    _viajar(dt, tope) {
+        const largo = this.trailPath.totalLength();
+        const falta = this._meta - this.state.distance;
+        const distancia = Math.abs(falta);
+        const sentido = falta >= 0 ? 1 : -1;
+        const deseada = sentido * Math.min(tope, Math.sqrt(2 * this.acceleration * distancia));
+        const cambio = this.acceleration * 1.6 * dt;
+        this._vel += Math.max(-cambio, Math.min(cambio, deseada - this._vel));
+        const paso = this._vel * dt;
+        const llega = Math.abs(paso) >= distancia || (distancia < 0.03 && Math.abs(this._vel) < 0.25);
+        if (llega && !this._continuo) {
+            this.state.distance = this._meta;
+            this._meta = null;
+            this._vel = 0;
+            this._porPasos = false;
+            this.app.fire('tour:stop', { distance: this.state.distance });
+        } else {
+            this.state.distance = Math.max(0, Math.min(this.state.distance + paso, largo));
+            if (Math.abs(this._vel) > 0.05) this._sentido = this._vel > 0 ? 1 : -1;
+        }
+    }
+
+    /**
+     * Rumbo del camino (grados, misma convención que state.yaw) promediado en una ventana
+     * corta, para que la vista no salte en los vértices del trazado. `firmeza` va de 0 a 1:
+     * cerca de 1 el camino sigue derecho; baja cuando el trazado se devuelve sobre sí mismo.
+     */
+    _rumboCamino(d, salida = null) {
+        const largo = this.trailPath.totalLength();
+        let x = 0;
+        let z = 0;
+        const ventana = [-0.9, -0.3, 0.3, 0.9];
+        for (const k of ventana) {
+            this.trailPath.directionAt(Math.max(0, Math.min(largo, d + k)), this._dir);
+            const n = Math.hypot(this._dir.x, this._dir.z) || 1;
+            x += this._dir.x / n;
+            z += this._dir.z / n;
+        }
+        if (salida) salida.firmeza = Math.hypot(x, z) / ventana.length;
+        return Math.atan2(-x, -z) / RAD;
+    }
+
+    /** La vista acompaña el giro que hizo el camino entre dos distancias. */
+    _seguirCamino(antes, ahora, dt) {
+        const a = {};
+        const b = {};
+        const rumboAntes = this._rumboCamino(antes, a);
+        const rumboAhora = this._rumboCamino(ahora, b);
+        // Donde el trazado se devuelve (el ramal del mirador) no hay un rumbo que seguir.
+        if (a.firmeza > 0.7 && b.firmeza > 0.7) {
+            const giro = ((rumboAhora - rumboAntes) % 360 + 540) % 360 - 180;
+            const tope = 60 * Math.abs(ahora - antes);   // grados por unidad recorrida
+            this.state.yaw += Math.max(-tope, Math.min(tope, giro));
+        }
+        if (this._porPasos && !this._looking) {
+            // Viaje pedido con un toque: la vista se endereza hacia donde se camina y casi a
+            // nivel, que es como mejor se ve la escena al llegar a la parada. El rumbo se toma
+            // un poco más adelante para que no dude donde el trazado se devuelve.
+            // Nunca más allá de la parada de destino: en el mirador el trazado se devuelve y
+            // la vista debe llegar mirando hacia afuera, no girarse antes de tiempo.
+            const largo = this.trailPath.totalLength();
+            let adelante = ahora + this._sentido * 1.2;
+            if (this._meta !== null) {
+                // El rumbo se lee un poco ANTES de la parada (0,3): justo en ella, si es un
+                // vértice, directionAt ya devuelve el tramo siguiente.
+                const borde = this._meta - this._sentido * 0.3;
+                adelante = this._sentido > 0 ? Math.min(adelante, borde) : Math.max(adelante, borde);
+            }
+            adelante = Math.max(0, Math.min(largo, adelante));
+            this.trailPath.directionAt(adelante, this._dir);
+            const frente = Math.atan2(-this._dir.x, -this._dir.z) / RAD + (this._sentido < 0 ? 180 : 0);
+            const rel = ((this.state.yaw - frente) % 360 + 540) % 360 - 180;
+            const k = Math.min(1, 2.4 * dt);
+            this.state.yaw -= rel * k;
+            const nivel = Math.max(-12, Math.min(4, this.state.pitch));
+            this.state.pitch += (nivel - this.state.pitch) * k;
+            this.lateral -= this.lateral * k;            // y vuelve al centro del camino
+        }
+    }
+
     start() {
         if (this._enabled || !this.trailPath.isUsable) return false;
         this._enabled = true;
@@ -173,6 +381,10 @@ export class TourEngine {
         this.state.distance = state.distance;
         this.state.yaw = state.yaw;
         this.state.pitch = state.pitch;
+        // Se vuelve al punto guardado y ahí se queda: sin viaje pendiente.
+        this._meta = null;
+        this._vel = 0;
+        this._continuo = false;
     }
 
     _bindInput() {
@@ -265,22 +477,34 @@ export class TourEngine {
             if (v.forward || v.strafe) ({ avance, lateral } = this._haciaLaVista(v.forward, v.strafe));
         }
         if (this.forwardOnly && avance < 0) avance = 0;
+        const antes = this.state.distance;
+        let tope = this.cruiseSpeed;
         if (avance !== 0) {
-            const baseSpeed =
-    this.speed * (this._input.fast ? this.fastMultiplier : 1);
-
-// SW-17: desacelerar únicamente al avanzar hacia un POI.
-// Si el usuario retrocede, conserva la velocidad normal.
-const poiMultiplier =
-    avance > 0
-        ? this._getPoiSpeedMultiplier()
-        : 1;
-
-const speed = baseSpeed * poiMultiplier;
-
-this.state.distance += avance * speed * dt;
-            // El recorte a los extremos lo hace positionAt: no se sale del tramo.
-            this.state.distance = Math.max(0, Math.min(this.state.distance, this.trailPath.totalLength()));
+            // El visitante mantiene el avance (tecla, joystick, flecha sostenida): camina hacia
+            // el extremo del trazado en ese sentido, a la marcha normal o a la rápida (Mayús).
+            this._continuo = true;
+            this._porPasos = false;
+            this._sentido = avance > 0 ? 1 : -1;
+            this._meta = this._sentido > 0 ? this.trailPath.totalLength() : 0;
+            tope = (this._input.fast ? this.speed * this.fastMultiplier : this.cruiseSpeed) *
+                Math.min(1, Math.abs(avance));
+        } else if (this._continuo) {
+            // Al soltar no se queda a mitad de camino: sigue hasta la primera parada en la que
+            // alcanza a frenar. Así siempre se mira con calma desde un punto que se ve bien.
+            this._continuo = false;
+            this._meta = this._paradaParaFrenar();
+        }
+        if (this._meta !== null) {
+            // SW-17: desacelerar únicamente al avanzar hacia un POI.
+            // Si el usuario retrocede, conserva la velocidad normal.
+            // En el viaje de parada a parada (un toque) no se aplica: ese viaje ya frena solo
+            // al llegar, y con varios puntos seguidos la marcha subía y bajaba a tirones
+            // (medido en el Tramo 1: tres frenadas en los primeros 4 m).
+            if (this._sentido > 0 && !this._porPasos) tope *= this._getPoiSpeedMultiplier();
+            this._viajar(dt, tope);
+        }
+        if (this.state.distance !== antes) {
+            if (this.followPath) this._seguirCamino(antes, this.state.distance, dt);
             this._emitProgress();
         }
         if (lateral !== 0) {
@@ -324,8 +548,8 @@ this.state.distance += avance * speed * dt;
 
     /** Deja la vista a ±yawLimit grados de la dirección del camino en el punto actual. */
     _recortarGiro() {
-        this.trailPath.directionAt(this.state.distance, this._dir);
-        const camino = Math.atan2(-this._dir.x, -this._dir.z) / RAD;
+        // Rumbo promediado: con el del segmento exacto la vista daba un tirón en cada vértice.
+        const camino = this._rumboCamino(this.state.distance);
         const rel = ((this.state.yaw - camino) % 360 + 540) % 360 - 180;   // de -180 a 180
         const tope = this.yawLimit;
         if (rel > tope) this.state.yaw = camino + tope;
