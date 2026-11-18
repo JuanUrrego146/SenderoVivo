@@ -99,33 +99,79 @@ export class SceneCatalog {
     }
 
     /**
-     * Deja solo los POI que tienen una ubicación sobre este trazado (RF-006: cada
-     * marcador se mide sobre el trazado donde se ve).
+     * Id de la escena que abre el visor para esta dirección.
+     *
+     * Sigue el mismo orden que activeTrackUrl() (y que resolveSceneUrl() en
+     * src/controllers/main.js: si esa función cambia, esta cambia con ella), pero
+     * devuelve el id de la escena y no su trazado:
+     *   1. ?render= nombra una escena (la primera con ese render) que tiene sogUrl.
+     *   2. ?sog= coincide con el sogUrl de una escena.
+     *   3. En celular, la primera escena luma con sogUrl, por orden.
+     *   4. La primera escena por orden.
+     * Devuelve null si el catálogo no tiene ninguna escena.
+     */
+    activeSceneId(
+        search = window.location.search,
+        isMobile = window.matchMedia('(max-width: 640px)').matches
+    ) {
+        const params = new URLSearchParams(search);
+
+        const render = params.get('render');
+        if (render) {
+            const match = this.scenes.find(scene => scene.render === render);
+            if (match && match.sogUrl) {
+                return match.id;
+            }
+        }
+
+        const override = params.get('sog');
+        if (override) {
+            const match = this.scenes.find(scene => scene.sogUrl === override);
+            if (match) {
+                return match.id;
+            }
+        }
+
+        const ordered = [...this.scenes].sort((a, b) => a.order - b.order);
+
+        if (isMobile) {
+            const light = ordered.find(scene => scene.render === 'luma' && scene.sogUrl);
+            if (light) {
+                return light.id;
+            }
+        }
+
+        return ordered[0]?.id ?? null;
+    }
+
+    /**
+     * Deja solo los POI que tienen una ubicación en la escena abierta (RF-006: cada
+     * marcador se mide sobre el trazado de la escena donde se ve).
+     *
+     * Cada escena muestra solo sus POI: las versiones de una zona no los comparten
+     * aunque compartan trazado (las cuatro de la Cumbre usan el mismo), así que se
+     * compara la escena exacta y no el trazado.
      *
      * Un POI trae su ubicación principal (sceneId, trailAnchor, anchor) y, si está
-     * también en otra versión de la zona con trazado propio, un arreglo opcional
-     * placements: [{ sceneId, trailAnchor, anchor }] con su ubicación en esas
-     * escenas. Se recorre la principal y luego las de placements, y gana la primera
-     * cuyo trazado es el abierto: el mismo objeto si es la principal, o una copia
-     * con esa ubicación si viene de placements. Es una copia para no mutar el POI
-     * original, que comparten PoiManager y shell.js. Sin ninguna ubicación sobre
-     * este trazado, el POI no sale.
-     *
-     * Las escenas con el mismo trazado comparten ubicación, como scene-01 y su
-     * técnica alterna scene-01-luma.
+     * también en otra escena, un arreglo opcional placements:
+     * [{ sceneId, trailAnchor, anchor }] con su ubicación en ellas. Se recorre la
+     * principal y luego las de placements, y gana la primera cuyo sceneId es el
+     * abierto: el mismo objeto si es la principal, o una copia con esa ubicación si
+     * viene de placements. Es una copia para no mutar el POI original, que comparten
+     * PoiManager y shell.js. Sin ninguna ubicación en esta escena, el POI no sale.
      */
-    filterPois(pois, trackUrl = this.activeTrackUrl()) {
+    filterPois(pois, sceneId = this.activeSceneId()) {
         const visible = [];
 
         for (const poi of pois) {
 
-            if (this.trackUrlOf(poi.sceneId) === trackUrl) {
+            if (poi.sceneId === sceneId) {
                 visible.push(poi);
                 continue;
             }
 
             const placement = (Array.isArray(poi.placements) ? poi.placements : [])
-                .find(item => item && this.trackUrlOf(item.sceneId) === trackUrl);
+                .find(item => item && item.sceneId === sceneId);
 
             if (placement) {
                 visible.push({
