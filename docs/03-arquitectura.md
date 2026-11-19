@@ -799,11 +799,30 @@ Forma real vigente (el prototipo ya lo consume):
 > parada en la que alcanza a frenar. Mientras camina, la vista acompaña las curvas del camino, y en el viaje
 > pedido con un toque se endereza hacia el sentido de marcha y vuelve al centro del corredor. La
 > desaceleración cerca de un POI (SW-17) se aplica al avance sostenido, no al viaje de parada a parada, que
-> ya frena al llegar. Las paradas se eligen midiendo (`scripts/escenas/nube/paradas_recorrido.py` dibuja la
-> escena cada 0,5 m del trazado y mide su nitidez); sin `stops` el motor las reparte cada 3,2 unidades. El
+> ya frena al llegar. Las paradas se eligen midiendo: en la Cumbre con `scripts/escenas/nube/paradas_recorrido.py`
+> (dibuja la escena cada 0,5 m del trazado y mide su nitidez) y en los tramos con `paradas_app.py`, sobre capturas
+> de la app real; sin `stops` el motor las reparte cada 3,2 unidades. El
 > punto de arranque siempre es parada. La flecha se dibuja en la parada siguiente y, si queda fuera de la
 > vista (el camino dobla o se devuelve, como en el mirador), aparece en el borde de la pantalla el botón
 > «Siguiente punto», que pide el mismo paso.
+> **`cuts`** (opcional) son los CORTES del trazado: pares `[desde, hasta]`, en metros desde el primer punto,
+> de los trechos que no se recorren porque la reconstrucción se ve mal ahí. `TourEngine` nunca deja al
+> visitante caminando ni detenido dentro de uno: los dos bordes de cada corte son parada, las paradas que
+> caen dentro se descartan, y al llegar a un borde el motor pasa al otro lado con un fundido corto
+> (`cutFade`, 0,28 s de salida y 0,28 s de llegada). En ese paso la vista gira lo mismo que giró el camino
+> entre los dos bordes, así quien miraba hacia un lado sigue mirando hacia el mismo lado. El motor avisa con
+> el evento `tour:cut` (`fase: 'salida'` y luego `fase: 'llegada'`) y `main.js` cubre la escena con el velo
+> `.corte-recorrido` (color `--sv-velo-corte`, por debajo de la interfaz) mientras dura. Con el avance
+> sostenido el paso ocurre solo y la marcha sigue del otro lado; si el visitante suelta durante el fundido, se
+> queda en el borde de llegada. La flecha del camino no se dibuja al otro lado de un corte: en el borde aparece
+> el botón «Siguiente punto». La distancia que publica el motor sigue siendo la del trazado completo, así que
+> las métricas del HUD no cambian de escala. Si el trazado empieza o termina en un corte, el recorrido empieza
+> o termina en el borde de ese corte (`TourEngine.pathStart` y `pathEnd`, que es lo que lee
+> `src/ui/conexionesSendero.js` para ofrecer el paso a la zona siguiente). Los cortes se deciden mirando la
+> app, no un dibujo aparte: `scripts/escenas/nube/barrido_app.mjs` camina el trazado en la app real y guarda
+> una captura por metro, `barrido_hoja.py` las mide y arma las hojas para revisar, y `paradas_app.py` propone los
+> cortes y reparte las paradas fuera de ellos (la regla y las cifras están en `docs/05-produccion-de-escenas.md`,
+> §12.4.3).
 >
 > En celular (menos de 640 px) se camina además con un joystick en pantalla, `src/views/JoystickView.js`:
 > la Vista solo publica `trail:joystick` con `{ forward, strafe }` de -1 a 1 y `main.js` lo pasa a

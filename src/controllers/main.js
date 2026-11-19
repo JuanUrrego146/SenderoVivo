@@ -523,6 +523,9 @@ async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
         // Paradas de la navegación por puntos (opcional): distancias sobre el trazado donde la
         // escena se midió más nítida. Sin ellas TourEngine las reparte de forma pareja.
         path.stops = Array.isArray(cfg.stops) ? cfg.stops : null;
+        // Cortes (opcional): trechos [desde, hasta] que no se recorren porque se midieron
+        // borrosos frente a las fotos reales. TourEngine los salta con un fundido.
+        path.cuts = Array.isArray(cfg.cuts) ? cfg.cuts : null;
         // Mismo cfg ya leido y parseado: un solo fetch de track.json, dos modelos.
         const gpsTrack = new GpsTrack(cfg);
         return { trail: path, gpsTrack };
@@ -624,6 +627,15 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
     // dibujada, y ahí se detiene. Varios toques seguidos encadenan paradas.
     app.on('trail:request-walk', ({ direction }) => {
         tour.step(direction > 0 ? 1 : -1);
+    });
+    // Cortes del trazado: mientras el motor pasa al otro lado de un trecho quitado, un velo
+    // del color del fondo cubre la escena (no la interfaz) y se retira al llegar.
+    const velo = document.createElement('div');
+    velo.className = 'corte-recorrido';
+    document.body.appendChild(velo);
+    app.on('tour:cut', ({ fase, duracion }) => {
+        velo.style.transitionDuration = duracion + 's';
+        velo.classList.toggle('corte-recorrido--activo', fase === 'salida');
     });
     showHint(
         'Toca la <strong>flecha del camino</strong> para ir al siguiente punto · también <strong>W A S D</strong><br>' +

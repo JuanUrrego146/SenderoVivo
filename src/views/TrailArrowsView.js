@@ -882,6 +882,9 @@ export class TrailArrowsView {
         this._hasNext =
             false;
 
+        this._nextAcrossCut =
+            false;
+
 
         const total =
             this.trail.totalLength();
@@ -1019,6 +1022,34 @@ export class TrailArrowsView {
                 this._nextPosition.copy(
                     pos
                 );
+            }
+
+            /*
+             * Parada al otro lado de un corte del trazado: la
+             * flecha no se dibuja allá lejos (habría que cruzar
+             * un trecho que no se recorre). Para la de avanzar
+             * queda el botón «Siguiente punto».
+             */
+
+            if (
+                Number.isFinite(parada) &&
+                typeof this.tour.crossesCut === 'function' &&
+                this.tour.crossesCut(
+                    distance,
+                    parada
+                )
+            ) {
+                if (
+                    marker.direction > 0
+                ) {
+                    this._nextAcrossCut =
+                        true;
+                }
+
+                marker.enabled =
+                    false;
+
+                continue;
             }
 
 
@@ -1286,7 +1317,14 @@ export class TrailArrowsView {
                 screen.y > 0 &&
                 screen.y < canvas.clientHeight - 24;
 
-            if (!dentro) {
+            if (this._nextAcrossCut) {
+                /*
+                 * La parada siguiente queda después de un trecho
+                 * que no se recorre: no hay un lado hacia el cual
+                 * mirar, el botón solo invita a seguir.
+                 */
+                lado = 'derecha';
+            } else if (!dentro) {
                 const hacia =
                     this._towardMarker;
 

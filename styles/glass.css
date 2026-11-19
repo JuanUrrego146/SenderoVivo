@@ -1056,6 +1056,23 @@
     }
 }
 
+/* Velo del paso al otro lado de un corte del trazado (src/controllers/main.js, evento tour:cut):
+   cubre la escena un instante mientras el visitante aparece después del trecho quitado. Va por
+   debajo de la interfaz, que sigue visible. */
+.corte-recorrido {
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    background: var(--sv-velo-corte);
+    transition: opacity 0.28s ease;
+}
+
+.corte-recorrido--activo {
+    opacity: 1;
+}
+
 /* Joystick para caminar desde el celular (src/views/JoystickView.js) */
 .sv-joystick {
     display: none;

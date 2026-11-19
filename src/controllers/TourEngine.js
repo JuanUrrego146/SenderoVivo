@@ -82,6 +82,19 @@ export class TourEngine {
         this.acceleration = options.acceleration ?? 3.0;              // arranque y frenado suaves
         // La vista acompaña las curvas del camino mientras se camina (la mirada sigue libre).
         this.followPath = options.followPath ?? true;
+        // Cortes: trechos del trazado que NO se recorren (campo `cuts` del trazado, pares
+        // [desde, hasta] en distancia). Son los que se midieron borrosos frente a las fotos
+        // reales del sitio. El visitante nunca camina ni se detiene dentro de uno: al llegar a
+        // su borde pasa al otro lado con un fundido corto (evento 'tour:cut').
+        this.cutFade = options.cutFade ?? 0.28;                    // segundos de cada mitad del fundido
+        this.cuts = this._armarCortes(options.cuts ?? this.trailPath.cuts, largo);
+        this.state.distance = this._fueraDeCorte(this.state.distance, 1);
+        // Extremos del recorrido útil: si el trazado empieza o termina en un corte, el recorrido
+        // empieza o termina en el borde de ese corte (no hay «otro lado» al que pasar).
+        this._inicio = this._fueraDeCorte(0, 1);
+        this._fin = this._fueraDeCorte(largo, -1);
+        this._salto = null;        // paso en curso al otro lado de un corte
+        this._teletransporte = false;
         this.stops = this._armarParadas(options.stops ?? this.trailPath.stops, largo);
         this._meta = null;        // distancia a la que se viaja; null = quieto
         this._vel = 0;            // velocidad a lo largo del trazado (unidades/s, con signo)
@@ -154,6 +167,19 @@ export class TourEngine {
     }
 
     /**
+     * Extremos del recorrido útil (los lee src/ui/conexionesSendero.js para saber cuándo el
+     * visitante llegó al principio o al final). Si el trazado empieza o termina en un corte,
+     * el extremo es el borde de ese corte.
+     */
+    get pathStart() {
+        return this._inicio;
+    }
+
+    get pathEnd() {
+        return this._fin;
+    }
+
+    /**
      * Deja la lista de paradas ordenada, dentro del trazado y sin paradas pegadas.
      * Los dos extremos siempre son parada; el punto de arranque lo es si no hay otra cerca.
      */
@@ -166,12 +192,24 @@ export class TourEngine {
             const n = Math.max(1, Math.round(largo / this.stopSpacing));
             paradas = Array.from({ length: n - 1 }, (_, i) => ((i + 1) * largo) / n);
         }
-        paradas.sort((a, b) => a - b);
-        const limpias = [0];
-        for (const d of paradas) {
-            if (d - limpias[limpias.length - 1] >= 0.8) limpias.push(d);
+        const inicio = this._inicio;
+        const fin = this._fin;
+        // Dentro de un corte no hay paradas, y los bordes de cada corte sí lo son.
+        paradas = paradas.filter((d) => d > inicio + 0.8 && d < fin - 0.8 && !this._enCorte(d));
+        for (const [a, b] of this.cuts) {
+            if (a > inicio + 0.01) paradas.push(a);
+            if (b < fin - 0.01) paradas.push(b);
         }
-        limpias.push(largo);
+        paradas.sort((a, b) => a - b);
+        const esBorde = (d) => this.cuts.some(([a, b]) => Math.abs(d - a) < 1e-6 || Math.abs(d - b) < 1e-6);
+        const limpias = [inicio];
+        for (const d of paradas) {
+            const ultima = limpias[limpias.length - 1];
+            if (d - ultima >= 0.8) limpias.push(d);
+            else if (esBorde(d) && limpias.length > 1 && !esBorde(ultima)) limpias[limpias.length - 1] = d;   // manda el borde
+        }
+        if (fin - limpias[limpias.length - 1] >= 0.8 || limpias.length === 1) limpias.push(fin);
+        else limpias[limpias.length - 1] = fin;
         // El punto de arranque es donde el visitante se para por primera vez: es parada. Si ya
         // hay una a menos de 0,8 (que no sea un extremo), esa se corre al arranque; así el
         // primer paso hacia atrás no es un saltito de medio metro.
@@ -188,6 +226,56 @@ export class TourEngine {
             limpias[cerca] = arranque;
         }
         return limpias;
+    }
+
+    /** Deja los cortes como pares [desde, hasta] dentro del trazado, ordenados y sin solaparse. */
+    _armarCortes(lista, largo) {
+        if (!Array.isArray(lista) || !(largo > 0)) return [];
+        const pares = lista
+            .filter((c) => Array.isArray(c) && c.length >= 2)
+            .map((c) => [Math.max(0, Number(c[0])), Math.min(largo, Number(c[1]))])
+            .filter(([a, b]) => Number.isFinite(a) && Number.isFinite(b) && b - a > 0.5)
+            .sort((x, y) => x[0] - y[0]);
+        const unidos = [];
+        for (const p of pares) {
+            const ult = unidos[unidos.length - 1];
+            if (ult && p[0] <= ult[1]) ult[1] = Math.max(ult[1], p[1]);
+            else unidos.push(p);
+        }
+        return unidos;
+    }
+
+    /** ¿La distancia cae dentro de un corte? Los bordes no cuentan, salvo en los extremos del trazado. */
+    _enCorte(d) {
+        const largo = this.trailPath.totalLength();
+        return this.cuts.some(([a, b]) => (d > a + 1e-6 || a <= 1e-6) && (d < b - 1e-6 || b >= largo - 1e-6) && d >= a && d <= b);
+    }
+
+    /** Saca una distancia de un corte: al borde de adelante (sentido +1) o al de atrás (-1). */
+    _fueraDeCorte(d, sentido) {
+        const largo = this.trailPath.totalLength();
+        for (const [a, b] of this.cuts) {
+            const dentro = (d > a + 1e-6 || a <= 1e-6) && (d < b - 1e-6 || b >= largo - 1e-6) && d >= a && d <= b;
+            if (!dentro) continue;
+            if (a <= 1e-6) return b;                 // el trazado empieza en un corte
+            if (b >= largo - 1e-6) return a;         // o termina en uno
+            return sentido >= 0 ? b : a;
+        }
+        return d;
+    }
+
+    /** Primer corte que queda entre dos distancias (en el orden en que se cruza), o null. */
+    _corteEntre(desde, hasta) {
+        const menor = Math.min(desde, hasta);
+        const mayor = Math.max(desde, hasta);
+        const cruzados = this.cuts.filter(([a, b]) => menor < b - 1e-6 && mayor > a + 1e-6);
+        if (!cruzados.length) return null;
+        return hasta >= desde ? cruzados[0] : cruzados[cruzados.length - 1];
+    }
+
+    /** Para las Vistas: ¿entre esas dos distancias hay un corte? (la flecha no se dibuja al otro lado). */
+    crossesCut(desde, hasta) {
+        return this._corteEntre(desde, hasta) !== null;
     }
 
     /**
@@ -225,7 +313,9 @@ export class TourEngine {
     /** Camina hasta una distancia dada del trazado (recortada a sus extremos). */
     goTo(distance) {
         const largo = this.trailPath.totalLength();
-        const destino = Math.max(0, Math.min(Number(distance) || 0, largo));
+        let destino = Math.max(0, Math.min(Number(distance) || 0, largo));
+        destino = this._fueraDeCorte(destino, destino >= this.state.distance ? 1 : -1);
+        destino = Math.max(this._inicio, Math.min(destino, this._fin));
         if (this.forwardOnly && destino < this.state.distance) return false;
         this._meta = destino;
         this._sentido = destino >= this.state.distance ? 1 : -1;
@@ -235,18 +325,17 @@ export class TourEngine {
 
     /** Primera parada, en el sentido de marcha, en la que todavía se alcanza a frenar. */
     _paradaParaFrenar() {
-        const largo = this.trailPath.totalLength();
         const frenado = (this._vel * this._vel) / (2 * this.acceleration);
         const desde = this.state.distance + this._sentido * 0.6 * frenado;
         const margen = 0.15;
         if (this._sentido > 0) {
             for (const d of this.stops) if (d >= desde - margen) return d;
-            return largo;
+            return this._fin;
         }
         for (let i = this.stops.length - 1; i >= 0; i--) {
             if (this.stops[i] <= desde + margen) return this.stops[i];
         }
-        return 0;
+        return this._inicio;
     }
 
     /**
@@ -254,24 +343,89 @@ export class TourEngine {
      * `tope` ni de la que permite detenerse justo en el destino.
      */
     _viajar(dt, tope) {
-        const largo = this.trailPath.totalLength();
-        const falta = this._meta - this.state.distance;
+        if (this._salto) {
+            this._avanzarSalto(dt);
+            return;
+        }
+        // Si entre aquí y el destino hay un corte, se camina hasta su borde y de ahí se pasa
+        // al otro lado con el fundido; lo que queda del viaje sigue después.
+        const destinoFinal = Math.max(this._inicio, Math.min(this._meta, this._fin));
+        this._meta = destinoFinal;
+        const corte = this._corteEntre(this.state.distance, destinoFinal);
+        let meta = destinoFinal;
+        if (corte) {
+            const haciaAdelante = destinoFinal >= this.state.distance;
+            const entrada = haciaAdelante ? corte[0] : corte[1];
+            const salida = haciaAdelante ? corte[1] : corte[0];
+            if (Math.abs(this.state.distance - entrada) < 0.05) {
+                this._salto = { hasta: salida, t: 0, hecho: false };
+                this._vel = 0;
+                this.app.fire('tour:cut', { fase: 'salida', duracion: this.cutFade, desde: entrada, hasta: salida });
+                return;
+            }
+            meta = entrada;
+        }
+        const falta = meta - this.state.distance;
         const distancia = Math.abs(falta);
         const sentido = falta >= 0 ? 1 : -1;
+        // Salto largo entre paradas (un trecho flojo del trazado que se cruza sin detenerse):
+        // la marcha sube hasta vez y media mientras falten más de 6 unidades y vuelve a la
+        // normal al acercarse, para no pasar medio minuto caminando por lo que peor se ve.
+        if (this._porPasos && distancia > 6) tope *= 1 + 0.5 * Math.min(1, (distancia - 6) / 6);
         const deseada = sentido * Math.min(tope, Math.sqrt(2 * this.acceleration * distancia));
         const cambio = this.acceleration * 1.6 * dt;
         this._vel += Math.max(-cambio, Math.min(cambio, deseada - this._vel));
         const paso = this._vel * dt;
         const llega = Math.abs(paso) >= distancia || (distancia < 0.03 && Math.abs(this._vel) < 0.25);
-        if (llega && !this._continuo) {
+        if (llega && corte) {
+            // Llegó al borde del corte: en el cuadro siguiente empieza el paso al otro lado.
+            this.state.distance = meta;
+            this._vel = 0;
+        } else if (llega && !this._continuo) {
             this.state.distance = this._meta;
             this._meta = null;
             this._vel = 0;
             this._porPasos = false;
             this.app.fire('tour:stop', { distance: this.state.distance });
         } else {
-            this.state.distance = Math.max(0, Math.min(this.state.distance + paso, largo));
+            this.state.distance = Math.max(this._inicio, Math.min(this.state.distance + paso, this._fin));
             if (Math.abs(this._vel) > 0.05) this._sentido = this._vel > 0 ? 1 : -1;
+        }
+    }
+
+    /**
+     * Paso al otro lado de un corte: medio fundido de salida, cambio de sitio con la vista
+     * girada lo mismo que giró el camino, y medio fundido de llegada.
+     */
+    _avanzarSalto(dt) {
+        const s = this._salto;
+        s.t += dt;
+        if (!s.hecho && s.t >= this.cutFade) {
+            const antes = this.state.distance;
+            const haciaAdelante = s.hasta >= antes;
+            // Rumbo del camino en el borde de salida y en el de llegada: la vista queda igual de
+            // girada respecto al camino que antes del paso (quien miraba por el camino sigue
+            // mirando por el camino; quien miraba a un lado, al mismo lado).
+            const rumboAntes = this._rumboCamino(antes);
+            const rumboDespues = this._rumboCamino(s.hasta);
+            this.state.yaw += ((rumboDespues - rumboAntes) % 360 + 540) % 360 - 180;
+            this.state.distance = s.hasta;
+            this.lateral = 0;
+            // Si mientras tanto el destino quedó del lado de donde se venía (se soltó el avance
+            // durante el fundido), el viaje termina aquí: nada de devolverse por el corte.
+            if (this._meta !== null && (haciaAdelante ? this._meta < s.hasta : this._meta > s.hasta)) this._meta = s.hasta;
+            s.hecho = true;
+            this._teletransporte = true;
+            this.app.fire('tour:cut', { fase: 'llegada', duracion: this.cutFade, desde: antes, hasta: s.hasta });
+        }
+        if (s.hecho && s.t >= this.cutFade * 1.5) {
+            this._salto = null;
+            if (!this._continuo && this._meta !== null && Math.abs(this._meta - this.state.distance) < 0.05) {
+                this.state.distance = this._meta;
+                this._meta = null;
+                this._porPasos = false;
+                this.app.fire('tour:stop', { distance: this.state.distance });
+            }
         }
     }
 
@@ -485,7 +639,7 @@ export class TourEngine {
             this._continuo = true;
             this._porPasos = false;
             this._sentido = avance > 0 ? 1 : -1;
-            this._meta = this._sentido > 0 ? this.trailPath.totalLength() : 0;
+            this._meta = this._sentido > 0 ? this._fin : this._inicio;
             tope = (this._input.fast ? this.speed * this.fastMultiplier : this.cruiseSpeed) *
                 Math.min(1, Math.abs(avance));
         } else if (this._continuo) {
@@ -503,7 +657,9 @@ export class TourEngine {
             if (this._sentido > 0 && !this._porPasos) tope *= this._getPoiSpeedMultiplier();
             this._viajar(dt, tope);
         }
-        if (this.state.distance !== antes) {
+        // En el cuadro del paso al otro lado de un corte el giro ya lo puso _avanzarSalto, y el
+        // progreso se publica más abajo, con la cámara ya puesta en el sitio nuevo.
+        if (this.state.distance !== antes && !this._teletransporte) {
             if (this.followPath) this._seguirCamino(antes, this.state.distance, dt);
             this._emitProgress();
         }
@@ -527,10 +683,19 @@ export class TourEngine {
 
         if (this.yawLimit !== null) this._recortarGiro();
 
+        const cambioDeSitio = this._teletransporte;
+        if (cambioDeSitio) {
+            // Paso al otro lado de un corte: la cámara aparece allá, sin recorrer lo cortado.
+            this._teletransporte = false;
+            this._currentPos.copy(this._targetPos);
+        }
         const t = Math.min(1, this.smoothing * dt);
         this._currentPos.lerp(this._currentPos, this._targetPos, t);
         this.camera.setPosition(this._currentPos);
         this.camera.setEulerAngles(this.state.pitch, this.state.yaw, 0);
+        // Quien escucha el progreso (audio espacial, puntos de interés por cercanía, HUD) debe
+        // recibir la posición del sitio nuevo, no la del borde del corte que se dejó atrás.
+        if (cambioDeSitio) this._emitProgress();
     }
 
     /** Control desde los botones en pantalla: 'forward'|'back'|'left'|'right'. */
