@@ -117,7 +117,7 @@ Esta es la decisión que define el proyecto. Un modelo 3D hecho a mano es la int
 Esta lista es vinculante. No es una lista de "fase 2": es una lista de lo que este proyecto **no va a hacer**, y no se propone de nuevo.
 
 - El circuito completo de 3,1 km.
-- Movimiento libre **fuera del trazado**. Las teclas WASD sí existen en el visor, pero avanzan, retroceden y se desplazan lateralmente **dentro del corredor del camino** (RF-004); lo vetado es salirse del trazado, no la tecla. El vuelo libre solo existe en el modo editor (`?editor=1`).
+- Movimiento libre **fuera del trazado**. Con W A S D (y en celular el joystick o dos dedos) se camina libre, como en un juego en primera persona, pero **dentro del corredor del camino** (RF-004); lo vetado es salirse del trazado, no la tecla. El vuelo libre solo existe en el modo editor (`?editor=1`).
 - App nativa iOS o Android.
 - Realidad virtual.
 - Multijugador o cualquier función social.

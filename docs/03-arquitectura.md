@@ -791,44 +791,59 @@ Forma real vigente (el prototipo ya lo consume):
 > **`startDistance`** (opcional, en metros desde el primer punto) es dónde arranca el recorrido;
 > sin él arranca en el primer punto. La Cumbre (`config/track-sendero-01.json`) arranca en su centro,
 > d = 15 m, y desde ahí se camina hacia la entrada o hacia la plataforma.
-> **`stops`** (opcional) son las PARADAS de la navegación por puntos, en metros desde el primer punto.
-> `TourEngine` mueve al visitante por el trazado pero solo lo deja quieto en ellas. Un toque en la flecha
-> del camino (`TrailArrowsView`, evento `trail:request-walk`) llama a `TourEngine.step` y lo lleva a la
-> parada siguiente con arranque y frenado suaves; varios toques seguidos encadenan paradas sin detenerse.
-> Con el avance sostenido (teclas, joystick, dos dedos) camina de corrido y al soltar sigue hasta la primera
-> parada en la que alcanza a frenar. Mientras camina, la vista acompaña las curvas del camino, y en el viaje
-> pedido con un toque se endereza hacia el sentido de marcha y vuelve al centro del corredor. La
-> desaceleración cerca de un POI (SW-17) se aplica al avance sostenido, no al viaje de parada a parada, que
-> ya frena al llegar. Las paradas se eligen midiendo: en la Cumbre con `scripts/escenas/nube/paradas_recorrido.py`
-> (dibuja la escena cada 0,5 m del trazado y mide su nitidez) y en los tramos con `paradas_app.py`, sobre capturas
-> de la app real; sin `stops` el motor las reparte cada 3,2 unidades. El
-> punto de arranque siempre es parada. La flecha se dibuja en la parada siguiente y, si queda fuera de la
-> vista (el camino dobla o se devuelve, como en el mirador), aparece en el borde de la pantalla el botón
-> «Siguiente punto», que pide el mismo paso.
+> **`stops`** (opcional) son las PARADAS del trazado, en metros desde el primer punto: los puntos donde la
+> escena se ve mejor. Se eligen midiendo: en la Cumbre con `scripts/escenas/nube/paradas_recorrido.py`
+> (dibuja la escena cada 0,5 m del trazado y mide su nitidez) y en los tramos con `paradas_app.py`, sobre
+> capturas de la app real; sin `stops` el motor las reparte cada 3,2 unidades, y el punto de arranque
+> siempre es parada. Sirven a la ayuda opcional de las flechas: un toque en la flecha del camino
+> (`TrailArrowsView`, evento `trail:request-walk`) o en el botón «Siguiente punto», que aparece en el borde
+> de la pantalla cuando la flecha queda fuera de la vista, llama a `TourEngine.step` y camina hasta la
+> parada siguiente con arranque y frenada suaves, sin girar la vista ni mover el lateral. Varios toques
+> encadenan paradas, en un viaje largo la marcha sube hasta vez y media mientras falten más de 6 unidades, y
+> cualquier tecla o el joystick cancelan ese viaje.
 > **`cuts`** (opcional) son los CORTES del trazado: pares `[desde, hasta]`, en metros desde el primer punto,
 > de los trechos que no se recorren porque la reconstrucción se ve mal ahí. `TourEngine` nunca deja al
 > visitante caminando ni detenido dentro de uno: los dos bordes de cada corte son parada, las paradas que
-> caen dentro se descartan, y al llegar a un borde el motor pasa al otro lado con un fundido corto
-> (`cutFade`, 0,28 s de salida y 0,28 s de llegada). En ese paso la vista gira lo mismo que giró el camino
-> entre los dos bordes, así quien miraba hacia un lado sigue mirando hacia el mismo lado. El motor avisa con
-> el evento `tour:cut` (`fase: 'salida'` y luego `fase: 'llegada'`) y `main.js` cubre la escena con el velo
-> `.corte-recorrido` (color `--sv-velo-corte`, por debajo de la interfaz) mientras dura. Con el avance
-> sostenido el paso ocurre solo y la marcha sigue del otro lado; si el visitante suelta durante el fundido, se
-> queda en el borde de llegada. La flecha del camino no se dibuja al otro lado de un corte: en el borde aparece
-> el botón «Siguiente punto». La distancia que publica el motor sigue siendo la del trazado completo, así que
-> las métricas del HUD no cambian de escala. Si el trazado empieza o termina en un corte, el recorrido empieza
-> o termina en el borde de ese corte (`TourEngine.pathStart` y `pathEnd`, que es lo que lee
-> `src/ui/conexionesSendero.js` para ofrecer el paso a la zona siguiente). Los cortes se deciden mirando la
-> app, no un dibujo aparte: `scripts/escenas/nube/barrido_app.mjs` camina el trazado en la app real y guarda
-> una captura por metro, `barrido_hoja.py` las mide y arma las hojas para revisar, y `paradas_app.py` propone los
-> cortes y reparte las paradas fuera de ellos (la regla y las cifras están en `docs/05-produccion-de-escenas.md`,
-> §12.4.3).
+> caen dentro se descartan, y cuando la marcha (libre o la de una flecha) entra en un corte el motor pasa al
+> borde de enfrente con un fundido corto (`cutFade`, 0,28 s de salida y 0,28 s de llegada). Durante el paso
+> no se lee la entrada y la cámara queda quieta; al llegar conserva el lateral, recortado al corredor de
+> allá, y la vista gira lo mismo que giró el rumbo suave del camino entre los dos bordes, así quien miraba
+> hacia un lado sigue mirando hacia el mismo lado. El motor avisa con el evento `tour:cut` (`fase: 'salida'`
+> y luego `fase: 'llegada'`) y `main.js` cubre la escena con el velo `.corte-recorrido` (color
+> `--sv-velo-corte`, por debajo de la interfaz) mientras dura. La flecha del camino no se dibuja al otro
+> lado de un corte: en el borde aparece el botón «Siguiente punto». La distancia que publica el motor sigue
+> siendo la del trazado completo, así que las métricas del HUD no cambian de escala. Si el trazado empieza o
+> termina en un corte, el recorrido empieza o termina en el borde de ese corte (`TourEngine.pathStart` y
+> `pathEnd`, que es lo que lee `src/ui/conexionesSendero.js` para ofrecer el paso a la zona siguiente). Los
+> cortes se deciden mirando la app, no un dibujo aparte: `scripts/escenas/nube/barrido_app.mjs` camina el
+> trazado en la app real y guarda una captura por metro, `barrido_hoja.py` las mide y arma las hojas para
+> revisar, y `paradas_app.py` propone los cortes y reparte las paradas fuera de ellos (la regla y las cifras
+> están en `docs/05-produccion-de-escenas.md`, §12.4.3).
 >
-> En celular (menos de 640 px) se camina además con un joystick en pantalla, `src/views/JoystickView.js`:
-> la Vista solo publica `trail:joystick` con `{ forward, strafe }` de -1 a 1 y `main.js` lo pasa a
-> `TourEngine.setStick`. El joystick, el teclado (W A S D y flechas) y el gesto de dos dedos son relativos a la vista: `TourEngine._haciaLaVista` avanza a velocidad completa por el trazado en el sentido hacia el que se mira (de regreso si se mira hacia atrás; solo cerca de la perpendicular baja de forma continua a 0) y lleva la parte de lado de la mirada al paso lateral. `press` y `release` (avance sostenido relativo al trazado) mandan sobre las demás entradas; el corredor y `forwardOnly` se aplican igual a todos. El motor
-> cuenta solo los dedos que tocan la escena (`targetTouches`) y gira la vista solo con el puntero que
-> se apoyó en ella, para que el pulgar del joystick no mire ni cuente como segundo dedo.
+> El movimiento es libre, como en un juego en primera persona: W camina hacia donde se mira, S hacia atrás,
+> A y D de lado, y en diagonal se combinan. El espacio para caminar es el corredor medido del trazado
+> (`corridorLeft` y `corridorRight`, RF-004): dentro de él se camina libre y contra su borde se resbala,
+> porque el motor anula la parte de la velocidad que empuja hacia afuera. Del lado de adentro de una curva
+> cerrada el lateral tampoco pasa del 80 % del radio de giro, para que la posición no se doble sobre sí
+> misma (la punta del mirador y el cruce de la Cumbre). La vista solo la mueve el visitante, arrastrando el
+> ratón o un dedo: el motor nunca la gira ni la endereza, y `yawLimit` se mide contra el rumbo suave del
+> camino. La posición se guarda como distancia sobre el trazado más un lateral, y la cámara va a la altura
+> de los ojos sobre una curva suave que pasa por los puntos del trazado (`TrailModel.smoothPositionAt`, una
+> Catmull-Rom centrípeta muestreada cada 0,05 m, con `headingAt` y `turnRadiusAt`), así que no da saltitos
+> en los vértices. `positionAt` y `directionAt` no cambian y siguen ubicando los POI, las flechas y el
+> audio. La marcha es de 1,4 m/s (el doble con Mayús), arranca a 3 m/s² y frena a 6 m/s²; en las escaleras
+> ese cambio se limita para que la cámara no acelere más de 1,2 m/s² en vertical, y la marcha baja lo justo
+> para que al soltar se detenga en menos de 0,3 m. Al pasar junto a un POI la marcha baja de forma continua
+> hasta el 60 % (SW-17) y vuelve a subir sin tirones. `forwardOnly` se sigue respetando en las escenas que
+> lo declaran (las de Luma); los tramos propios no lo llevan.
+>
+> En celular (menos de 640 px) se camina además con un joystick en pantalla, `src/views/JoystickView.js`: la
+> Vista solo publica `trail:joystick` con `{ forward, strafe }` de -1 a 1 y `main.js` lo pasa a
+> `TourEngine.setStick`. El joystick hace lo mismo que W A S D (el eje y adelante y atrás, el eje x de
+> lado), dos dedos avanzan hacia donde se mira y los botones en pantalla (`press` y `release`) también; el
+> motor suma las tres entradas en el marco de la vista. El motor cuenta solo los dedos que tocan la escena
+> (`targetTouches`) y gira la vista solo con el puntero que se apoyó en ella, para que el pulgar del
+> joystick no mire ni cuente como segundo dedo.
 > `src/ui/acomodoMovil.js` mide lo que ocupa la barra de navegación móvil y lo publica en
 > `--sv-tope-nav-movil`; la tarjeta "Detalles del sendero" va 8 px encima y el joystick 12 px encima de ella.
 >
