@@ -129,6 +129,7 @@ function desdeContrato(poi) {
         // Rutas reales declaradas en config/pois.json
         modelUrl: poi.modelUrl || '',
         previewUrl: poi.previewUrl || '',
+        idleAnimation: poi.idleAnimation || '',
         narrationUrl: poi.narrationUrl || '',
         birdCallUrl: poi.birdCallUrl || ''
     };
@@ -384,6 +385,17 @@ function updateHotspotsOverlay() {
 
         el.style.transform =
             `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0)`;
+
+        /*
+         * Un punto con modelo que se ve y está cerca: su .glb se adelanta.
+         */
+        if (
+            item.modelUrl &&
+            !modelosAdelantados.has(item.id) &&
+            Math.hypot(vx, vy, vz) < DISTANCIA_ADELANTO_M
+        ) {
+            adelantarModelo(item);
+        }
     }
 }
 
@@ -425,6 +437,9 @@ function esperarVisor() {
      * Actualización visual sincronizada con el render.
      */
     visorApp.on('update', updateHotspotsOverlay);
+
+    // Escena lista: se pide ya la librería del visor 3D de las hojas.
+    precargarVisorModelos();
 
 }
 
@@ -479,8 +494,7 @@ function figuraDelPunto(item, claseImagen, claseIcono, icono) {
  * Botones interactivos de la ficha de especie.
  * Distribución:
  * - Fila 1: Canto y Narración alineados horizontalmente (lado a lado)
- * - Fila 2: Ver en 3D solo, más grande y robusto
- * - Fila 3: Marcar como Visto abajo del 3D, con separación y mayor tamaño
+ * - Fila 2: Marcar como Visto, con separación y mayor tamaño
  */
 function accionesMediaHTML(item) {
     const filas = [];
@@ -535,23 +549,8 @@ function accionesMediaHTML(item) {
         `);
     }
 
-    // Fila 2: Modelo 3D abajo solo, más grande y con presencia sólida (no delgado)
-    if (item.modelUrl) {
-        filas.push(`
-            <div class="w-full">
-                <button
-                    onclick="verModelo3D('${item.id}')"
-                    class="w-full py-3.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2.5 touch-manipulation cursor-pointer shadow-sm hover:translate-y-[-1px] active:scale-[0.98]"
-                    style="background: var(--sv-surface-solid-warm); border: 1.5px solid var(--sv-surface-border); color: var(--sv-text-primary); min-height: 50px;"
-                >
-                    <i class="fa-solid fa-cube text-base" style="color: var(--sv-primary-hover);"></i>
-                    <span>Ver en 3D</span>
-                </button>
-            </div>
-        `);
-    }
-
-    // Fila 3: Botón de Marcar como Visto abajo del 3D, aún más grande y prominente
+    // Fila 2: Botón de Marcar como Visto, grande y prominente. El modelo 3D no lleva botón:
+    // la hoja ya trae el visor arriba (visorHojaHTML).
     filas.push(`
         <div class="w-full">
             <button
@@ -589,6 +588,9 @@ function selectHotspot(id) {
 
     if (!item) return;
 
+    // Otra ficha con visor abierta: se destruye antes de armar esta.
+    destruirVisorHoja();
+
     guardarEstadoRecorridoFicha();
 
     // Cerrar el panel de catálogo o pestañas si estaba desplegado
@@ -625,6 +627,8 @@ function selectHotspot(id) {
             >
                 <i class="fa-solid fa-xmark"></i>
             </button>
+
+            ${visorHojaHTML(item)}
 
             <!-- Cabecera limpia y espaciada: 1 SOLO ICONO, sin recuadros redundantes -->
             <div class="mb-5 pr-7">
@@ -722,6 +726,127 @@ function selectHotspot(id) {
     `;
 
     sheet.classList.remove('translate-y-full');
+
+    montarVisorHoja(item);
+}
+
+
+/* ==========================================================================
+   VISOR 3D DE LA HOJA
+   Un punto con modelo abre su hoja con el visor arriba: la miniatura (previewUrl) se ve
+   desde el primer cuadro y, cuando el modelo carga, se puede girar y acercar. Solo hay
+   un visor vivo a la vez, y destruirVisorHoja() lo retira y devuelve el render a la
+   escena en todos los caminos que cierran o reemplazan la hoja.
+   ========================================================================== */
+
+let visorHoja = null;
+let turnoVisorHoja = 0;
+
+function miniaturaHojaHTML(item) {
+    return item.previewUrl
+        ? `<img src="${item.previewUrl}" alt="" decoding="async" class="poi-hoja-3d-miniatura">`
+        : '';
+}
+
+function visorHojaHTML(item) {
+    if (!item.modelUrl) return '';
+
+    return `<div id="poi-hoja-3d" class="poi-hoja-3d">${miniaturaHojaHTML(item)}</div>`;
+}
+
+function cerrarHojaSiEstaAbierta() {
+    const hoja = document.getElementById('bottom-sheet');
+
+    if (hoja && !hoja.classList.contains('translate-y-full')) {
+        closeBottomSheet();
+    }
+}
+
+function destruirVisorHoja() {
+    // Cancela también una carga que todavía no terminó.
+    turnoVisorHoja++;
+
+    if (visorHoja) {
+        visorHoja.destroy();
+        visorHoja = null;
+    }
+}
+
+async function montarVisorHoja(item) {
+    const contenedor = document.getElementById('poi-hoja-3d');
+    if (!contenedor || !item.modelUrl) return;
+
+    const turno = ++turnoVisorHoja;
+
+    try {
+        const { ModelView } = await import(
+            new URL('src/views/ModelView.js', document.baseURI).href
+        );
+        if (turno !== turnoVisorHoja) return;
+
+        const vista = new ModelView(contenedor);
+        visorHoja = vista;
+
+        // Mismo criterio que la ficha completa (RF-029): un texto entre corchetes es un
+        // pendiente anotado, no el nombre de un clip.
+        const clip = typeof item.idleAnimation === 'string' ? item.idleAnimation.trim() : '';
+
+        await vista.load(item.modelUrl, {
+            animacion: clip && !clip.startsWith('[') ? clip : '',
+            poster: item.previewUrl,
+            toqueVertical: true
+        });
+    } catch (error) {
+        if (turno !== turnoVisorHoja) return;
+
+        console.warn('El visor 3D de la hoja no pudo cargar el modelo:', error);
+        if (visorHoja) {
+            visorHoja.destroy();
+            visorHoja = null;
+        }
+        contenedor.innerHTML = miniaturaHojaHTML(item);
+        const aviso = document.createElement('div');
+        aviso.className = 'poi-hoja-3d-aviso';
+        aviso.textContent = 'No se pudo cargar el modelo 3D. Se muestra su miniatura.';
+        contenedor.appendChild(aviso);
+    }
+}
+
+/*
+ * El visor (model-viewer) se pide por adelantado cuando la escena está lista, para que
+ * la primera hoja con modelo no espere la descarga de la librería.
+ */
+function precargarVisorModelos() {
+    const precargar = () => {
+        import(new URL('src/views/ModelView.js', document.baseURI).href)
+            .then(modulo => modulo.precargarVisor())
+            .catch(error => console.warn('No se pudo adelantar el visor 3D:', error));
+    };
+
+    if (typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(precargar, { timeout: 4000 });
+    } else {
+        setTimeout(precargar, 2000);
+    }
+}
+
+/*
+ * El .glb de un punto cercano se baja antes de que el visitante lo toque, con prioridad
+ * baja, y queda en la caché del navegador. Una sola vez por punto. Se lee el cuerpo
+ * completo para que la descarga termine y la caché guarde el archivo entero.
+ */
+const DISTANCIA_ADELANTO_M = 15;
+const modelosAdelantados = new Set();
+
+function adelantarModelo(item) {
+    modelosAdelantados.add(item.id);
+
+    fetch(item.modelUrl, { priority: 'low' })
+        .then(respuesta => (respuesta.ok ? respuesta.arrayBuffer() : null))
+        .catch(() => {
+            // Sin red no pasa nada: el visor lo pedirá al abrir la hoja.
+            modelosAdelantados.delete(item.id);
+        });
 }
 
 
@@ -732,6 +857,7 @@ function selectHotspot(id) {
  * Si ShellView no está disponible, la cerramos directamente.
  */
 function closeBottomSheet() {
+    destruirVisorHoja();
     restaurarEstadoRecorridoFicha();
     detenerAudioEspecie();
 
@@ -863,6 +989,9 @@ function switchTab(tab) {
         panel.classList.remove('flex');
         return;
     }
+
+    // El panel tapa la hoja de un punto: se cierra con ella su visor 3D.
+    cerrarHojaSiEstaAbierta();
 
     panel.classList.remove('hidden');
     panel.classList.add('flex');
@@ -1470,6 +1599,8 @@ let currentAlbumSearchQuery = '';
 function openBiodiversityAlbum() {
     const modal = document.getElementById('biodiversity-album-modal');
     if (!modal) return;
+    // El álbum tapa la hoja de un punto: se cierra con ella su visor 3D.
+    cerrarHojaSiEstaAbierta();
     modal.classList.remove('hidden');
 
     const searchInput = document.getElementById('album-search-input');

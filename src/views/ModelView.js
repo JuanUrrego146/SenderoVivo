@@ -1,3 +1,47 @@
+const MODEL_VIEWER_URL =
+    'https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js';
+
+/**
+ * Inyecta el script de model-viewer y espera a que el componente exista.
+ *
+ * La app lo llama por adelantado, cuando la escena está lista, para que el primer
+ * visor que se abra no espere la descarga de la librería; ModelView.load() lo llama
+ * también, y si ya está pedido o definido no repite nada. Si el script falla, se
+ * retira del documento para que el siguiente intento lo pida de nuevo.
+ */
+export async function precargarVisor() {
+
+    if (customElements.get('model-viewer')) {
+        return;
+    }
+
+    let script = document.querySelector('script[data-model-viewer]');
+
+    let fallo = null;
+
+    if (!script) {
+
+        script = document.createElement('script');
+        script.type = 'module';
+        script.src = MODEL_VIEWER_URL;
+        script.dataset.modelViewer = 'true';
+
+        fallo = new Promise((_, rechazar) => {
+            script.addEventListener('error', () => {
+                script.remove();
+                rechazar(new Error('No se pudo descargar la librería model-viewer.'));
+            }, { once: true });
+        });
+
+        document.head.appendChild(script);
+    }
+
+    await Promise.race(
+        [customElements.whenDefined('model-viewer'), fallo].filter(Boolean)
+    );
+}
+
+
 export class ModelView {
 
     constructor(container) {
@@ -5,6 +49,8 @@ export class ModelView {
         this.container = container;
 
         this.model = null;
+
+        this._destruido = false;
     }
 
 
@@ -17,6 +63,12 @@ export class ModelView {
          */
 
         await this._loadModelViewer();
+
+        // La ficha pudo cerrarse mientras bajaba la librería: no se monta nada ni se
+        // pausa la escena.
+        if (this._destruido) {
+            return null;
+        }
 
 
         /*
@@ -132,6 +184,29 @@ export class ModelView {
             'reveal',
             'auto'
         );
+
+        /*
+         * Miniatura que se ve desde el primer cuadro mientras baja el modelo.
+         */
+        if (opciones.poster) {
+
+            model.setAttribute(
+                'poster',
+                new URL(opciones.poster, window.location.href).href
+            );
+        }
+
+        /*
+         * Dentro de una hoja que se desplaza, un arrastre vertical sobre el visor
+         * desplaza la hoja y uno horizontal gira el modelo.
+         */
+        if (opciones.toqueVertical) {
+
+            model.setAttribute(
+                'touch-action',
+                'pan-y'
+            );
+        }
 
         /*
          * Animación de reposo (RF-029): se declara por configuración con el
@@ -279,6 +354,9 @@ export class ModelView {
                     () => finish(() => reject(new Error('No se pudo cargar el modelo 3D: ' + modelUrl))),
                     { once: true }
                 );
+
+                // destroy() corta la espera sin error: la ficha ya se cerró.
+                this._cancelarEspera = () => finish(resolve);
             }
         );
 
@@ -295,70 +373,7 @@ export class ModelView {
 
     async _loadModelViewer() {
 
-        /*
-         * Si ya existe, no hacemos nada.
-         */
-
-        if (
-            customElements.get(
-                'model-viewer'
-            )
-        ) {
-
-            return;
-        }
-
-
-        /*
-         * Buscar si ya existe un script.
-         */
-
-        let script =
-            document.querySelector(
-                'script[data-model-viewer]'
-            );
-
-
-        /*
-         * Crear script si no existe.
-         */
-
-        if (!script) {
-
-            script =
-                document.createElement(
-                    'script'
-                );
-
-
-            script.type =
-                'module';
-
-
-            script.src =
-                'https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js';
-
-
-            script.dataset.modelViewer =
-                'true';
-
-
-            document.head.appendChild(
-                script
-            );
-
-
-        }
-
-
-        /*
-         * Esperar a que el componente exista.
-         */
-
-        await customElements.whenDefined(
-            'model-viewer'
-        );
-
+        await precargarVisor();
 
     }
 
@@ -370,6 +385,13 @@ export class ModelView {
      */
 
     destroy() {
+
+        this._destruido = true;
+
+        if (this._cancelarEspera) {
+            this._cancelarEspera();
+            this._cancelarEspera = null;
+        }
 
         // La escena del sendero vuelve a dibujarse al cerrar la ficha.
         const app = window.senderoApp;
