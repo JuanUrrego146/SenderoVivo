@@ -91,11 +91,12 @@ class MarcoAla:
         return np.cos(a)[..., None] * self.c + np.sin(a)[..., None] * self.s
 
 
-def afinar_alas(ave, frente=0.085, atras=0.13, grosor=0.028):
+def afinar_alas(ave, frente=0.085, atras=0.13, grosor=0.024, cuna=0.65):
     """Convierte la 'tabla' del ala en un brazo delgado: las plumas daran la silueta.
 
     frente, atras y grosor son las medidas del brazo (hacia el borde de ataque, hacia atras y medio espesor)
-    como fraccion de la envergadura de la tabla.
+    como fraccion de la envergadura de la tabla. cuna adelgaza la seccion hacia atras, como un perfil de ala:
+    grueso en el borde de ataque y fino donde salen las remeras, para que las coberteras bajen sin tocarlo.
     """
     for lado in ("L", "R"):
         m = MarcoAla(ave, lado)
@@ -109,6 +110,9 @@ def afinar_alas(ave, frente=0.085, atras=0.13, grosor=0.028):
         v2 = np.where(v > 0, v * k_a, v * k_f)
         medio = max(m.h_top - m.h_mid, m.h_mid - m.h_bot, 1e-9)
         k_h = np.minimum(1.0, grosor * m.B / medio) * afila
+        v_f, v_b = -frente * m.B * afila, atras * m.B * afila
+        xi = np.clip((v2 - v_f) / np.maximum(v_b - v_f, 1e-9), 0.0, 1.0)
+        k_h = k_h * (1.0 - cuna * xi)
         h2 = m.h_mid + (hh - m.h_mid) * k_h
         nuevo = m.punto(u, v2, h2)
         ave.co[sel] = ave.co[sel] * (1 - mez[:, None]) + nuevo * mez[:, None]
@@ -125,6 +129,58 @@ def afinar_cola(ave, k_largo=0.42, k_ancho=0.6):
     a2 = np.where(a > 0, a * k_largo, a)
     nuevo = mc.base + a2[:, None] * mc.t + (x * k_ancho)[:, None] * ave.X + (e * k_ancho)[:, None] * mc.D
     ave.co[sel] = ave.co[sel] * (1 - mez[:, None]) + nuevo * mez[:, None]
+
+
+class PerfilBrazo:
+    """Contorno del brazo del ala a lo largo de la envergadura: frente, espalda, techo y piso.
+
+    Se mide sobre la malla ya afinada. Sirve para asentar las coberteras y el borde de ataque de modo que,
+    vista el ala de frente, nada asome por encima del brazo.
+    """
+
+    def __init__(self, ave, m, lado="L", n_tramos=16, w_min=0.55):
+        w = ave.w_ala_L if lado == "L" else ave.w_ala_R
+        sel = ave.v_piel & (w > w_min)
+        u, v, h = m.uvh(ave.co[sel])
+        cortes = np.linspace(float(u.min()), float(u.max()) + 1e-9, n_tramos + 1)
+        filas = []
+        for a, b in zip(cortes[:-1], cortes[1:]):
+            k = (u >= a) & (u < b)
+            if k.sum() >= 2:
+                filas.append((float(u[k].mean()), float(v[k].min()), float(v[k].max()), float(h[k].max()), float(h[k].min())))
+        f = np.array(filas, np.float64)
+        self.uc, self._vf, self._vb, self._ht, self._hb = (f[:, i] for i in range(5))
+        fino = sel & (w > 0.9)
+        uf = m.uvh(ave.co[fino])[0] if fino.sum() > 3 else u
+        self.u_fino = float(np.percentile(uf, 3))
+
+    def vf(self, u):
+        return np.interp(u, self.uc, self._vf)
+
+    def vb(self, u):
+        return np.interp(u, self.uc, self._vb)
+
+    def ht(self, u):
+        return np.interp(u, self.uc, self._ht)
+
+    def hb(self, u):
+        return np.interp(u, self.uc, self._hb)
+
+
+def pesos_suaves(ave, P, mascara, k=4):
+    """Pesos interpolados de los k vertices mas cercanos (por distancia inversa) dentro de una mascara."""
+    idx = np.nonzero(mascara)[0]
+    base = ave.co[idx]
+    P = np.asarray(P, np.float64)
+    out = np.empty((len(P), ave.W.shape[1]), np.float32)
+    for i in range(0, len(P), 512):
+        d2 = ((P[i:i + 512, None, :] - base[None, :, :]) ** 2).sum(-1)
+        cerca = np.argsort(d2, axis=1)[:, :k]
+        dd = np.sqrt(np.take_along_axis(d2, cerca, 1))
+        wgt = 1.0 / np.maximum(dd, 1e-9)
+        wgt /= wgt.sum(1, keepdims=True)
+        out[i:i + 512] = (ave.W[idx[cerca]] * wgt[..., None]).sum(1)
+    return out
 
 
 class MarcoCola:
@@ -188,6 +244,7 @@ def rejilla_color(F, ts, nx, base, punta=None, t_punta=0.8, borde=None, lado_bor
 def plumas_alas(ave, T, esp, rng):
     cfg = esp["ala"]
     mL = MarcoAla(ave, "L")
+    pf = PerfilBrazo(ave, mL, "L")
     escala = cfg.get("escala", 1.0)
     if cfg.get("envergadura"):
         lp0 = np.asarray(cfg["largo_prim"], np.float64)
@@ -231,7 +288,7 @@ def plumas_alas(ave, T, esp, rng):
     ang_all = np.concatenate([ang_p[::-1], ang_s, ang_t])
     tipo = np.array(["prim"] * n_p + ["sec"] * n_s + ["ter"] * n_t, dtype=object)
     n_r = len(u_all)
-    paso_h = cfg.get("paso_h", 0.0035) * mL.B
+    paso_h = cfg.get("paso_h", 0.0025) * mL.B
     h_r = mL.h_mid + paso_h * (np.arange(n_r) - n_r * 0.5)
     v_r = cfg.get("v_raiz", 0.04) * mL.B
     raiz = mL.punto(u_all, np.full(n_r, v_r), h_r)
@@ -272,8 +329,78 @@ def plumas_alas(ave, T, esp, rng):
         orden = np.argsort(u_all)
         return np.interp(u, u_all[orden], h_r[orden])
 
+    # cuanto cuelga por debajo de su eje cada remera: la comba baja los dos cantos y el alabeo baja uno mas
+    caida_rem = (0.07 + 0.5 * math.sin(rho)) * ancho
+
+    def cuelga_remera(u):
+        orden = np.argsort(u_all)
+        return np.interp(u, u_all[orden], caida_rem[orden])
+
+    # --- superficie de reposo de las coberteras
+    # Vista el ala de frente, nada debe asomar por encima del brazo: cada fila arranca sobre el techo del brazo y baja
+    # en linea recta hasta quedar justo encima de las remeras; las filas mas cercanas al borde de ataque van un paso
+    # mas altas que las de atras, como tejas. Por debajo del ala, lo mismo en espejo.
+    margen = cfg.get("margen_brazo", 0.006) * mL.B
+    holgura = cfg.get("holgura", 0.012) * mL.B
+    paso = cfg.get("paso_cob", 0.0035) * mL.B
+    caida = cfg.get("caida", 0.34) * mL.B
+
+    def reposo(u, v, dorsal):
+        t = np.clip((v - pf.vf(u)) / caida, 0.0, 1.0)
+        if dorsal:
+            borde, rem = pf.ht(u) + margen, altura_remera(u) + holgura
+            return np.maximum(borde + (rem - borde) * t, rem)
+        borde, rem = pf.hb(u) - margen, altura_remera(u) - holgura - 1.15 * cuelga_remera(u)
+        return np.minimum(borde + (rem - borde) * t, rem)
+
+    # --- borde de ataque: plumitas marginales que envuelven el brazo y se tienden hacia la punta del ala,
+    # para que de frente se vea un canto emplumado y redondo en lugar del brazo liso
+    if cfg.get("borde", True):
+        lb0 = cfg.get("largo_borde", 0.075) * B
+        phis = np.asarray(cfg.get("filas_borde", (66, 40, 14, -12, -38, -64)), np.float64)
+        beta = math.radians(cfg.get("giro_borde", 30.0))
+        c_dor = hexa(col.get("borde_ala", col.get("brazo", "#3a2e25")))
+        c_ven = hexa(col.get("borde_ala_inf", col.get("brazo_inf", "#bdb7ac")))
+        mb = cfg.get("margen_borde", 0.008) * mL.B
+        d_capa = cfg.get("capa_borde", 0.0016) * mL.B
+        u_b0 = max(float(pf.uc[0]) - 0.02 * mL.B, 0.0)
+        u_b1 = 0.975 * mL.B
+        capa = np.argsort(np.argsort(-np.abs(phis)))      # la fila mas cercana a la nariz queda encima
+        for kf, phi_d in enumerate(phis):
+            us = []
+            uu = u_b0 + (0.2 * lb0 if kf % 2 else 0.0)
+            while uu < u_b1:
+                us.append(uu)
+                uu += 0.40 * lb0 * (1.0 - 0.40 * float(suave(mL.u_W, mL.B, uu)))
+            us = np.asarray(us, np.float64)
+            n = len(us)
+            if n == 0:
+                continue
+            us = us + 0.12 * lb0 * (rng.random(n) * 2 - 1)
+            Lb = lb0 * (1.0 - 0.40 * suave(mL.u_W, mL.B, us)) * (1 + 0.10 * (rng.random(n) * 2 - 1))
+            ht_u, hb_u, vf_u = pf.ht(us), pf.hb(us), pf.vf(us)
+            Tn = 0.5 * (ht_u - hb_u) + mb + capa[kf] * d_capa
+            hc = 0.5 * (ht_u + hb_u)
+            vc = vf_u - mb - capa[kf] * d_capa + Tn
+            ph = np.radians(phi_d + 4.0 * (rng.random(n) * 2 - 1))
+            raiz_b = mL.punto(us, vc - Tn * np.cos(ph), hc + Tn * np.sin(ph))
+            Nb = _norm(-np.cos(ph)[:, None] * mL.c + np.sin(ph)[:, None] * mL.n)
+            sg_b = 1.0 if phi_d >= 0 else -1.0
+            tg = _norm((sg_b * np.sin(ph))[:, None] * mL.c + (sg_b * np.cos(ph))[:, None] * mL.n)
+            yb = _norm(math.cos(beta) * mL.s[None, :] + math.sin(beta) * tg)
+            xb = np.cross(yb, Nb)
+            arriba = float(suave(-25.0, 25.0, phi_d))
+            base_b = c_ven * (1 - arriba) + c_dor * arriba
+            ts_b = np.array([0.0, 0.5, 1.0])
+            Cb = rejilla_color(n, ts_b, 2, np.tile(base_b, (n, 1)), sombra_base=0.84, rng=rng, ruido=0.05)
+            ancho_b = 0.72 * Lb
+            lotes.append(dict(raiz=raiz_b, eje_y=yb, eje_x=xb, L=Lb, ancho=ancho_b, celda=cfg.get("celda_borde", "cob_lisa"), color=Cb,
+                              pesos=pesos_suaves(ave, raiz_b, mL.sel), curva=np.clip(Lb * math.sin(beta) ** 2 / (2.0 * Tn), 0.02, 0.40),
+                              comba=np.clip(ancho_b / (8.0 * Tn), 0.04, 0.32), nx=2, ts=ts_b, espejo=bool(phi_d >= 0),
+                              dorsal=bool(phi_d >= 0), mat=1))
+
     # --- coberteras: filas dorsales y ventrales
-    def fila(n, u0, u1, v0, k_largo, k_ancho, h_raiz, h_punta, celda, color, punta=None, borde=None, dorsal=True, ts=None,
+    def fila(n, u0, u1, v0, k_largo, k_ancho, nivel, celda, color, punta=None, borde=None, dorsal=True, ts=None,
              t_punta=0.78, fuerza_borde=0.8, desfase=0.0, ang_extra=0.0, k_suave=0.0, color2=None, u_mezcla=(0.35, 0.55)):
         paso_u = (u1 - u0) / max(n - 1, 1)
         u = np.linspace(u0, u1, n) + desfase * paso_u + 0.30 * paso_u * (rng.random(n) * 2 - 1)
@@ -282,15 +409,18 @@ def plumas_alas(ave, T, esp, rng):
         # sobre la mano las coberteras son mas cortas respecto a su primaria
         k_l = k_l * (1.0 - cfg.get("acorta_mano", 0.42) * suave(mL.u_W - 0.05 * mL.B, mL.u_W + 0.12 * mL.B, u))
         L = Lr * k_l * (1 + 0.12 * (rng.random(n) * 2 - 1))
-        h_loc = altura_remera(u)
         sg = 1.0 if dorsal else -1.0
-        holgura = cfg.get("holgura", 0.022) * B
-        h_r0 = h_loc + sg * (h_raiz + holgura)
-        h_r0 = np.maximum(h_r0, mL.h_top + 0.004 * mL.B) if dorsal else np.minimum(h_r0, mL.h_bot - 0.004 * mL.B)
-        h_p0 = h_loc + sg * (h_punta + holgura)
-        r = mL.punto(u, v0 * mL.B + 0.007 * mL.B * (rng.random(n) * 2 - 1), h_r0)
+        # la raiz nunca por delante de la nariz del brazo: ese canto lo cubren las plumitas del borde
+        v_r = v0 * mL.B + 0.007 * mL.B * (rng.random(n) * 2 - 1)
+        v_r = np.maximum(v_r, pf.vf(u) + cfg.get("tras_nariz", 0.35) * 0.5 * (pf.ht(u) - pf.hb(u)))
+        eps = nivel * paso
+        h_r0 = reposo(u, v_r, dorsal) + sg * eps
+        r = mL.punto(u, v_r, h_r0)
         d = mL.dir(ang + ang_extra + 7 * (rng.random(n) * 2 - 1))
-        punta_p = r + d * L[:, None] + mL.n * (h_p0 - h_r0)[:, None]
+        llano = r + d * L[:, None]
+        u_t, v_t, _h = mL.uvh(llano)
+        h_p0 = reposo(u_t, v_t, dorsal) + sg * eps * 0.8
+        punta_p = llano + mL.n * (h_p0 - h_r0)[:, None]
         yv = _norm(punta_p - r)
         nn = mL.n if dorsal else -mL.n
         xv = np.cross(yv, nn) * mL.diestro
@@ -300,23 +430,25 @@ def plumas_alas(ave, T, esp, rng):
         if color2 is not None:
             km = suave(u_mezcla[0] * mL.B, u_mezcla[1] * mL.B, u)[:, None]
             base_c = base_c * (1 - km) + hexa(color2)[None, :] * km
+        # por debajo del ala el forro es suave y parejo: menos sombra en la base para que no parezcan escamas
         Cc = rejilla_color(n, ts_c, 2, base_c, punta=None if punta is None else hexa(punta), t_punta=t_punta,
                            borde=None if borde is None else hexa(borde), lado_borde=0, fuerza_borde=fuerza_borde,
-                           sombra_base=0.7, rng=rng, ruido=0.06)
+                           sombra_base=(0.72 if dorsal else 0.88), rng=rng, ruido=(0.06 if dorsal else 0.035))
         pw = ave.pesos_cercanos(r, mL.sel)
-        lotes.append(dict(raiz=r, eje_y=yv, eje_x=xv, L=L, ancho=L * k_ancho, celda=celda, color=Cc, pesos=pw,
-                          curva=(0.03 if dorsal else -0.02), comba=(0.10 if dorsal else -0.06), nx=2, ts=ts_c,
-                          espejo=dorsal, dorsal=dorsal, mat=1))
+        ancho = L * k_ancho
+        # curvatura y comba hacia el ala (encima y debajo), sin hundirse en la fila de abajo
+        tope = 0.8 * paso
+        curva = np.minimum(cfg.get("curva_cob", 0.03), tope / np.maximum(L, 1e-12))
+        comba = np.minimum(cfg.get("comba_cob", 0.08), tope / np.maximum(ancho, 1e-12))
+        lotes.append(dict(raiz=r, eje_y=yv, eje_x=xv, L=L, ancho=ancho, celda=celda, color=Cc, pesos=pw,
+                          curva=curva, comba=comba, nx=2, ts=ts_c, espejo=dorsal, dorsal=dorsal, mat=1))
 
-    d_h = cfg.get("paso_cob", 0.012) * B
     u_ini = cfg.get("u_cob_ini", 0.02) * mL.B
     for f in esp["ala"]["filas"]:
         dorsal = f.get("dorsal", True)
-        signo = 1 if dorsal else -1
-        h_borde = mL.h_top if dorsal else mL.h_bot
         nivel = f.get("nivel", 1)
         fila(n=f["n"], u0=f.get("u0", u_ini / mL.B) * mL.B, u1=f.get("u1", 0.97) * mL.B, v0=f["v"], k_largo=f["largo"], k_ancho=f.get("ancho", 0.55),
-             h_raiz=d_h * (nivel * 0.5 + 0.6), h_punta=d_h * nivel,
+             nivel=nivel,
              celda=f.get("celda", "cob_lisa"), color=f["color"], punta=f.get("punta"),
              borde=f.get("borde"), dorsal=dorsal, t_punta=f.get("t_punta", 0.78), fuerza_borde=f.get("fuerza_borde", 0.8),
              desfase=f.get("desfase", 0.0), ang_extra=f.get("ang", 0.0), color2=f.get("color2"), u_mezcla=f.get("u_mezcla", (0.35, 0.55)))

@@ -17,9 +17,9 @@ Se ven en el visor 3D de la ficha, no en la escena. Cada uno es un punto de inte
 | `silla-rota.glb` | Silla Rota.glb | 4055464 | `d3375da2e27116f7dc8d7e3df7fecfebf5019c881d006bed1b8f3ab9abbd1a4c` |
 | `letrero-flecha.glb` | Letrero flecha.glb | 1991796 | `63d1016b9586a58011ae6909bd45de972d7f778a0badd025c6d71e69c71a6b09` |
 
-Los diez suman 25.146.564 bytes. Esos archivos de la raíz y sus copias con texturas a 512 de la carpeta `512/` se conservan tal como llegaron. La ficha de la app carga hoy los de la carpeta `v2/`.
+Los diez suman 25.146.564 bytes. Esos archivos de la raíz y sus copias con texturas a 512 de la carpeta `512/` se conservan tal como llegaron. La ficha de la app carga hoy las aves de la carpeta `v3/` y los objetos de la carpeta `v2/`.
 
-## La carpeta `v2/`: lo que carga la ficha
+## La carpeta `v2/`: los objetos y la primera versión de las aves
 
 `v2/` tiene veintitrés modelos: diez aves y trece objetos del sendero. Son versiones trabajadas en Blender a partir de los `.glb` de la carpeta compartida «Modelos glb» (subcarpetas «Aves» y «Puntos de interes»), que no se modificó. El proceso completo y sus decisiones están en `scripts/modelos/mejora/LEEME.md`.
 
@@ -59,7 +59,28 @@ La ficha reproduce sola y en bucle la animación de reposo de las aves (RF-029).
 
 Los veintitrés suman 32.863.808 bytes.
 
-Veintiún modelos están enlazados a su punto de interés en `config/pois.json`. `atlapetes-nuquipalido.glb` es el modelo que en la carpeta compartida se llama «Nuca»: tiene forma de atlapetes y se pintó como *Atlapetes pallidinucha*, el de los cerros orientales de Bogotá, y su punto pasó a llamarse `poi-atlapetes-nuquipalido`. `puente-principal.glb` va en `poi-puente-madera`. `edificio.glb` y `estructura-final.glb` no tienen todavía un punto de interés que los use. El carpintero candela tiene punto de interés y canto, pero no tiene modelo.
+Veintiún modelos están enlazados a su punto de interés en `config/pois.json`. `atlapetes-nuquipalido.glb` es el modelo que en la carpeta compartida se llama «Nuca»: tiene forma de atlapetes y se pintó como *Atlapetes pallidinucha*, el de los cerros orientales de Bogotá, y su punto pasó a llamarse `poi-atlapetes-nuquipalido`. `puente-principal.glb` va en `poi-puente-madera`. `edificio.glb` y `estructura-final.glb` no tienen todavía un punto de interés que los use. El carpintero candela tiene punto de interés y canto, pero no tiene modelo. Las diez aves de esta carpeta ya no se cargan: sus puntos apuntan a la versión de `v3/`. Las miniaturas de `v2/miniaturas/` se sacaron de estos modelos y siguen en uso.
+
+## La carpeta `v3/`: las aves con el ala corregida
+
+`v3/` tiene las diez aves rehechas con el mismo proceso de `v2/` y un ala distinta, porque vista de frente se veía mal: las coberteras de encima se apilaban hasta casi una décima parte del largo del ala por encima del brazo y asomaban como una cresta dentada, el brazo del ala quedaba a la vista como un tubo liso y claro, y las coberteras de debajo se curvaban hacia afuera y parecían escamas.
+
+Ahora el brazo tiene sección de perfil de ala, grueso adelante y fino atrás. Las coberteras se asientan sobre él y bajan en línea recta hasta quedar justo encima de las remeras, cada fila apenas un paso más alta que la de atrás; por debajo del ala dejan además el espacio que cuelgan las remeras, y las dos caras se curvan hacia el ala. El borde de ataque lleva seis filas de plumitas que lo envuelven y se tienden hacia la punta, como en un ave real. La animación, el esqueleto, los colores y el resto del plumaje son los de `v2/`. Cada ave pesa entre 2,00 y 2,78 MB.
+
+| Archivo en `v3/` | Bytes | sha256 |
+|---|---|---|
+| `aguililla-de-swainson.glb` | 1997060 | `ad91e655ce64d4c8b262862d06fd6a8e37330f02b3974d15ecc683584d7c07c0` |
+| `atlapetes-nuquipalido.glb` | 2159472 | `4f8bbbddaf2964cb464a9b1a0f2317ca49d49a57ee653036e2912bd3ca4defe1` |
+| `colibri-chillon.glb` | 2374596 | `368cbe921d732ae5c8ca4a298552bdf759be3ae888ca6df3e14dde6149cf4183` |
+| `copeton.glb` | 2030716 | `19f5ba32054db111c4a4bad6ee568047228fe5e311533cd16ebe8a783266ac4a` |
+| `cucarachero-rufo.glb` | 2096048 | `55fa1b3d2ff00a7581962e34ad3df82cf467a42e070a818ffe198f6a1cee1983` |
+| `golondrina-plomiza.glb` | 2434848 | `9b304a6ecd17d5ccfd04172d7e54e79cdbf6f9c39e7885dbb5217065a09682a9` |
+| `pibi-ahumado.glb` | 2781944 | `c22b742fe759bcc1306723826efdb540e1b6b279dc13888746aeccba5bbf29ad` |
+| `saltapared-comun.glb` | 2257492 | `a95cabbecdccd548c4e479b11f1882284412be80bb3e7db7147cf951606237c5` |
+| `tucan-andino.glb` | 2289048 | `aedd8d6d80ca807f5251738c696e7de001ff98e57b8292c1b9ab01a5713e2364` |
+| `vireo-ojirrojo.glb` | 2135584 | `9874a230b807f10f7022be9e1977d02aa34f1bc054941356036ca2d04d7ba332` |
+
+Los diez suman 22.556.808 bytes.
 
 ## Las texturas vienen completas, salvo Height
 
@@ -79,6 +100,6 @@ Revisado el 21/10/2026 en las pasadas centrales de los tres tramos grabados con 
 
 ## Reglas para tocar estos archivos
 
-Si un `.glb` cambia, va con nombre nuevo y nunca se sobrescribe, porque `_headers` cachea `/assets/models/*` durante una semana. Por eso las versiones trabajadas están en `v2/` y una versión posterior irá en `v3/`. Un modelo nuevo de la misma familia se declara en `config/pois.json` sin tocar código: se copia aquí y se añade su POI de tipo `patrimonio` con `modelUrl`, dejando la historia en `[por verificar]` mientras no haya fuente citable.
+Si un `.glb` cambia, va con nombre nuevo y nunca se sobrescribe, porque `_headers` cachea `/assets/models/*` durante una semana. Por eso las versiones trabajadas están en `v2/`, las aves corregidas en `v3/` y una versión posterior irá en `v4/`. Un modelo nuevo de la misma familia se declara en `config/pois.json` sin tocar código: se copia aquí y se añade su POI de tipo `patrimonio` con `modelUrl`, dejando la historia en `[por verificar]` mientras no haya fuente citable.
 
 Cada modelo de `v2/` tiene su miniatura en `v2/miniaturas/<nombre del .glb>.webp` (256 por 256 px, fondo transparente), que el medallón del punto muestra en lugar del icono. Se genera con `scripts/modelos/miniaturas/generar.sh` y se declara en `previewUrl` de `config/pois.json`. Si un modelo cambia y va a una carpeta nueva por la caché de una semana, su miniatura se vuelve a generar y va en esa misma carpeta nueva.

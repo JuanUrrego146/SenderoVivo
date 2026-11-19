@@ -21,7 +21,7 @@
         "alt": 1.83
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/colibri-chillon.glb",
+      "modelUrl": "assets/models/v3/colibri-chillon.glb",
       "previewUrl": "assets/models/v2/miniaturas/colibri-chillon.webp",
       "idleAnimation": "Take 001",
       "narrationUrl": "",
@@ -239,7 +239,7 @@
       },
       "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/golondrina-plomiza.glb",
+      "modelUrl": "assets/models/v3/golondrina-plomiza.glb",
       "previewUrl": "assets/models/v2/miniaturas/golondrina-plomiza.webp",
       "idleAnimation": "Take 001",
       "narrationUrl": "assets/audio/golondrina-narracion.mp3",
@@ -682,7 +682,7 @@
         "alt": 3.5
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/aguililla-de-swainson.glb",
+      "modelUrl": "assets/models/v3/aguililla-de-swainson.glb",
       "previewUrl": "assets/models/v2/miniaturas/aguililla-de-swainson.webp",
       "idleAnimation": "Take 001",
       "narrationUrl": "",
@@ -720,7 +720,7 @@
         "alt": 1.68
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/copeton.glb",
+      "modelUrl": "assets/models/v3/copeton.glb",
       "previewUrl": "assets/models/v2/miniaturas/copeton.webp",
       "idleAnimation": "Take 001",
       "narrationUrl": "",
@@ -758,7 +758,7 @@
         "alt": 1.98
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/tucan-andino.glb",
+      "modelUrl": "assets/models/v3/tucan-andino.glb",
       "previewUrl": "assets/models/v2/miniaturas/tucan-andino.webp",
       "idleAnimation": "Take 001",
       "narrationUrl": "",
@@ -833,7 +833,7 @@
         "alt": 2.38
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/cucarachero-rufo.glb",
+      "modelUrl": "assets/models/v3/cucarachero-rufo.glb",
       "previewUrl": "assets/models/v2/miniaturas/cucarachero-rufo.webp",
       "idleAnimation": "Take 001",
       "narrationUrl": "",
@@ -871,7 +871,7 @@
         "alt": 2.06
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/pibi-ahumado.glb",
+      "modelUrl": "assets/models/v3/pibi-ahumado.glb",
       "previewUrl": "assets/models/v2/miniaturas/pibi-ahumado.webp",
       "idleAnimation": "Take 001",
       "narrationUrl": "",
@@ -909,7 +909,7 @@
         "alt": 1.35
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/saltapared-comun.glb",
+      "modelUrl": "assets/models/v3/saltapared-comun.glb",
       "previewUrl": "assets/models/v2/miniaturas/saltapared-comun.webp",
       "idleAnimation": "Take 001",
       "narrationUrl": "",
@@ -947,7 +947,7 @@
         "alt": 2.07
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/vireo-ojirrojo.glb",
+      "modelUrl": "assets/models/v3/vireo-ojirrojo.glb",
       "previewUrl": "assets/models/v2/miniaturas/vireo-ojirrojo.webp",
       "idleAnimation": "Take 001",
       "narrationUrl": "",
@@ -985,7 +985,7 @@
         "alt": 1.3
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/atlapetes-nuquipalido.glb",
+      "modelUrl": "assets/models/v3/atlapetes-nuquipalido.glb",
       "previewUrl": "assets/models/v2/miniaturas/atlapetes-nuquipalido.webp",
       "idleAnimation": "Take 001",
       "narrationUrl": "",
