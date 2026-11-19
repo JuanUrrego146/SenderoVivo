@@ -84,12 +84,12 @@
       "scientificName": "[por verificar: el Acueducto cita el nombre común sin binomio]",
       "sceneId": "sendero-01-t1-propia",
       "anchor": {
-        "x": -10.15,
-        "y": 4.31,
-        "z": -2.68
+        "x": -24.09,
+        "y": 10.04,
+        "z": -5.72
       },
       "trailAnchor": {
-        "d": 10.98,
+        "d": 26.98,
         "lat": -1.9,
         "alt": 0.95
       },
@@ -109,7 +109,7 @@
       "conservation": "Citada por el administrador del sendero",
       "curiosity": "Crece rápido en suelos removidos, así que suele ser de los primeros en volver donde el bosque se recupera.",
       "audioFreq": 520,
-      "anchorNote": "Ubicación reconstruida al costado del Tramo 1 en vegetación nativa. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84), del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m.",
+      "anchorNote": "Ubicación reconstruida al costado del Tramo 1 en vegetación nativa. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84) más 16 m, porque los primeros 16 m del trazado se quitaron por borrosos (campo cuts) y el recorrido empieza ahí; del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m.",
       "mediaNote": "[pendiente] El modelo aliso.glb todavía no está en el repositorio: modelUrl va vacío hasta que llegue, para que la ficha no ofrezca un modelo que no existe."
     },
     {
@@ -156,12 +156,12 @@
       "scientificName": "Punto patrimonial",
       "sceneId": "sendero-01-t1-propia",
       "anchor": {
-        "x": -7.17,
-        "y": 2.96,
-        "z": -1.67
+        "x": -21.17,
+        "y": 8.61,
+        "z": -5.71
       },
       "trailAnchor": {
-        "d": 7.35,
+        "d": 23.35,
         "lat": -1.9,
         "alt": 0.7
       },
@@ -182,7 +182,7 @@
       "conservation": "[por verificar] la historia",
       "curiosity": "Los Cerros Orientales guardan patrimonio de acueducto documentado: si aparece infraestructura análoga en la quebrada, hay dónde buscar fuente.",
       "audioFreq": 330,
-      "anchorNote": "Ubicación del paso patrimonial sobre la quebrada en el Tramo 1. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84), del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m."
+      "anchorNote": "Ubicación del paso patrimonial sobre la quebrada en el Tramo 1. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84) más 16 m, porque los primeros 16 m del trazado se quitaron por borrosos (campo cuts) y el recorrido empieza ahí; del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m."
     },
     {
       "id": "poi-pino",
@@ -413,12 +413,12 @@
       "scientificName": "Banca de madera con techo",
       "sceneId": "sendero-01-t1-propia",
       "anchor": {
-        "x": 0.06,
-        "y": 1.54,
-        "z": -2.55
+        "x": -14.77,
+        "y": 6.17,
+        "z": -7.35
       },
       "trailAnchor": {
-        "d": 1.0,
+        "d": 17.0,
         "lat": 1.9,
         "alt": 0.71
       },
@@ -440,7 +440,7 @@
       "curiosity": "",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicación aproximada al arranque del Tramo 1 propio: en campo está unos metros más abajo, en el empalme con el Tramo 2, fuera de la captura. Va con los lados de la subida, la banca a la derecha, como se ve en el cuadro 642 de t2_CentroCentro_Devuelta."
+      "anchorNote": "Ubicación aproximada al arranque del recorrido del Tramo 1 propio, que empieza en el metro 16 porque los primeros 16 m del trazado se quitaron por borrosos (campo cuts): en campo está unos metros más abajo, en el empalme con el Tramo 2, fuera de la captura. Va 1 m después del arranque y con los lados de la subida, la banca a la derecha, como se ve en el cuadro 642 de t2_CentroCentro_Devuelta."
     },
     {
       "id": "poi-letrero-observatorio-de-aves",
@@ -450,12 +450,12 @@
       "scientificName": "Letrero interpretativo",
       "sceneId": "sendero-01-t1-propia",
       "anchor": {
-        "x": -3.0,
-        "y": 2.03,
-        "z": 0.05
+        "x": -17.41,
+        "y": 6.92,
+        "z": -4.36
       },
       "trailAnchor": {
-        "d": 2.5,
+        "d": 18.5,
         "lat": -1.9,
         "alt": 0.9
       },
@@ -477,7 +477,7 @@
       "curiosity": "El letrero lo ubica a 270 m del mirador Santa Ana.",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicación aproximada al arranque del Tramo 1 propio: en campo está unos metros más abajo, en el empalme con el Tramo 2, fuera de la captura. Va con los lados de la subida, el letrero a la izquierda, como se ve en el cuadro 642 de t2_CentroCentro_Devuelta."
+      "anchorNote": "Ubicación aproximada al arranque del recorrido del Tramo 1 propio, que empieza en el metro 16 porque los primeros 16 m del trazado se quitaron por borrosos (campo cuts): en campo está unos metros más abajo, en el empalme con el Tramo 2, fuera de la captura. Va 2,5 m después del arranque y con los lados de la subida, el letrero a la izquierda, como se ve en el cuadro 642 de t2_CentroCentro_Devuelta."
     },
     {
       "id": "poi-letrero-prohibido-el-paso",
@@ -596,15 +596,15 @@
       "category": "curiosidades",
       "commonName": "Silla rota",
       "scientificName": "Banca de madera deteriorada",
-      "sceneId": "sendero-01-t1-propia",
+      "sceneId": "sendero-02-propia",
       "anchor": {
-        "x": -3.1,
-        "y": 2.38,
-        "z": -4.39
+        "x": 34.62,
+        "y": -6.49,
+        "z": 48.41
       },
       "trailAnchor": {
-        "d": 4.5,
-        "lat": 2.2,
+        "d": 107.36,
+        "lat": 3.39,
         "alt": 0.84
       },
       "distanceMeters": 0,
@@ -625,7 +625,7 @@
       "curiosity": "",
       "audioFreq": 330,
       "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
-      "anchorNote": "Ubicación provisional al arranque del Tramo 1 propio, junto a la banca vieja: en campo está en el Tramo 2, que por ahora queda por fuera de la app. Su medida real, sobre sendero-02-propia, es d 107.36, lat 3.39, alt 0.84 y anchor (34.62, -6.49, 48.41), con los cuadros 492, 498 y 504 de t2_CentroCentro_Devuelta."
+      "anchorNote": "Medida sobre el modelo del Tramo 2 propio (sendero-02-propia) con los cuadros 492, 498 y 504 de t2_CentroCentro_Devuelta: 687 puntos 3D que caen sobre la banca en dos vistas o más. El medallón flota 0,3 m sobre el tablón superior y queda a 0,02 m de lo medido."
     },
     {
       "id": "poi-letrero-flecha",
@@ -897,16 +897,16 @@
       "category": "fauna",
       "commonName": "Saltapared común",
       "scientificName": "Troglodytes musculus",
-      "sceneId": "sendero-01-t1-propia",
+      "sceneId": "sendero-02-propia",
       "anchor": {
-        "x": -55.41,
-        "y": 25.57,
-        "z": -3.27
+        "x": 28.4,
+        "y": -7.34,
+        "z": 49.02
       },
       "trailAnchor": {
-        "d": 63.68,
-        "lat": -2.75,
-        "alt": 1.35
+        "d": 103.23,
+        "lat": -2.83,
+        "alt": 1.96
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/v3/saltapared-comun.glb",
@@ -935,16 +935,16 @@
       "category": "fauna",
       "commonName": "Vireo ojirrojo",
       "scientificName": "Vireo olivaceus",
-      "sceneId": "sendero-01-t1-propia",
+      "sceneId": "sendero-02-propia",
       "anchor": {
-        "x": -5.43,
-        "y": 4.28,
-        "z": -5.76
+        "x": 56.15,
+        "y": -19.64,
+        "z": 70.45
       },
       "trailAnchor": {
-        "d": 7.16,
-        "lat": 2.71,
-        "alt": 2.07
+        "d": 59.64,
+        "lat": 2.43,
+        "alt": 1.84
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/v3/vireo-ojirrojo.glb",
@@ -973,16 +973,16 @@
       "category": "fauna",
       "commonName": "Atlapetes nuquipálido",
       "scientificName": "Atlapetes pallidinucha",
-      "sceneId": "sendero-01-t1-propia",
+      "sceneId": "sendero-02-propia",
       "anchor": {
-        "x": -45.62,
-        "y": 19.86,
-        "z": -4.5
+        "x": 86.75,
+        "y": -29.21,
+        "z": 65.0
       },
       "trailAnchor": {
-        "d": 50.91,
-        "lat": -3.28,
-        "alt": 1.3
+        "d": 21.1,
+        "lat": -3.11,
+        "alt": 2.24
       },
       "distanceMeters": 0,
       "modelUrl": "assets/models/v3/atlapetes-nuquipalido.glb",
