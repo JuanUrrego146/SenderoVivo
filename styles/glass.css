@@ -2814,6 +2814,11 @@
         width: 100% !important;
     }
 
+    /* Sin border-box, el 100 % más el relleno del buscador se salía por la derecha. */
+    #album-search-input {
+        box-sizing: border-box !important;
+    }
+
     #biodiversity-album-grid {
         grid-template-columns: 1fr !important;
         gap: 14px !important;
@@ -2931,6 +2936,28 @@
         align-items: flex-start !important;
         padding: 16px 18px !important;
         gap: 14px !important;
+    }
+
+    /* En columna, el bloque de texto tomaba el ancho de su contenido y se salía por la
+       derecha (subtítulo y selector cortados). Ocupa todo el ancho y recorta adentro. */
+    .preparar-header-row > .min-w-0 {
+        width: 100% !important;
+    }
+
+    /* La X se quedaba sola en una fila debajo del selector: vuelve a la esquina. */
+    .preparar-header-row > .tab-modal-close-btn {
+        position: absolute !important;
+        top: 12px !important;
+        right: 12px !important;
+    }
+
+    .preparar-header-row > .min-w-0 > span:first-child {
+        padding-right: 52px !important;
+    }
+
+    /* La ubicación pasa a dos líneas en vez de cortarse en «(Cl.». */
+    #preparar-trail-sub {
+        white-space: normal !important;
     }
 }
 
