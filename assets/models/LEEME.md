@@ -17,7 +17,7 @@ Se ven en el visor 3D de la ficha, no en la escena. Cada uno es un punto de inte
 | `silla-rota.glb` | Silla Rota.glb | 4055464 | `d3375da2e27116f7dc8d7e3df7fecfebf5019c881d006bed1b8f3ab9abbd1a4c` |
 | `letrero-flecha.glb` | Letrero flecha.glb | 1991796 | `63d1016b9586a58011ae6909bd45de972d7f778a0badd025c6d71e69c71a6b09` |
 
-Los diez suman 25.146.564 bytes. Esos archivos de la raíz y sus copias con texturas a 512 de la carpeta `512/` se conservan tal como llegaron. La ficha de la app carga hoy las aves de la carpeta `v3/` y los objetos de la carpeta `v2/`.
+Los diez suman 25.146.564 bytes. Esos archivos de la raíz y sus copias con texturas a 512 de la carpeta `512/` se conservan tal como llegaron. La ficha de la app carga hoy las aves y los letreros de la carpeta `v3/`, y el puente, la banca y la silla de la carpeta `v2/`.
 
 ## La carpeta `v2/`: los objetos y la primera versión de las aves
 
@@ -59,13 +59,15 @@ La ficha reproduce sola y en bucle la animación de reposo de las aves (RF-029).
 
 Los veintitrés suman 32.863.808 bytes.
 
-Veintiún modelos están enlazados a su punto de interés en `config/pois.json`. `atlapetes-nuquipalido.glb` es el modelo que en la carpeta compartida se llama «Nuca»: tiene forma de atlapetes y se pintó como *Atlapetes pallidinucha*, el de los cerros orientales de Bogotá, y su punto pasó a llamarse `poi-atlapetes-nuquipalido`. `puente-principal.glb` va en `poi-puente-madera`. `edificio.glb` y `estructura-final.glb` no tienen todavía un punto de interés que los use. El carpintero candela tiene punto de interés y canto, pero no tiene modelo. Las diez aves de esta carpeta ya no se cargan: sus puntos apuntan a la versión de `v3/`. Las miniaturas de `v2/miniaturas/` se sacaron de estos modelos y siguen en uso.
+Veintiún modelos están enlazados a su punto de interés en `config/pois.json`. `atlapetes-nuquipalido.glb` es el modelo que en la carpeta compartida se llama «Nuca»: tiene forma de atlapetes y se pintó como *Atlapetes pallidinucha*, el de los cerros orientales de Bogotá, y su punto pasó a llamarse `poi-atlapetes-nuquipalido`. `puente-principal.glb` va en `poi-puente-madera`. `edificio.glb` y `estructura-final.glb` no tienen todavía un punto de interés que los use. El carpintero candela tiene punto de interés y canto, pero no tiene modelo. Las diez aves y los ocho letreros de esta carpeta ya no se cargan: sus puntos apuntan a la versión de `v3/`. Las miniaturas de `v2/miniaturas/` se sacaron de estos modelos y siguen en uso.
 
-## La carpeta `v3/`: las aves con el ala corregida
+## La carpeta `v3/`: aves con el ala corregida y letreros legibles
 
 `v3/` tiene las diez aves rehechas con el mismo proceso de `v2/` y un ala distinta, porque vista de frente se veía mal: las coberteras de encima se apilaban hasta casi una décima parte del largo del ala por encima del brazo y asomaban como una cresta dentada, el brazo del ala quedaba a la vista como un tubo liso y claro, y las coberteras de debajo se curvaban hacia afuera y parecían escamas.
 
 Ahora el brazo tiene sección de perfil de ala, grueso adelante y fino atrás. Las coberteras se asientan sobre él y bajan en línea recta hasta quedar justo encima de las remeras, cada fila apenas un paso más alta que la de atrás; por debajo del ala dejan además el espacio que cuelgan las remeras, y las dos caras se curvan hacia el ala. El borde de ataque lleva seis filas de plumitas que lo envuelven y se tienden hacia la punta, como en un ave real. La animación, el esqueleto, los colores y el resto del plumaje son los de `v2/`. Cada ave pesa entre 2,00 y 2,78 MB.
+
+En los letreros de `v2/` el texto no se leía: las caras impresas habían bajado a 512 por 512 y el realce las tomó por madera, porque casi no tienen blanco, y les sumó un relieve que emborronaba las letras. En `v3/` cada cara impresa conserva su textura sin relieve, ampliada al doble con filtro Lanczos y con un enfoque suave, de modo que el texto aguanta el acercamiento del visor; la madera, los postes y los mapas de normales quedan a 512 con el mismo realce de `v2/`. Los materiales que se tratan como madera se eligen por nombre con la opción `--madera` de `scripts/modelos/mejora/optimizar_glb.py`. En el tablero informativo la cara impresa queda a 1024 sin ampliar: ya en el modelo original el texto pequeño ocupa unos pocos píxeles y no se puede leer, así que mejorarlo exige la imagen de origen del tablero o una foto de frente del tablero real. Cada letrero pesa entre 0,25 y 2,13 MB, menos que en `v2/` salvo el tablero.
 
 | Archivo en `v3/` | Bytes | sha256 |
 |---|---|---|
@@ -75,12 +77,20 @@ Ahora el brazo tiene sección de perfil de ala, grueso adelante y fino atrás. L
 | `copeton.glb` | 2030716 | `19f5ba32054db111c4a4bad6ee568047228fe5e311533cd16ebe8a783266ac4a` |
 | `cucarachero-rufo.glb` | 2096048 | `55fa1b3d2ff00a7581962e34ad3df82cf467a42e070a818ffe198f6a1cee1983` |
 | `golondrina-plomiza.glb` | 2434848 | `9b304a6ecd17d5ccfd04172d7e54e79cdbf6f9c39e7885dbb5217065a09682a9` |
+| `letrero-bosque-alto-andino.glb` | 799028 | `1084013cda3e08e498bbf62a1546ffedd3b3df4d878dd0464c6dc5304d89ee77` |
+| `letrero-bosque-andino-y-pinos.glb` | 776524 | `ba22d30a744c9679847a05518cbce29f537979d54ed36bc9022605aa729c1087` |
+| `letrero-flecha.glb` | 668972 | `fb194b33965eeffa7baed863df64c41b5c713d5ec5e1a20f982d78538b816d90` |
+| `letrero-indicaciones.glb` | 1297496 | `b0f011553a562bbac04f6fb8ecbfa6672cfffa3cd01a8b43163c1e26b5b22c9c` |
+| `letrero-observatorio-de-aves.glb` | 589380 | `828f81fcb2d55bd5fa89beda669f621b764e5af1cce91c1eb5e6ff886e220991` |
+| `letrero-prohibido-el-paso.glb` | 254696 | `144a9a43533eec09dd4682dcaaeabf2cf9faefa576cc81ebaac549d8d7ca7a50` |
+| `letrero-servicios-ambientales.glb` | 579120 | `0899975395b9924205dcb3f76672b24a15433c0668633f1e0874741d2325c78d` |
 | `pibi-ahumado.glb` | 2781944 | `c22b742fe759bcc1306723826efdb540e1b6b279dc13888746aeccba5bbf29ad` |
 | `saltapared-comun.glb` | 2257492 | `a95cabbecdccd548c4e479b11f1882284412be80bb3e7db7147cf951606237c5` |
+| `tablero-informativo.glb` | 2131788 | `390bc20b47d2da32fead622a536b86d94afbdf9f6e7b38352b3a5c2711b77e72` |
 | `tucan-andino.glb` | 2289048 | `aedd8d6d80ca807f5251738c696e7de001ff98e57b8292c1b9ab01a5713e2364` |
 | `vireo-ojirrojo.glb` | 2135584 | `9874a230b807f10f7022be9e1977d02aa34f1bc054941356036ca2d04d7ba332` |
 
-Los diez suman 22.556.808 bytes.
+Los dieciocho suman 29.653.812 bytes.
 
 ## Las texturas vienen completas, salvo Height
 
@@ -100,6 +110,6 @@ Revisado el 21/10/2026 en las pasadas centrales de los tres tramos grabados con 
 
 ## Reglas para tocar estos archivos
 
-Si un `.glb` cambia, va con nombre nuevo y nunca se sobrescribe, porque `_headers` cachea `/assets/models/*` durante una semana. Por eso las versiones trabajadas están en `v2/`, las aves corregidas en `v3/` y una versión posterior irá en `v4/`. Un modelo nuevo de la misma familia se declara en `config/pois.json` sin tocar código: se copia aquí y se añade su POI de tipo `patrimonio` con `modelUrl`, dejando la historia en `[por verificar]` mientras no haya fuente citable.
+Si un `.glb` cambia, va con nombre nuevo y nunca se sobrescribe, porque `_headers` cachea `/assets/models/*` durante una semana. Por eso las versiones trabajadas están en `v2/`, las aves corregidas y los letreros legibles en `v3/` y una versión posterior irá en `v4/`. Un modelo nuevo de la misma familia se declara en `config/pois.json` sin tocar código: se copia aquí y se añade su POI de tipo `patrimonio` con `modelUrl`, dejando la historia en `[por verificar]` mientras no haya fuente citable.
 
 Cada modelo de `v2/` tiene su miniatura en `v2/miniaturas/<nombre del .glb>.webp` (256 por 256 px, fondo transparente), que el medallón del punto muestra en lugar del icono. Se genera con `scripts/modelos/miniaturas/generar.sh` y se declara en `previewUrl` de `config/pois.json`. Si un modelo cambia y va a una carpeta nueva por la caché de una semana, su miniatura se vuelve a generar y va en esa misma carpeta nueva.

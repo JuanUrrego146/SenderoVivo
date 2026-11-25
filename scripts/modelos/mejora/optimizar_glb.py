@@ -202,7 +202,20 @@ def _imagen_de(g, tinfo):
     return src
 
 
-def optimizar(entrada, salida, lado_max=1024, calidad=88, realce=0.0, cuantiza=False):
+def impreso_nitido(color, factor=2, lado_max=2048, fuerza=0.55):
+    """Cara impresa de un letrero: se amplia con Lanczos y se enfoca suave, para que el texto aguante el acercamiento."""
+    im = color.convert("RGB")
+    w, h = im.size
+    f = max(1, min(factor, lado_max // max(w, h)))
+    if f > 1:
+        im = im.resize((w * f, h * f), Image.LANCZOS)
+    c = np.asarray(im, np.float32) / 255.0
+    borroso = np.stack([_gauss(c[..., k], 0.9 * f) for k in range(3)], -1)
+    c2 = np.clip(c + fuerza * (c - borroso), 0, 1)
+    return Image.fromarray((c2 * 255 + 0.5).astype(np.uint8), "RGB")
+
+
+def optimizar(entrada, salida, lado_max=1024, calidad=88, realce=0.0, cuantiza=False, madera=None, lado_texto=2048):
     g, binario = leer_glb(entrada)
     vistas = g.get("bufferViews", [])
     datos = [bytes(binario[v.get("byteOffset", 0): v.get("byteOffset", 0) + v["byteLength"]]) for v in vistas]
@@ -221,6 +234,8 @@ def optimizar(entrada, salida, lado_max=1024, calidad=88, realce=0.0, cuantiza=F
             if ic is None or ic in hechos:
                 continue
             hechos.add(ic)
+            if madera is not None and not any(k.lower() in m.get("name", "").lower() for k in madera):
+                continue
             imgs = g["images"]
             if "bufferView" not in imgs[ic]:
                 continue
@@ -235,11 +250,23 @@ def optimizar(entrada, salida, lado_max=1024, calidad=88, realce=0.0, cuantiza=F
             if n2 is not None:
                 retocadas[inm] = n2
                 hechos.add(inm)
+    impresas = set()
+    if madera is not None:
+        for m in g.get("materials", []):
+            if any(k.lower() in m.get("name", "").lower() for k in madera):
+                continue
+            ic = _imagen_de(g, m.get("pbrMetallicRoughness", {}).get("baseColorTexture"))
+            if ic is not None and "bufferView" in g["images"][ic]:
+                color = Image.open(io.BytesIO(datos[g["images"][ic]["bufferView"]]))
+                color.load()
+                retocadas[ic] = impreso_nitido(color, 2, lado_texto)
+                impresas.add(ic)
     for i, im in enumerate(g.get("images", [])):
         if "bufferView" not in im:
             continue
         bv = im["bufferView"]
-        nuevo, mime, tam = codificar(retocadas.get(i, datos[bv]), usos.get(i, {"color"}), lado_max, calidad)
+        nuevo, mime, tam = codificar(retocadas.get(i, datos[bv]), usos.get(i, {"color"}), lado_texto if i in impresas else lado_max,
+                                     max(calidad, 92) if i in impresas else calidad)
         informe.append((im.get("name"), len(datos[bv]), len(nuevo), tam))
         datos[bv] = nuevo
         if mime:
@@ -298,9 +325,12 @@ def main():
     ap.add_argument("--detalle", action="store_true")
     ap.add_argument("--realce", type=float, default=0.0)
     ap.add_argument("--cuantizar", action="store_true")
+    ap.add_argument("--madera", default=None, help="letreros: partes del nombre de los materiales de madera, separadas por coma; los demas se tratan como caras impresas")
+    ap.add_argument("--lado_texto", type=int, default=2048)
     a = ap.parse_args()
     antes = Path(a.entrada).stat().st_size
-    total, informe = optimizar(a.entrada, a.salida, a.max, a.calidad, a.realce, a.cuantizar)
+    madera = [k.strip() for k in a.madera.split(",") if k.strip()] if a.madera is not None else None
+    total, informe = optimizar(a.entrada, a.salida, a.max, a.calidad, a.realce, a.cuantizar, madera, a.lado_texto)
     print("{}  {:.2f} MB -> {:.2f} MB".format(Path(a.salida).name, antes / 1e6, total / 1e6))
     if a.detalle:
         for nombre, x, y, tam in informe:

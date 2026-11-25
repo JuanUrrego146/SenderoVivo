@@ -313,7 +313,7 @@
         "alt": 2.07
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/tablero-informativo.glb",
+      "modelUrl": "assets/models/v3/tablero-informativo.glb",
       "previewUrl": "assets/models/v2/miniaturas/tablero-informativo.webp",
       "narrationUrl": "",
       "transcriptUrl": "",
@@ -349,7 +349,7 @@
         "alt": -0.08
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/letrero-indicaciones.glb",
+      "modelUrl": "assets/models/v3/letrero-indicaciones.glb",
       "previewUrl": "assets/models/v2/miniaturas/letrero-indicaciones.webp",
       "narrationUrl": "",
       "transcriptUrl": "",
@@ -386,7 +386,7 @@
         "alt": -0.38
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/letrero-bosque-alto-andino.glb",
+      "modelUrl": "assets/models/v3/letrero-bosque-alto-andino.glb",
       "previewUrl": "assets/models/v2/miniaturas/letrero-bosque-alto-andino.webp",
       "narrationUrl": "",
       "transcriptUrl": "",
@@ -460,7 +460,7 @@
         "alt": 0.9
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/letrero-observatorio-de-aves.glb",
+      "modelUrl": "assets/models/v3/letrero-observatorio-de-aves.glb",
       "previewUrl": "assets/models/v2/miniaturas/letrero-observatorio-de-aves.webp",
       "narrationUrl": "",
       "transcriptUrl": "",
@@ -497,7 +497,7 @@
         "alt": -0.46
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/letrero-prohibido-el-paso.glb",
+      "modelUrl": "assets/models/v3/letrero-prohibido-el-paso.glb",
       "previewUrl": "assets/models/v2/miniaturas/letrero-prohibido-el-paso.webp",
       "narrationUrl": "",
       "transcriptUrl": "",
@@ -534,7 +534,7 @@
         "alt": -0.53
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/letrero-bosque-andino-y-pinos.glb",
+      "modelUrl": "assets/models/v3/letrero-bosque-andino-y-pinos.glb",
       "previewUrl": "assets/models/v2/miniaturas/letrero-bosque-andino-y-pinos.webp",
       "narrationUrl": "",
       "transcriptUrl": "",
@@ -571,7 +571,7 @@
         "alt": -0.17
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/letrero-servicios-ambientales.glb",
+      "modelUrl": "assets/models/v3/letrero-servicios-ambientales.glb",
       "previewUrl": "assets/models/v2/miniaturas/letrero-servicios-ambientales.webp",
       "narrationUrl": "",
       "transcriptUrl": "",
@@ -645,7 +645,7 @@
         "alt": -0.03
       },
       "distanceMeters": 0,
-      "modelUrl": "assets/models/v2/letrero-flecha.glb",
+      "modelUrl": "assets/models/v3/letrero-flecha.glb",
       "previewUrl": "assets/models/v2/miniaturas/letrero-flecha.webp",
       "narrationUrl": "",
       "transcriptUrl": "",
