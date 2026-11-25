@@ -29,6 +29,30 @@ function colorDeToken(nombreToken) {
         .trim();
 }
 
+/*
+ * Pendientes del catálogo. config/pois.json marca lo que falta con anotaciones del
+ * equipo ([por completar], [por verificar: …]); el visitante nunca las ve. La misma
+ * regla vive en src/views/PoiCardView.js, la ficha que se abre desde la escena.
+ */
+const PENDIENTE_POI = /\[|\bpor (completar|verificar|confirmar|identificar|definir)\b/i;
+
+// Texto largo: se quitan las anotaciones y queda el resto de la frase.
+function textoVisible(texto) {
+    if (typeof texto !== 'string') return '';
+    return texto
+        .replace(/\s*[·:]?\s*\[[^\]]*\]/g, '')
+        .replace(/\s+([.,;:])/g, '$1')
+        .replace(/\s{2,}/g, ' ')
+        .replace(/^[\s·:.,;]+|[\s·:,;]+$/g, '')
+        .trim();
+}
+
+// Dato corto (altitud, consejos, conservación): si está pendiente, no se muestra.
+function datoVisible(texto) {
+    if (typeof texto !== 'string' || PENDIENTE_POI.test(texto)) return '';
+    return texto.trim();
+}
+
 /**
  * Traduce una entrada del contrato a la forma que utiliza este cascarón.
  */
@@ -108,14 +132,15 @@ function desdeContrato(poi) {
         color: catColor,
 
         typeLabel: limpiarTipoLabel(poi.id, poi.typeLabel),
-        shortDesc: poi.shortDesc || '',
-        fullDesc: poi.fullDesc || '',
-        conservation: poi.conservation || 'Verificado',
-        curiosity: limpiarCuriosidad(poi.id, poi.curiosity),
+        shortDesc: textoVisible(poi.shortDesc),
+        fullDesc: textoVisible(poi.fullDesc),
+        // Una conservación pendiente no se muestra: nada de un «✓ Por verificar».
+        conservation: poi.conservation ? datoVisible(poi.conservation) : 'Verificado',
+        curiosity: datoVisible(limpiarCuriosidad(poi.id, poi.curiosity)),
         // La ficha patrimonial omite la distribución altitudinal (RF-030): nada de inventar una altitud.
-        altitudeRange: cat === 'patrimonio' ? '' : limpiarAltitud(poi.id, poi.altitudeRange),
-        sightingTips: poi.sightingTips || '',
-        fieldIdTips: poi.fieldIdTips || '',
+        altitudeRange: cat === 'patrimonio' ? '' : datoVisible(limpiarAltitud(poi.id, poi.altitudeRange)),
+        sightingTips: datoVisible(poi.sightingTips),
+        fieldIdTips: datoVisible(poi.fieldIdTips),
         audioFreq: poi.audioFreq || 440,
 
         discovered: false,
@@ -664,48 +689,35 @@ function selectHotspot(id) {
                 ${item.fullDesc}
             </p>
 
-            <!-- Consejos de avistamiento e identificacion en campo (#95): siempre visibles en fauna y flora, con aviso si falta el dato.
+            <!-- Consejos de avistamiento e identificacion en campo (#95). Cada bloque aparece solo
+                 cuando el catálogo trae el dato: un pendiente no se le muestra al visitante.
                  La ficha patrimonial los omite: no hay especie que identificar (RF-030). -->
-            ${item.category !== 'patrimonio' ? `
+            ${item.category !== 'patrimonio' && item.sightingTips ? `
             <div class="mb-5">
                 <h4 class="text-xs font-bold flex items-center gap-1.5 mb-1.5" style="color: var(--sv-primary);">
                     <i class="fa-solid fa-binoculars text-xs"></i>
                     <span>Consejos de avistamiento</span>
                 </h4>
                 <p class="text-xs sm:text-[12.5px] leading-relaxed" style="color: var(--sv-text-muted);">
-                    ${
-                        !item.sightingTips ||
-                        item.sightingTips
-                            .trim()
-                            .toLowerCase()
-                            .startsWith('[por completar')
-                            ? 'Información pendiente de completar.'
-                            : item.sightingTips
-                    }
+                    ${item.sightingTips}
                 </p>
             </div>
+            ` : ''}
 
+            ${item.category !== 'patrimonio' && item.fieldIdTips ? `
             <div class="mb-5">
                 <h4 class="text-xs font-bold flex items-center gap-1.5 mb-1.5" style="color: var(--sv-primary);">
                     <i class="fa-solid fa-magnifying-glass text-xs"></i>
                     <span>Cómo identificarla en campo</span>
                 </h4>
                 <p class="text-xs sm:text-[12.5px] leading-relaxed" style="color: var(--sv-text-muted);">
-                    ${
-                        !item.fieldIdTips ||
-                        item.fieldIdTips
-                            .trim()
-                            .toLowerCase()
-                            .startsWith('[por completar')
-                            ? 'Información pendiente de completar.'
-                            : item.fieldIdTips
-                    }
+                    ${item.fieldIdTips}
                 </p>
             </div>
             ` : ''}
 
             <!-- ¿Sabías que?: TOTALMENTE LIMPIO SIN RECUADROS NI BORDES -->
-            ${item.curiosity && !item.curiosity.includes('[por') ? `
+            ${item.curiosity ? `
                 <div class="mb-5">
                     <h4 class="text-xs font-bold flex items-center gap-1.5 mb-1.5" style="color: var(--sv-primary);">
                         <i class="fa-solid fa-lightbulb text-xs"></i>
@@ -1695,14 +1707,16 @@ function createAlbumCardHTML(item, idx) {
                 <h4 class="album-species-common">${item.name}</h4>
                 <p class="album-species-scientific">${item.scientific || 'Especie nativa de los Cerros'}</p>
                 <div class="album-species-meta-row">
-                    ${item.altitudeRange && !item.altitudeRange.includes('[por') ? `
+                    ${item.altitudeRange ? `
                         <span class="album-meta-pill">
                             <i class="fa-solid fa-mountain text-[8px] mr-1"></i>${item.altitudeRange}
                         </span>
                     ` : ''}
-                    <span class="album-meta-pill">
-                        <i class="fa-solid fa-check text-[8px] mr-1" style="color: var(--sv-primary);"></i>${item.conservation || 'Verificado'}
-                    </span>
+                    ${item.conservation ? `
+                        <span class="album-meta-pill">
+                            <i class="fa-solid fa-check text-[8px] mr-1" style="color: var(--sv-primary);"></i>${item.conservation}
+                        </span>
+                    ` : ''}
                 </div>
             </div>
 

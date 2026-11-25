@@ -9,6 +9,24 @@ function mostrarBoton(button, visible) {
     else button.style.setProperty('display', 'none', 'important');
 }
 
+// Pendientes del catálogo: la misma regla que src/ui/shell.js (textoVisible/datoVisible).
+const PENDIENTE_POI = /\[|\bpor (completar|verificar|confirmar|identificar|definir)\b/i;
+
+function textoVisible(texto) {
+    if (typeof texto !== 'string') return '';
+    return texto
+        .replace(/\s*[·:]?\s*\[[^\]]*\]/g, '')
+        .replace(/\s+([.,;:])/g, '$1')
+        .replace(/\s{2,}/g, ' ')
+        .replace(/^[\s·:.,;]+|[\s·:,;]+$/g, '')
+        .trim();
+}
+
+function datoVisible(texto) {
+    if (typeof texto !== 'string' || PENDIENTE_POI.test(texto)) return '';
+    return texto.trim();
+}
+
 export class PoiCardView {
     constructor(app, audioController = null) {
         this.app = app;
@@ -51,13 +69,15 @@ export class PoiCardView {
         const card = document.createElement('div');
         card.className = 'sv-poi-card pointer-events-auto';
 
-        const commonName = poi?.commonName || poi?.name || 'Especie nativa';
-        const scientificName = poi?.scientificName || poi?.scientific || 'Biodiversidad altoandina';
+        // Las anotaciones del catálogo ([por completar], [por verificar: …]) no se le
+        // muestran al visitante: misma regla que textoVisible/datoVisible en src/ui/shell.js.
+        const commonName = textoVisible(poi?.commonName || poi?.name) || 'Especie nativa';
+        const scientificName = textoVisible(poi?.scientificName || poi?.scientific) || 'Biodiversidad altoandina';
         // Sin respaldo inventado: si el POI no trae altitud, no se muestra ninguna. La ficha
         // patrimonial tampoco la lleva nunca (RF-030).
-        const altitude = poi?.altitudeRange || poi?.altitude || '';
+        const altitude = datoVisible(poi?.altitudeRange || poi?.altitude);
         const showAltitude = poi?.type !== 'patrimonio' && Boolean(altitude);
-        const description = poi?.fullDesc || poi?.shortDesc || poi?.desc || 'Especie representativa de los ecosistemas de alta montaña en los Cerros Orientales de Bogotá.';
+        const description = textoVisible(poi?.fullDesc) || textoVisible(poi?.shortDesc) || textoVisible(poi?.desc) || 'Especie representativa de los ecosistemas de alta montaña en los Cerros Orientales de Bogotá.';
 
         card.innerHTML = `
             <button
