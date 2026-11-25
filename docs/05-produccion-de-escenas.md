@@ -896,10 +896,47 @@ npx --yes @playcanvas/splat-transform@3.10.3 -w lod3.ply assets/scenes/<id>-movi
 # 10) Fondo de dos tonos (cielo arriba, color del suelo abajo) para domoUrl: las panoramicas 360 de los tramos no
 #     estan ubicadas en la escena y no sirven de fondo fotografico.
 $PY $N/fondo_tramo.py limpia.ply track_p.json cielo_media.json assets/fondos/<tramo>-fondo.jpg 4
-# 11) Paradas de la navegacion por puntos: cada 0,5 m se dibuja la escena en primera persona y se mide su nitidez;
-#     quedan como `stops` en el trazado las que maximizan esa medida con separaciones de 2,2 a 4,2 m.
-$PY $N/paradas_recorrido.py config/track-<id>.json final.ply paradas.json hoja=paradas.jpg
+# 11) Cortes y paradas, decididos con lo que ve el visitante EN LA APP: se camina el trazado en la app real (Edge
+#     sin ventana, con la tarjeta) y se guarda una captura por metro; se mide cada una y se arman hojas para mirar;
+#     paradas_app.py propone los cortes y reparte las paradas fuera de ellos. Los bordes de los cortes se eligen
+#     mirando las hojas y se pasan en cortes=; la salida trae `cuts` y `stops` para el trazado.
+node $N/barrido_app.mjs "http://localhost:3420/?render=<render>" <carpeta> modo=tramo paso=1
+$PY $N/barrido_hoja.py <carpeta> cortes=a-b,c-d
+$PY $N/paradas_app.py <carpeta>/medidas.json <largo> paradas_app.json cortes=a-b,c-d
+#     Comprobacion final, como el visitante: de parada en parada cruzando los cortes con su fundido.
+node $N/barrido_app.mjs "http://localhost:3420/?render=<render>" <carpeta2> modo=paradas
 ```
+
+**Los trechos que se ven mal se quitan del recorrido (campo `cuts`, 19/11).** Una reconstrucción de celular no sale
+pareja: donde la grabación pasó rápido, a oscuras o por una curva cerrada, la escena queda borrosa o con manchas
+pegadas a la cámara, y eso no se arregla limpiando. Esos trechos se quitan del trazado y el visitante los pasa con un
+fundido corto (el motor lo describe en `docs/03-arquitectura.md`). La decisión se toma con capturas de la app y no con
+el dibujo aparte de `paradas_recorrido.py`: en el Tramo 2 ese dibujo daba nítida (1.379) la parada del metro 44,5, y
+en la app media pantalla era una mancha clara corrida. La regla, la misma en los dos tramos: se quita un trecho cuando
+cuatro capturas seguidas o más (una por metro) quedan por debajo de 0,6 veces la nitidez mediana de su tramo, o cuando
+una mancha (bloques sin textura) tapa la quinta parte de la vista o más; los bordes van a la primera captura limpia de
+cada lado. Los baches más cortos no se quitan, pero no llevan parada: se cruzan caminando. `nitidez_fotos.py` y
+`nitidez_relativa.py` sirven para explicar la causa (comparan con las fotos tomadas en el mismo sitio), pero ya no
+deciden: un trecho que se ve borroso porque sus fotos salieron oscuras y movidas se ve igual de mal.
+
+| Tramo | Nitidez mediana (umbral) | Cortes | Recorrible |
+|---|---|---|---|
+| Tramo 2 | 2.180 (1.308) | 39 a 58 m, 73 a 102 m, 133 a 141 m | 92,7 m de 148,7 |
+| Tramo 1 | 1.613 (968) | 0 a 16 m | 56,0 m de 72,0 |
+
+En el Tramo 2, de 39 a 58 m es la curva cerrada (manchas claras corridas del metro 41 al 46, nitidez de hasta 883 del
+47 al 50 y una mancha oscura que tapa hasta la quinta parte de la vista del 55 al 57); de 73 a 102 m la nitidez cae
+hasta 430 y del metro 89 al 100 las fotos salieron casi negras (brillo de 8 a 21 sobre 255); de 133 a 141 m cae hasta
+998 y quedan manchas en los metros 139 y 140. En el Tramo 1, del metro 4 al 14 la nitidez va de 340 a 862 y los
+metros 0 a 3 quedan por debajo de sus propias fotos (0,47 a 0,82); las fotos de ese arranque salieron oscuras y
+movidas. Como el trazado empieza en un corte, el recorrido empieza en el metro 16, y los cuatro puntos de interés que
+estaban en ese arranque (con ubicación aproximada) se corrieron 16 m hacia adelante, en el mismo orden y del mismo
+lado.
+
+**Una mancha al abrir no siempre es del sitio.** Al abrir el Tramo 1, la primera vista salió con una mancha que tapa
+la mitad izquierda en 3 de 4 aperturas de prueba, y se fue al avanzar 3 o 4 m. Sale en el punto donde arranca la
+cámara, sea el metro 0 o el 16, y ese mismo punto se ve limpio cuando se llega caminando o se vuelve a él: es de la
+carga, no de la escena. Antes de medir el arranque de un tramo hay que caminar unos metros y volver.
 
 **La limpieza de la Cumbre daña los tramos.** Los filtros de burbujas de cielo, flotantes alargados y manchas
 lejanas se afinaron en un claro nublado; en una ladera de bosque quitan terreno real. Medido en el Tramo 1 contra 8

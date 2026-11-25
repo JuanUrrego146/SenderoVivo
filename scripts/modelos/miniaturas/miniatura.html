@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miniatura</title>
+<style>
+  /* Fondo transparente en toda la cadena: la captura conserva el canal alfa. */
+  html, body { margin: 0; width: 100%; height: 100%; background: transparent; overflow: hidden; }
+  model-viewer { display: block; width: 100%; height: 100%; background: transparent; --poster-color: transparent; }
+</style>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+</head>
+<body>
+<script>
+// Uso: miniatura.html?modelo=assets/models/v2/copeton.glb[&orbita=60deg%2072deg%20auto]
+// Mismos ajustes que la ficha 3D de la app (environment-image neutral, exposure 1.6).
+// Sin sombra, sin aviso de interaccion, sin giro ni animacion: sale la pose de reposo.
+const ruta = new URLSearchParams(location.search).get('modelo');
+const mv = document.createElement('model-viewer');
+mv.setAttribute('src', '/' + ruta);
+mv.setAttribute('environment-image', 'neutral');
+mv.setAttribute('exposure', '1.6');
+mv.setAttribute('shadow-intensity', '0');
+mv.setAttribute('interaction-prompt', 'none');
+mv.setAttribute('camera-orbit', new URLSearchParams(location.search).get('orbita') || '30deg 72deg auto');
+mv.setAttribute('reveal', 'auto');
+mv.addEventListener('load', () => {
+  // Dos cuadros para que el encuadre automatico y el primer render queden asentados.
+  requestAnimationFrame(() => requestAnimationFrame(() => { document.title = 'listo'; }));
+});
+mv.addEventListener('error', (e) => { document.title = 'error'; console.error('modelo', ruta, e.detail); });
+document.body.appendChild(mv);
+</script>
+</body>
+</html>

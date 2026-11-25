@@ -262,8 +262,13 @@ export class PoiCardView {
         }
 
         try {
+            // RF-029: el clip de reposo viene del catálogo. Un texto entre
+            // corchetes es un pendiente anotado, no el nombre de un clip.
+            const clip = typeof poi?.idleAnimation === 'string' ? poi.idleAnimation.trim() : '';
             this.modelViewer = new ModelView(container);
-            await this.modelViewer.load(modelUrl);
+            await this.modelViewer.load(modelUrl, {
+                animacion: clip && !clip.startsWith('[') ? clip : ''
+            });
             if (loading) loading.remove();
         } catch (error) {
             console.warn('Modelo 3D no disponible, mostrando estado alternativo:', error);

@@ -81,7 +81,11 @@ async function montarConexiones() {
         let mostrar = null;
         if (largo > 0 && explorando) {
             const d = tour.state.distance;
-            const extremo = d >= largo - CERCA_M ? 'fin' : (d <= CERCA_M ? 'inicio' : null);
+            // Extremos del recorrido útil: si el trazado empieza o termina en un trecho quitado
+            // (campo `cuts`), el visitante no llega hasta 0 ni hasta el largo completo.
+            const inicio = tour.pathStart ?? 0;
+            const fin = tour.pathEnd ?? largo;
+            const extremo = d >= fin - CERCA_M ? 'fin' : (d <= inicio + CERCA_M ? 'inicio' : null);
             if (extremo !== extremoDeLlegada) extremoDeLlegada = null;
             const conexion = extremo && !extremoDeLlegada && conexiones.find(c => c.en === extremo);
             const destino = conexion && destinoDe(conexion);

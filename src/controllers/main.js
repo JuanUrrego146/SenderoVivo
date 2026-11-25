@@ -281,31 +281,6 @@ async function localFileExists(url) {
     }
 }
 
-/**
- * Carga un GLB anclado a coordenadas de MUNDO (modulo de Alejandra, portado).
- * Va colgado del ROOT, no del splat: no hereda la nivelacion de la escena,
- * asi el mismo punto fisico coincide en ambas tecnicas (contrato de
- * coordenadas del registro, docs/03 par. 8 y CONTEXTO-EQUIPO par. 8bis).
- */
-async function loadWorldModel(app, { url, position = new Vec3(0, 0, 0), rotation = new Vec3(0, 0, 0), scale = 1 } = {}) {
-    const modelAsset = new Asset('world-model', 'container', { url });
-    app.assets.add(modelAsset);
-    await new Promise((resolve, reject) => {
-        modelAsset.ready(resolve);
-        modelAsset.on('error', reject);
-        app.assets.load(modelAsset);
-    });
-    if (!modelAsset.loaded || !modelAsset.resource) {
-        throw new Error(`No se pudo cargar el modelo 3D: ${url}`);
-    }
-    const model = modelAsset.resource.instantiateRenderEntity();
-    model.setPosition(position.x, position.y, position.z);
-    model.setEulerAngles(rotation.x, rotation.y, rotation.z);
-    model.setLocalScale(scale, scale, scale);
-    app.root.addChild(model);
-    return { entity: model, asset: modelAsset };
-}
-
 async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
     let poiDiagnosticsVisible = false;
     const qualityProfile = detectFromDevice();
@@ -454,21 +429,8 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
         console.warn('No se pudo leer el contrato de ambientacion:', error);
     }
     // ===== Integracion de Alejandra (dev/alejandra-chambueta): =====
-    // modelo 3D anclado al mundo + sistema de POIs con ficha (src/poi/).
-    try {
-        const worldModel = await loadWorldModel(app, {
-            url: 'assets/models/golondrina-plomiza.glb',
-            // Ubicacion PROVISIONAL (origen del mundo): la definitiva la
-            // decide Alejandra; solo hay que cambiar estas coordenadas.
-            position: new Vec3(0, 0, 0),
-            rotation: new Vec3(0, 0, 0),
-            scale: 1
-        });
-        window.senderoWorldModel = worldModel.entity;
-        window.senderoWorldModelAsset = worldModel.asset;
-    } catch (error) {
-        console.warn('Modelo 3D no cargado:', error);
-    }
+    // sistema de POIs con ficha. Los modelos 3D se ven solo en el visor de la
+    // ficha (RF-009): en la escena no se carga ninguno.
     if (window.senderoTour) {
         const poiManager = new PoiManager(app, camera, window.senderoTour);
         const poiCard = new PoiCardView(app, ambience);
@@ -561,6 +523,9 @@ async function loadTrail(trackUrl = TRACK_CONFIG_URL) {
         // Paradas de la navegación por puntos (opcional): distancias sobre el trazado donde la
         // escena se midió más nítida. Sin ellas TourEngine las reparte de forma pareja.
         path.stops = Array.isArray(cfg.stops) ? cfg.stops : null;
+        // Cortes (opcional): trechos [desde, hasta] que no se recorren porque se midieron
+        // borrosos frente a las fotos reales. TourEngine los salta con un fundido.
+        path.cuts = Array.isArray(cfg.cuts) ? cfg.cuts : null;
         // Mismo cfg ya leido y parseado: un solo fetch de track.json, dos modelos.
         const gpsTrack = new GpsTrack(cfg);
         return { trail: path, gpsTrack };
@@ -662,6 +627,15 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
     // dibujada, y ahí se detiene. Varios toques seguidos encadenan paradas.
     app.on('trail:request-walk', ({ direction }) => {
         tour.step(direction > 0 ? 1 : -1);
+    });
+    // Cortes del trazado: mientras el motor pasa al otro lado de un trecho quitado, un velo
+    // del color del fondo cubre la escena (no la interfaz) y se retira al llegar.
+    const velo = document.createElement('div');
+    velo.className = 'corte-recorrido';
+    document.body.appendChild(velo);
+    app.on('tour:cut', ({ fase, duracion }) => {
+        velo.style.transitionDuration = duracion + 's';
+        velo.classList.toggle('corte-recorrido--activo', fase === 'salida');
     });
     showHint(
         'Toca la <strong>flecha del camino</strong> para ir al siguiente punto · también <strong>W A S D</strong><br>' +

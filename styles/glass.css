@@ -206,6 +206,86 @@
     filter: drop-shadow(0 0 10px var(--sv-primary-glow));
 }
 
+/* Miniaturas de los puntos: el propio modelo 3D (previewUrl en config/pois.json) en lugar
+   del icono. Son WebP de 256 px con fondo transparente y aire alrededor, de modo que
+   object-fit: contain los deja enteros, centrados y sin deformar a cualquier tamaño. */
+.poi-gem-miniatura,
+.medallon-miniatura,
+.album-card-miniatura {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.poi-gem-miniatura {
+    padding: 2px;
+    transition: transform 0.25s ease;
+}
+
+.poi-beacon:hover .poi-gem-miniatura {
+    transform: scale(1.1);
+}
+
+.medallon-miniatura {
+    padding: 2px;
+}
+
+.album-card-miniatura {
+    padding: 6px;
+}
+
+/* Visor 3D de la hoja de un punto: ocupa el ancho de la hoja y tiene el mismo fondo claro
+   de la ficha 3D. La miniatura (previewUrl) se ve desde el primer cuadro; model-viewer la
+   toma como poster mientras baja el modelo. */
+.poi-hoja-3d {
+    position: relative;
+    width: 100%;
+    height: 240px;
+    margin: 4px 0 18px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--sv-surface-inset-solid);
+}
+
+@media (min-width: 640px) {
+    .poi-hoja-3d {
+        height: 300px;
+    }
+}
+
+.poi-hoja-3d model-viewer {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+
+.poi-hoja-3d-miniatura {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+}
+
+.poi-hoja-3d-aviso {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    padding: 0 16px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sv-text-muted);
+}
+
 /* 4. Etiqueta Holográfica Flotante (Specimen Preview) en Beige */
 .poi-hologram-card {
     position: absolute;
@@ -974,6 +1054,23 @@
     .parada-fuera[data-lado="derecha"] {
         right: 10px;
     }
+}
+
+/* Velo del paso al otro lado de un corte del trazado (src/controllers/main.js, evento tour:cut):
+   cubre la escena un instante mientras el visitante aparece después del trecho quitado. Va por
+   debajo de la interfaz, que sigue visible. */
+.corte-recorrido {
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    background: var(--sv-velo-corte);
+    transition: opacity 0.28s ease;
+}
+
+.corte-recorrido--activo {
+    opacity: 1;
 }
 
 /* Joystick para caminar desde el celular (src/views/JoystickView.js) */

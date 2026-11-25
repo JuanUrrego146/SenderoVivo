@@ -178,7 +178,6 @@ Nombres en **inglés**, según la convención del proyecto.
 | `AudioController` | **[existe]** | `src/controllers/AudioController.js`; gestiona el lecho, las fuentes HRTF declaradas en `soundscape.json` y el límite de `QualityProfile` |
 | `QualityProfile`, `LodController` | [previsto] | `src/engine/` — Alejandra |
 | `HudView` | [previsto] | `src/ui/` — Juan pinta, Eybar/Alberto diseñan. El prototipo tiene un HUD provisional dentro del hint |
-| `WorldModel` | **[huérfano]** | `src/WorldModel.js`, nadie lo importa; `main.js:249` usa su propia `loadWorldModel()`. Se elimina en SW-02 (#77) |
 
 ```mermaid
 classDiagram
@@ -420,7 +419,6 @@ No existe `poi:selected`. El par real, ya en producción, es `poi:open` / `poi:c
 
 **Deuda conocida (26/08/2026):**
 
-- **`src/WorldModel.js` está huérfano y mal nombrado.** Nadie lo importa; `main.js:249` define su propia `loadWorldModel()` local. Pese al nombre, no es Modelo: crea `Entity` y la mete en la escena. Se elimina en SW-02 (#77).
 - **`src/ui/shell.js` habla por globales `window.sendero*` en vez de por eventos.** Se carga como script clásico (`index.html:433`, sin `type="module"`) y llama métodos de Controlador directamente (`window.senderoAmbience.toggle()`, `window.senderoPoiManager`, entre otros). Se resuelve en SW-04 (#81).
 - **`TrailMarkers` mezcla Vista y Controlador.** Crea las flechas (Vista) y además hace picking y mueve al visitante (Controlador). Se resuelve entre SW-03 (#79, flechas) y SW-04 (#81, picking y avance).
 - **`PoiManager` mezcla Vista y Controlador.** Decide qué POI se abre (Controlador) y crea las entidades de los marcadores (Vista). Se resuelve entre SW-04 (#81, decisión) y SW-03 (#79, marcadores).
@@ -666,6 +664,7 @@ Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el produ
       "anchor": { "x": 0, "y": 0, "z": 0 },
       "distanceMeters": 0,
       "modelUrl": "assets/models/colibri-chillon.glb",
+      "previewUrl": "assets/models/v2/miniaturas/colibri-chillon.webp",
       "idleAnimation": "idle-flap",
       "narrationUrl": "assets/audio/colibri-narracion.mp3",
       "transcriptUrl": "assets/text/colibri-transcripcion.txt",
@@ -704,7 +703,8 @@ Los cuatro archivos que gobiernan el contenido. **Cambiarlos es cambiar el produ
 ```
 
 > Cada escena muestra solo los POI cuyo `sceneId` es el suyo o que la nombran en `placements`, y las versiones de una zona no los comparten aunque compartan trazado: las cuatro de la Cumbre (Luma, Polycam, Mixta y Propia) usan `config/track-sendero-01.json`, y aun así cada una muestra los suyos. Un POI trae su ubicación principal (`sceneId`, `trailAnchor`, `anchor`) y, si está también en otra escena, un arreglo opcional `placements: [{ sceneId, trailAnchor, anchor }]` con su ubicación en ella. `SceneCatalog.filterPois()` compara la escena exacta que abre el visor (`SceneCatalog.activeSceneId()`, que sigue el mismo orden de `resolveSceneUrl()` en `main.js`), recorre la principal y luego las de `placements` y usa la primera cuyo `sceneId` es el abierto; devuelve el mismo POI si fue la principal o una copia con esa ubicación si fue una de `placements`, de modo que `PoiManager`, `TourEngine`, `DataController` y `shell.js` reciben el POI ya ubicado y no cambian. Los puntos están solo en la Cumbre propia (`sendero-01-propia`, 13 puntos) y en el Tramo 1 propio (`sendero-01-t1-propia`, 14); las demás versiones, entre ellas el Tramo 2, no muestran ninguno. `trackUrlOf()` y `activeTrackUrl()` siguen sirviendo al audio, cuyas fuentes con `sceneId` suenan solo en las escenas que usan el mismo trazado. Solo la Cumbre propia y el Tramo 1 propio declaran `zona` y `version` en `config/scenes.json`; con esos dos campos `src/ui/selectorSendero.js` arma arriba a la derecha el selector de zona (Cumbre y Tramo 1) y, solo cuando una zona tiene más de una versión, el de versión de la reconstrucción. Como cada zona tiene una sola, el selector ofrece las dos zonas y ningún grupo de versiones, y sumar una versión no toca código. Las demás versiones (Luma, Polycam y Mixta de la Cumbre, y Luma del Tramo 1), el Tramo 2 (`sendero-02` y `sendero-02-propia`), nuestras reconstrucciones COLMAP (?render=sendero-nuestra y ?render=sendero-t1-nuestra) y el parque de prueba quedan sin zona, fuera del selector y del paso entre zonas, y siguen abriéndose por `?render=`. La app abre la Cumbre propia porque `index.html` agrega `?render=sendero-propia` cuando la dirección no trae `?render=`, `?sog=` ni `?editor`. Mixta: Polycam hasta 4,5 m del camino y Luma desde 7,5 m, con Polycam afinada contra Luma. `trailAnchor` se mide sobre el trazado de la escena: `d` es la distancia recorrida, `lat` el desplazamiento lateral, positivo a la derecha del avance, y `alt` la altura sobre el punto del trazado. `anchor` es la posición del medallón en coordenadas de esa escena, la que calcula el visor, y de ahí sale el canto espacial de las aves. El `anchorNote` de cada POI dice si su ubicación está medida sobre la reconstrucción, es aproximada, es de demostración o es al azar. Una escena del sendero real declara además `clearColorToken: --sv-escena-cielo-nublado`, para que los huecos del dosel se vean como el cielo nublado de la grabación y no como el beige de la interfaz.
-> `type` admite `"fauna"`, `"flora"` y `"patrimonio"`. Todo POI necesita `id`, `commonName`, `sceneId`, `anchor` y `trailAnchor` con números; fauna añade `scientificName`, `modelUrl`, `altitudeRange`, `fieldIdTips` y `sightingTips`; flora añade `scientificName`; patrimonio añade `historicalNote`, `period` y `sourceUrl`. Si `historicalNote` afirma un dato, `sourceUrl` no puede quedar vacío. El catálogo comprueba además que `modelUrl`, `narrationUrl` y `birdCallUrl` apunten a archivos existentes y muestra el POI y campo problemáticos en pantalla.
+> `type` admite `"fauna"`, `"flora"` y `"patrimonio"`. Todo POI necesita `id`, `commonName`, `sceneId`, `anchor` y `trailAnchor` con números; fauna añade `scientificName`, `modelUrl`, `altitudeRange`, `fieldIdTips` y `sightingTips`; flora añade `scientificName`; patrimonio añade `historicalNote`, `period` y `sourceUrl`. Si `historicalNote` afirma un dato, `sourceUrl` no puede quedar vacío. El catálogo comprueba además que `modelUrl`, `previewUrl`, `narrationUrl` y `birdCallUrl` apunten a archivos existentes y muestra el POI y campo problemáticos en pantalla.
+> `previewUrl` es opcional y apunta a la miniatura del modelo 3D del punto, un WebP de 256 por 256 px con fondo transparente que se genera con `scripts/modelos/miniaturas/generar.sh` y vive en `assets/models/v2/miniaturas/`, con el mismo nombre del `.glb`. Con ella, la escena, la Bitácora, la pestaña Especies y el álbum muestran el propio modelo del punto dentro del medallón; sin ella muestran el icono de la categoría.
 
 ### `soundscape.json`
 
@@ -791,25 +791,59 @@ Forma real vigente (el prototipo ya lo consume):
 > **`startDistance`** (opcional, en metros desde el primer punto) es dónde arranca el recorrido;
 > sin él arranca en el primer punto. La Cumbre (`config/track-sendero-01.json`) arranca en su centro,
 > d = 15 m, y desde ahí se camina hacia la entrada o hacia la plataforma.
-> **`stops`** (opcional) son las PARADAS de la navegación por puntos, en metros desde el primer punto.
-> `TourEngine` mueve al visitante por el trazado pero solo lo deja quieto en ellas. Un toque en la flecha
-> del camino (`TrailArrowsView`, evento `trail:request-walk`) llama a `TourEngine.step` y lo lleva a la
-> parada siguiente con arranque y frenado suaves; varios toques seguidos encadenan paradas sin detenerse.
-> Con el avance sostenido (teclas, joystick, dos dedos) camina de corrido y al soltar sigue hasta la primera
-> parada en la que alcanza a frenar. Mientras camina, la vista acompaña las curvas del camino, y en el viaje
-> pedido con un toque se endereza hacia el sentido de marcha y vuelve al centro del corredor. La
-> desaceleración cerca de un POI (SW-17) se aplica al avance sostenido, no al viaje de parada a parada, que
-> ya frena al llegar. Las paradas se eligen midiendo (`scripts/escenas/nube/paradas_recorrido.py` dibuja la
-> escena cada 0,5 m del trazado y mide su nitidez); sin `stops` el motor las reparte cada 3,2 unidades. El
-> punto de arranque siempre es parada. La flecha se dibuja en la parada siguiente y, si queda fuera de la
-> vista (el camino dobla o se devuelve, como en el mirador), aparece en el borde de la pantalla el botón
-> «Siguiente punto», que pide el mismo paso.
+> **`stops`** (opcional) son las PARADAS del trazado, en metros desde el primer punto: los puntos donde la
+> escena se ve mejor. Se eligen midiendo: en la Cumbre con `scripts/escenas/nube/paradas_recorrido.py`
+> (dibuja la escena cada 0,5 m del trazado y mide su nitidez) y en los tramos con `paradas_app.py`, sobre
+> capturas de la app real; sin `stops` el motor las reparte cada 3,2 unidades, y el punto de arranque
+> siempre es parada. Sirven a la ayuda opcional de las flechas: un toque en la flecha del camino
+> (`TrailArrowsView`, evento `trail:request-walk`) o en el botón «Siguiente punto», que aparece en el borde
+> de la pantalla cuando la flecha queda fuera de la vista, llama a `TourEngine.step` y camina hasta la
+> parada siguiente con arranque y frenada suaves, sin girar la vista ni mover el lateral. Varios toques
+> encadenan paradas, en un viaje largo la marcha sube hasta vez y media mientras falten más de 6 unidades, y
+> cualquier tecla o el joystick cancelan ese viaje.
+> **`cuts`** (opcional) son los CORTES del trazado: pares `[desde, hasta]`, en metros desde el primer punto,
+> de los trechos que no se recorren porque la reconstrucción se ve mal ahí. `TourEngine` nunca deja al
+> visitante caminando ni detenido dentro de uno: los dos bordes de cada corte son parada, las paradas que
+> caen dentro se descartan, y cuando la marcha (libre o la de una flecha) entra en un corte el motor pasa al
+> borde de enfrente con un fundido corto (`cutFade`, 0,28 s de salida y 0,28 s de llegada). Durante el paso
+> no se lee la entrada y la cámara queda quieta; al llegar conserva el lateral, recortado al corredor de
+> allá, y la vista gira lo mismo que giró el rumbo suave del camino entre los dos bordes, así quien miraba
+> hacia un lado sigue mirando hacia el mismo lado. El motor avisa con el evento `tour:cut` (`fase: 'salida'`
+> y luego `fase: 'llegada'`) y `main.js` cubre la escena con el velo `.corte-recorrido` (color
+> `--sv-velo-corte`, por debajo de la interfaz) mientras dura. La flecha del camino no se dibuja al otro
+> lado de un corte: en el borde aparece el botón «Siguiente punto». La distancia que publica el motor sigue
+> siendo la del trazado completo, así que las métricas del HUD no cambian de escala. Si el trazado empieza o
+> termina en un corte, el recorrido empieza o termina en el borde de ese corte (`TourEngine.pathStart` y
+> `pathEnd`, que es lo que lee `src/ui/conexionesSendero.js` para ofrecer el paso a la zona siguiente). Los
+> cortes se deciden mirando la app, no un dibujo aparte: `scripts/escenas/nube/barrido_app.mjs` camina el
+> trazado en la app real y guarda una captura por metro, `barrido_hoja.py` las mide y arma las hojas para
+> revisar, y `paradas_app.py` propone los cortes y reparte las paradas fuera de ellos (la regla y las cifras
+> están en `docs/05-produccion-de-escenas.md`, §12.4.3).
 >
-> En celular (menos de 640 px) se camina además con un joystick en pantalla, `src/views/JoystickView.js`:
-> la Vista solo publica `trail:joystick` con `{ forward, strafe }` de -1 a 1 y `main.js` lo pasa a
-> `TourEngine.setStick`. El joystick, el teclado (W A S D y flechas) y el gesto de dos dedos son relativos a la vista: `TourEngine._haciaLaVista` avanza a velocidad completa por el trazado en el sentido hacia el que se mira (de regreso si se mira hacia atrás; solo cerca de la perpendicular baja de forma continua a 0) y lleva la parte de lado de la mirada al paso lateral. `press` y `release` (avance sostenido relativo al trazado) mandan sobre las demás entradas; el corredor y `forwardOnly` se aplican igual a todos. El motor
-> cuenta solo los dedos que tocan la escena (`targetTouches`) y gira la vista solo con el puntero que
-> se apoyó en ella, para que el pulgar del joystick no mire ni cuente como segundo dedo.
+> El movimiento es libre, como en un juego en primera persona: W camina hacia donde se mira, S hacia atrás,
+> A y D de lado, y en diagonal se combinan. El espacio para caminar es el corredor medido del trazado
+> (`corridorLeft` y `corridorRight`, RF-004): dentro de él se camina libre y contra su borde se resbala,
+> porque el motor anula la parte de la velocidad que empuja hacia afuera. Del lado de adentro de una curva
+> cerrada el lateral tampoco pasa del 80 % del radio de giro, para que la posición no se doble sobre sí
+> misma (la punta del mirador y el cruce de la Cumbre). La vista solo la mueve el visitante, arrastrando el
+> ratón o un dedo: el motor nunca la gira ni la endereza, y `yawLimit` se mide contra el rumbo suave del
+> camino. La posición se guarda como distancia sobre el trazado más un lateral, y la cámara va a la altura
+> de los ojos sobre una curva suave que pasa por los puntos del trazado (`TrailModel.smoothPositionAt`, una
+> Catmull-Rom centrípeta muestreada cada 0,05 m, con `headingAt` y `turnRadiusAt`), así que no da saltitos
+> en los vértices. `positionAt` y `directionAt` no cambian y siguen ubicando los POI, las flechas y el
+> audio. La marcha es de 1,4 m/s (el doble con Mayús), arranca a 3 m/s² y frena a 6 m/s²; en las escaleras
+> ese cambio se limita para que la cámara no acelere más de 1,2 m/s² en vertical, y la marcha baja lo justo
+> para que al soltar se detenga en menos de 0,3 m. Al pasar junto a un POI la marcha baja de forma continua
+> hasta el 60 % (SW-17) y vuelve a subir sin tirones. `forwardOnly` se sigue respetando en las escenas que
+> lo declaran (las de Luma); los tramos propios no lo llevan.
+>
+> En celular (menos de 640 px) se camina además con un joystick en pantalla, `src/views/JoystickView.js`: la
+> Vista solo publica `trail:joystick` con `{ forward, strafe }` de -1 a 1 y `main.js` lo pasa a
+> `TourEngine.setStick`. El joystick hace lo mismo que W A S D (el eje y adelante y atrás, el eje x de
+> lado), dos dedos avanzan hacia donde se mira y los botones en pantalla (`press` y `release`) también; el
+> motor suma las tres entradas en el marco de la vista. El motor cuenta solo los dedos que tocan la escena
+> (`targetTouches`) y gira la vista solo con el puntero que se apoyó en ella, para que el pulgar del
+> joystick no mire ni cuente como segundo dedo.
 > `src/ui/acomodoMovil.js` mide lo que ocupa la barra de navegación móvil y lo publica en
 > `--sv-tope-nav-movil`; la tarjeta "Detalles del sendero" va 8 px encima y el joystick 12 px encima de ella.
 >
@@ -927,8 +961,9 @@ SenderoVivo/
     │                           los .sog y .ply sueltos siguen ignorados
     ├── models/                 marcador-provisional.glb · golondrina-plomiza.glb (convertido
     │                           19/08 con scripts/modelos/) · golondrina-plomiza-fuente/ ·
-    │                           diez modelos de señalización y mobiliario de Alberto, que
-    │                           se ven en el visor 3D de la ficha (ver LEEME.md)
+    │                           diez modelos de señalización y mobiliario de Alberto ·
+    │                           512/ (copias con texturas a 512) · v2/ (diez aves con plumas
+    │                           y trece objetos mejorados: lo que carga la ficha, ver LEEME.md)
     ├── audio/
     └── text/
 ```

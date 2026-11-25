@@ -133,19 +133,6 @@
         15,
         35
       ]
-    },
-    {
-      "id": "canto-colibri-nuca-blanca",
-      "label": "Colibrí nuca blanca",
-      "poiId": "poi-colibri-nuca-blanca",
-      "url": "assets/audio/espacial/colibri-nuca-blanca.mp3",
-      "refDistance": 3,
-      "maxDistance": 30,
-      "rolloffFactor": 1.2,
-      "intervalSeconds": [
-        8,
-        20
-      ]
     }
   ]
 }

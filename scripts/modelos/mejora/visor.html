@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visor de modelos</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #E4C7A8; font: 13px/1.3 system-ui, sans-serif; color: #222; }
+  #rejilla { display: grid; gap: 6px; padding: 6px; box-sizing: border-box; height: 100%; }
+  .celda { position: relative; background: #E4C7A8; border-radius: 10px; overflow: hidden; min-height: 0; }
+  model-viewer { width: 100%; height: 100%; display: block; background: #E4C7A8; --poster-color: transparent; }
+  .rotulo { position: absolute; left: 8px; top: 6px; background: rgba(255,255,255,.75); padding: 1px 6px; border-radius: 6px; z-index: 2; }
+</style>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+</head>
+<body>
+<div id="rejilla"></div>
+<script>
+// Uso: ?m=salida/copeton.glb[,otro.glb]&orbit=35deg 78deg auto[|otra orbita]&cols=2&t=0.4&fov=28deg&auto=1
+const q = new URLSearchParams(location.search);
+const modelos = (q.get('m') || '').split(',').filter(Boolean);
+const orbitas = (q.get('orbit') || '35deg 78deg auto').split('|');
+const cols = parseInt(q.get('cols') || '0', 10);
+const tiempo = q.get('t');
+const rejilla = document.getElementById('rejilla');
+const celdas = [];
+for (const m of modelos) for (const o of orbitas) celdas.push([m, o]);
+rejilla.style.gridTemplateColumns = `repeat(${cols || Math.min(celdas.length, 4)}, 1fr)`;
+window.listos = 0;
+for (const [m, o] of celdas) {
+  const c = document.createElement('div'); c.className = 'celda';
+  const mv = document.createElement('model-viewer');
+  mv.setAttribute('src', '../' + m + (q.get('v') ? '?v=' + q.get('v') : ''));
+  mv.setAttribute('environment-image', 'neutral');
+  mv.setAttribute('tone-mapping', 'neutral');
+  mv.setAttribute('camera-controls', '');
+  mv.setAttribute('interaction-prompt', 'none');
+  mv.setAttribute('shadow-intensity', '1');
+  mv.setAttribute('exposure', q.get('exp') || '1.6');
+  mv.setAttribute('camera-orbit', o);
+  if (q.get('fov')) mv.setAttribute('field-of-view', q.get('fov'));
+  if (q.get('target')) mv.setAttribute('camera-target', q.get('target'));
+  if (q.get('auto')) mv.setAttribute('auto-rotate', '');
+  if (q.get('play')) mv.setAttribute('autoplay', '');
+  mv.addEventListener('load', async () => {
+    if (tiempo !== null && mv.availableAnimations.length) {
+      mv.animationName = mv.availableAnimations[0];
+      await mv.updateComplete;
+      mv.pause();
+      const dur = mv.duration || 6;
+      mv.currentTime = parseFloat(tiempo) * dur;
+      await mv.updateComplete;
+      if (q.get('dbg')) { const d = document.createElement('div'); d.className = 'rotulo'; d.style.top = '30px';
+        d.textContent = 't=' + mv.currentTime.toFixed(2) + ' dur=' + mv.duration + ' paused=' + mv.paused; c.appendChild(d); }
+    }
+    window.listos += 1;
+    document.title = 'listos ' + window.listos + '/' + celdas.length;
+  });
+  mv.addEventListener('error', (e) => { document.title = 'error ' + m; console.error('modelo', m, e.detail); });
+  const r = document.createElement('div'); r.className = 'rotulo'; r.textContent = m.split('/').pop().replace('.glb', '') + ' · ' + o;
+  if (!q.get('sinrotulo')) c.appendChild(r);
+  c.appendChild(mv); rejilla.appendChild(c);
+}
+</script>
+</body>
+</html>
