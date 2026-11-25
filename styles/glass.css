@@ -2876,7 +2876,9 @@
 #preparar-visita-modal {
     position: fixed !important;
     inset: 0 !important;
-    z-index: var(--sv-z-modal, 50) !important;
+    /* Se abre desde la portada (#trail-lobby, z-index 10000): tiene que quedar encima,
+       igual que el álbum de biodiversidad. */
+    z-index: 10005 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
