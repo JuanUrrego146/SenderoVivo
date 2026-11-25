@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "note": "Catálogo ÚNICO de puntos de interés. Unifica el catálogo de presentación que estaba escrito a mano en src/ui/shell.js (Eybar Viasus) con el contrato funcional de este archivo (Alejandra Chambueta). Añadir un POI no toca código (RF-021, RNF-009, invariante 3). Campos de presentación: category, icon, colorToken, typeLabel, shortDesc, fullDesc, conservation, curiosity, audioFreq. Campos funcionales: type, sceneId, anchor, trailAnchor, modelUrl, idleAnimation, narrationUrl, transcriptUrl, birdCallUrl. Los colores se declaran como TOKEN de styles/tokens.css, nunca como literal (invariante 14).",
+  "note": "Catálogo ÚNICO de puntos de interés. Unifica el catálogo de presentación que estaba escrito a mano en src/ui/shell.js (Eybar Viasus) con el contrato funcional de este archivo (Alejandra Chambueta). Añadir un POI no toca código (RF-021, RNF-009, invariante 3). Campos de presentación: category, icon, colorToken, typeLabel, shortDesc, fullDesc, conservation, curiosity, audioFreq. Campos funcionales: type, sceneId, anchor, trailAnchor, modelUrl, idleAnimation, narrationUrl, transcriptUrl, birdCallUrl. Los colores se declaran como TOKEN de styles/tokens.css, nunca como literal (invariante 14). Los pendientes del equipo se anotan entre corchetes ([por completar], [por verificar: …]) y la interfaz nunca los muestra; las notas internas sobre el contenido van en contentNote, que tampoco se muestra.",
   "anchorNote": "trailAnchor sitúa el punto sobre el trazado de su escena (sceneId): d = distancia recorrida, lat = desplazamiento lateral, positivo a la derecha del avance, y alt = altura sobre el punto del trazado. Cada escena muestra solo los POI cuyo sceneId es el suyo o que la nombran en placements: [{sceneId, trailAnchor, anchor}]; las versiones de una zona no los comparten aunque compartan trazado. Por decisión de Juan del 18/11/2026 los puntos van solo en las versiones propias de la Cumbre (sendero-01-propia) y del Tramo 1 (sendero-01-t1-propia); el Tramo 2 queda por ahora sin puntos. anchor {x,y,z} es la posición del medallón en coordenadas de mundo de esa escena, la que calcula el visor; de ahí sale también el canto espacial de las aves. La nota anchorNote de cada POI dice si su ubicación está medida sobre la reconstrucción, es aproximada o es al azar.",
   "pois": [
     {
@@ -33,13 +33,14 @@
       "icon": "fa-dove",
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna · Verificado en el sendero",
-      "shortDesc": "El ave insignia del proyecto. POI confirmado del catálogo.",
+      "shortDesc": "El ave insignia del proyecto.",
       "fullDesc": "Colibrí de verde iridiscente con parche azul violeta en la garganta. Vive entre 1.700 y 3.500 msnm, el único rango de altitud ya verificado del catálogo. Registrado en el propio sendero: eBird lo reporta en el punto Club La Aguadora / Sendero Santa Ana. Canto grabado por Henrry en El Carmen, Trujillo (Venezuela) y publicado en iNaturalist (observación 413336398) con licencia CC BY 4.0.",
       "conservation": "Verificado",
       "curiosity": "Su nombre viene del canto insistente y chillón que emite desde perchas altas, sobre todo al amanecer.",
       "audioFreq": 880,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
-      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
+      "contentNote": "Retirado de shortDesc: «POI confirmado del catálogo.»"
     },
     {
       "id": "poi-helecho-arborescente",
@@ -68,13 +69,14 @@
       "sightingTips": "[por completar tras V1]",
       "icon": "fa-seedling",
       "colorToken": "--sv-green-300",
-      "typeLabel": "Flora · POI confirmado",
-      "shortDesc": "POI confirmado. La especie exacta se confirma con la planta delante.",
-      "fullDesc": "El Acueducto documenta helechos entre la vegetación nativa de este sendero, pero cita el grupo y no la especie. En los Cerros suele corresponder al género Cyathea, y la regla del proyecto es no publicar el binomio hasta verlo en campo.",
+      "typeLabel": "Flora · Confirmado en el sendero",
+      "shortDesc": "Helecho de la vegetación nativa que el Acueducto documenta en este sendero.",
+      "fullDesc": "El Acueducto documenta helechos entre la vegetación nativa de este sendero, pero cita el grupo y no la especie. En los Cerros suele corresponder al género Cyathea.",
       "conservation": "[por verificar]",
-      "curiosity": "Señalar la especie exacta exige verla: ningún dato del proyecto se publica sin fuente citable o medición propia.",
+      "curiosity": "",
       "audioFreq": 600,
-      "anchorNote": "Ubicación reconstruida en La Cumbre en zona de sotobosque húmedo."
+      "anchorNote": "Ubicación reconstruida en La Cumbre en zona de sotobosque húmedo.",
+      "contentNote": "Retirado de fullDesc: «, y la regla del proyecto es no publicar el binomio hasta verlo en campo» Texto anterior de typeLabel: «Flora · POI confirmado» Texto anterior de shortDesc: «POI confirmado. La especie exacta se confirma con la planta delante.» Texto anterior de curiosity: «Señalar la especie exacta exige verla: ningún dato del proyecto se publica sin fuente citable o medición propia.»"
     },
     {
       "id": "poi-aliso",
@@ -141,12 +143,13 @@
       "colorToken": "--sv-water-400",
       "typeLabel": "Mamífero · Citado por el Acueducto",
       "shortDesc": "Uno de los mamíferos que el Acueducto documenta para este sendero.",
-      "fullDesc": "La ficha oficial del sendero cita cusumbos y coatíes entre la fauna que se observa. El binomio viene del catálogo regional de los Cerros Orientales y queda por confirmar aquí. Es candidato a POI solo si la visita encuentra rastro o lugar de paso dentro de los 200 m.",
-      "conservation": "Citado para este sendero · binomio por confirmar",
+      "fullDesc": "La ficha oficial del sendero cita cusumbos y coatíes entre la fauna que se observa.",
+      "conservation": "Citado para este sendero",
       "curiosity": "Anda en grupos y hurga entre la hojarasca con el hocico alargado; deja el suelo removido por donde pasa.",
       "audioFreq": 220,
       "anchorNote": "Ubicación de demostración en área de cobertura vegetal densa del Tramo 1. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84), del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m.",
-      "mediaNote": "[pendiente] El modelo cusumbo.glb todavía no está en el repositorio: modelUrl va vacío hasta que llegue, para que la ficha no ofrezca un modelo que no existe."
+      "mediaNote": "[pendiente] El modelo cusumbo.glb todavía no está en el repositorio: modelUrl va vacío hasta que llegue, para que la ficha no ofrezca un modelo que no existe.",
+      "contentNote": "Retirado de fullDesc: «El binomio viene del catálogo regional de los Cerros Orientales y queda por confirmar aquí. Es candidato a POI solo si la visita encuentra rastro o lugar de paso dentro de los 200 m.» Retirado de conservation: «· binomio por confirmar»"
     },
     {
       "id": "poi-puente-madera",
@@ -176,13 +179,14 @@
       "sourceUrl": "",
       "icon": "fa-landmark",
       "colorToken": "--sv-gray-200",
-      "typeLabel": "Patrimonio · POI confirmado",
+      "typeLabel": "Patrimonio · Confirmado en el sendero",
       "shortDesc": "No todo el contenido del sendero está vivo.",
-      "fullDesc": "Punto patrimonial candidato. Los elementos construidos concretos dentro de los 200 m se identifican en la visita de reconocimiento. La regla del patrimonio no cambia: sin fuente citable la ficha describe lo que se ve y marca la historia como pendiente.",
+      "fullDesc": "Puente de madera sobre el sendero.",
       "conservation": "[por verificar] la historia",
-      "curiosity": "Los Cerros Orientales guardan patrimonio de acueducto documentado: si aparece infraestructura análoga en la quebrada, hay dónde buscar fuente.",
+      "curiosity": "",
       "audioFreq": 330,
-      "anchorNote": "Ubicación del paso patrimonial sobre la quebrada en el Tramo 1. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84) más 16 m, porque los primeros 16 m del trazado se quitaron por borrosos (campo cuts) y el recorrido empieza ahí; del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m."
+      "anchorNote": "Ubicación del paso patrimonial sobre la quebrada en el Tramo 1. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84) más 16 m, porque los primeros 16 m del trazado se quitaron por borrosos (campo cuts) y el recorrido empieza ahí; del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m.",
+      "contentNote": "Texto anterior de typeLabel: «Patrimonio · POI confirmado» Texto anterior de fullDesc: «Punto patrimonial candidato. Los elementos construidos concretos dentro de los 200 m se identifican en la visita de reconocimiento. La regla del patrimonio no cambia: sin fuente citable la ficha describe lo que se ve y marca la historia como pendiente.» Texto anterior de curiosity: «Los Cerros Orientales guardan patrimonio de acueducto documentado: si aparece infraestructura análoga en la quebrada, hay dónde buscar fuente.»"
     },
     {
       "id": "poi-pino",
@@ -262,7 +266,7 @@
       "id": "poi-muro-antiguo",
       "type": "patrimonio",
       "category": "curiosidades",
-      "commonName": "[por identificar en V1]",
+      "commonName": "Muro patrimonial antiguo",
       "scientificName": "Punto patrimonial",
       "sceneId": "sendero-01-t1-propia",
       "anchor": {
@@ -286,14 +290,15 @@
       "sourceUrlNote": "Vacío a propósito. La pista «por el valle del Teusacá pasaban rutas de intercambio muiscas» no tiene fuente citable, así que no se publica (invariante 9, HU-48). Vuelve a historicalNote cuando tenga sourceUrl.",
       "icon": "fa-landmark",
       "colorToken": "--sv-gray-200",
-      "typeLabel": "Patrimonio · [por identificar en V1]",
-      "shortDesc": "Punto patrimonial pendiente de identificar en la primera visita.",
-      "fullDesc": "Punto patrimonial por identificar en la visita de reconocimiento. El sourceUrl es obligatorio antes de publicar cualquier dato histórico.",
+      "typeLabel": "Patrimonio",
+      "shortDesc": "Muro antiguo junto al sendero.",
+      "fullDesc": "Muro antiguo junto al sendero.",
       "conservation": "[por verificar]",
       "curiosity": "[por completar tras V1]",
       "audioFreq": 300,
       "anchorNote": "Ubicación de vestigios de contención de piedra en el Tramo 1. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84), del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m.",
-      "mediaNote": "[por definir] Declarado en scene-02, que todavía no existe. El modelo muro-antiguo.glb tampoco está en el repositorio."
+      "mediaNote": "[por definir] Declarado en scene-02, que todavía no existe. El modelo muro-antiguo.glb tampoco está en el repositorio.",
+      "contentNote": "Texto anterior de commonName: «[por identificar en V1]» Texto anterior de typeLabel: «Patrimonio · [por identificar en V1]» Texto anterior de shortDesc: «Punto patrimonial pendiente de identificar en la primera visita.» Texto anterior de fullDesc: «Punto patrimonial por identificar en la visita de reconocimiento. El sourceUrl es obligatorio antes de publicar cualquier dato histórico.»"
     },
     {
       "id": "poi-tablero-informativo",
@@ -325,11 +330,12 @@
       "colorToken": "--sv-gray-200",
       "typeLabel": "Señalización del sendero",
       "shortDesc": "Tablero de bienvenida del camino Santa Ana - La Aguadora, con el mapa del recorrido.",
-      "fullDesc": "Tablero de madera con techo y dos paneles. El de arriba se titula «SANTA ANA-LA AGUADORA» y dice: «Camino ubicado en la localidad de Usaquén. El nombre “Santa Ana” proviene de la hacienda Santa Ana que existió entre los siglos XVIII - XX y “La Aguadora” es un homenaje a las mujeres que transportaban el agua en vasijas proveniente de la quebrada Santa Bárbara.» Al pie trae seis normas ilustradas con íconos: [por verificar]. El panel de abajo es el «MAPA DEL RECORRIDO», con los circuitos del Camino Santa Ana y un perfil de altura; sus cifras no se leen a 1024 px: [por verificar].",
+      "fullDesc": "Tablero de madera con techo y dos paneles. El de arriba se titula «SANTA ANA-LA AGUADORA» y dice: «Camino ubicado en la localidad de Usaquén. El nombre “Santa Ana” proviene de la hacienda Santa Ana que existió entre los siglos XVIII - XX y “La Aguadora” es un homenaje a las mujeres que transportaban el agua en vasijas proveniente de la quebrada Santa Bárbara.» Al pie trae seis normas ilustradas con íconos. El panel de abajo es el «MAPA DEL RECORRIDO», con los circuitos del Camino Santa Ana y un perfil de altura.",
       "conservation": "Modelo 3D del equipo",
       "curiosity": "Según el propio tablero, «La Aguadora» recuerda a las mujeres que transportaban el agua en vasijas desde la quebrada Santa Bárbara.",
       "audioFreq": 330,
-      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026)."
+      "modelNote": "Modelo y texturas de Alberto Alemán (carpeta compartida del equipo, 20/10/2026).",
+      "contentNote": "Texto anterior de fullDesc: «Tablero de madera con techo y dos paneles. El de arriba se titula «SANTA ANA-LA AGUADORA» y dice: «Camino ubicado en la localidad de Usaquén. El nombre “Santa Ana” proviene de la hacienda Santa Ana que existió entre los siglos XVIII - XX y “La Aguadora” es un homenaje a las mujeres que transportaban el agua en vasijas proveniente de la quebrada Santa Bárbara.» Al pie trae seis normas ilustradas con íconos: [por verificar]. El panel de abajo es el «MAPA DEL RECORRIDO», con los circuitos del Camino Santa Ana y un perfil de altura; sus cifras no se leen a 1024 px: [por verificar].»"
     },
     {
       "id": "poi-letrero-indicaciones",
@@ -695,12 +701,13 @@
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna",
       "shortDesc": "Su canto suena desde este punto del recorrido.",
-      "fullDesc": "Canto grabado por Bob Lefebvre en Calgary, Alberta (Canadá) y publicado en iNaturalist (observación 393866214) con licencia CC0 1.0. La ficha de la especie está por completar.",
+      "fullDesc": "Canto grabado por Bob Lefebvre en Calgary, Alberta (Canadá) y publicado en iNaturalist (observación 393866214) con licencia CC0 1.0.",
       "conservation": "Por verificar",
       "curiosity": "",
       "audioFreq": 700,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
-      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
+      "contentNote": "Retirado de fullDesc: «La ficha de la especie está por completar.»"
     },
     {
       "id": "poi-copeton",
@@ -733,12 +740,13 @@
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna",
       "shortDesc": "Su canto suena desde este punto del recorrido.",
-      "fullDesc": "Canto grabado por Cristiane Colodel en Ipiranga, Paraná (Brasil) y publicado en iNaturalist (observación 412305713) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "fullDesc": "Canto grabado por Cristiane Colodel en Ipiranga, Paraná (Brasil) y publicado en iNaturalist (observación 412305713) con licencia CC BY 4.0.",
       "conservation": "Por verificar",
       "curiosity": "",
       "audioFreq": 700,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
-      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
+      "contentNote": "Retirado de fullDesc: «La ficha de la especie está por completar.»"
     },
     {
       "id": "poi-tucan-andino",
@@ -771,12 +779,13 @@
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna",
       "shortDesc": "Su canto suena desde este punto del recorrido.",
-      "fullDesc": "Canto grabado por Christoph Moning en Riosucio, Caldas (Colombia) y publicado en iNaturalist (observación 158154192) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "fullDesc": "Canto grabado por Christoph Moning en Riosucio, Caldas (Colombia) y publicado en iNaturalist (observación 158154192) con licencia CC BY 4.0.",
       "conservation": "Por verificar",
       "curiosity": "",
       "audioFreq": 700,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
-      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
+      "contentNote": "Retirado de fullDesc: «La ficha de la especie está por completar.»"
     },
     {
       "id": "poi-carpintero-candela",
@@ -808,12 +817,13 @@
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna",
       "shortDesc": "Su canto suena desde este punto del recorrido.",
-      "fullDesc": "Canto grabado por Andrés Ramírez-Barrera en Tibasosa, Boyacá (Colombia) y publicado en iNaturalist (observación 55966590) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "fullDesc": "Canto grabado por Andrés Ramírez-Barrera en Tibasosa, Boyacá (Colombia) y publicado en iNaturalist (observación 55966590) con licencia CC BY 4.0.",
       "conservation": "Por verificar",
       "curiosity": "",
       "audioFreq": 700,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
-      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
+      "contentNote": "Retirado de fullDesc: «La ficha de la especie está por completar.»"
     },
     {
       "id": "poi-cucarachero-rufo",
@@ -846,12 +856,13 @@
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna",
       "shortDesc": "Su canto suena desde este punto del recorrido.",
-      "fullDesc": "Canto grabado por Nicolás Baresch Uribe en San Francisco, Cundinamarca (Colombia) y publicado en iNaturalist (observación 257479477) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "fullDesc": "Canto grabado por Nicolás Baresch Uribe en San Francisco, Cundinamarca (Colombia) y publicado en iNaturalist (observación 257479477) con licencia CC BY 4.0.",
       "conservation": "Por verificar",
       "curiosity": "",
       "audioFreq": 700,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
-      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
+      "contentNote": "Retirado de fullDesc: «La ficha de la especie está por completar.»"
     },
     {
       "id": "poi-pibi-ahumado",
@@ -884,12 +895,13 @@
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna",
       "shortDesc": "Su canto suena desde este punto del recorrido.",
-      "fullDesc": "Canto grabado por Henrry en Mosquey, Trujillo (Venezuela) y publicado en iNaturalist (observación 413340061) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "fullDesc": "Canto grabado por Henrry en Mosquey, Trujillo (Venezuela) y publicado en iNaturalist (observación 413340061) con licencia CC BY 4.0.",
       "conservation": "Por verificar",
       "curiosity": "",
       "audioFreq": 700,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
-      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
+      "contentNote": "Retirado de fullDesc: «La ficha de la especie está por completar.»"
     },
     {
       "id": "poi-saltapared-comun",
@@ -922,12 +934,13 @@
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna",
       "shortDesc": "Su canto suena desde este punto del recorrido.",
-      "fullDesc": "Canto grabado por Celso Henrique Varela Rios en Campinas, São Paulo (Brasil) y publicado en iNaturalist (observación 413756938) con licencia CC BY 4.0. La ficha de la especie está por completar.",
+      "fullDesc": "Canto grabado por Celso Henrique Varela Rios en Campinas, São Paulo (Brasil) y publicado en iNaturalist (observación 413756938) con licencia CC BY 4.0.",
       "conservation": "Por verificar",
       "curiosity": "",
       "audioFreq": 700,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
-      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
+      "contentNote": "Retirado de fullDesc: «La ficha de la especie está por completar.»"
     },
     {
       "id": "poi-vireo-ojirrojo",
@@ -960,12 +973,13 @@
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna",
       "shortDesc": "Su canto suena desde este punto del recorrido.",
-      "fullDesc": "Canto grabado por Francesca Venti en Fulks Run, Virginia (Estados Unidos) y publicado en iNaturalist (observación 405342873) con licencia CC BY-NC 4.0. La ficha de la especie está por completar.",
+      "fullDesc": "Canto grabado por Francesca Venti en Fulks Run, Virginia (Estados Unidos) y publicado en iNaturalist (observación 405342873) con licencia CC BY-NC 4.0.",
       "conservation": "Por verificar",
       "curiosity": "",
       "audioFreq": 700,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
-      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md."
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono y normalizada para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
+      "contentNote": "Retirado de fullDesc: «La ficha de la especie está por completar.»"
     },
     {
       "id": "poi-atlapetes-nuquipalido",
@@ -998,12 +1012,13 @@
       "colorToken": "--sv-water-400",
       "typeLabel": "Avifauna",
       "shortDesc": "Gorrión montés de los cerros: corona canela que se vuelve blanca en la nuca y vientre amarillo.",
-      "fullDesc": "Atlapetes de los bordes de bosque altoandino y de los matorrales de subpáramo de los Andes. El equipo lo modeló con el nombre «Nuca Blanca» y se pintó como la especie de los cerros orientales de Bogotá, con los lados de la cabeza negros, el dorso gris pizarra y las partes inferiores amarillas. Su registro en el sendero está por verificar contra la lista de eBird y su canto todavía no está en el catálogo.",
+      "fullDesc": "Atlapetes de los bordes de bosque altoandino y de los matorrales de subpáramo de los Andes. El equipo lo modeló con el nombre «Nuca Blanca» y se pintó como la especie de los cerros orientales de Bogotá, con los lados de la cabeza negros, el dorso gris pizarra y las partes inferiores amarillas.",
       "conservation": "Por verificar",
       "curiosity": "",
       "audioFreq": 700,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
-      "mediaNote": "El canto que traía este punto era de Florisuga mellivora, un colibrí de tierras bajas, y no corresponde a esta especie: se retiró de la ficha y del audio espacial. Los archivos siguen en assets/audio/Audios Pajaros y en assets/audio/espacial, con sus créditos en CREDITOS_Y_LICENCIAS.md."
+      "mediaNote": "El canto que traía este punto era de Florisuga mellivora, un colibrí de tierras bajas, y no corresponde a esta especie: se retiró de la ficha y del audio espacial. Los archivos siguen en assets/audio/Audios Pajaros y en assets/audio/espacial, con sus créditos en CREDITOS_Y_LICENCIAS.md.",
+      "contentNote": "Retirado de fullDesc: «Su registro en el sendero está por verificar contra la lista de eBird y su canto todavía no está en el catálogo.»"
     }
   ]
 }
