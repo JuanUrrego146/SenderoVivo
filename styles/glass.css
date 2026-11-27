@@ -3408,6 +3408,7 @@
     max-height: 88vh !important;
     max-height: 88dvh !important;
     overflow-y: auto !important;
+    overflow-x: hidden !important;
     background: var(--sv-surface-solid) !important;
     color: var(--sv-text-primary) !important;
     border-radius: var(--sv-radius-xl, 28px) !important;

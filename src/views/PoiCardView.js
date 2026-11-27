@@ -289,8 +289,11 @@ export class PoiCardView {
             // corchetes es un pendiente anotado, no el nombre de un clip.
             const clip = typeof poi?.idleAnimation === 'string' ? poi.idleAnimation.trim() : '';
             this.modelViewer = new ModelView(container);
+            // El entorno 3D del sendero (panorámica de la zona del punto) lo calcula shell.js.
+            const entorno = typeof window.urlEntornoDe === 'function' && poi?.sceneId ? window.urlEntornoDe(poi) : undefined;
             await this.modelViewer.load(modelUrl, {
-                animacion: clip && !clip.startsWith('[') ? clip : ''
+                animacion: clip && !clip.startsWith('[') ? clip : '',
+                entorno
             });
             if (loading) loading.remove();
         } catch (error) {

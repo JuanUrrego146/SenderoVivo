@@ -952,6 +952,8 @@ const ZONA_DEL_ENTORNO = {
 function urlEntornoDe(item) {
     return `assets/fondos/entorno-ave-${ZONA_DEL_ENTORNO[item.sceneId] || 'cumbre'}.webp`;
 }
+// PoiCardView (la ficha que se abre desde la escena, un módulo) también la pide.
+window.urlEntornoDe = urlEntornoDe;
 
 function miniaturaHojaHTML(item) {
     return item.previewUrl
