@@ -48,7 +48,10 @@ export class JoystickView {
         this._colocar();
     }
 
-    /** Pone el joystick 12 px encima de lo que haya abajo en celular. */
+    /**
+     * Pone el joystick 12 px encima de lo que haya abajo en celular. Solo cuenta lo que está en
+     * la mitad de abajo: la tarjeta de datos va arriba, bajo la barra del título.
+     */
     _colocar() {
         const tarjeta = document.getElementById('mobile-details-card');
         const nav = document.getElementById('shell-nav-mobile');
@@ -56,7 +59,7 @@ export class JoystickView {
         for (const el of [tarjeta, nav]) {
             if (!el || !el.offsetParent) continue;
             const r = el.getBoundingClientRect();
-            if (r.height > 0) tope = Math.min(tope, r.top);
+            if (r.height > 0 && r.top > window.innerHeight / 2) tope = Math.min(tope, r.top);
         }
         const abajo = tope < window.innerHeight ? window.innerHeight - tope + 12 : 84;
         this.base.style.bottom = Math.round(abajo) + 'px';

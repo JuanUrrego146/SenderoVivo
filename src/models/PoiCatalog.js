@@ -29,6 +29,11 @@ const TYPE_FIELDS = {
     }
 };
 
+// Campos que se muestran al visitante y patrón de lo que no debe aparecer en ellos.
+const VISIBLE_TEXT_FIELDS = ['commonName', 'scientificName', 'typeLabel', 'shortDesc', 'fullDesc',
+    'curiosity', 'sightingTips', 'fieldIdTips', 'historicalNote'];
+const INTERNAL_NOTE = /ART-|binomio|CC BY|grabado por|el equipo/i;
+
 function isNonEmptyString(value) {
     return typeof value === 'string' && value.trim().length > 0;
 }
@@ -83,6 +88,20 @@ function validatePoi(poi) {
             message: 'es obligatorio cuando historicalNote afirma un dato histórico',
             severity: 'error'
         });
+    }
+
+    // Lo que el visitante lee no lleva notas internas del equipo ni créditos: el crédito del
+    // canto va en audioCredit. Las anotaciones entre corchetes no cuentan (las quita la ficha).
+    for (const field of VISIBLE_TEXT_FIELDS) {
+        const value = poi[field];
+        if (typeof value === 'string' && INTERNAL_NOTE.test(value.replace(/\[[^\]]*\]/g, ''))) {
+            issues.push({
+                poiId,
+                field,
+                message: 'trae una nota interna o un crédito (ART-, binomio, CC BY, grabado por, el equipo): el crédito del canto va en audioCredit',
+                severity: 'warning'
+            });
+        }
     }
 
     // Ubicaciones del POI en otras escenas con trazado propio (SceneCatalog.filterPois).

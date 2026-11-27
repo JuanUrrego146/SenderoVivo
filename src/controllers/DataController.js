@@ -1,5 +1,8 @@
 import { HudView } from '../views/HudView.js';
 
+// Marcha de paseo del motor del recorrido (TourEngine.walkSpeed), en metros por segundo.
+const MARCHA_DE_PASEO = 1.4;
+
 /**
  * Prepara las métricas del recorrido para el HUD.
  *
@@ -42,6 +45,7 @@ export class DataController {
 
     _onProgress(progress = {}) {
         this.sceneTotal = Number.isFinite(progress.total) ? progress.total : 0;
+        this.currentSceneDistance = Number.isFinite(progress.distance) ? progress.distance : null;
         this.currentDistance = Number.isFinite(progress.distanceMeters)
             ? progress.distanceMeters
             : this._sceneToTrackDistance(progress.distance);
@@ -54,9 +58,30 @@ export class DataController {
             desnivel: this._formatElevation(progress.elevationGainMeters),
             altitud: this._formatAltitude(progress.altitudeMeters),
             pendiente: this._formatSlope(progress.slopePercent),
-            eta: this._formatDuration(this._estimateToNextPoi()),
-            nextPoi: this.nextPoi?.commonName || 'Próximo punto'
+            eta: this._textoProximoPunto(),
+            nextPoi: 'Próximo punto'
         });
+    }
+
+    /**
+     * Próximo punto (RF-016): el POI más cercano hacia adelante en la distancia del trazado de
+     * la escena, con metros y segundos a la marcha de paseo (1,4 m/s): «Silla rota · 12 m · 9 s».
+     * Si no queda ninguno adelante, «Fin del tramo».
+     */
+    _textoProximoPunto() {
+        const d = this.currentSceneDistance;
+        if (!Number.isFinite(d)) return '—';
+        let siguiente = null;
+        for (const poi of this.pois) {
+            const anclaje = Number(poi?.trailAnchor?.d);
+            if (Number.isFinite(anclaje) && anclaje > d + 0.5 && (!siguiente || anclaje < siguiente.d)) {
+                siguiente = { poi, d: anclaje };
+            }
+        }
+        if (!siguiente) return 'Fin del tramo';
+        const metros = siguiente.d - d;
+        const nombre = String(siguiente.poi.commonName || '').replace(/\[[^\]]*\]/g, '').trim() || 'Punto de interés';
+        return `${nombre} · ${Math.round(metros)} m · ${Math.round(metros / MARCHA_DE_PASEO)} s`;
     }
 
     _sceneToTrackDistance(distance) {
@@ -112,8 +137,8 @@ export class DataController {
 
     _renderEta() {
         this.hudView.update({
-            eta: this._formatDuration(this._estimateToNextPoi()),
-            nextPoi: this.nextPoi?.commonName || 'Próximo punto'
+            eta: this._textoProximoPunto(),
+            nextPoi: 'Próximo punto'
         });
     }
 
