@@ -335,20 +335,17 @@
 
         <div id="preparar-visita-modal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="preparar-trail-title" onclick="if(event.target===this) closePrepararVisita();">
             <div class="preparar-visita-modal-card glass-panel pointer-events-auto">
-                
+
                 <!-- Cabecera de la Ficha Técnica con Proximidad Gestalt Corregida -->
                 <div class="preparar-header-row">
                     <div class="min-w-0 flex-1">
                         <span class="text-xs font-bold font-mono tracking-wider uppercase block mb-1" style="color: var(--sv-text-dim);">
-                            FICHA TÉCNICA DEL SENDERO · <span style="color: var(--sv-primary);">EAAB Cerros Orientales</span>
+                            PREPARAR LA VISITA · <span style="color: var(--sv-primary);">EAAB Cerros Orientales</span>
                         </span>
                         <h2 id="preparar-trail-title" class="text-xl sm:text-3xl font-extrabold font-syne truncate" style="color: var(--sv-text-primary); letter-spacing: -0.02em;">
-                            Sendero Santa Ana
+
                         </h2>
-                        <p id="preparar-trail-sub" class="text-xs sm:text-[13px] mt-1 flex items-center truncate" style="color: var(--sv-text-muted);">
-                            <i class="fa-solid fa-location-dot mr-1.5" style="color: var(--sv-primary);"></i>
-                            Cerros Orientales de Bogotá · Localidad de Usaquén (Cl. 119)
-                        </p>
+                        <p id="preparar-trail-sub" class="text-xs sm:text-[13px] mt-1 flex items-center truncate" style="color: var(--sv-text-muted);"></p>
                     </div>
 
                     <!-- Botón Cerrar aislado y accesible en esquina superior -->
@@ -357,10 +354,11 @@
                     </button>
                 </div>
 
-                <!-- Cuerpo del Modal (Desplazable con scroll suave y sin necesidad de zoom) -->
+                <!-- Cuerpo del Modal (Desplazable con scroll suave y sin necesidad de zoom). Todo sale de config/senderos.json (RNF-009): lo arma armarPrepararVisita en src/ui/shell.js -->
                 <div class="preparar-scroll-container">
 
-                    <!-- Fila 1: Métricas Principales (3 Columnas: Distancia, Desnivel, Tiempo) -->
+                    <!-- Fila 1: cifras del sendero (solo los disponibles) -->
+                    <div id="preparar-cifras">
                     <div class="preparar-metrics-grid">
                         <div class="trail-metric-card">
                             <div class="trail-metric-icon">
@@ -370,9 +368,7 @@
                                 <span class="text-[11px] sm:text-xs font-bold font-mono tracking-wider uppercase block truncate" style="color: var(--sv-text-dim);">
                                     DISTANCIA
                                 </span>
-                                <span id="preparar-stat-distance" class="text-base sm:text-2xl font-bold font-syne block truncate" style="color: var(--sv-text-primary);">
-                                    
-                                </span>
+                                <span id="preparar-stat-distance" class="text-base sm:text-2xl font-bold font-syne block truncate" style="color: var(--sv-text-primary);"></span>
                             </div>
                         </div>
 
@@ -405,26 +401,26 @@
                         </div>
                     </div>
 
-                    <!-- Fila 2: Cuadrícula de 2 Columnas (Réplica visual exacta de Image 2) -->
+                    </div>
+                    <p id="preparar-sin-cifras" class="preparar-sin-cifras" hidden>Las fuentes oficiales no publican distancia, duración ni desnivel de este sendero.</p>
+
+                    <!-- Fila 2: dos columnas -->
                     <div class="preparar-content-grid">
 
-                        <!-- Columna Izquierda: Ecosistema + Mapa Interactivo del Recorrido (Separados con holgura) -->
+                        <!-- Columna izquierda: ecosistema y mapa de hitos (solo si el sendero los trae), consejos del sector y recomendaciones del equipo -->
                         <div class="preparar-left-col flex flex-col gap-6 sm:gap-8">
-                            
+                            <div id="preparar-eco-bloque" class="flex flex-col gap-6 sm:gap-8" hidden>
                             <!-- 1. Tarjeta Ecosistema con Imagen y Descripción -->
                             <div class="ecosystem-banner-card">
-                                <div id="preparar-eco-banner" class="ecosystem-banner" style="background-image: url('assets/portada-mirador.webp');">
+                                <div id="preparar-eco-banner" class="ecosystem-banner">
                                     <div class="ecosystem-banner-overlay"></div>
                                     <div class="absolute bottom-3 left-4 right-4 z-10">
                                         <span id="preparar-eco-tag" class="inline-block text-[10px] sm:text-xs font-bold font-syne px-3 py-1 rounded-full shadow-md" style="background: var(--sv-flora-surface); color: var(--sv-flora-color); border: 1px solid var(--sv-flora-border);">
-                                            Circuito Bosque de Pinos y Cuenca Hídrica
-                                        </span>
+                                                                                    </span>
                                     </div>
                                 </div>
                                 <div class="p-4 sm:p-5" style="background: var(--sv-surface-inset);">
-                                    <p id="preparar-eco-desc" class="text-xs sm:text-[13.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted); font-family: var(--sv-font-body);">
-                                        Camino ecológico ancestral rodeado de imponentes bosques de pinos y vegetación nativa altoandina. Un sendero de pendiente amable ideal para caminatas contemplativas, avistamiento de aves andinas y conexión profunda con la naturaleza.
-                                    </p>
+                                    <p id="preparar-eco-desc" class="text-xs sm:text-[13.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted); font-family: var(--sv-font-body);"></p>
                                 </div>
                             </div>
 
@@ -448,7 +444,7 @@
                                 </p>
 
                                 <!-- Visual del mapa con orientación Norte -->
-                                <div id="preparar-map-img" class="preparar-map-visual mb-4" style="background-image: url('assets/portada-mirador.webp');">
+                                <div id="preparar-map-img" class="preparar-map-visual mb-4">
                                     <div class="preparar-map-overlay"></div>
                                     <div class="absolute top-3 left-3 z-10">
                                         <span class="text-[10px] sm:text-[10.5px] font-bold font-mono uppercase px-2.5 py-1 rounded-md flex items-center gap-1.5" style="background: var(--sv-surface-solid); color: var(--sv-primary); border: 1px solid var(--sv-surface-border); backdrop-filter: blur(4px);">
@@ -460,95 +456,46 @@
 
                                 <!-- Hitos interactivos del recorrido -->
                                 <div id="preparar-map-hitos" class="flex items-center gap-2.5 flex-wrap pt-1">
-                                    <!-- Generados dinámicamente por switchPrepararTrail -->
+                                    
                                 </div>
                             </div>
+                            </div>
+
+                            <section id="preparar-sector-bloque" class="preparar-map-card p-5 sm:p-6">
+                                <h3 class="text-sm sm:text-base font-bold font-syne mb-2" style="color: var(--sv-text-primary);">En este sector</h3>
+                                <p id="preparar-sector-texto" class="text-xs sm:text-[13px] leading-relaxed" style="color: var(--sv-text-muted);"></p>
+                            </section>
+
+                            <section id="preparar-equipo-bloque" class="preparar-map-card p-5 sm:p-6">
+                                <h3 class="text-sm sm:text-base font-bold font-syne mb-3" style="color: var(--sv-text-primary);">Recomendaciones del equipo Sendero Vivo</h3>
+                                <ul id="preparar-equipo-lista" class="preparar-lista"></ul>
+                            </section>
                         </div>
 
-                        <!-- Columna Derecha: Requisitos de Seguridad (Antes de comenzar) -->
+                        <!-- Columna derecha: antes de salir, reglas del Acueducto, plataforma de reservas y horario -->
                         <div class="checklist-card-group p-4 sm:p-6 flex flex-col justify-between">
                             <div>
                                 <div class="flex items-center justify-between gap-3 mb-1.5">
                                     <h3 class="text-base sm:text-lg font-bold font-syne" style="color: var(--sv-text-primary);">
-                                        Antes de comenzar
+                                        Antes de salir
                                     </h3>
                                     <span id="checklist-counter-badge" class="text-xs font-mono font-bold px-3 py-1 rounded-full transition-all flex-shrink-0" style="background: var(--sv-secondary-surface); color: var(--sv-secondary); border: 1px solid var(--sv-secondary-border);">
-                                        0/4 listo
+                                        0/0 listo
                                     </span>
                                 </div>
                                 <p class="text-xs sm:text-[12.5px] mb-4 sm:mb-5" style="color: var(--sv-text-muted);">
-                                    Requisitos de seguridad y elementos esenciales
+                                    Toca cada ítem cuando lo tengas listo
                                 </p>
 
-                                <!-- Lista interactiva de 4 requisitos -->
-                                <div class="flex flex-col gap-3">
-                                    <!-- Ítem 0 -->
-                                    <div id="checklist-item-0" onclick="toggleChecklistItem(0)" class="checklist-item-card">
-                                        <div id="checklist-icon-0" class="checklist-checkbox"></div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
-                                                <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">
-                                                    Agua (Mínimo 1 Litro)
-                                                </h4>
-                                                <span class="checklist-badge-obligatorio">Obligatorio</span>
-                                            </div>
-                                            <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">
-                                                Llevar termo o cantimplora recargable. En los cerros está prohibido el plástico de un solo uso.
-                                            </p>
-                                        </div>
-                                    </div>
+                                <div id="preparar-checklist" class="flex flex-col gap-3"></div>
 
-                                    <!-- Ítem 1 -->
-                                    <div id="checklist-item-1" onclick="toggleChecklistItem(1)" class="checklist-item-card">
-                                        <div id="checklist-icon-1" class="checklist-checkbox"></div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
-                                                <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">
-                                                    Calzado cómodo y con agarre
-                                                </h4>
-                                                <span class="checklist-badge-obligatorio">Obligatorio</span>
-                                            </div>
-                                            <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">
-                                                Botas de trekking o calzado deportivo con labrado para evitar resbalones sobre piedras húmedas y barro.
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <!-- Ítem 2 -->
-                                    <div id="checklist-item-2" onclick="toggleChecklistItem(2)" class="checklist-item-card">
-                                        <div id="checklist-icon-2" class="checklist-checkbox"></div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
-                                                <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">
-                                                    Reserva Acueducto de Bogotá
-                                                </h4>
-                                                <span class="checklist-badge-obligatorio">Obligatorio</span>
-                                            </div>
-                                            <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">
-                                                Reserva confirmada en el portal o app "Caminos de los Cerros" de la EAAB. Código QR listo en pantalla.
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <!-- Ítem 3 -->
-                                    <div id="checklist-item-3" onclick="toggleChecklistItem(3)" class="checklist-item-card">
-                                        <div id="checklist-icon-3" class="checklist-checkbox"></div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
-                                                <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">
-                                                    Chaqueta cortaviento o impermeable
-                                                </h4>
-                                                <span class="checklist-badge-obligatorio">Obligatorio</span>
-                                            </div>
-                                            <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">
-                                                La temperatura desciende bruscamente arriba de 3.000 m con niebla y brisa andina.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <section class="mt-6">
+                                    <h3 class="text-base sm:text-lg font-bold font-syne mb-3" style="color: var(--sv-text-primary);">Reglas del Acueducto</h3>
+                                    <ul id="preparar-reglas-lista" class="preparar-lista"></ul>
+                                </section>
                             </div>
 
-                            <!-- Plataforma EAAB y Horario Oficial -->
+                            <!-- Plataforma de reservas y horario -->
                             <div class="mt-5 pt-4 border-t space-y-3" style="border-color: var(--sv-surface-border-subtle);">
                                 <a href="https://caminos.eaab.gov.co/" target="_blank" rel="noopener noreferrer" class="eaab-platform-link">
                                     <div class="flex items-center gap-3">
@@ -571,7 +518,7 @@
 
                                 <div class="flex items-center gap-2 text-[11.5px] sm:text-xs px-1" style="color: var(--sv-text-muted);">
                                     <i class="fa-regular fa-calendar-check" style="color: var(--sv-fauna-hover);"></i>
-                                    <span><strong>Martes a Domingo:</strong> 5:45 a.m. a 10:00 a.m. (Ingreso hasta las 8:30 a.m.)</span>
+                                    <span id="preparar-horario-texto"></span>
                                 </div>
                             </div>
                         </div>
@@ -586,10 +533,10 @@
                     </div>
                     <div class="flex items-center gap-2.5 w-full sm:w-auto">
                         <button type="button" onclick="closePrepararVisita()" class="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl font-bold cursor-pointer transition text-center text-xs sm:text-sm" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-surface-border); color: var(--sv-text-muted);">
-                            Volver al inicio
+                            Volver
                         </button>
-                        <button type="button" onclick="launchExplorationFromVisit()" class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 cursor-pointer transition hover:scale-105 text-xs sm:text-sm" style="background: linear-gradient(135deg, var(--sv-primary) 0%, var(--sv-primary-hover) 100%); border: 1px solid var(--sv-primary-hover); color: var(--sv-text-inverse); box-shadow: 0 4px 14px var(--sv-primary-glow);">
-                            <span>Iniciar Exploración 3D</span>
+                        <button type="button" id="preparar-btn-iniciar" onclick="launchExplorationFromVisit()" class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 cursor-pointer transition hover:scale-105 text-xs sm:text-sm" style="background: linear-gradient(135deg, var(--sv-primary) 0%, var(--sv-primary-hover) 100%); border: 1px solid var(--sv-primary-hover); color: var(--sv-text-inverse); box-shadow: 0 4px 14px var(--sv-primary-glow);">
+                            <span>Iniciar el recorrido en 3D</span>
                             <i class="fa-solid fa-arrow-right text-[11px]"></i>
                         </button>
                     </div>

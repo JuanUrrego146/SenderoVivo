@@ -2884,7 +2884,7 @@
     inset: 0 !important;
     /* Se abre desde la portada (#trail-lobby, z-index 10000): tiene que quedar encima,
        igual que el álbum de biodiversidad. */
-    z-index: 10005 !important;
+    z-index: 10020 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -4536,6 +4536,7 @@ button,
 }
 
 .sendero-entrar,
+.sendero-preparar,
 .senderos-cerrar,
 .senderos-volver {
     display: inline-flex;
@@ -4555,10 +4556,26 @@ button,
 }
 
 .sendero-entrar {
-    align-self: flex-start;
-    margin-top: 6px;
     background: var(--sv-primary);
     color: var(--sv-text-inverse);
+}
+
+/* Botones de la tarjeta: «Entrar al recorrido» (solo el disponible) y «Preparar la visita», abajo */
+.sendero-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 8px;
+}
+
+.sendero-preparar {
+    background: var(--sv-surface-panel);
+    color: var(--sv-text-primary);
+}
+
+.sendero-preparar .ic {
+    color: var(--sv-primary);
 }
 
 .sendero-entrar .ic {
@@ -4600,4 +4617,32 @@ button,
     .senderos-volver {
         display: none;
     }
+}
+
+/* Preparar visita de cada sendero: cifras solo en los disponibles y listas de texto */
+#preparar-visita-modal [hidden] {
+    display: none !important;
+}
+
+.preparar-sin-cifras {
+    margin: 0 0 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--sv-text-muted);
+}
+
+.preparar-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--sv-text-muted);
+}
+
+.preparar-lista strong {
+    color: var(--sv-text-primary);
 }
