@@ -114,9 +114,9 @@ def pintar(ob):
     if "pelo" not in me.color_attributes:
         me.color_attributes.new("pelo", 'FLOAT_COLOR', 'CORNER')
     ca = me.color_attributes["pelo"]
-    oliva, vientre, oscuro = hexa("#7d6e30"), hexa("#a9944f"), hexa("#3a2f20")
-    anillo_os, anillo_cl = hexa("#3a2c1f"), hexa("#b39a68")
-    hocico, claro = hexa("#4b3d2e"), hexa("#cbbb8e")
+    oliva, vientre, oscuro = hexa("#625b3e"), hexa("#857c5a"), hexa("#33291d")
+    anillo_os, anillo_cl = hexa("#33271c"), hexa("#9c8a66")
+    hocico, claro = hexa("#433629"), hexa("#b8ab88")
     rng = np.random.default_rng(3)
     col_v = []
     for v in me.vertices:
