@@ -361,7 +361,30 @@ export class ModelView {
         );
 
 
+        // El entorno real (panorámica 360 del sendero) llega después del modelo: el visor ya
+        // se puede girar y acercar mientras baja, y un fallo suyo no tumba la carga del modelo.
+        if (opciones.entorno && !this._destruido) {
+            this._ponerEntorno(model, opciones.entorno);
+        }
+
         return model;
+    }
+
+
+    /**
+     * Pone la panorámica 360 como fondo del visor (skybox-image): el ave queda dentro de su
+     * bosque y el fondo gira con ella. La luz se queda con el entorno neutro de siempre, para
+     * que el modelo se vea con sus colores y no oscurecido por el bosque. En pantallas de menos
+     * de 640 px se usa la versión de 2048 de ancho.
+     */
+    _ponerEntorno(model, url) {
+        const liviana = window.innerWidth < 640 ? url.replace(/\.webp$/, '-2048.webp') : url;
+        model.addEventListener('error', (evento) => {
+            if (evento?.detail?.type === 'environment' || evento?.detail?.sourceError) {
+                console.warn('No se pudo cargar el entorno 3D de la ficha:', liviana);
+            }
+        });
+        model.setAttribute('skybox-image', new URL(liviana, window.location.href).href);
     }
 
 

@@ -264,6 +264,7 @@
     <body>
         <div id="overlay">
             <div id="overlay-content">
+                <div class="hueco-ilustracion" data-ilustracion="carga"></div>
                 <div class="spinner"></div>
                 <h1>Preparando el visor…</h1>
             </div>
@@ -272,6 +273,8 @@
         <!-- ============ VENTANA INICIAL A PANTALLA COMPLETA (HERO START SCREEN) ============ -->
         <div id="trail-lobby" role="dialog" aria-modal="true" aria-label="Pantalla de inicio Sendero Vivo">
             <!-- Foto real del mirador de la Cumbre: ancha en escritorio, vertical en celular -->
+            <!-- Fondo ilustrado (video en bucle con su imagen fija): lo llena shell.js si los archivos existen -->
+            <div class="portada-fondo" data-ilustracion="portada-fondo" aria-hidden="true"></div>
             <picture class="hero-foto">
                 <source media="(max-width: 640px)" srcset="assets/portada-mirador-movil.webp">
                 <img src="assets/portada-mirador.webp" alt="" decoding="async" fetchpriority="high">
@@ -316,10 +319,6 @@
 
             <!-- Barra Inferior / Footer: Estadísticas y Lema -->
             <footer class="hero-bottom-footer">
-                <!-- Cerros y frailejones del pie: los datos y el lema van sobre el cerro más oscuro -->
-                <svg class="ilu hero-cerros" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><use href="assets/ilustraciones/cerros.svg#ilu"/></svg>
-                <svg class="ilu hero-frailejon hero-frailejon--a" aria-hidden="true"><use href="assets/ilustraciones/frailejon.svg#ilu"/></svg>
-                <svg class="ilu hero-frailejon hero-frailejon--b" aria-hidden="true"><use href="assets/ilustraciones/frailejon.svg#ilu"/></svg>
                 <div class="hero-bottom-divider"></div>
                 <div class="hero-footer-content">
                     <div class="hero-footer-stats" style="font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700;">
@@ -335,6 +334,11 @@
                 </div>
             </footer>
         </div>
+
+        <!-- Cierre del recorrido: pantalla propia, todavía sin contenido; espera su ilustración -->
+        <section id="cierre-recorrido" hidden>
+            <div class="hueco-ilustracion" data-ilustracion="cierre"></div>
+        </section>
 
         <div id="preparar-visita-modal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="preparar-trail-title" onclick="if(event.target===this) closePrepararVisita();">
             <div class="preparar-visita-modal-card glass-panel pointer-events-auto">
@@ -603,6 +607,7 @@
         <!-- ============ ÁLBUM DE BIODIVERSIDAD (CATÁLOGO VISUAL) ============ -->
         <div id="biodiversity-album-modal" role="dialog" aria-modal="true" aria-label="Catálogo Vivo de Biodiversidad" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5" style="background: var(--sv-scrim-heavy); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);" onclick="if(event.target===this) closeBiodiversityAlbum();">
             <div class="biodiversity-modal-card glass-panel w-full max-w-4xl max-h-[85vh] flex flex-col rounded-[28px] overflow-hidden shadow-2xl pointer-events-auto" style="background: var(--sv-surface-solid); border: 2px solid var(--sv-surface-border);">
+                <div class="hueco-ilustracion" data-ilustracion="album-cabecera"></div>
                 <!-- Cabecera del Álbum -->
                 <div class="p-4 sm:p-5 border-b flex items-center justify-between gap-3" style="border-color: var(--sv-surface-border); background: var(--sv-surface-solid);">
                     <div class="flex items-center gap-3 min-w-0">
@@ -700,7 +705,7 @@
                 <div class="command-bar-left">
                     <button class="expedition-badge-trigger" onclick="openTrailLobby()" title="Ficha técnica del sendero y detalles">
                         <div class="expedition-badge-icon">
-                            <svg class="ilu ilu-frailejon" aria-hidden="true"><use href="assets/ilustraciones/frailejon.svg#ilu"/></svg>
+                            <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#monte"/></svg>
                         </div>
                         <div class="expedition-title-group">
                             <span class="expedition-brand-sup">Cerros Orientales · Bogotá</span>

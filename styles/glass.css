@@ -3966,13 +3966,7 @@ body,
     border-color: var(--sv-surface-border-subtle);
 }
 
-/* Ilustraciones planas: sombra de papel y sin nada flotando sin panel detrás */
-.ilu {
-    filter: var(--sv-ilu-sombra);
-    overflow: visible;
-}
-
-/* Portada: foto real, velo, título y cerros al pie */
+/* Portada: foto real y velo; con el fondo ilustrado, velo crema y texto oscuro */
 .hero-foto,
 .hero-foto img {
     position: absolute;
@@ -4038,34 +4032,6 @@ body,
     z-index: 2;
 }
 
-.hero-cerros {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 150%;
-    z-index: 0;
-}
-
-.hero-frailejon {
-    position: absolute;
-    bottom: 54%;
-    width: clamp(46px, 6vw, 74px);
-    height: clamp(60px, 8vw, 98px);
-    z-index: 1;
-}
-
-.hero-frailejon--a {
-    right: 9%;
-}
-
-.hero-frailejon--b {
-    right: 17%;
-    bottom: 62%;
-    transform: scale(0.8);
-}
-
 .hero-footer-stats,
 .hero-footer-stats *,
 .hero-footer-slogan {
@@ -4077,23 +4043,9 @@ body,
     color: var(--sv-portada-em) !important;
 }
 
-/* Ayuda de primera visita: el copetón dentro del panel */
-#hint .ilu-copeton {
-    width: 44px;
-    height: 34px;
-    margin-right: 10px;
-    vertical-align: middle;
-}
-
-/* Tarjeta del sendero: el frailejón pequeño */
-.expedition-badge-icon .ilu-frailejon {
-    width: 22px;
-    height: 29px;
-}
-
-/* Cabecera de la ficha: cielo nublado con cerros, helecho y frailejón detrás del visor 3D */
+/* Cabecera de la ficha: el visor 3D con el degradado liso del sistema mientras baja el entorno real */
 .poi-hoja-3d {
-    background: var(--sv-ficha-velo-claro), var(--sv-ficha-foto) center / cover no-repeat, var(--sv-ficha-sky);
+    background: var(--sv-ficha-sky);
     border-radius: var(--sv-radius-lg);
     border: var(--sv-divider-border);
 }
@@ -4102,20 +4054,6 @@ body,
     background: transparent !important;
     position: relative;
     z-index: 2;
-}
-
-.poi-hoja-3d .ficha-ilu {
-    position: absolute;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.poi-hoja-3d .ficha-ilu--propia {
-    left: 4%;
-    bottom: 8%;
-    width: 24%;
-    height: 60%;
-    object-fit: contain;
 }
 
 .poi-hoja-3d-miniatura {
@@ -4128,4 +4066,121 @@ button,
 .parada-fuera,
 .render-btn {
     white-space: nowrap;
+}
+
+
+/* ==========================================================================
+   HUECOS DE ILUSTRACIÓN (data-ilustracion; los llena llenarHuecosDeIlustracion en shell.js)
+   Vacíos no se ven ni dejan borde. Llenos, toman su tamaño de los tokens --sv-hueco-*.
+   ========================================================================== */
+.hueco-ilustracion {
+    display: block;
+    border: 0;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.hueco-ilustracion:empty {
+    display: none;
+}
+
+.hueco-ilustracion img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: var(--sv-ilu-sombra);
+}
+
+[data-ilustracion="selector-mapa"] { width: var(--sv-hueco-selector-mapa-ancho); height: var(--sv-hueco-selector-mapa-alto); max-width: 100%; }
+[data-ilustracion="carga"] { width: var(--sv-hueco-carga-ancho); height: var(--sv-hueco-carga-alto); }
+[data-ilustracion="album-cabecera"],
+[data-ilustracion="bitacora-cabecera"] { width: 100%; aspect-ratio: var(--sv-hueco-cabecera-proporcion); min-height: var(--sv-hueco-cabecera-alto-min); }
+[data-ilustracion="bitacora-cabecera"] { margin-bottom: 12px; }
+[data-ilustracion="album-cabecera"] img,
+[data-ilustracion="bitacora-cabecera"] img { object-fit: cover; object-position: center top; }
+[data-ilustracion="cierre"] { width: var(--sv-hueco-cierre-ancho); height: var(--sv-hueco-cierre-alto); }
+[data-ilustracion^="especie-"] { width: var(--sv-hueco-especie-ancho); height: var(--sv-hueco-especie-alto); }
+
+/* Una especie con su ilustración ocupa el lugar del icono de reserva */
+.con-ilustracion > .fa-solid,
+.con-ilustracion > .ic {
+    display: none;
+}
+
+.album-card-medallion:has(.hueco-ilustracion:not(:empty)) > .fa-solid,
+.album-card-medallion:has(.hueco-ilustracion:not(:empty)) > img {
+    display: none;
+}
+
+.hueco-ilustracion--especie {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+#cierre-recorrido {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+#cierre-recorrido[hidden] {
+    display: none;
+}
+
+#overlay-content .hueco-ilustracion {
+    margin-bottom: 12px;
+}
+
+/* Fondo ilustrado de la portada: video en bucle con su imagen fija, a pantalla completa */
+.portada-fondo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    margin: 0;
+}
+
+#trail-lobby > .portada-fondo {
+    position: absolute;
+    inset: 0;
+}
+
+.portada-fondo img,
+.portada-fondo video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: none;
+}
+
+.portada--ilustrada > .hero-foto {
+    display: none;
+}
+
+.portada--ilustrada > .portada-fondo {
+    z-index: 0;
+}
+
+.portada--ilustrada > .hero-screen-overlay {
+    background: var(--sv-hero-veil-ilustracion);
+}
+
+.portada--ilustrada .hero-brand-sendero,
+.portada--ilustrada .hero-brand-tagline,
+.portada--ilustrada .hero-footer-slogan {
+    color: var(--sv-text-primary) !important;
+    text-shadow: none;
+}
+
+.portada--ilustrada .hero-brand-vivo {
+    color: var(--sv-primary);
+    text-shadow: none;
 }

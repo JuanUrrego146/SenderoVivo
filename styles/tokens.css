@@ -117,11 +117,6 @@
     --sv-ficha-sky: linear-gradient(#D1DBDE, #ECE6D3);
     /* Cielo de la cabecera de la ficha; arranca en --sv-escena-cielo-nublado */
     --sv-ficha-veil: rgba(20, 26, 18, 0.42);
-    --sv-ficha-foto: url('../assets/ficha-entorno.webp');
-    /* Entorno realista del visor 3D de la ficha: un cuadro real de la Cumbre, borroso, con un velo
-       claro para que el modelo se lea. Va en lugar de las ilustraciones, que no combinan con un
-       modelo realista. */
-    --sv-ficha-velo-claro: linear-gradient(rgba(246, 238, 219, 0.30), rgba(246, 238, 219, 0.30));
     --sv-hero-veil: linear-gradient(90deg, rgba(20, 26, 18, 0.70) 0%, rgba(20, 26, 18, 0.46) 45%, transparent 75%);
     --sv-portada-ink: #FFFBF0;
     --sv-portada-em: #E8C36A;
@@ -130,32 +125,21 @@
     --sv-font-style-acento: normal;
     --sv-icon-stroke: 2.3;
 
-    /* ── Ilustraciones planas del sendero (assets/ilustraciones) ── */
-    --sv-ilu-hoja-1: #4F8A5C;
-    --sv-ilu-hoja-2: #A3C47E;
-    --sv-ilu-tallo: #3B6B47;
-    --sv-ilu-tronco: #8A5E40;
-    --sv-ilu-flor: #E8B84A;
-    --sv-ilu-flor-centro: #C27A2E;
-    --sv-ilu-cerro-1: #B9CC97;
-    --sv-ilu-cerro-2: #7FA06E;
-    --sv-ilu-cerro-3: #3B6B47;
-    --sv-ilu-golondrina-dorso: #4A6590;
-    --sv-ilu-golondrina-ala: #34496E;
-    --sv-ilu-golondrina-vientre: #C3C8D0;
+    /* ── Huecos de ilustración (pantallas propias: portada, elegir sendero, carga, álbum, bitácora y cierre) ──
+       Tamaño de cada hueco en escritorio y, más abajo, en celular. Donde se ve la escena o un modelo 3D no hay huecos. ── */
     --sv-ilu-sombra: drop-shadow(2px 2px 0 rgba(28, 40, 30, 0.28));
-    --sv-ilu-ojo: #141414;
-    --sv-ilu-brillo: #FFFFFF;
-    --sv-ilu-pico-golondrina: #202326;
-    --sv-ilu-trazo-oscuro: rgba(0, 0, 0, 0.28);
-    --sv-ilu-trazo-claro: rgba(255, 255, 255, 0.18);
-    /* El copetón de la ficha de ayuda */
-    --sv-ilu-copeton-cuerpo: #A0714C;
-    --sv-ilu-copeton-ala: #7A5234;
-    --sv-ilu-copeton-pecho: #FBEFD9;
-    --sv-ilu-copeton-cabeza: #B5BCB8;
-    --sv-ilu-copeton-raya: #2E2A1F;
-    --sv-ilu-copeton-collar: #D98A45;
+    --sv-hueco-selector-mapa-ancho: 560px;
+    --sv-hueco-selector-mapa-alto: 360px;
+    --sv-hueco-carga-ancho: 240px;
+    --sv-hueco-carga-alto: 240px;
+    --sv-hueco-cabecera-proporcion: 4.2 / 1;
+    --sv-hueco-cabecera-alto-min: 0px;
+    --sv-hueco-cierre-ancho: 320px;
+    --sv-hueco-cierre-alto: 240px;
+    --sv-hueco-especie-ancho: 96px;
+    --sv-hueco-especie-alto: 96px;
+    /* Fondo ilustrado de la portada: velo crema radial desde arriba a la izquierda, con el texto oscuro */
+    --sv-hero-veil-ilustracion: radial-gradient(ellipse at 0% 0%, rgba(246, 238, 219, 0.88) 0%, rgba(246, 238, 219, 0.55) 40%, transparent 70%);
 
     /* ── Escala Modular de Espaciado (Base 4px / 8px) ── */
     --sv-space-2xs: 0.25rem;  /* 4px */
@@ -280,4 +264,19 @@
     --sv-green-300-60: var(--sv-primary-border);
     --sv-green-300-30: var(--sv-primary-surface);
     --sv-green-300-40: var(--sv-primary-surface);
+}
+
+/* Tamaño de los huecos de ilustración en celular */
+@media (max-width: 639px) {
+    :root {
+        --sv-hueco-selector-mapa-ancho: 100%;
+        --sv-hueco-selector-mapa-alto: 240px;
+        --sv-hueco-carga-ancho: 160px;
+        --sv-hueco-carga-alto: 160px;
+        --sv-hueco-cabecera-alto-min: 120px;
+        --sv-hueco-cierre-ancho: 240px;
+        --sv-hueco-cierre-alto: 180px;
+        --sv-hueco-especie-ancho: 72px;
+        --sv-hueco-especie-alto: 72px;
+    }
 }

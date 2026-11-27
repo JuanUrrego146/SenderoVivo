@@ -154,6 +154,7 @@ function desdeContrato(poi) {
         // Rutas reales declaradas en config/pois.json
         modelUrl: poi.modelUrl || '',
         previewUrl: poi.previewUrl || '',
+        sceneId: poi.sceneId || '',
         illustrationUrl: poi.illustrationUrl || '',
         idleAnimation: poi.idleAnimation || '',
         narrationUrl: poi.narrationUrl || '',
@@ -562,6 +563,103 @@ function medallonHTML(item, tam = 'w-10 h-10') {
  * (previewUrl, un WebP de assets/models/v2/miniaturas/) o, si el punto no la tiene,
  * el icono de su categoría. Cada sitio pasa la clase de glass.css que le corresponde.
  */
+/*
+ * Huecos de ilustración (data-ilustracion="<nombre>"): lugares de las pantallas propias (portada,
+ * elegir sendero, carga, álbum, bitácora y cierre) que esperan las ilustraciones del gerente.
+ * Vacíos no se ven ni dejan borde. config/ilustraciones.json lista los nombres cuyo archivo
+ * existe en assets/ilustraciones/<nombre>.webp; solo esos se piden, así un hueco sin archivo no
+ * hace una petición que falle. Donde la ilustración se ve junto a la escena o a un modelo 3D no
+ * hay huecos: ahí la interfaz va sobria.
+ */
+const ILUSTRACIONES_URL = 'config/ilustraciones.json';
+let ilustracionesDisponibles = null;
+
+async function ilustracionesQueExisten() {
+    if (!ilustracionesDisponibles) {
+        ilustracionesDisponibles = fetch(ILUSTRACIONES_URL)
+            .then((respuesta) => (respuesta.ok ? respuesta.json() : {}))
+            .then((datos) => (datos && typeof datos === 'object' ? datos : {}))
+            .catch(() => ({}));
+    }
+    return ilustracionesDisponibles;
+}
+
+/** Hueco de la ilustración de una especie, para cuando su punto no tiene miniatura del modelo. */
+function huecoEspecieHTML(item) {
+    if (!item || item.previewUrl) return '';
+    // Una ilustración propia del punto (illustrationUrl) llena el hueco sin pasar por la lista.
+    const propia = item.illustrationUrl
+        ? ` data-ilustracion-lista="1"><img src="${item.illustrationUrl}" alt="" loading="lazy" decoding="async"`
+        : '';
+    return `<span class="hueco-ilustracion hueco-ilustracion--especie" data-ilustracion="especie-${item.id}"${propia}></span>`;
+}
+
+async function llenarHuecosDeIlustracion(raiz = document) {
+    const huecos = [...raiz.querySelectorAll('[data-ilustracion]:not([data-ilustracion-lista])')];
+    if (!huecos.length) return;
+    const existen = await ilustracionesQueExisten();
+    for (const hueco of huecos) {
+        hueco.dataset.ilustracionLista = '1';
+        const nombre = hueco.dataset.ilustracion;
+        const entrada = existen[nombre];
+        if (!entrada) continue;
+        if (nombre === 'portada-fondo') {
+            montarFondoDePortada(hueco, entrada);
+            continue;
+        }
+        const archivo = typeof entrada === 'string' ? entrada : `${nombre}.webp`;
+        const imagen = new Image();
+        imagen.alt = '';
+        imagen.decoding = 'async';
+        imagen.addEventListener('load', () => {
+            hueco.replaceChildren(imagen);
+            hueco.parentElement?.classList.add('con-ilustracion');
+        });
+        imagen.src = `assets/ilustraciones/${archivo}`;
+    }
+}
+
+/**
+ * Fondo ilustrado de la portada: un video en bucle, sin sonido, con su imagen fija como poster.
+ * Con prefers-reduced-motion, o si el video falla, solo la imagen fija. Con el fondo montado la
+ * portada pasa del velo oscuro y el texto claro al velo crema y el texto oscuro (clase
+ * portada--ilustrada); sin archivos queda como siempre: la foto del mirador con el velo oscuro.
+ */
+function montarFondoDePortada(hueco, entrada) {
+    const portada = document.getElementById('trail-lobby');
+    const ruta = (nombre) => `assets/ilustraciones/${nombre}`;
+    const fija = ruta(entrada.imagen || 'portada-fondo.webp');
+    const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const movil = window.matchMedia('(max-width: 640px)').matches;
+    const mostrarImagen = () => {
+        hueco.replaceChildren(Object.assign(new Image(), { src: fija, alt: '', decoding: 'async' }));
+    };
+    const imagenDePrueba = new Image();
+    imagenDePrueba.addEventListener('load', () => {
+        portada?.classList.add('portada--ilustrada');
+        const archivoVideo = movil ? entrada.videoMovil : entrada.video;
+        if (sinMovimiento || !archivoVideo) {
+            mostrarImagen();
+            return;
+        }
+        const video = document.createElement('video');
+        video.muted = true;
+        video.loop = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.setAttribute('aria-hidden', 'true');
+        video.preload = 'auto';
+        video.poster = fija;
+        video.src = ruta(archivoVideo);
+        video.addEventListener('error', mostrarImagen, { once: true });
+        hueco.replaceChildren(video);
+        video.play().catch(() => { /* el poster queda a la vista */ });
+    });
+    imagenDePrueba.src = fija;
+}
+
 function figuraDelPunto(item, claseImagen, claseIcono, icono) {
     if (item.previewUrl) {
         return `<img src="${item.previewUrl}" alt="" loading="lazy" decoding="async" class="${claseImagen}">`;
@@ -814,6 +912,21 @@ function selectHotspot(id) {
 let visorHoja = null;
 let turnoVisorHoja = 0;
 
+/*
+ * Entorno 3D real detrás del modelo de la ficha: la panorámica 360 de la zona del punto, sacada de
+ * la propia escena (scripts/escenas/panoramica_desde_app.mjs). Un punto de una zona que no se
+ * conoce usa la de la Cumbre.
+ */
+const ZONA_DEL_ENTORNO = {
+    'sendero-01-propia': 'cumbre',
+    'sendero-01-t1-propia': 'tramo1',
+    'sendero-02-propia': 'tramo2'
+};
+
+function urlEntornoDe(item) {
+    return `assets/fondos/entorno-ave-${ZONA_DEL_ENTORNO[item.sceneId] || 'cumbre'}.webp`;
+}
+
 function miniaturaHojaHTML(item) {
     return item.previewUrl
         ? `<img src="${item.previewUrl}" alt="" decoding="async" class="poi-hoja-3d-miniatura">`
@@ -823,12 +936,9 @@ function miniaturaHojaHTML(item) {
 function visorHojaHTML(item) {
     if (!item.modelUrl) return '';
 
-    // El entorno del visor es una foto real de la Cumbre (--sv-ficha-foto), a juego con el modelo
-    // realista. Un punto puede traer además su propia ilustración (illustrationUrl).
-    const propia = item.illustrationUrl
-        ? `<img class="ilu ficha-ilu ficha-ilu--propia" src="${item.illustrationUrl}" alt="" loading="lazy" decoding="async">`
-        : '';
-    return `<div class="poi-hoja-3d">${propia}` +
+    // La ficha no lleva ilustraciones: detrás del modelo va el entorno 3D real del sendero
+    // (ModelView, skybox-image). Mientras baja, se ve el degradado liso del sistema.
+    return `<div class="poi-hoja-3d">` +
         `<div id="poi-hoja-3d" class="poi-hoja-3d-visor">${miniaturaHojaHTML(item)}</div></div>`;
 }
 
@@ -864,6 +974,7 @@ async function montarVisorHoja(item) {
         await vista.load(item.modelUrl, {
             animacion: clip && !clip.startsWith('[') ? clip : '',
             poster: item.previewUrl,
+            entorno: urlEntornoDe(item),
             toqueVertical: true
         });
     } catch (error) {
@@ -1020,6 +1131,8 @@ function updateDiscoveredProgress() {
 }
 
 function switchTab(tab) {
+    // Los huecos de ilustración del panel (cabecera de la bitácora) se llenan cuando ya está armado.
+    queueMicrotask(() => llenarHuecosDeIlustracion(document.getElementById('tab-panel-content') || document));
     const panel = document.getElementById('tab-panel-container');
     const content = document.getElementById('tab-panel-content');
     const modalIcon = document.getElementById('tab-modal-icon');
@@ -1120,6 +1233,7 @@ function switchTab(tab) {
         if (filterBar) filterBar.style.display = 'none';
 
         content.innerHTML = `
+            <div class="hueco-ilustracion" data-ilustracion="bitacora-cabecera"></div>
             <div class="bitacora-summary-card glass-panel rounded-2xl p-5 mb-5" style="border: 1.5px solid var(--sv-primary-border); background: var(--sv-surface-solid); box-shadow: var(--sv-surface-shadow);">
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-xs sm:text-sm font-bold font-syne" style="color: var(--sv-text-primary);">
@@ -1757,6 +1871,7 @@ function createAlbumCardHTML(item, idx) {
                 <!-- Medallón botánico central con icono representativo -->
                 <div class="album-card-medallion">
                     ${figuraDelPunto(item, 'album-card-miniatura', '', iconClass)}
+                    ${huecoEspecieHTML(item)}
                 </div>
             </div>
 
@@ -1840,6 +1955,7 @@ function renderBiodiversityAlbum(category = 'all') {
     }
 
     grid.innerHTML = items.map((item, idx) => createAlbumCardHTML(item, idx)).join('');
+    llenarHuecosDeIlustracion(grid);
 }
 
 // Stubs de compatibilidad segura
@@ -2354,6 +2470,7 @@ cargarCatalogo()
         updateDiscoveredProgress();
         initRenderModelMobile();
         initLobby();
+        llenarHuecosDeIlustracion();
         esperarVisor();
 
         // Atajos de teclado unificados para la expedición (WCAG 2.1 Esc Dismissal)

@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg">
-  <!-- Ilustración plana del sendero. Sus colores son tokens de styles/tokens.css (los sv-ilu-...): se monta con use y los sigue. -->
-  <symbol id="ilu" viewBox="0 0 300 60" preserveAspectRatio="none">
-  <path fill="var(--sv-ilu-cerro-1)" d="M0 30 C40 10 70 14 110 24 C150 34 180 8 220 12 C255 15 280 26 300 22 V60 H0Z"/>
-  <path fill="var(--sv-ilu-cerro-2)" d="M0 40 C35 28 75 30 120 38 C160 45 200 26 245 30 C270 32 290 38 300 36 V60 H0Z"/>
-  <path fill="var(--sv-ilu-cerro-3)" d="M0 50 C50 42 90 46 140 50 C190 54 240 44 300 48 V60 H0Z"/></symbol>
-</svg>
