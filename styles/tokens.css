@@ -136,6 +136,8 @@
     /* ── Elegir sendero: senderos apagados («Próximamente») ── */
     --sv-sendero-apagado-opacidad: 0.7;
     --sv-sendero-apagado-saturacion: 0.55;
+    /* Alto de la tarjeta de Santa Ana a 1440×900 (292,16 px), redondeado hacia arriba a múltiplo de 8: todas las tarjetas lo comparten */
+    --sv-sendero-tarjeta-alto: 296px;
     --sv-hueco-carga-ancho: 240px;
     --sv-hueco-carga-alto: 240px;
     --sv-hueco-cabecera-proporcion: 4.2 / 1;

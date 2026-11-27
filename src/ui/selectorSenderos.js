@@ -184,12 +184,13 @@
             grupo.append(tarjetas);
             sectores.append(grupo);
         }
+        // La nota de reserva va dentro de la columna de tarjetas, justo después del último sector.
+        sectores.append(crear('p', 'senderos-pie', datos.reservaNota
+            ? `${datos.reservaNota}. Los senderos que aún no están en la app se muestran apagados.`
+            : ''));
         cuerpo.append(sectores);
 
-        const pie = crear('p', 'senderos-pie', datos.reservaNota
-            ? `${datos.reservaNota}. Los senderos que aún no están en la app se muestran apagados.`
-            : '');
-        pantalla.append(cabecera, cuerpo, pie);
+        pantalla.append(cabecera, cuerpo);
         if (typeof llenarHuecosDeIlustracion === 'function') llenarHuecosDeIlustracion(pantalla);
         const primero = senderos.find(disponible) || senderos[0];
         if (primero) seleccionar(primero.id);

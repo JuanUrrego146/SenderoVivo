@@ -4380,8 +4380,6 @@ button,
 }
 
 .senderos-mapa {
-    position: sticky;
-    top: 0;
     margin: 0;
 }
 
@@ -4601,13 +4599,58 @@ button,
     font-size: 0.85rem;
 }
 
-@media (max-width: 640px) {
+/* Escritorio: la pantalla llena el alto sin scroll de página. El mapa va enmarcado a la izquierda,
+   y las tarjetas, con su propio scroll y todas del mismo alto, a la derecha. */
+@media (min-width: 641px) {
+    .senderos {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        box-sizing: border-box;
+        height: 100dvh;
+        overflow: hidden;
+    }
+
+    .senderos[hidden] {
+        display: none;
+    }
+
     .senderos-cuerpo {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 3fr) minmax(380px, 2fr);
+        align-items: stretch;
+        min-height: 0;
     }
 
     .senderos-mapa {
-        position: static;
+        container-type: size;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--sv-surface-panel);
+        border: var(--sv-panel-border);
+        border-radius: var(--sv-radius-lg);
+    }
+
+    .senderos-mapa-dibujo {
+        width: min(calc(100cqw - 32px), calc((100cqh - 56px) * 1280 / 723));
+        max-width: none;
+    }
+
+    .senderos-sectores {
+        min-height: 0;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    .sendero-tarjeta {
+        box-sizing: border-box;
+        min-height: var(--sv-sendero-tarjeta-alto);
+    }
+}
+
+@media (max-width: 640px) {
+    .senderos-cuerpo {
+        grid-template-columns: 1fr;
     }
 
     .senderos-tarjetas {
