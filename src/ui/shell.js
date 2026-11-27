@@ -57,13 +57,13 @@ function datoVisible(texto) {
  * Traduce una entrada del contrato a la forma que utiliza este cascarón.
  */
 function limpiarNombreComun(id, name) {
-    if (id === 'poi-muro-antiguo' || !name || name.includes('[por')) return 'Muro patrimonial antiguo';
+    if (!name || name.includes('[por')) return 'Punto de interés';
     if (id === 'poi-golondrina-plomiza' || id === 'poi-golondrina') return 'Golondrina plomiza';
     return name.replace(/\[[^\]]*\]/g, '').trim();
 }
 
 function limpiarTipoLabel(id, label) {
-    if (id === 'poi-muro-antiguo' || !label || label.includes('[por')) return 'Patrimonio histórico';
+    if (!label || label.includes('[por')) return 'Patrimonio histórico';
     if (id === 'poi-golondrina-plomiza' || id === 'poi-golondrina') return 'Avifauna nativa';
     return label.replace(/\s*·\s*\[por[^\]]*\]/g, '').replace(/\s*·\s*Binomio\s+por\s+verificar/gi, '').replace(/\[[^\]]*\]/g, '').trim();
 }
@@ -76,7 +76,6 @@ function limpiarNombreCientifico(id, scientific) {
     if (id === 'poi-puente-madera') return 'Infraestructura patrimonial';
     if (id === 'poi-colibri-chillon') return 'Colibri coruscans';
     if (id === 'poi-golondrina-plomiza' || id === 'poi-golondrina') return 'Orochelidon murina';
-    if (id === 'poi-muro-antiguo') return 'Estructura colonial andina';
     if (!scientific || scientific.includes('[por')) return 'Especie altoandina';
     return scientific.replace(/\s*·\s*\[por[^\]]*\]/g, '').replace(/\s*·\s*Binomio\s+por\s+verificar/gi, '').replace(/\[[^\]]*\]/g, '').trim();
 }
@@ -99,9 +98,6 @@ function limpiarCuriosidad(id, curiosity) {
         if (id === 'poi-golondrina-plomiza' || id === 'poi-golondrina') {
             return 'Es una de las pocas golondrinas residentes en la cordillera; anida en taludes y barrancos a lo largo de senderos y valles altoandinos.';
         }
-        if (id === 'poi-muro-antiguo') {
-            return 'Ruta de conexión histórica entre comunidades del valle del Teusacá y los Cerros Orientales de Bogotá.';
-        }
         return '';
     }
     return curiosity;
@@ -111,7 +107,7 @@ function desdeContrato(poi) {
     let cat = poi.category || poi.type || 'patrimonio';
     if (poi.id === 'poi-pino') {
         cat = 'flora';
-    } else if (poi.id === 'poi-puente-madera' || poi.id === 'poi-muro-antiguo') {
+    } else if (poi.id === 'poi-puente-madera') {
         cat = 'patrimonio';
     } else if (cat === 'curiosidades') {
         cat = poi.type === 'flora' ? 'flora' : 'patrimonio';

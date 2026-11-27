@@ -21,7 +21,7 @@
       "id": "canto-golondrina-plomiza",
       "label": "Golondrina plomiza",
       "poiId": "poi-golondrina-plomiza",
-      "url": "assets/audio/espacial/golondrina-plomiza.mp3",
+      "url": "assets/audio/espacial/golondrina-plomiza-xc.mp3",
       "refDistance": 3,
       "maxDistance": 30,
       "rolloffFactor": 1.2,
@@ -125,13 +125,26 @@
       "id": "canto-vireo-ojirrojo",
       "label": "Vireo ojirrojo",
       "poiId": "poi-vireo-ojirrojo",
-      "url": "assets/audio/espacial/vireo-ojirrojo.mp3",
+      "url": "assets/audio/espacial/vireo-ojirrojo-co.mp3",
       "refDistance": 3,
       "maxDistance": 30,
       "rolloffFactor": 1.2,
       "intervalSeconds": [
         15,
         35
+      ]
+    },
+    {
+      "id": "canto-atlapetes-nuquipalido",
+      "label": "Atlapetes nuquipálido",
+      "poiId": "poi-atlapetes-nuquipalido",
+      "url": "assets/audio/espacial/atlapetes-nuquipalido.mp3",
+      "refDistance": 3,
+      "maxDistance": 30,
+      "rolloffFactor": 1.2,
+      "intervalSeconds": [
+        12,
+        30
       ]
     }
   ]

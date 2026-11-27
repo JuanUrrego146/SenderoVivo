@@ -249,8 +249,8 @@
       "idleAnimation": "Take 001",
       "narrationUrl": "assets/audio/golondrina-narracion.mp3",
       "transcriptUrl": "",
-      "birdCallUrl": "assets/audio/Audios Pajaros/Golondrina High Final_1.mp3",
-      "audioCredit": "Canto: Juan M. Atencio, Villa General Mitre, Buenos Aires, Argentina · iNaturalist (observación 394727684) · CC BY-NC 4.0",
+      "birdCallUrl": "assets/audio/Audios Pajaros/Golondrina-plomiza-Orochelidon-murina-XC242905.mp3",
+      "audioCredit": "Canto: Niels Krabbe, laguna del Tambo, cordillera de los Llanganates, Tungurahua, Ecuador · xeno-canto (XC242905) · CC BY-SA 4.0 · https://xeno-canto.org/242905",
       "altitudeRange": "2.600 – 3.200 msnm",
       "fieldIdTips": "Silueta aerodinámica y vuelo bajo rasante sobre caminos",
       "sightingTips": "Observar en zonas despejadas del sendero durante las primeras horas de la mañana",
@@ -263,44 +263,6 @@
       "curiosity": "Es una de las pocas golondrinas residentes en la cordillera; anida en taludes y barrancos a lo largo de senderos y valles altoandinos.",
       "audioFreq": 760,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo."
-    },
-    {
-      "id": "poi-muro-antiguo",
-      "type": "patrimonio",
-      "category": "curiosidades",
-      "commonName": "Muro patrimonial antiguo",
-      "scientificName": "Punto patrimonial",
-      "sceneId": "sendero-01-t1-propia",
-      "anchor": {
-        "x": -20.65,
-        "y": 8.74,
-        "z": -9.34
-      },
-      "trailAnchor": {
-        "d": 23.56,
-        "lat": 1.9,
-        "alt": 0.75
-      },
-      "distanceMeters": 0,
-      "modelUrl": "",
-      "narrationUrl": "",
-      "transcriptUrl": "",
-      "birdCallUrl": "",
-      "historicalNote": "[por verificar]",
-      "period": "[por verificar]",
-      "sourceUrl": "",
-      "sourceUrlNote": "Vacío a propósito. La pista «por el valle del Teusacá pasaban rutas de intercambio muiscas» no tiene fuente citable, así que no se publica (invariante 9, HU-48). Vuelve a historicalNote cuando tenga sourceUrl.",
-      "icon": "fa-landmark",
-      "colorToken": "--sv-gray-200",
-      "typeLabel": "Patrimonio",
-      "shortDesc": "Muro antiguo junto al sendero.",
-      "fullDesc": "Muro antiguo junto al sendero.",
-      "conservation": "[por verificar]",
-      "curiosity": "[por completar tras V1]",
-      "audioFreq": 300,
-      "anchorNote": "Ubicación de vestigios de contención de piedra en el Tramo 1. En el Tramo 1 propio va en la misma proporción del recorrido (d por 72,0 / 56,84), del mismo lado y a 1,9 m o más del trazado, fuera de su corredor de 1,5 m.",
-      "mediaNote": "[por definir] Declarado en scene-02, que todavía no existe. El modelo muro-antiguo.glb tampoco está en el repositorio.",
-      "contentNote": "Texto anterior de commonName: «[por identificar en V1]» Texto anterior de typeLabel: «Patrimonio · [por identificar en V1]» Texto anterior de shortDesc: «Punto patrimonial pendiente de identificar en la primera visita.» Texto anterior de fullDesc: «Punto patrimonial por identificar en la visita de reconocimiento. El sourceUrl es obligatorio antes de publicar cualquier dato histórico.»"
     },
     {
       "id": "poi-tablero-informativo",
@@ -964,8 +926,8 @@
       "idleAnimation": "Take 001",
       "narrationUrl": "",
       "transcriptUrl": "",
-      "birdCallUrl": "assets/audio/Audios Pajaros/Vireo-Ojos-Rojos-High-Poly_1.mp3",
-      "audioCredit": "Canto: Francesca Venti, Fulks Run, Virginia, Estados Unidos · iNaturalist (observación 405342873) · CC BY-NC 4.0",
+      "birdCallUrl": "assets/audio/Audios Pajaros/Vireo-ojirrojo-Vireo-olivaceus-Colombia_1.mp3",
+      "audioCredit": "Canto: Jorge I. Merchán Mayorga, Quinta de San Pedro Alejandrino, Santa Marta, Magdalena, Colombia · iNaturalist (observación 138057534) · CC BY-SA 4.0 · https://www.inaturalist.org/observations/138057534",
       "altitudeRange": "",
       "fieldIdTips": "[por completar]",
       "sightingTips": "[por completar]",
@@ -1004,7 +966,7 @@
       "idleAnimation": "Take 001",
       "narrationUrl": "",
       "transcriptUrl": "",
-      "birdCallUrl": "",
+      "birdCallUrl": "assets/audio/Audios Pajaros/Atlapetes-nuquipalido-Atlapetes-pallidinucha_1.mp3",
       "altitudeRange": "",
       "fieldIdTips": "Lados de la cabeza negros, lista de la corona canela al frente y blanca hacia la nuca, partes inferiores amarillas.",
       "sightingTips": "[por completar]",
@@ -1017,8 +979,9 @@
       "curiosity": "",
       "audioFreq": 700,
       "anchorNote": "Ubicación al azar (encargo de Juan del 17/11/2026, semilla 20261117): el ave se reparte por el tramo para que se vea y su canto suene desde ahí. No es un punto de avistamiento medido en campo.",
-      "mediaNote": "El canto que traía este punto era de Florisuga mellivora, un colibrí de tierras bajas, y no corresponde a esta especie: se retiró de la ficha y del audio espacial. Los archivos siguen en assets/audio/Audios Pajaros y en assets/audio/espacial, con sus créditos en CREDITOS_Y_LICENCIAS.md.",
-      "contentNote": "Retirado de fullDesc: «Su registro en el sendero está por verificar contra la lista de eBird y su canto todavía no está en el catálogo.»"
+      "mediaNote": "Canto original para la ficha en assets/audio/Audios Pajaros; versión mono a −23 LUFS para el audio espacial en assets/audio/espacial. Créditos completos en assets/audio/Audios Pajaros/CREDITOS_Y_LICENCIAS.md.",
+      "contentNote": "Retirado de fullDesc: «Su registro en el sendero está por verificar contra la lista de eBird y su canto todavía no está en el catálogo.»",
+      "audioCredit": "Canto: Nicolás Baresch Uribe, Facatativá, Cundinamarca, Colombia · iNaturalist (observación 112829169) · CC BY 4.0 · https://www.inaturalist.org/observations/112829169"
     }
   ]
 }
