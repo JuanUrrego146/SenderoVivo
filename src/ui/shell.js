@@ -942,6 +942,14 @@ function visorHojaHTML(item) {
         `<div id="poi-hoja-3d" class="poi-hoja-3d-visor">${miniaturaHojaHTML(item)}</div></div>`;
 }
 
+function cerrarHojaSiEstaAbierta() {
+    const hoja = document.getElementById('bottom-sheet');
+
+    if (hoja && !hoja.classList.contains('translate-y-full')) {
+        closeBottomSheet();
+    }
+}
+
 function destruirVisorHoja() {
     // Cancela también una carga que todavía no terminó.
     turnoVisorHoja++;
