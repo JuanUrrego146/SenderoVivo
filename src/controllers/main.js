@@ -69,12 +69,15 @@ function showOverlay(html) {
 
 function showLoading() {
     showOverlay(`
+        <div class="hueco-ilustracion" data-ilustracion="carga"></div>
         <div class="spinner"></div>
         <h1>Preparando el recorrido…</h1>
         <p id="carga-detalle">Descargando la escena</p>
         <div class="barra"><div class="barra-fill" id="carga-barra"></div></div>
         <p class="nota">La escena pesa 56 MB. La primera visita tarda; después queda en caché.</p>
     `);
+    // El hueco de la ilustración de carga se llena con el archivo de config/ilustraciones.json, si existe.
+    if (typeof window.llenarHuecosDeIlustracion === 'function') window.llenarHuecosDeIlustracion(overlayContent);
 }
 
 /** Actualiza la barra de progreso de la descarga. */

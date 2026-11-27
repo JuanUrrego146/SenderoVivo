@@ -24,7 +24,7 @@
         <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Quicksand:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
         <style>
             /* Tokens de color en styles/tokens.css — Atlas Botánico Vivo */
 
@@ -32,13 +32,13 @@
                 margin: 0;
                 overflow: hidden;
                 background: var(--sv-teal-deep);
-                font-family: 'Quicksand', system-ui, sans-serif;
+                font-family: var(--sv-font-body);
                 font-weight: 500;
             }
 
             /* Headings usan Syne */
             h1, h2, h3, h4, h5, h6 {
-                font-family: 'Syne', 'Quicksand', system-ui, sans-serif;
+                font-family: var(--sv-font-title);
             }
 
             #overlay {
@@ -65,7 +65,7 @@
                 font-size: 22px;
                 font-weight: 700;
                 color: var(--sv-text-primary);
-                font-family: 'Syne', system-ui, sans-serif;
+                font-family: var(--sv-font-title);
             }
             #overlay-content p {
                 margin: 0 0 12px;
@@ -264,6 +264,7 @@
     <body>
         <div id="overlay">
             <div id="overlay-content">
+                <div class="hueco-ilustracion" data-ilustracion="carga"></div>
                 <div class="spinner"></div>
                 <h1>Preparando el visor…</h1>
             </div>
@@ -271,6 +272,13 @@
 
         <!-- ============ VENTANA INICIAL A PANTALLA COMPLETA (HERO START SCREEN) ============ -->
         <div id="trail-lobby" role="dialog" aria-modal="true" aria-label="Pantalla de inicio Sendero Vivo">
+            <!-- Foto real del mirador de la Cumbre: ancha en escritorio, vertical en celular -->
+            <!-- Fondo ilustrado (video en bucle con su imagen fija): lo llena shell.js si los archivos existen -->
+            <div class="portada-fondo" data-ilustracion="portada-fondo" aria-hidden="true"></div>
+            <picture class="hero-foto">
+                <source media="(max-width: 640px)" srcset="assets/portada-mirador-movil.webp">
+                <img src="assets/portada-mirador.webp" alt="" decoding="async" fetchpriority="high">
+            </picture>
             <div class="hero-screen-overlay"></div>
 
 
@@ -278,7 +286,7 @@
             <header class="hero-top-bar">
                 <div class="hero-pill-location">
                     <i class="fa-solid fa-location-dot"></i>
-                    <span>Sendero Santa Ana</span>
+                    <span>Cerros Orientales de Bogotá</span>
                 </div>
                 <div class="hero-pill-tech">
                     <span data-portada="tecnica">Recorrido en 3D</span>
@@ -313,19 +321,24 @@
             <footer class="hero-bottom-footer">
                 <div class="hero-bottom-divider"></div>
                 <div class="hero-footer-content">
-                    <div class="hero-footer-stats" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">
-                        <span data-portada="recorrido" class="hero-stat-highlight" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-primary-hover);"></span>
+                    <div class="hero-footer-stats" style="font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700;">
+                        <span data-portada="recorrido" class="hero-stat-highlight" style="font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700; color: var(--sv-primary-hover);"></span>
                         <span class="hero-stat-sep">·</span>
-                        <span data-portada="subida" class="hero-stat-highlight" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-primary-hover);"></span>
+                        <span data-portada="subida" class="hero-stat-highlight" style="font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700; color: var(--sv-primary-hover);"></span>
                         <span class="hero-stat-sep">·</span>
-                        <span data-portada="altitud" class="hero-stat-time" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-surface-solid);"></span>
+                        <span data-portada="altitud" class="hero-stat-time" style="font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700; color: var(--sv-surface-solid);"></span>
                     </div>
-                    <div class="hero-footer-slogan" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-primary-hover);">
+                    <div class="hero-footer-slogan" style="font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700; color: var(--sv-primary-hover);">
                         Buenos senderos, mejores personas
                     </div>
                 </div>
             </footer>
         </div>
+
+        <!-- Cierre del recorrido: pantalla propia, todavía sin contenido; espera su ilustración -->
+        <section id="cierre-recorrido" hidden>
+            <div class="hueco-ilustracion" data-ilustracion="cierre"></div>
+        </section>
 
         <div id="preparar-visita-modal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="preparar-trail-title" onclick="if(event.target===this) closePrepararVisita();">
             <div class="preparar-visita-modal-card glass-panel pointer-events-auto">
@@ -407,7 +420,7 @@
                             
                             <!-- 1. Tarjeta Ecosistema con Imagen y Descripción -->
                             <div class="ecosystem-banner-card">
-                                <div id="preparar-eco-banner" class="ecosystem-banner" style="background-image: url('assets/portada-cumbre.webp');">
+                                <div id="preparar-eco-banner" class="ecosystem-banner" style="background-image: url('assets/portada-mirador.webp');">
                                     <div class="ecosystem-banner-overlay"></div>
                                     <div class="absolute bottom-3 left-4 right-4 z-10">
                                         <span id="preparar-eco-tag" class="inline-block text-[10px] sm:text-xs font-bold font-syne px-3 py-1 rounded-full shadow-md" style="background: var(--sv-flora-surface); color: var(--sv-flora-color); border: 1px solid var(--sv-flora-border);">
@@ -416,7 +429,7 @@
                                     </div>
                                 </div>
                                 <div class="p-4 sm:p-5" style="background: var(--sv-surface-inset);">
-                                    <p id="preparar-eco-desc" class="text-xs sm:text-[13.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted); font-family: 'Quicksand', sans-serif;">
+                                    <p id="preparar-eco-desc" class="text-xs sm:text-[13.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted); font-family: var(--sv-font-body);">
                                         Camino ecológico ancestral rodeado de imponentes bosques de pinos y vegetación nativa altoandina. Un sendero de pendiente amable ideal para caminatas contemplativas, avistamiento de aves andinas y conexión profunda con la naturaleza.
                                     </p>
                                 </div>
@@ -442,7 +455,7 @@
                                 </p>
 
                                 <!-- Visual del mapa con orientación Norte -->
-                                <div id="preparar-map-img" class="preparar-map-visual mb-4" style="background-image: url('assets/portada-cumbre.webp');">
+                                <div id="preparar-map-img" class="preparar-map-visual mb-4" style="background-image: url('assets/portada-mirador.webp');">
                                     <div class="preparar-map-overlay"></div>
                                     <div class="absolute top-3 left-3 z-10">
                                         <span class="text-[10px] sm:text-[10.5px] font-bold font-mono uppercase px-2.5 py-1 rounded-md flex items-center gap-1.5" style="background: var(--sv-surface-solid); color: var(--sv-primary); border: 1px solid var(--sv-surface-border); backdrop-filter: blur(4px);">
@@ -594,6 +607,7 @@
         <!-- ============ ÁLBUM DE BIODIVERSIDAD (CATÁLOGO VISUAL) ============ -->
         <div id="biodiversity-album-modal" role="dialog" aria-modal="true" aria-label="Catálogo Vivo de Biodiversidad" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5" style="background: var(--sv-scrim-heavy); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);" onclick="if(event.target===this) closeBiodiversityAlbum();">
             <div class="biodiversity-modal-card glass-panel w-full max-w-4xl max-h-[85vh] flex flex-col rounded-[28px] overflow-hidden shadow-2xl pointer-events-auto" style="background: var(--sv-surface-solid); border: 2px solid var(--sv-surface-border);">
+                <div class="hueco-ilustracion" data-ilustracion="album-cabecera"></div>
                 <!-- Cabecera del Álbum -->
                 <div class="p-4 sm:p-5 border-b flex items-center justify-between gap-3" style="border-color: var(--sv-surface-border); background: var(--sv-surface-solid);">
                     <div class="flex items-center gap-3 min-w-0">
@@ -691,7 +705,7 @@
                 <div class="command-bar-left">
                     <button class="expedition-badge-trigger" onclick="openTrailLobby()" title="Ficha técnica del sendero y detalles">
                         <div class="expedition-badge-icon">
-                            <i class="fa-solid fa-mountain-sun"></i>
+                            <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#monte"/></svg>
                         </div>
                         <div class="expedition-title-group">
                             <span class="expedition-brand-sup">Cerros Orientales · Bogotá</span>
@@ -701,7 +715,7 @@
                     <div class="expedition-live-pill" title="Altitud de estación actual">
                         <span class="live-pulse-dot"></span>
                         <span style="font-size: 11px; font-weight: 600; color: var(--sv-text-muted);">
-                            <i class="fa-solid fa-mountain text-[10px]" style="color: var(--sv-primary);"></i> <strong id="hud-altitud-top" style="color: var(--sv-text-primary); font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">—</strong>
+                            <svg class="ic text-[10px]" style="color: var(--sv-primary);" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#alt"/></svg> <strong id="hud-altitud-top" style="color: var(--sv-text-primary); font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700;">—</strong>
                         </span>
                     </div>
                 </div>
@@ -715,7 +729,7 @@
                             Luma
                         </button>
                         <button id="btn-ambient-audio-toggle" type="button" class="render-btn" onclick="toggleAmbientAudio()" title="Activar / Silenciar sonido de bosque" aria-label="Sonido ambiental">
-                            <i class="fa-solid fa-volume-high"></i>
+                            <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#sonido"/></svg>
                         </button>
                     </div>
                     <script>
@@ -733,10 +747,10 @@
 
                     <div class="command-actions-cluster">
                         <button onclick="openTrailLobby()" class="command-icon-btn" title="Ficha del sendero">
-                            <i class="fa-solid fa-mountain-sun"></i>
+                            <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#monte"/></svg>
                         </button>
                         <button onclick="openOnboarding(true)" class="command-icon-btn" title="Tutorial de interacción">
-                            <i class="fa-solid fa-circle-question"></i>
+                            <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#ayuda"/></svg>
                         </button>
                     </div>
                 </div>
@@ -747,19 +761,19 @@
                 <div class="mobile-top-main">
                     <button class="mobile-brand-pill" onclick="openTrailLobby()" title="Información del sendero">
                         <div class="mobile-brand-icon">
-                            <i class="fa-solid fa-mountain-sun"></i>
+                            <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#monte"/></svg>
                         </div>
                         <div class="mobile-brand-titles">
                             <span class="mobile-brand-title">Sendero Santa Ana</span>
-                            <span class="mobile-brand-sub" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">Altitud GPS · Cerros Orientales</span>
+                            <span class="mobile-brand-sub" style="font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700;">Altitud GPS · Cerros Orientales</span>
                         </div>
                     </button>
                     <div class="mobile-top-controls">
                         <button id="btn-ambient-audio-toggle-m" onclick="toggleAmbientAudio()" class="mobile-action-icon" aria-label="Sonido ambiental" title="Activar / Silenciar sonido de bosque">
-                            <i class="fa-solid fa-volume-high"></i>
+                            <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#sonido"/></svg>
                         </button>
                         <button onclick="openTrailLobby()" class="mobile-action-icon" aria-label="Información del sendero" title="Ficha técnica">
-                            <i class="fa-solid fa-circle-info"></i>
+                            <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#ayuda"/></svg>
                         </button>
                     </div>
                 </div>
@@ -774,7 +788,7 @@
                 <div class="telemetry-card" role="button" tabindex="0" aria-expanded="false" title="Datos del recorrido · toca para ver más"
                     onclick="alternarTelemetria(this)" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); alternarTelemetria(this); }">
                     <div class="telemetry-linea">
-                        <span class="telemetry-dato"><i class="fa-solid fa-mountain"></i><span id="hud-altitud">—</span></span>
+                        <span class="telemetry-dato"><svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#alt"/></svg><span id="hud-altitud">—</span></span>
                         <span class="telemetry-dato"><span class="telemetry-etiqueta">Recorrido</span><span id="hud-recorrido">—</span></span>
                         <span class="telemetry-dato"><span class="telemetry-etiqueta">Restante</span><span id="hud-restante">—</span></span>
                         <span class="telemetry-dato telemetry-proximo"><span class="telemetry-etiqueta" id="hud-eta-label">Próximo punto</span><span id="hud-eta">—</span></span>
@@ -782,7 +796,7 @@
                     <div class="telemetry-detalle">
                         <div class="telemetry-metrics-pills">
                             <div class="telemetry-mini-pill" title="Desnivel acumulado">
-                                <i class="fa-solid fa-arrow-trend-up" style="color: var(--sv-secondary);"></i>
+                                <svg class="ic" style="color: var(--sv-secondary);" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#arriba"/></svg>
                                 <span id="hud-desnivel">+0 m</span>
                             </div>
                             <div class="telemetry-mini-pill" title="Pendiente media">
@@ -801,11 +815,11 @@
 
                     <div class="telemetry-footer-row">
                         <div class="telemetry-poi-count">
-                            <i class="fa-solid fa-binoculars" style="color: var(--sv-primary); font-size: 11px;"></i>
+                            <svg class="ic" style="color: var(--sv-primary); font-size: 11px;" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#binoculares"/></svg>
                             <span id="discovered-counter">0 de 8 especies vistas</span>
                         </div>
                         <button onclick="event.stopPropagation(); switchTab('quest')" class="telemetry-btn-bitacora">
-                            <i class="fa-solid fa-book-bookmark"></i> Bitácora
+                            <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#bitacora"/></svg> Bitácora
                         </button>
                     </div>
                     </div>
@@ -817,16 +831,16 @@
                 <div class="flex items-center justify-between px-3 py-2.5 cursor-pointer select-none"
                     onclick="toggleDetailsCard()" ontouchstart="toggleDetailsCard(); event.preventDefault();">
                     <div class="flex items-center gap-2">
-                        <i id="details-arrow-icon" class="fa-solid fa-chevron-up text-xs transition-transform duration-300" style="color: var(--sv-primary);"></i>
+                        <svg class="ic text-xs transition-transform duration-300" id="details-arrow-icon" style="color: var(--sv-primary);" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#arriba"/></svg>
                         <span class="text-xs font-bold" style="color: var(--sv-text-primary);">Detalles del sendero</span>
                     </div>
-                    <span id="hud-datos-mobile" class="text-xs font-bold" style="color: var(--sv-primary); font-family: 'Playfair Display', serif; font-style: italic;">—</span>
+                    <span id="hud-datos-mobile" class="text-xs font-bold" style="color: var(--sv-primary); font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento);">—</span>
                 </div>
                 <div id="details-content" class="hidden" style="border-top: 1px solid var(--sv-surface-border);">
                     <div class="grid grid-cols-5 gap-1 px-3 py-2.5" style="font-variant-numeric: tabular-nums;">
                         <div class="text-center">
                             <div class="text-[11px] font-bold uppercase" style="color: var(--sv-text-dim);">Altitud</div>
-                            <div class="text-[14px] font-bold" style="color: var(--sv-primary); font-family: 'Playfair Display', serif; font-style: italic;" id="hud-altitud-m">—</div>
+                            <div class="text-[14px] font-bold" style="color: var(--sv-primary); font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento);" id="hud-altitud-m">—</div>
                         </div>
                         <div class="text-center">
                             <div class="text-[11px] font-bold uppercase" style="color: var(--sv-text-dim);">Recorrido</div>
@@ -851,15 +865,15 @@
             <!-- Nav PC -->
             <nav id="shell-nav-pc" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 glass-panel rounded-full px-5 py-2 sm:px-8 sm:py-2.5 flex items-center gap-6 sm:gap-12 shadow-2xl pointer-events-auto">
                 <button id="nav-trail" onclick="switchTab('trail')" ontouchstart="switchTab('trail')" class="active-dock-tab flex flex-col items-center gap-1 font-medium touch-manipulation cursor-pointer transition min-w-[54px] min-h-[44px] justify-center" style="color: var(--sv-primary);">
-                    <i class="fa-solid fa-compass text-base sm:text-lg"></i>
+                    <svg class="ic ic-nav" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#sendero"/></svg>
                     <span class="text-[10px] sm:text-[11px]">Sendero</span>
                 </button>
                 <button id="nav-catalog" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')" class="flex flex-col items-center gap-1 transition touch-manipulation cursor-pointer min-w-[54px] min-h-[44px] justify-center" style="color: var(--sv-text-dim);">
-                    <i class="fa-solid fa-book-bookmark text-base sm:text-lg"></i>
+                    <svg class="ic ic-nav" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#especies"/></svg>
                     <span class="text-[10px] sm:text-[11px]">Especies</span>
                 </button>
                 <button id="nav-quest" onclick="switchTab('quest')" ontouchstart="switchTab('quest')" class="flex flex-col items-center gap-1 transition touch-manipulation cursor-pointer min-w-[54px] min-h-[44px] justify-center" style="color: var(--sv-text-dim);">
-                    <i class="fa-solid fa-trophy text-base sm:text-lg"></i>
+                    <svg class="ic ic-nav" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#bitacora"/></svg>
                     <span class="text-[10px] sm:text-[11px]">Bitácora</span>
                 </button>
             </nav>
@@ -868,17 +882,17 @@
             <nav id="shell-nav-mobile" class="absolute bottom-3 left-4 right-4 z-40 glass-panel rounded-full px-4 py-2 flex items-center justify-around shadow-2xl pointer-events-auto">
                 <button id="nav-trail-m" onclick="switchTab('trail')" ontouchstart="switchTab('trail')"
                     class="nav-m-btn nav-m-active flex flex-col items-center gap-1 font-medium touch-manipulation cursor-pointer transition min-w-[50px] min-h-[44px] justify-center" style="color: var(--sv-primary);">
-                    <i class="fa-solid fa-compass text-base"></i>
+                    <svg class="ic ic-nav" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#sendero"/></svg>
                     <span class="text-[10px]">Sendero</span>
                 </button>
                 <button id="nav-catalog-m" onclick="switchTab('catalog')" ontouchstart="switchTab('catalog')"
                     class="nav-m-btn flex flex-col items-center gap-1 transition touch-manipulation cursor-pointer min-w-[50px] min-h-[44px] justify-center" style="color: var(--sv-text-dim);">
-                    <i class="fa-solid fa-book-bookmark text-base"></i>
+                    <svg class="ic ic-nav" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#especies"/></svg>
                     <span class="text-[10px]">Especies</span>
                 </button>
                 <button id="nav-quest-m" onclick="switchTab('quest')" ontouchstart="switchTab('quest')"
                     class="nav-m-btn flex flex-col items-center gap-1 transition touch-manipulation cursor-pointer min-w-[50px] min-h-[44px] justify-center" style="color: var(--sv-text-dim);">
-                    <i class="fa-solid fa-trophy text-base"></i>
+                    <svg class="ic ic-nav" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#bitacora"/></svg>
                     <span class="text-[10px]">Bitácora</span>
                 </button>
             </nav>

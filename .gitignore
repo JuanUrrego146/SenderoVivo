@@ -68,6 +68,9 @@ captures/
 *.avi
 *.mkv
 *.insv
+# Salvo los dos videos de la portada: son parte de la app (assets/ilustraciones/LEEME.md)
+!assets/ilustraciones/portada-fondo.mp4
+!assets/ilustraciones/portada-fondo-movil.mp4
 
 # Fotogramas extraídos del video
 frames/

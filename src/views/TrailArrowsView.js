@@ -267,9 +267,11 @@ export class TrailArrowsView {
          * Todo viene de styles/tokens.css.
          */
 
+        // Flecha del camino del estilo de papel recortado: el trazo en el verde de acción y el
+        // borde en el crema del marcador (ya no amarillo).
         const arrowFill =
             cssToken(
-                '--sv-green-300'
+                '--sv-arrow-ink'
             );
 
         /*
@@ -284,7 +286,7 @@ export class TrailArrowsView {
 
         const arrowStroke =
             cssToken(
-                '--sv-text-inverse'
+                '--sv-arrow-bg'
             );
 
         const materialColor =

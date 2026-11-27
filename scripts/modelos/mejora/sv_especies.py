@@ -95,9 +95,9 @@ ALA_REDONDA = dict(n_prim=9, n_sec=6, n_ter=3, largo_prim=[0.70, 0.80, 0.88, 0.9
 ALA_PUNTIAGUDA = dict(n_prim=9, n_sec=6, n_ter=3, largo_prim=[0.62, 0.74, 0.88, 1.02, 1.14, 1.24, 1.30, 1.30, 1.20], ang_prim=(10, 74),
                       largo_sec=0.56, ang_sec=(6, -2), largo_ter=[0.52, 0.46, 0.40], ang_ter=(-8, -20),
                       ancho_prim=0.16, ancho_sec=0.27, ancho_ter=0.30)
-ALA_GOLONDRINA = dict(n_prim=9, n_sec=6, n_ter=3, largo_prim=[0.55, 0.68, 0.84, 1.00, 1.18, 1.34, 1.48, 1.58, 1.60], ang_prim=(8, 78),
+ALA_GOLONDRINA = dict(n_prim=9, n_sec=6, n_ter=3, largo_prim=[0.55, 0.68, 0.84, 1.00, 1.18, 1.34, 1.48, 1.58, 1.60], ang_prim=(8, 70),
                       largo_sec=0.46, ang_sec=(6, -2), largo_ter=[0.44, 0.40, 0.34], ang_ter=(-8, -20),
-                      ancho_prim=0.13, ancho_sec=0.28, ancho_ter=0.30)
+                      ancho_prim=0.17, ancho_sec=0.28, ancho_ter=0.30)
 ALA_COLIBRI = dict(n_prim=10, n_sec=6, n_ter=2, largo_prim=[0.50, 0.62, 0.76, 0.90, 1.04, 1.18, 1.30, 1.40, 1.48, 1.50], ang_prim=(6, 80),
                    largo_sec=0.36, ang_sec=(6, 0), largo_ter=[0.34, 0.30], ang_ter=(-6, -16),
                    ancho_prim=0.125, ancho_sec=0.30, ancho_ter=0.32)
@@ -158,7 +158,7 @@ def _pinta_aguililla(ave, c):
     p.zona(z.lat * z.tramo(0.45, 0.95, 0.08), color="#e3cba6", celda="cont_barras")              # flancos barrados
     p.zona(z.ven * suave(0.86, 0.98, s), color="#efe4cf", tam=1.25)                              # infracoberteras
     p.zona((1 - z.dor) * z.tramo(0.17, 0.43, 0.05), color="#73431f", celda="cont_liso", tam=1.1)  # babero rufo
-    p.zona(z.dor * suave(0.12, 0.22, s), color="#7d6850", celda="cont_borde", tam=1.35)          # dorso pardo oscuro escamado
+    p.zona(z.dor * suave(-0.30, -0.10, s), color="#7d6850", celda="cont_borde", tam=1.35)          # dorso pardo oscuro escamado
     p.zona(z.dor * suave(0.90, 0.98, s), color="#e9e2d2", celda="cont_liso", tam=1.3)            # supracoberteras claras
     p.zona(cab, color="#4d3927", celda="cont_liso2")                                              # cabeza parda
     p.zona(z.garganta(desde=118, lam_max=125), color="#f4f0e8")                                  # garganta blanca
@@ -251,7 +251,7 @@ def _pinta_golondrina(ave, c):
     p = Pintor(c, "#6d6965", "cont_liso")                                                        # partes inferiores gris humo
     p.zona(z.ven * z.tramo(0.45, 0.9, 0.1), color="#76726d")
     p.zona(z.ven * suave(0.86, 0.98, z.s), color="#3c3c40", tam=1.2)                             # infracoberteras oscuras
-    p.zona(1 - suave(98, 128, z.th), color="#1c2a3a")                                            # dorso y costados negro azulado
+    p.zona(1 - suave(82, 110, z.th), color="#1c2a3a")                                            # dorso negro azulado; costados y vientre gris humo
     p.zona(z.cab, color="#1c2a3a", celda="cont_liso2")
     p.zona(z.cab * suave(z.po + 6, z.po + 22, z.phi), color="#5f5b58")                           # mejillas y garganta grises
     p.zona(z.franja(-10, 10, lam1=z.lo - 6), color="#14181e")                                    # lores negros
@@ -281,7 +281,7 @@ def _pinta_nuca(ave, c):
     p.zona(z.ven * z.tramo(0.30, 0.95, 0.1), color="#cdb93a")                                    # vientre amarillo oliva
     p.zona(z.lat * z.tramo(0.3, 0.98, 0.1), color="#8f8d4e")                                     # flancos oliva grisaceo
     p.zona(z.ven * suave(0.86, 0.98, z.s), color="#b8a84a", tam=1.2)
-    p.zona(z.dor * suave(0.14, 0.24, z.s), color="#3d4046", tam=1.1)                             # dorso gris pizarra
+    p.zona(z.dor * suave(-0.30, -0.10, z.s), color="#3d4046", tam=1.1)                             # dorso gris pizarra
     p.zona(z.cab, color="#171616", celda="cont_liso2")                                            # lados de la cabeza negros
     lista = z.cab * (1 - suave(11, 20, z.phi)) * suave(24, 38, z.lam)
     p.zona(lista, color="#c9772e")                                                               # lista canela en la frente
@@ -342,12 +342,13 @@ def _pinta_saltapared(ave, c):
     p = Pintor(c, "#cfab82", "cont_liso")                                                        # partes inferiores ante canela
     p.zona(z.lat * z.tramo(0.4, 0.98, 0.1), color="#bb8858", celda="cont_barras")                # flancos mas rufos y barrados
     p.zona(z.ven * suave(0.84, 0.97, z.s), color="#c59a6c", celda="cont_barras", tam=1.2)
-    p.zona(z.dor * suave(0.14, 0.24, z.s), color="#876038", celda="cont_liso")
+    p.zona(z.dor * suave(-0.30, -0.10, z.s), color="#876038", celda="cont_liso")                  # dorso pardo desde la coronilla
     p.zona(z.dor * suave(0.6, 0.75, z.s), color="#96693a")                                       # rabadilla mas rufa
-    p.zona(z.cab, color="#a98660", celda="cont_liso2")                                            # cara ante parda
-    p.zona(z.corona(z.po - 20), color="#7a5632")
+    p.zona(z.cab, color="#86613b", celda="cont_liso2")                                            # cabeza parda como el dorso
+    p.zona(z.corona(z.po - 14), color="#7a5632")                                                 # coronilla parda
     p.zona(z.nuca(), color="#7f5a34")
-    p.zona(z.franja(-19, -8, sv=3, lam0=28, lam1=150), color="#cdb08a")                          # ceja palida
+    p.zona(z.cab * suave(z.po + 4, z.po + 18, z.phi), color="#b08d66")                           # mejilla ante
+    p.zona(z.franja(-12, -6, sv=2, lam0=40, lam1=140), color="#c4a47e")                          # ceja ante tenue
     p.zona(z.franja(-5, 5, sv=3, lam0=z.lo + 10), color="#6a4c2e")                               # linea postocular
     p.zona(z.garganta(), color="#dec7a8")
     return p
@@ -356,6 +357,7 @@ def _pinta_saltapared(ave, c):
 def saltapared():
     return {
         "pinta": _pinta_saltapared,
+        "pico_fino": 0.62,                                                                     # pico fino de cucarachero
         "cuerpo": dict(largo=0.092, largo_cabeza=0.46, densidad=0.31, levante=13.0, candidatos=140000),
         "ala": dict(ALA_REDONDA, envergadura=1.1,
                     color=dict(remera="#8a643c", borde="#a57c50", ter="#876038", borde_ter="#a57c50", fuerza_borde=0.4,
@@ -375,7 +377,7 @@ def _pinta_tucan(ave, c):
     p = Pintor(c, "#9cc4de", "cont_liso")                                                        # pecho y vientre celestes
     p.zona(z.lat * z.tramo(0.62, 0.9, 0.06), color="#6e3a1e")                                    # muslos castaños
     p.zona(z.ven * suave(0.86, 0.96, s), color="#b3231f", tam=1.2)                               # infracoberteras rojas
-    p.zona(z.dor * suave(0.10, 0.22, s), color="#6a5a33", tam=1.15)                              # manto pardo oliva
+    p.zona(z.dor * suave(-0.30, -0.10, s), color="#6a5a33", tam=1.15)                              # manto pardo oliva
     p.zona(z.dor * z.tramo(0.70, 0.90, 0.04), color="#e0c42a")                                   # rabadilla amarilla
     p.zona(z.dor * suave(0.90, 0.96, s), color="#3c4a3a")                                        # supracoberteras verdosas
     p.zona(z.cab, color="#f3f3ef", celda="cont_liso2")                                            # mejillas y garganta blancas
@@ -409,7 +411,7 @@ def _pinta_vireo(ave, c):
     p = Pintor(c, "#f1efe8", "cont_liso")                                                        # partes inferiores blancas
     p.zona(z.lat * z.tramo(0.4, 0.98, 0.1), color="#e2dc9c")                                     # flancos amarillentos
     p.zona(z.ven * suave(0.84, 0.97, z.s), color="#e6df96", tam=1.2)
-    p.zona(z.dor * suave(0.14, 0.24, z.s), color="#78813f")                                      # dorso verde oliva
+    p.zona(z.dor * suave(-0.30, -0.10, z.s), color="#78813f")                                      # dorso verde oliva
     p.zona(z.cab, color="#aaa87e", celda="cont_liso2")                                            # mejillas oliva ante
     p.zona(z.garganta(desde=118), color="#f1efe8")
     p.zona(z.nuca(150), color="#78813f")

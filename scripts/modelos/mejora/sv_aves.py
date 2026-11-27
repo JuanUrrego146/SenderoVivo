@@ -14,7 +14,7 @@ import numpy as np
 
 import sv_lib
 
-ATLAS_DIR = os.path.join(sv_lib.RAIZ, "trabajo", "atlas")
+ATLAS_DIR = os.path.join(sv_lib.RAIZ, "trabajo", "atlas_v4")
 # La ficha de la app (ModelView.js) muestra los modelos con exposicion 1,6. Los colores se escriben
 # multiplicados por 1/1,6 para que en la app se vean con el tono con el que se pintaron.
 GANANCIA_VISOR = 1.0 / 1.6
@@ -436,7 +436,13 @@ class Ave:
         self.C_cab = cab
         sel_cab = tronco & np.isin(self.dom, list(CABEZA))
         self.R_cab = float(np.median(np.linalg.norm(co[sel_cab] - cab, axis=1))) if sel_cab.sum() > 5 else 0.004
-        pico = co[self.v_pico]
+        # en la golondrina y el saltapared las patas comparten el material del pico: solo cuentan como pico
+        # los vertices que mueve la cabeza (si no, la «punta del pico» caia en los dedos y la cabeza quedaba
+        # con la coronilla y la garganta invertidas)
+        sel_pico = self.v_pico & (self.peso(list(CABEZA)) > 0.5)
+        if sel_pico.sum() < 4:
+            sel_pico = self.v_pico
+        pico = co[sel_pico]
         if len(pico):
             punta = pico[np.argmax(np.linalg.norm(pico - cab, axis=1))].copy()
         else:

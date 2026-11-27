@@ -118,6 +118,24 @@ def afinar_alas(ave, frente=0.085, atras=0.13, grosor=0.024, cuna=0.65):
         ave.co[sel] = ave.co[sel] * (1 - mez[:, None]) + nuevo * mez[:, None]
 
 
+def afinar_pico(ave, k=0.7):
+    """Adelgaza el pico alrededor de su eje (alto y ancho por k), sin cambiar el largo.
+
+    La base queda igual para no abrir costura con la cabeza; el adelgazamiento crece hacia la punta."""
+    sel = ave.v_pico & (ave.peso(list(sv_aves.CABEZA)) > 0.5)
+    if sel.sum() < 4:
+        return 0
+    P = ave.co[sel]
+    f = ave.f_cab
+    t = (P - ave.C_cab) @ f
+    t0, t1 = ave.pico_base, ave.pico_base + ave.pico_largo
+    x = np.clip((t - t0) / max(t1 - t0, 1e-9), 0, 1)
+    eje = ave.C_cab[None, :] + t[:, None] * f[None, :]
+    kk = 1.0 - (1.0 - k) * suave(0.0, 0.35, x)
+    ave.co[sel] = eje + (P - eje) * kk[:, None]
+    return int(sel.sum())
+
+
 def afinar_cola(ave, k_largo=0.42, k_ancho=0.6):
     sel = ave.v_piel & (ave.w_cola > 0.3)
     if sel.sum() < 4:
@@ -518,7 +536,8 @@ def plumas_cuerpo(ave, T, esp, rng):
     w_ala = suma([b + s for b in sv_aves.ALA for s in ("_L", "_R")])
     w_pata = suma([b + s for b in sv_aves.PATA for s in ("_L", "_R")])
     c = ave.coords(P, Nn)
-    ok = (w_ala < cfg.get("corte_ala", 0.5)) & (w_pata < 0.35)
+    patas_nuevas = esp.get("patas", {}).get("modo") is not None
+    ok = (w_ala < cfg.get("corte_ala", 0.5)) & (w_pata < (cfg.get("corte_pata", 0.48) if patas_nuevas else 0.35))
     ok &= c["s"] < 1.0 + cfg.get("cob_cola", 0.25)
     ok &= c["d_ojo"] > cfg.get("margen_ojo", 1.35)
     P, Nn, Wp = P[ok], Nn[ok], Wp[ok]
@@ -528,6 +547,10 @@ def plumas_cuerpo(ave, T, esp, rng):
     tam *= 0.55 + 0.45 * suave(1.2, 3.2, c["d_ojo"])
     tam *= 0.5 + 0.5 * suave(0.05, 0.9, ave.dist_pico(P))
     Lp = L0 * tam
+    if patas_nuevas:
+        # las plumas de los flancos y del muslo caen sobre las patas recogidas y tapan la piel del vientre
+        w_p = w_pata[ok] if len(w_pata) != len(P) else w_pata
+        Lp = Lp * (1.0 + cfg.get("k_muslo", 0.8) * suave(0.06, 0.40, w_p))
     radios = cfg.get("densidad", 0.36) * Lp
     idx = sv_aves.poisson(P, radios, rng)
     P, Nn, Wp, Lp = P[idx], Nn[idx], Wp[idx], Lp[idx]
@@ -729,6 +752,12 @@ def construir(nombre, esp, semilla=11):
         afinar_alas(ave, **esp.get("afinar_alas_kw", {}))
     if esp.get("afinar_cola", True):
         afinar_cola(ave, **esp.get("afinar_cola_kw", {}))
+    if esp.get("pico_fino"):
+        afinar_pico(ave, esp["pico_fino"])
+    usar_patas = esp.get("patas", {}).get("modo") is not None
+    if usar_patas:
+        import sv_patas
+        sv_patas.meter_patas_originales(ave)
     ave.escribir_posiciones()
     me = ave.ob.data
     no = np.empty(len(ave.co) * 3, np.float32)
@@ -750,6 +779,8 @@ def construir(nombre, esp, semilla=11):
     m_vuelo = sv_aves.material_plumas("SV_Plumas_Vuelo", **kw_v)
     ave.plumas = T.crear(ave, "plumas", [m_cuerpo, m_vuelo])
     vestir_base(ave, esp)
+    if usar_patas:
+        cuenta["patas"] = sv_patas.patas_nuevas(ave, esp)
     cuenta["tri_plumas"] = int(sum(len(p.vertices) - 2 for p in ave.plumas.data.polygons))
     cuenta["vert_plumas"] = len(ave.plumas.data.vertices)
     cuenta["articulaciones_suavizadas"] = suavizar_aleteo(ave, esp.get("aleteo_k", 0.30))
