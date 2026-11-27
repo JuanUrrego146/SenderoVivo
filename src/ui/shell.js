@@ -135,7 +135,7 @@ function desdeContrato(poi) {
         shortDesc: textoVisible(poi.shortDesc),
         fullDesc: textoVisible(poi.fullDesc),
         // Una conservación pendiente no se muestra: nada de un «✓ Por verificar».
-        conservation: poi.conservation ? datoVisible(poi.conservation) : 'Verificado',
+        conservation: datoVisible(poi.conservation),
         curiosity: datoVisible(limpiarCuriosidad(poi.id, poi.curiosity)),
         // La ficha patrimonial omite la distribución altitudinal (RF-030): nada de inventar una altitud.
         altitudeRange: cat === 'patrimonio' ? '' : datoVisible(limpiarAltitud(poi.id, poi.altitudeRange)),
@@ -156,7 +156,9 @@ function desdeContrato(poi) {
         previewUrl: poi.previewUrl || '',
         idleAnimation: poi.idleAnimation || '',
         narrationUrl: poi.narrationUrl || '',
-        birdCallUrl: poi.birdCallUrl || ''
+        birdCallUrl: poi.birdCallUrl || '',
+        // Procedencia y licencia del canto: va como línea de créditos bajo el botón, no en la descripción.
+        audioCredit: textoVisible(poi.audioCredit)
     };
 }
 
@@ -355,6 +357,8 @@ function updateHotspotsOverlay() {
 
     const camPos = visorCamara.getPosition();
     const camFwd = visorCamara.forward;
+    let cercano = null;
+    let distanciaCercano = Infinity;
 
     for (const item of trailData) {
         const el = nodosHotspot[item.id];
@@ -411,6 +415,12 @@ function updateHotspotsOverlay() {
         el.style.transform =
             `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0)`;
 
+        const distancia = Math.hypot(vx, vy, vz);
+        if (distancia < DISTANCIA_TARJETA_M && distancia < distanciaCercano) {
+            cercano = item;
+            distanciaCercano = distancia;
+        }
+
         /*
          * Un punto con modelo que se ve y está cerca: su .glb se adelanta.
          */
@@ -422,8 +432,52 @@ function updateHotspotsOverlay() {
             adelantarModelo(item);
         }
     }
+
+    actualizarTarjetaCercana(cercano);
 }
 
+
+/*
+ * Tarjeta del punto cercano: la vista previa de un punto (nombre, categoría, «Explorar») solo
+ * aparece cuando hay uno visible a menos de DISTANCIA_TARJETA_M de la cámara, y va arriba de
+ * la barra de secciones, no pegada al medallón ni en una esquina: la mitad de abajo es del camino.
+ */
+const DISTANCIA_TARJETA_M = 6;
+let tarjetaCercana = null;
+let idTarjetaCercana = null;
+
+function actualizarTarjetaCercana(item) {
+    const id = item ? item.id : null;
+    if (id === idTarjetaCercana) return;
+    idTarjetaCercana = id;
+    if (!tarjetaCercana) {
+        const shell = document.getElementById('shell');
+        if (!shell) return;
+        tarjetaCercana = document.createElement('div');
+        tarjetaCercana.className = 'poi-hologram-card punto-cercano';
+        tarjetaCercana.setAttribute('role', 'button');
+        tarjetaCercana.tabIndex = 0;
+        tarjetaCercana.addEventListener('click', () => {
+            if (idTarjetaCercana) selectHotspot(idTarjetaCercana);
+        });
+        shell.appendChild(tarjetaCercana);
+    }
+    if (!item) {
+        tarjetaCercana.classList.remove('punto-cercano--visible');
+        return;
+    }
+    const origen = nodosHotspot[item.id]?.querySelector('.poi-hologram-card');
+    tarjetaCercana.innerHTML = origen ? origen.innerHTML : '';
+    tarjetaCercana.style.setProperty('--poi-color', item.color);
+    tarjetaCercana.setAttribute('aria-label', `Explorar ${item.name}`);
+    tarjetaCercana.classList.add('punto-cercano--visible');
+}
+
+/** La franja de datos del recorrido se despliega al tocarla (desnivel, progreso, Bitácora). */
+function alternarTelemetria(tarjeta) {
+    const abierta = tarjeta.classList.toggle('abierta');
+    tarjeta.setAttribute('aria-expanded', String(abierta));
+}
 
 /**
  * Espera hasta que el visor y la cámara real estén disponibles.
@@ -572,6 +626,9 @@ function accionesMediaHTML(item) {
                 ${audioYnarracion.join('')}
             </div>
         `);
+        if (item.birdCallUrl && item.audioCredit) {
+            filas.push(`<p class="ficha-credito-canto">${item.audioCredit}</p>`);
+        }
     }
 
     // Fila 2: Botón de Marcar como Visto, grande y prominente. El modelo 3D no lleva botón:
@@ -685,9 +742,11 @@ function selectHotspot(id) {
             </div>
 
             <!-- Descripción general espaciada con excelente respiración -->
+            ${item.fullDesc ? `
             <p class="text-xs sm:text-[13.5px] leading-relaxed mb-5" style="color: var(--sv-text-muted); line-height: 1.65;">
                 ${item.fullDesc}
             </p>
+            ` : ''}
 
             <!-- Consejos de avistamiento e identificacion en campo (#95). Cada bloque aparece solo
                  cuando el catálogo trae el dato: un pendiente no se le muestra al visitante.
@@ -1793,40 +1852,72 @@ function handleSearch() {}
    PREPARAR VISITA — FICHA TÉCNICA Y REQUISITOS EAAB
    ========================================================================== */
 
+// Un solo sendero: el que recorre la app. Distancia, desnivel y tiempo salen de
+// config/portada.json (cargarPortada), no se escriben aquí.
 const TRAILS_VISIT_DATA = {
-    'quebrada-la-vieja': {
-        name: 'Quebrada La Vieja',
-        subtitle: 'Cerros Orientales de Bogotá · Localidad de Chapinero (Cl. 71)',
-        distance: '→ 7,3 km',
-        elevation: '▲ +406 m',
-        time: '⏱ 3 h',
-        ecosystemTag: 'Ecosistema de Niebla y Nacimiento Hídrico',
-        description: 'El sendero más emblemático de los Cerros Orientales de Bogotá. Asciende a lo largo del cañón de la quebrada entre helechos gigantes, orquídeas silvestres y bosques de niebla hasta alcanzar la cascada y el mirador con vista panorámica a la sabana.',
-        image: 'assets/quebrada-cascada.webp',
-        mapImage: 'assets/hero-bg.webp',
-        hitos: ['01 · Entrada Cl. 71', '02 · Bosque Niebla', '03 · La Cascada', '04 · Mirador']
-    },
     'santa-ana': {
-        name: 'Santa Ana - La Aguadora',
+        name: 'Sendero Santa Ana',
         subtitle: 'Cerros Orientales de Bogotá · Localidad de Usaquén (Cl. 119)',
-        distance: '→ 4,5 km',
-        elevation: '▲ +180 m',
-        time: '⏱ 2 h',
+        distance: '',
+        elevation: '',
+        time: '',
         ecosystemTag: 'Circuito Bosque de Pinos y Cuenca Hídrica',
         description: 'Camino ecológico ancestral rodeado de imponentes bosques de pinos y vegetación nativa altoandina. Un sendero de pendiente amable ideal para caminatas contemplativas, avistamiento de aves andinas y conexión profunda con la naturaleza.',
-        image: 'assets/hero-bg.webp',
-        mapImage: 'assets/quebrada-cascada.webp',
+        image: 'assets/portada-cumbre.webp',
+        mapImage: 'assets/portada-cumbre.webp',
         hitos: ['01 · Entrada Cl. 119', '02 · Bosque Pinos', '03 · Mirador Aguadora', '04 · Reserva']
     }
 };
 
+/*
+ * Datos de la portada (RF-001): lo que se recorre en la app, medido sobre los trazados y
+ * guardado en config/portada.json con su método. El tiempo de visita se calcula a 0,5 m/s
+ * y se redondea a 5 minutos.
+ */
+const PORTADA_URL = 'config/portada.json';
+
+async function cargarPortada() {
+    try {
+        const respuesta = await fetch(PORTADA_URL);
+        if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+        const datos = await respuesta.json();
+        const metros = Number(datos.recorribleMetros);
+        const subida = Number(datos.subidaMetros);
+        const minimo = Number(datos.altitudMin);
+        const maximo = Number(datos.altitudMax);
+        if (![metros, subida, minimo, maximo].every(Number.isFinite)) throw new Error('faltan cifras');
+        const cifra = (n) => n.toLocaleString('es-CO', { maximumFractionDigits: 0 });
+        const minutos = Math.max(5, Math.round(metros / 0.5 / 60 / 5) * 5);
+        const textos = {
+            tecnica: `Unos ${minutos} minutos de visita`,
+            recorrido: `${cifra(metros)} m recorribles`,
+            subida: `+${cifra(subida)} m de subida`,
+            altitud: `${cifra(minimo)} a ${cifra(maximo)} m de altitud`
+        };
+        document.querySelectorAll('[data-portada]').forEach((el) => {
+            const texto = textos[el.dataset.portada];
+            if (texto) el.textContent = texto;
+        });
+        const visita = TRAILS_VISIT_DATA['santa-ana'];
+        visita.distance = `${cifra(metros)} m`;
+        visita.elevation = `+${cifra(subida)} m`;
+        visita.time = `unos ${minutos} min`;
+        const estadisticas = { 'preparar-stat-distance': visita.distance, 'preparar-stat-elevation': visita.elevation, 'preparar-stat-time': visita.time };
+        for (const [id, texto] of Object.entries(estadisticas)) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = texto;
+        }
+    } catch (error) {
+        console.warn('No se pudieron leer los datos de la portada (config/portada.json):', error);
+    }
+}
+
 // Precarga inmediata de assets visuales WebP para evitar microstutters
 try {
-    const _imgP1 = new Image(); _imgP1.src = 'assets/quebrada-cascada.webp';
-    const _imgP2 = new Image(); _imgP2.src = 'assets/hero-bg.webp';
+    const _imgP1 = new Image(); _imgP1.src = 'assets/portada-cumbre.webp';
 } catch (e) {}
 
-let currentPrepararTrailKey = 'quebrada-la-vieja';
+let currentPrepararTrailKey = 'santa-ana';
 const CHECKLIST_STORAGE_KEY = 'sv_visit_checklist_state';
 
 function getChecklistState() {
@@ -2250,6 +2341,8 @@ window.finishOnboarding = finishOnboarding;
  *
  * Si el catálogo falla, el visor sigue funcionando.
  */
+
+cargarPortada();
 
 cargarCatalogo()
     .catch(error => {

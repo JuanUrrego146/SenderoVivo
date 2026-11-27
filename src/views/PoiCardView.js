@@ -78,6 +78,8 @@ export class PoiCardView {
         const altitude = datoVisible(poi?.altitudeRange || poi?.altitude);
         const showAltitude = poi?.type !== 'patrimonio' && Boolean(altitude);
         const description = textoVisible(poi?.fullDesc) || textoVisible(poi?.shortDesc) || textoVisible(poi?.desc) || 'Especie representativa de los ecosistemas de alta montaña en los Cerros Orientales de Bogotá.';
+        // Procedencia y licencia del canto: línea de créditos bajo el botón, no en la descripción.
+        const credito = textoVisible(poi?.audioCredit);
 
         card.innerHTML = `
             <button
@@ -219,6 +221,7 @@ export class PoiCardView {
                     <span>Ver transcripción</span>
                 </button>
             </div>
+            ${poi?.birdCallUrl && credito ? `<p class="ficha-credito-canto">${credito}</p>` : ''}
 
             <!-- TRANSCRIPCIÓN ACCESIBLE (#97): la ruta sale de transcriptUrl en el catálogo -->
             <div

@@ -278,10 +278,10 @@
             <header class="hero-top-bar">
                 <div class="hero-pill-location">
                     <i class="fa-solid fa-location-dot"></i>
-                    <span>Quebrada La Vieja</span>
+                    <span>Sendero Santa Ana</span>
                 </div>
                 <div class="hero-pill-tech">
-                    <span>200m Escaneados en 3DGS</span>
+                    <span data-portada="tecnica">Recorrido en 3D</span>
                 </div>
             </header>
 
@@ -314,11 +314,11 @@
                 <div class="hero-bottom-divider"></div>
                 <div class="hero-footer-content">
                     <div class="hero-footer-stats" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">
-                        <span class="hero-stat-highlight" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-primary-hover);">7,3 km</span>
+                        <span data-portada="recorrido" class="hero-stat-highlight" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-primary-hover);"></span>
                         <span class="hero-stat-sep">·</span>
-                        <span class="hero-stat-highlight" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-primary-hover);">+406 m desnivel</span>
+                        <span data-portada="subida" class="hero-stat-highlight" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-primary-hover);"></span>
                         <span class="hero-stat-sep">·</span>
-                        <span class="hero-stat-time" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-surface-solid);">3 horas</span>
+                        <span data-portada="altitud" class="hero-stat-time" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-surface-solid);"></span>
                     </div>
                     <div class="hero-footer-slogan" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; color: var(--sv-primary-hover);">
                         Buenos senderos, mejores personas
@@ -337,27 +337,12 @@
                             FICHA TÉCNICA DEL SENDERO · <span style="color: var(--sv-primary);">EAAB Cerros Orientales</span>
                         </span>
                         <h2 id="preparar-trail-title" class="text-xl sm:text-3xl font-extrabold font-syne truncate" style="color: var(--sv-text-primary); letter-spacing: -0.02em;">
-                            Quebrada La Vieja
+                            Sendero Santa Ana
                         </h2>
                         <p id="preparar-trail-sub" class="text-xs sm:text-[13px] mt-1 flex items-center truncate" style="color: var(--sv-text-muted);">
                             <i class="fa-solid fa-location-dot mr-1.5" style="color: var(--sv-primary);"></i>
-                            Cerros Orientales de Bogotá · Localidad de Chapinero (Cl. 71)
+                            Cerros Orientales de Bogotá · Localidad de Usaquén (Cl. 119)
                         </p>
-
-                        <!-- Selector de Sendero contextualizado junto a su título (Ley de Proximidad) -->
-                        <div class="trail-select-wrapper flex items-center gap-2 mt-3 flex-wrap">
-                            <span class="text-xs font-semibold" style="color: var(--sv-text-muted);">
-                                Seleccionar sendero:
-                            </span>
-                            <div class="trail-select-btn-group inline-flex items-center gap-1.5 p-1 rounded-2xl" style="background: var(--sv-surface-solid); border: 1px solid var(--sv-surface-border);">
-                                <button type="button" data-trail="quebrada-la-vieja" onclick="switchPrepararTrail('quebrada-la-vieja')" class="trail-select-pill active text-xs font-semibold px-4 py-2 rounded-xl cursor-pointer transition text-center min-h-[40px]">
-                                    Quebrada La Vieja
-                                </button>
-                                <button type="button" data-trail="santa-ana" onclick="switchPrepararTrail('santa-ana')" class="trail-select-pill text-xs font-semibold px-4 py-2 rounded-xl cursor-pointer transition text-center min-h-[40px]">
-                                    Santa Ana - La Aguadora
-                                </button>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Botón Cerrar aislado y accesible en esquina superior -->
@@ -380,7 +365,7 @@
                                     DISTANCIA
                                 </span>
                                 <span id="preparar-stat-distance" class="text-base sm:text-2xl font-bold font-syne block truncate" style="color: var(--sv-text-primary);">
-                                    → 7,3 km
+                                    
                                 </span>
                             </div>
                         </div>
@@ -394,7 +379,7 @@
                                     DESNIVEL +
                                 </span>
                                 <span id="preparar-stat-elevation" class="text-base sm:text-2xl font-bold font-syne block truncate" style="color: var(--sv-text-primary);">
-                                    ▲ +406 m
+                                    
                                 </span>
                             </div>
                         </div>
@@ -408,7 +393,7 @@
                                     TIEMPO APROX.
                                 </span>
                                 <span id="preparar-stat-time" class="text-base sm:text-2xl font-bold font-syne block truncate" style="color: var(--sv-text-primary);">
-                                    ⏱ 3 h
+                                    
                                 </span>
                             </div>
                         </div>
@@ -422,17 +407,17 @@
                             
                             <!-- 1. Tarjeta Ecosistema con Imagen y Descripción -->
                             <div class="ecosystem-banner-card">
-                                <div id="preparar-eco-banner" class="ecosystem-banner" style="background-image: url('assets/quebrada-cascada.webp');">
+                                <div id="preparar-eco-banner" class="ecosystem-banner" style="background-image: url('assets/portada-cumbre.webp');">
                                     <div class="ecosystem-banner-overlay"></div>
                                     <div class="absolute bottom-3 left-4 right-4 z-10">
                                         <span id="preparar-eco-tag" class="inline-block text-[10px] sm:text-xs font-bold font-syne px-3 py-1 rounded-full shadow-md" style="background: var(--sv-flora-surface); color: var(--sv-flora-color); border: 1px solid var(--sv-flora-border);">
-                                            Ecosistema de Niebla y Nacimiento Hídrico
+                                            Circuito Bosque de Pinos y Cuenca Hídrica
                                         </span>
                                     </div>
                                 </div>
                                 <div class="p-4 sm:p-5" style="background: var(--sv-surface-inset);">
                                     <p id="preparar-eco-desc" class="text-xs sm:text-[13.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted); font-family: 'Quicksand', sans-serif;">
-                                        El sendero más emblemático de los Cerros Orientales de Bogotá. Asciende a lo largo del cañón de la quebrada entre helechos gigantes, orquídeas silvestres y bosques de niebla hasta alcanzar la cascada y el mirador con vista panorámica a la sabana.
+                                        Camino ecológico ancestral rodeado de imponentes bosques de pinos y vegetación nativa altoandina. Un sendero de pendiente amable ideal para caminatas contemplativas, avistamiento de aves andinas y conexión profunda con la naturaleza.
                                     </p>
                                 </div>
                             </div>
@@ -457,7 +442,7 @@
                                 </p>
 
                                 <!-- Visual del mapa con orientación Norte -->
-                                <div id="preparar-map-img" class="preparar-map-visual mb-4" style="background-image: url('assets/hero-bg.webp');">
+                                <div id="preparar-map-img" class="preparar-map-visual mb-4" style="background-image: url('assets/portada-cumbre.webp');">
                                     <div class="preparar-map-overlay"></div>
                                     <div class="absolute top-3 left-3 z-10">
                                         <span class="text-[10px] sm:text-[10.5px] font-bold font-mono uppercase px-2.5 py-1 rounded-md flex items-center gap-1.5" style="background: var(--sv-surface-solid); color: var(--sv-primary); border: 1px solid var(--sv-surface-border); backdrop-filter: blur(4px);">
@@ -617,7 +602,7 @@
                         </div>
                         <div class="min-w-0">
                             <h2 class="text-sm sm:text-lg font-bold font-syne truncate" style="color: var(--sv-text-primary);">Catálogo Vivo de Biodiversidad</h2>
-                            <p class="text-[11px] sm:text-xs truncate" style="color: var(--sv-text-muted);">Guía ilustrada de campo · Quebrada La Vieja</p>
+                            <p class="text-[11px] sm:text-xs truncate" style="color: var(--sv-text-muted);">Guía ilustrada de campo · Sendero Santa Ana</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2.5 flex-shrink-0">
@@ -710,7 +695,7 @@
                         </div>
                         <div class="expedition-title-group">
                             <span class="expedition-brand-sup">Cerros Orientales · Bogotá</span>
-                            <h2 class="expedition-trail-name">Sendero Santa Ana · La Vieja</h2>
+                            <h2 class="expedition-trail-name">Sendero Santa Ana</h2>
                         </div>
                     </button>
                     <div class="expedition-live-pill" title="Altitud de estación actual">
@@ -784,18 +769,17 @@
 
             <!-- ============ TELEMETRÍA DE EXPEDICIÓN (HUD UNIFICADO PC) ============ -->
             <div id="expedition-telemetry-hud">
-                <div class="telemetry-card">
-                    <div class="telemetry-top-row">
-                        <div class="telemetry-alt-chip">
-                            <div class="telemetry-alt-icon">
-                                <i class="fa-solid fa-mountain"></i>
-                            </div>
-                            <div class="telemetry-alt-numbers">
-                                <span class="telemetry-alt-title">Altitud</span>
-                                <span class="telemetry-alt-val" id="hud-altitud" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;">—</span>
-                            </div>
-                        </div>
-
+                <!-- Franja compacta arriba a la izquierda: la mitad de abajo de la escena es del camino.
+                     Altitud, recorrido, restante y próximo punto en una línea; lo demás al tocarla. -->
+                <div class="telemetry-card" role="button" tabindex="0" aria-expanded="false" title="Datos del recorrido · toca para ver más"
+                    onclick="alternarTelemetria(this)" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); alternarTelemetria(this); }">
+                    <div class="telemetry-linea">
+                        <span class="telemetry-dato"><i class="fa-solid fa-mountain"></i><span id="hud-altitud">—</span></span>
+                        <span class="telemetry-dato"><span class="telemetry-etiqueta">Recorrido</span><span id="hud-recorrido">—</span></span>
+                        <span class="telemetry-dato"><span class="telemetry-etiqueta">Restante</span><span id="hud-restante">—</span></span>
+                        <span class="telemetry-dato telemetry-proximo"><span class="telemetry-etiqueta" id="hud-eta-label">Próximo punto</span><span id="hud-eta">—</span></span>
+                    </div>
+                    <div class="telemetry-detalle">
                         <div class="telemetry-metrics-pills">
                             <div class="telemetry-mini-pill" title="Desnivel acumulado">
                                 <i class="fa-solid fa-arrow-trend-up" style="color: var(--sv-secondary);"></i>
@@ -806,21 +790,9 @@
                                 <span id="hud-pendiente">0 %</span>
                             </div>
                         </div>
-                    </div>
-
                     <div class="telemetry-progress-track">
                         <div class="telemetry-progress-header">
                             <span id="progreso-pct" style="color: var(--sv-text-muted);">Progreso del sendero · 0%</span>
-                            <span title="Recorrido · distancia restante">
-                                <span style="color: var(--sv-text-dim);">Recorrido </span>
-                                <span id="hud-recorrido" style="color: var(--sv-primary); font-family: 'Syne', sans-serif;">—</span>
-                                <span style="color: var(--sv-text-dim);"> · Restante </span>
-                                <span id="hud-restante" style="color: var(--sv-text-muted); font-family: 'Syne', sans-serif;">—</span>
-                            </span>
-                        </div>
-                        <div class="text-[11px]" style="color: var(--sv-text-muted);">
-                            <span id="hud-eta-label">Próximo punto</span> ·
-                            <span id="hud-eta" style="color: var(--sv-primary); font-variant-numeric: tabular-nums;">—</span>
                         </div>
                         <div class="telemetry-bar-bg">
                             <div id="carga-barra-hud" class="telemetry-bar-fill"></div>
@@ -832,9 +804,10 @@
                             <i class="fa-solid fa-binoculars" style="color: var(--sv-primary); font-size: 11px;"></i>
                             <span id="discovered-counter">0 de 8 especies vistas</span>
                         </div>
-                        <button onclick="switchTab('quest')" class="telemetry-btn-bitacora">
+                        <button onclick="event.stopPropagation(); switchTab('quest')" class="telemetry-btn-bitacora">
                             <i class="fa-solid fa-book-bookmark"></i> Bitácora
                         </button>
+                    </div>
                     </div>
                 </div>
             </div>

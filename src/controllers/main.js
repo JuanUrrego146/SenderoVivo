@@ -126,10 +126,72 @@ function showPlaceholder(expectedUrl) {
     `);
 }
 
-/** Ayuda en pantalla, abajo a la izquierda. */
+/** Ayuda en pantalla. */
 function showHint(html) {
     hint.innerHTML = html;
     hint.hidden = false;
+}
+
+/**
+ * Indicación de primera visita (RF-026): cómo moverse, una sola vez por visita. Sale cuando
+ * el visitante entra a la escena (se cierra la portada), se va con un fundido al primer
+ * movimiento o a los 8 s, y no vuelve en esa pestaña.
+ */
+function mostrarIndicacionInicial(app) {
+    const CLAVE = 'sv_indicacion_movimiento';
+    try {
+        if (sessionStorage.getItem(CLAVE)) return;
+    } catch (e) { /* sin almacenamiento: se muestra igual */ }
+
+    const mostrar = () => {
+        const movil = window.matchMedia('(max-width: 640px)').matches;
+        showHint(movil
+            ? 'Usa el <strong>joystick</strong> para caminar · desliza para mirar'
+            : '<strong>W A S D</strong> para caminar · arrastra para mirar');
+        hint.classList.add('indicacion-inicial');
+        try { sessionStorage.setItem(CLAVE, '1'); } catch (e) { /* sin almacenamiento */ }
+
+        let inicio = null;
+        let hecho = false;
+        const irse = () => {
+            if (hecho) return;
+            hecho = true;
+            app.off('tour:progress', alMoverse);
+            clearTimeout(reloj);
+            hint.classList.add('indicacion-inicial--fuera');
+            setTimeout(() => { hint.hidden = true; }, 600);
+        };
+        const alMoverse = ({ position }) => {
+            if (!position) return;
+            if (!inicio) { inicio = position; return; }
+            if (Math.hypot(position.x - inicio.x, position.z - inicio.z) > 0.05) irse();
+        };
+        const reloj = setTimeout(irse, 8000);
+        // «Explorar el sendero» da un pasito solo al entrar (shell.js): ese no cuenta como el
+        // primer movimiento del visitante.
+        setTimeout(() => {
+            if (hecho) return;
+            const p = window.senderoTour?.camera?.getPosition();
+            if (p) inicio = { x: p.x, z: p.z };
+            app.on('tour:progress', alMoverse);
+        }, 1500);
+    };
+
+    // Detrás de la portada no se ve: espera a que el visitante entre.
+    const portada = document.getElementById('trail-lobby');
+    const portadaVisible = () => portada && !portada.classList.contains('lobby-hidden') &&
+        getComputedStyle(portada).display !== 'none';
+    if (!portadaVisible()) {
+        mostrar();
+        return;
+    }
+    const observador = new MutationObserver(() => {
+        if (!portadaVisible()) {
+            observador.disconnect();
+            mostrar();
+        }
+    });
+    observador.observe(portada, { attributes: true, attributeFilter: ['class', 'style', 'hidden'] });
 }
 
 function showError(message) {
@@ -436,12 +498,18 @@ async function startViewer(sceneUrl, sceneUp, sceneOpts = {}) {
         const poiCard = new PoiCardView(app, ambience);
         const dataController = new DataController(app, window.senderoTour.gpsTrack, new HudView());
         window.senderoDataController = dataController;
+        // El motor publicó el progreso al arrancar, antes de que existiera el HUD, y desde el
+        // movimiento libre solo vuelve a publicar cuando el visitante se mueve: se le pide una
+        // publicación ahora para que altitud, recorrido y restante salgan desde el primer cuadro.
+        window.senderoTour._emitProgress();
         window.senderoPoiManager = poiManager;
         window.senderoPoiCard = poiCard;
         app.on('poi:request-close', () => poiManager.closePoi());
         try {
             await poiManager.load();
             dataController.setPois(poiManager.pois);
+            // Con los POI cargados, el próximo punto ya tiene nombre, metros y segundos.
+            window.senderoTour._emitProgress();
             if (poiManager.diagnostics.length) {
                 poiDiagnosticsVisible = true;
                 const errors = poiManager.diagnostics.filter(issue => issue.severity === 'error');
@@ -637,21 +705,18 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
         velo.style.transitionDuration = duracion + 's';
         velo.classList.toggle('corte-recorrido--activo', fase === 'salida');
     });
-    showHint(
-        'Toca la <strong>flecha del camino</strong> para ir al siguiente punto · también <strong>W A S D</strong><br>' +
-        '<strong>R</strong> subir la vista · <strong>F</strong> bajarla · arrastra para mirar en 360°<br>' +
-        '<span id="hud-progress">0 % del recorrido</span> · ' +
-        'altura <span id="hud-eye">' + (trail.eyeHeight ?? 0).toFixed(2) + '</span>'
-    );
+    mostrarIndicacionInicial(app);
 
-    app.on('tour:progress', ({ distance, total }) => {
-        const hud = document.getElementById('hud-progress');
-        if (hud && total > 0) hud.textContent = Math.round(100 * distance / total) + ' % del recorrido';
-    });
-    app.on('tour:eyeheight', (v) => {
-        const hud = document.getElementById('hud-eye');
-        if (hud) hud.textContent = v.toFixed(2);
-    });
+    // R y F suben y bajan la altura de los ojos: son para calibrar una escena, no para el
+    // visitante. Solo funcionan con ?debug (el editor del trazado vuela libre y no las usa).
+    if (!params.has('debug')) {
+        window.addEventListener('keydown', (e) => {
+            const tecla = (e.key || '').toLowerCase();
+            const escribe = e.target instanceof HTMLElement &&
+                (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName));
+            if ((tecla === 'r' || tecla === 'f') && !escribe) e.stopImmediatePropagation();
+        }, true);
+    }
 }
 
 async function main() {
