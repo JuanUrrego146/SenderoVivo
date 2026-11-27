@@ -300,12 +300,12 @@ ACTUALEMNTE AUDIO DE PRUEBA 1 ES EL PRUEBA ANTERIOR QUE TENIAMOS ANTES DEL REFAC
 
 ## Versiones para el audio espacial
 
-Para la ambientación sonora en 3D (`config/soundscape.json`), once cantos de esta carpeta se derivaron y se guardaron en `assets/audio/espacial/`. Cada archivo derivado es mono, lleva un filtro paso alto en 300 Hz y está normalizado a -23 LUFS, con `ffmpeg -ac 1 -af "highpass=f=300,loudnorm=I=-23:TP=-2:LRA=11" -ar 44100 -c:a libmp3lame -b:a 96k`. Conservan la licencia y la atribución de su original: el autor, la localidad y la observación de iNaturalist de cada grabación están arriba, en el detalle por espécimen. Las fichas siguen usando el original (`birdCallUrl`); la versión derivada es solo para el audio espacial.
+Para la ambientación sonora en 3D (`config/soundscape.json`), los cantos de esta carpeta se derivaron y se guardaron en `assets/audio/espacial/`. Cada archivo derivado es mono, lleva un filtro paso alto en 300 Hz y está normalizado a -23 LUFS, con `ffmpeg -ac 1 -af "highpass=f=300,loudnorm=I=-23:TP=-2:LRA=11" -ar 44100 -c:a libmp3lame -b:a 96k`. Conservan la licencia y la atribución de su original: el autor, la localidad y la observación de iNaturalist de cada grabación están arriba, en el detalle por espécimen. Las fichas siguen usando el original (`birdCallUrl`); la versión derivada es solo para el audio espacial.
 
 | Archivo derivado (`assets/audio/espacial/`) | Original (`assets/audio/Audios Pajaros/`) | Licencia del original |
 | :--- | :--- | :---: |
 | `colibri-chillon.mp3` | `Colibri-Chillon_1.mp3` | **CC-BY 4.0** |
-| `golondrina-plomiza.mp3` | `Golondrina High Final_1.mp3` | **CC-BY-NC 4.0** |
+| `golondrina-plomiza-xc.mp3` | `Golondrina-plomiza-Orochelidon-murina-XC242905.mp3` | **CC-BY-SA 4.0** |
 | `aguililla-de-swainson.mp3` | `Aguililla-de-Swainson_1.mp3` | **CC0 1.0** |
 | `copeton.mp3` | `Copeton RIGG_1.mp3` | **CC-BY 4.0** |
 | `tucan-andino.mp3` | `Tucan RIGG_1.mp3` | **CC-BY 4.0** |
@@ -313,7 +313,38 @@ Para la ambientación sonora en 3D (`config/soundscape.json`), once cantos de es
 | `cucarachero-rufo.mp3` | `Cucarachero-rufo-Cinnycerthia-Unirufa_1.mp3` | **CC-BY 4.0** |
 | `pibi-ahumado.mp3` | `Pibí-ahumado-Contopus-fumigatus_1.mp3` | **CC-BY 4.0** |
 | `saltapared-comun.mp3` | `Saltapared-Común-Sureño-Troglodytes-musculus_1.mp3` | **CC-BY 4.0** |
-| `vireo-ojirrojo.mp3` | `Vireo-Ojos-Rojos-High-Poly_1.mp3` | **CC-BY-NC 4.0** |
+| `vireo-ojirrojo-co.mp3` | `Vireo-ojirrojo-Vireo-olivaceus-Colombia_1.mp3` | **CC-BY-SA 4.0** |
+| `atlapetes-nuquipalido.mp3` | `Atlapetes-nuquipalido-Atlapetes-pallidinucha_1.mp3` | **CC-BY 4.0** |
 | `colibri-nuca-blanca.mp3` | `Nuca-Blanca-RIGG_1.mp3` | **CC-BY 4.0** |
 
-Dos de estos originales son CC-BY-NC (la golondrina y el vireo), así que sus versiones derivadas no se pueden usar en un producto comercial. Si el proyecto se monetiza, esas dos especies tienen otra grabación CC0 o CC-BY en este mismo catálogo (`Golondrina High Final_2` y `Vireo Ojos Rojos High Poly_2`), y habría que derivar de ella.
+Todos los cantos que usa la app (en la ficha y en el audio espacial) son CC0, CC BY o CC BY-SA, porque la aplicación es para el Acueducto. Los archivos `Golondrina High Final_1.mp3`, `Vireo-Ojos-Rojos-High-Poly_1.mp3` y sus derivados `golondrina-plomiza.mp3` y `vireo-ojirrojo.mp3` siguen en el repositorio, pero ya no los usa ninguna ficha: son CC-BY-NC, y el de la golondrina además es de otra especie (*Pygochelidon cyanoleuca*, según su observación de iNaturalist). Las derivaciones del 27/11/2026 (golondrina, vireo y atlapetes) siguen la misma receta, con el nivel ajustado en tres pasadas de ganancia y un limitador en lugar de `loudnorm`, porque `loudnorm` de una pasada se queda corto en archivos de menos de 15 s.
+
+## Grabaciones añadidas el 27/11/2026
+
+Juan autorizó en el chat la descarga de estas tres grabaciones. Se eligieron por licencia apta para uso comercial y, dentro de eso, por cercanía al sendero y nitidez del canto medida con earshot (coincidencia con «un pájaro pequeño cantando claro al aire libre»: atlapetes z +4,0, vireo z +3,2, golondrina z +2,5).
+
+### Atlapetes nuquipálido
+- **Nombre científico:** *Atlapetes pallidinucha*
+- **Archivo:** `Atlapetes-nuquipalido-Atlapetes-pallidinucha_1.mp3` (convertido del `.m4a` original de 8,7 s)
+- **Licencia:** `CC-BY 4.0` (Atribución). Uso comercial permitido; crédito obligatorio.
+- **Grabado por:** Nicolás Baresch Uribe (@nbareschu), 25/04/2022
+- **Localidad:** Facatativá, Cundinamarca, Colombia
+- **Observación original:** [https://www.inaturalist.org/observations/112829169](https://www.inaturalist.org/observations/112829169) (grado de investigación)
+
+### Vireo ojirrojo
+- **Nombre científico:** *Vireo olivaceus*
+- **Archivo:** `Vireo-ojirrojo-Vireo-olivaceus-Colombia_1.mp3` (convertido del `.wav` original de 8,1 s)
+- **Licencia:** `CC-BY-SA 4.0` (Atribución, compartir igual). Uso comercial permitido; crédito obligatorio, y las versiones derivadas se comparten con la misma licencia.
+- **Grabado por:** Jorge I. Merchán Mayorga (@roysh), 08/10/2022
+- **Localidad:** Quinta de San Pedro Alejandrino, Santa Marta, Magdalena, Colombia
+- **Observación original:** [https://www.inaturalist.org/observations/138057534](https://www.inaturalist.org/observations/138057534) (la especie la da el autor; la observación todavía no tiene identificaciones de la comunidad)
+
+### Golondrina plomiza
+- **Nombre científico:** *Orochelidon murina*
+- **Archivo:** `Golondrina-plomiza-Orochelidon-murina-XC242905.mp3` (12,8 s, llamadas de alimentación)
+- **Licencia:** `CC-BY-SA 4.0` (Atribución, compartir igual). Es la única grabación de la especie en xeno-canto e iNaturalist con licencia que permite uso comercial; todas las demás son BY-NC, BY-NC-SA, BY-NC-ND o con todos los derechos reservados.
+- **Grabado por:** Niels Krabbe, 03/05/1992
+- **Localidad:** 1 km al sureste de la laguna del Tambo, cordillera de los Llanganates, Tungurahua, Ecuador, 3.700 msnm
+- **Grabación original:** [https://xeno-canto.org/242905](https://xeno-canto.org/242905)
+
+El cusumbo andino (*Nasuella olivacea*) no tiene canto en la app: las dos únicas grabaciones de la especie en iNaturalist son CC-BY-NC o con todos los derechos reservados, y en su ficha solo suena la narración.
