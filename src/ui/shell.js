@@ -545,7 +545,7 @@ function medallonHTML(item, tam = 'w-10 h-10') {
     const theme = getCategoryTheme(item?.category);
     return `
         <div
-            class="${tam} rounded-xl shadow-sm flex items-center justify-center flex-shrink-0"
+            class="${tam} medallon-fila rounded-xl shadow-sm flex items-center justify-center flex-shrink-0"
             style="
                 background: ${theme.surface};
                 color: ${theme.color};
@@ -554,6 +554,7 @@ function medallonHTML(item, tam = 'w-10 h-10') {
             "
         >
             ${figuraDelPunto(item, 'medallon-miniatura', 'text-base', item.icon || 'fa-seedling')}
+            ${huecoEspecieHTML(item, 'hueco-ilustracion--fila')}
         </div>
     `;
 }
@@ -584,14 +585,19 @@ async function ilustracionesQueExisten() {
     return ilustracionesDisponibles;
 }
 
-/** Hueco de la ilustración de una especie, para cuando su punto no tiene miniatura del modelo. */
-function huecoEspecieHTML(item) {
-    if (!item || item.previewUrl) return '';
+/**
+ * Hueco de la ilustración de una especie (el id del POI incluido: especie-poi-copeton). En el
+ * álbum y la bitácora, que son pantallas propias, la ilustración ocupa el lugar de la miniatura
+ * del modelo y del icono; en la escena y en la ficha, donde se ve el mundo real, se queda la
+ * miniatura.
+ */
+function huecoEspecieHTML(item, clase = '') {
+    if (!item) return '';
     // Una ilustración propia del punto (illustrationUrl) llena el hueco sin pasar por la lista.
     const propia = item.illustrationUrl
         ? ` data-ilustracion-lista="1"><img src="${item.illustrationUrl}" alt="" loading="lazy" decoding="async"`
         : '';
-    return `<span class="hueco-ilustracion hueco-ilustracion--especie" data-ilustracion="especie-${item.id}"${propia}></span>`;
+    return `<span class="hueco-ilustracion hueco-ilustracion--especie ${clase}" data-ilustracion="especie-${item.id}"${propia}></span>`;
 }
 
 async function llenarHuecosDeIlustracion(raiz = document) {
@@ -2465,6 +2471,8 @@ window.finishOnboarding = finishOnboarding;
  * Si el catálogo falla, el visor sigue funcionando.
  */
 
+// Los huecos de ilustración se llenan cuanto antes: el de la pantalla de carga vive solo mientras baja la escena.
+llenarHuecosDeIlustracion();
 cargarPortada();
 
 cargarCatalogo()

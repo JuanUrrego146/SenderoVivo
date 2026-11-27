@@ -138,8 +138,12 @@
     --sv-hueco-cierre-alto: 240px;
     --sv-hueco-especie-ancho: 96px;
     --sv-hueco-especie-alto: 96px;
+    --sv-hueco-especie-fila: 64px;
     /* Fondo ilustrado de la portada: velo crema radial desde arriba a la izquierda, con el texto oscuro */
-    --sv-hero-veil-ilustracion: radial-gradient(ellipse at 0% 0%, rgba(246, 238, 219, 0.88) 0%, rgba(246, 238, 219, 0.55) 40%, transparent 70%);
+    /* Velo crema sobre el fondo ilustrado de la portada: banda inferior para las cifras y el lema, y mancha a la izquierda para el título. Medido sobre el video real (peor caso de 7 cuadros): título y «Vivo» >= 4,5:1. */
+    --sv-hero-veil-ilustracion:
+        linear-gradient(0deg, rgba(246, 238, 219, 0.90) 0, rgba(246, 238, 219, 0.82) 84px, rgba(246, 238, 219, 0) 190px),
+        radial-gradient(ellipse 64% 60% at 0% 36%, rgba(246, 238, 219, 0.93) 0%, rgba(246, 238, 219, 0.80) 42%, rgba(246, 238, 219, 0) 100%);
 
     /* ── Escala Modular de Espaciado (Base 4px / 8px) ── */
     --sv-space-2xs: 0.25rem;  /* 4px */
@@ -278,5 +282,6 @@
         --sv-hueco-cierre-alto: 180px;
         --sv-hueco-especie-ancho: 72px;
         --sv-hueco-especie-alto: 72px;
+        --sv-hueco-especie-fila: 56px;
     }
 }

@@ -4075,6 +4075,7 @@ button,
    ========================================================================== */
 .hueco-ilustracion {
     display: block;
+    flex-shrink: 0;
     border: 0;
     margin: 0 auto;
     overflow: hidden;
@@ -4110,6 +4111,45 @@ button,
 
 .album-card-medallion:has(.hueco-ilustracion:not(:empty)) > .fa-solid,
 .album-card-medallion:has(.hueco-ilustracion:not(:empty)) > img {
+    display: none;
+}
+
+/* Con su ilustración, el medallón del álbum pierde el círculo y deja ver el dibujo */
+.album-card-medallion:has(.hueco-ilustracion:not(:empty)) {
+    width: var(--sv-hueco-especie-ancho);
+    height: var(--sv-hueco-especie-alto);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.album-card-medallion .hueco-ilustracion--especie {
+    position: static;
+    transform: none;
+}
+
+/* Bitácora y guía de especies: la ilustración ocupa el lugar del medallón */
+.hueco-ilustracion--fila {
+    width: var(--sv-hueco-especie-fila);
+    height: var(--sv-hueco-especie-fila);
+}
+
+.medallon-fila:has(.hueco-ilustracion:not(:empty)) {
+    width: var(--sv-hueco-especie-fila);
+    height: var(--sv-hueco-especie-fila);
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.medallon-fila .hueco-ilustracion--especie {
+    position: static;
+    transform: none;
+}
+
+.medallon-fila:has(.hueco-ilustracion:not(:empty)) > img.medallon-miniatura,
+.medallon-fila:has(.hueco-ilustracion:not(:empty)) > .fa-solid {
     display: none;
 }
 
@@ -4161,15 +4201,15 @@ button,
     filter: none;
 }
 
-.portada--ilustrada > .hero-foto {
+#trail-lobby.portada--ilustrada > .hero-foto {
     display: none;
 }
 
-.portada--ilustrada > .portada-fondo {
+#trail-lobby.portada--ilustrada > .portada-fondo {
     z-index: 0;
 }
 
-.portada--ilustrada > .hero-screen-overlay {
+#trail-lobby.portada--ilustrada > .hero-screen-overlay {
     background: var(--sv-hero-veil-ilustracion);
 }
 
@@ -4181,6 +4221,12 @@ button,
 }
 
 .portada--ilustrada .hero-brand-vivo {
-    color: var(--sv-primary);
+    color: var(--sv-primary-hover);
     text-shadow: none;
+}
+
+/* Las cifras del pie llevan colores en línea pensados para la foto oscura: sobre el velo crema van en tinta */
+.portada--ilustrada .hero-footer-stats,
+.portada--ilustrada .hero-footer-stats * {
+    color: var(--sv-text-primary) !important;
 }

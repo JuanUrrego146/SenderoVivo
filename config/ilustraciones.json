@@ -1,1 +1,27 @@
-{}
+{
+  "album-cabecera": true,
+  "bitacora-cabecera": true,
+  "carga": true,
+  "cierre": true,
+  "especie-poi-aguililla-de-swainson": true,
+  "especie-poi-aliso": true,
+  "especie-poi-atlapetes-nuquipalido": true,
+  "especie-poi-carpintero-candela": true,
+  "especie-poi-colibri-chillon": true,
+  "especie-poi-copeton": true,
+  "especie-poi-cucarachero-rufo": true,
+  "especie-poi-cusumbo": true,
+  "especie-poi-golondrina-plomiza": true,
+  "especie-poi-helecho-arborescente": true,
+  "especie-poi-pibi-ahumado": true,
+  "especie-poi-pino": true,
+  "especie-poi-saltapared-comun": true,
+  "especie-poi-tucan-andino": true,
+  "especie-poi-vireo-ojirrojo": true,
+  "portada-fondo": {
+    "imagen": "portada-fondo.webp",
+    "video": "portada-fondo.mp4",
+    "videoMovil": "portada-fondo-movil.mp4"
+  },
+  "selector-mapa": true
+}
