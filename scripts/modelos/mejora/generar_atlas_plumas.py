@@ -161,7 +161,7 @@ def construir(tam=1024):
 
     pb = 2.3 * esc
     # fila A: plumas de contorno (cuerpo)
-    A = dict(tipo="contorno", punta=2.2, y_max=0.60, calamo=0.05, paso_barba=pb * 0.85, fleco=0.24, cortes=2,
+    A = dict(tipo="contorno", punta=2.2, y_max=0.60, calamo=0.05, paso_barba=pb * 0.85, fleco=0.12, cortes=1,
              plumon=0.34, ancho=0.92, subida=0.50, k_raquis=0.05, k_barba=0.04, alt_raquis=0.30, alt_barba=0.10)
     poner("cont_liso", 0, 0, ch1, patron="liso", **A)
     poner("cont_liso2", 1, 0, ch1, patron="liso", **{**A, "punta": 1.7, "y_max": 0.55, "cortes": 2})
@@ -185,10 +185,11 @@ def construir(tam=1024):
     # filas C: plumas de vuelo y de cola
     V = dict(tipo="vuelo", calamo=0.06, paso_barba=pb, fleco=0.035, plumon=0.10, subida=0.30, k_borde=0.26, k_raquis=0.30)
     y2 = 2 * ch1
-    poner("prim_lisa", 0, y2, ch2, patron="liso", asim=-0.42, punta=1.9, y_max=0.50, cortes=3, ancho=0.80, **V)
-    poner("prim_barras", 1, y2, ch2, patron="barras", n_barras=9, ciclo=0.34, fuerza_patron=0.42, asim=-0.42, punta=1.9, y_max=0.50, cortes=3, ancho=0.80, **V)
-    poner("sec_lisa", 2, y2, ch2, patron="liso", asim=-0.22, punta=2.3, y_max=0.60, cortes=2, ancho=0.88, **V)
-    poner("sec_barras", 3, y2, ch2, patron="barras", n_barras=9, ciclo=0.34, fuerza_patron=0.42, asim=-0.22, punta=2.3, y_max=0.60, cortes=2, ancho=0.88, **V)
+    # remeras de punta redondeada y ancho casi parejo en dos tercios del largo, como las reales
+    poner("prim_lisa", 0, y2, ch2, patron="liso", asim=-0.42, punta=2.7, y_max=0.64, cortes=2, ancho=0.86, **V)
+    poner("prim_barras", 1, y2, ch2, patron="barras", n_barras=9, ciclo=0.34, fuerza_patron=0.42, asim=-0.42, punta=2.7, y_max=0.64, cortes=2, ancho=0.86, **V)
+    poner("sec_lisa", 2, y2, ch2, patron="liso", asim=-0.22, punta=3.2, y_max=0.70, cortes=1, ancho=0.92, **V)
+    poner("sec_barras", 3, y2, ch2, patron="barras", n_barras=9, ciclo=0.34, fuerza_patron=0.42, asim=-0.22, punta=3.2, y_max=0.70, cortes=1, ancho=0.92, **V)
     poner("cola_lisa", 4, y2, ch2, patron="liso", asim=0.0, punta=3.0, y_max=0.66, cortes=2, ancho=0.84, **V)
     poner("cola_barras", 5, y2, ch2, patron="barras", n_barras=11, ciclo=0.30, fuerza_patron=0.45, asim=0.0, punta=3.0, y_max=0.66, cortes=2, ancho=0.84, **V)
     poner("cola_banda", 6, y2, ch2, patron="barras", n_barras=11, ciclo=0.24, fuerza_patron=0.62, banda=0.14, asim=0.0, punta=3.0, y_max=0.66, cortes=2, ancho=0.84, **V)

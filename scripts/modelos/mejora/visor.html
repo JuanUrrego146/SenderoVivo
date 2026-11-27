@@ -31,11 +31,12 @@ for (const [m, o] of celdas) {
   const c = document.createElement('div'); c.className = 'celda';
   const mv = document.createElement('model-viewer');
   mv.setAttribute('src', '../' + m + (q.get('v') ? '?v=' + q.get('v') : ''));
-  mv.setAttribute('environment-image', 'neutral');
-  mv.setAttribute('tone-mapping', 'neutral');
+  mv.setAttribute('environment-image', q.get('env') ? (q.get('env').startsWith('hdri') ? q.get('env') : q.get('env')) : 'neutral');
+  if (q.get('sint')) mv.setAttribute('shadow-softness', q.get('sint'));
+  mv.setAttribute('tone-mapping', q.get('tm') || 'neutral');
   mv.setAttribute('camera-controls', '');
   mv.setAttribute('interaction-prompt', 'none');
-  mv.setAttribute('shadow-intensity', '1');
+  mv.setAttribute('shadow-intensity', q.get('sh') || '1');
   mv.setAttribute('exposure', q.get('exp') || '1.6');
   mv.setAttribute('camera-orbit', o);
   if (q.get('fov')) mv.setAttribute('field-of-view', q.get('fov'));

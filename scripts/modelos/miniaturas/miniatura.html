@@ -13,13 +13,13 @@
 </head>
 <body>
 <script>
-// Uso: miniatura.html?modelo=assets/models/v2/copeton.glb[&orbita=60deg%2072deg%20auto]
-// Mismos ajustes que la ficha 3D de la app (environment-image neutral, exposure 1.6).
+// Uso: miniatura.html?modelo=assets/models/v4/copeton.glb[&orbita=60deg%2072deg%20auto]
+// Mismos ajustes que la ficha 3D de la app (luz de entorno assets/entorno/luz-bosque.hdr, exposure 1.6).
 // Sin sombra, sin aviso de interaccion, sin giro ni animacion: sale la pose de reposo.
 const ruta = new URLSearchParams(location.search).get('modelo');
 const mv = document.createElement('model-viewer');
 mv.setAttribute('src', '/' + ruta);
-mv.setAttribute('environment-image', 'neutral');
+mv.setAttribute('environment-image', '/assets/entorno/luz-bosque.hdr');
 mv.setAttribute('exposure', '1.6');
 mv.setAttribute('shadow-intensity', '0');
 mv.setAttribute('interaction-prompt', 'none');

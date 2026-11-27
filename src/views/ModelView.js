@@ -135,14 +135,19 @@ export class ModelView {
         );
 
         /*
-         * Luz: entorno neutro explícito y exposición más alta. Varias texturas
-         * (observatorio, servicios ambientales, banca, silla) tienen color base
-         * medio de 0,12 a 0,26 y con exposición 1 sobre fondo casi negro se veían
-         * negras en el celular.
+         * Luz: un entorno real de exterior (jardín con árboles, HDRI CC0 de
+         * Poly Haven, 512 por 256 px) en lugar del entorno neutro de estudio.
+         * El neutro ilumina parejo desde todos lados y los modelos se veían
+         * planos, como de computador; con luz de cielo arriba y sombra abajo
+         * las plumas, la madera y los letreros toman volumen sin cambiar de
+         * color. La exposición se queda en 1,6: varias texturas (observatorio,
+         * servicios ambientales, banca, silla) tienen color base medio de 0,12
+         * a 0,26 y con exposición 1 se veían negras en el celular, y los
+         * colores de las aves están calibrados para 1,6.
          */
         model.setAttribute(
             'environment-image',
-            'neutral'
+            new URL('assets/entorno/luz-bosque.hdr', document.baseURI).href
         );
 
         model.setAttribute(
@@ -373,9 +378,10 @@ export class ModelView {
 
     /**
      * Pone la panorámica 360 como fondo del visor (skybox-image): el ave queda dentro de su
-     * bosque y el fondo gira con ella. La luz se queda con el entorno neutro de siempre, para
-     * que el modelo se vea con sus colores y no oscurecido por el bosque. En pantallas de menos
-     * de 640 px se usa la versión de 2048 de ancho.
+     * bosque y el fondo gira con ella. La luz no sale de la panorámica sino de environment-image
+     * (assets/entorno/luz-bosque.hdr, puesta en load), que manda sobre el skybox: así el modelo
+     * conserva sus colores y no queda oscurecido por el bosque. En pantallas de menos de 640 px
+     * se usa la versión de 2048 de ancho.
      */
     _ponerEntorno(model, url) {
         const liviana = window.innerWidth < 640 ? url.replace(/\.webp$/, '-2048.webp') : url;

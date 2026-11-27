@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# Genera las miniaturas WebP de los POI que tienen modelo 3D en assets/models/v2/.
+# Genera las miniaturas WebP de los POI que tienen modelo 3D en assets/models/<VERSION>/.
 #
 # Uso: scripts/modelos/miniaturas/generar.sh
 # Variables opcionales:
+#   VERSION  carpeta de modelos (v4); toma los POI cuyo modelUrl esta en ella
 #   PUERTO   puerto del servidor estatico (3491)
 #   ESPERA   milisegundos de tiempo virtual que Edge espera a que cargue el .glb (20000)
 #   PARALELO capturas simultaneas (4)
@@ -13,22 +14,23 @@
 #   HOJA     donde guardar la hoja de contactos (por defecto, miniaturas-hoja.jpg en la carpeta
 #            temporal del sistema; no se versiona)
 #
-# Para cada POI de config/pois.json cuyo modelUrl esta en assets/models/v2/ saca una captura
+# Para cada POI de config/pois.json cuyo modelUrl esta en assets/models/<VERSION>/ saca una captura
 # de 512 px con fondo transparente de miniatura.html (model-viewer 4.0.0 con los mismos
 # ajustes que la ficha 3D) y procesar.py la recorta, la lleva a 256 por 256 y la guarda en
-# assets/models/v2/miniaturas/<nombre del .glb>.webp. Hace falta python con Pillow y Edge.
+# assets/models/<VERSION>/miniaturas/<nombre del .glb>.webp. Hace falta python con Pillow y Edge.
 # Edge sin ventana necesita la pagina por HTTP (el .glb no carga desde file://).
 set -euo pipefail
 
 RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 AQUI="$RAIZ/scripts/modelos/miniaturas"
+VERSION="${VERSION:-v4}"
 PUERTO="${PUERTO:-3491}"
 ESPERA="${ESPERA:-20000}"
 PARALELO="${PARALELO:-4}"
 ORBITA_OBJETOS="${ORBITA_OBJETOS:-30deg 72deg auto}"
 ORBITA_AVES="${ORBITA_AVES:-60deg 72deg auto}"
 EDGE="${EDGE:-/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe}"
-DESTINO="$RAIZ/assets/models/v2/miniaturas"
+DESTINO="$RAIZ/assets/models/$VERSION/miniaturas"
 TMP="$(mktemp -d)"
 HOJA="${HOJA:-$(dirname "$TMP")/miniaturas-hoja.jpg}"
 
@@ -52,14 +54,14 @@ for _ in $(seq 1 20); do
     sleep 0.5
 done
 
-# Rutas de los modelos de v2 declarados en pois.json (una por POI).
+# Rutas de los modelos de la version declarados en pois.json (una por POI).
 mapfile -t MODELOS < <(python -I -c "
 import json, sys
 for p in json.load(open(sys.argv[1], encoding='utf-8'))['pois']:
     m = p.get('modelUrl', '')
-    if m.startswith('assets/models/v2/'):
+    if m.startswith('assets/models/' + sys.argv[2] + '/'):
         sys.stdout.buffer.write((m + '|' + p['type'] + chr(10)).encode())
-" "$RAIZ/config/pois.json" | tr -d '\015' | sort -u)
+" "$RAIZ/config/pois.json" "$VERSION" | tr -d '\015' | sort -u)
 echo "Modelos con miniatura: ${#MODELOS[@]}"
 
 capturar() {
