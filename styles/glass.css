@@ -1213,6 +1213,11 @@
     box-shadow: 0 2px 8px var(--sv-primary-glow);
 }
 
+.expedition-badge-icon .ic,
+.mobile-brand-icon .ic {
+    color: var(--sv-text-inverse);
+}
+
 .mobile-brand-titles {
     display: flex;
     flex-direction: column;
@@ -4209,8 +4214,35 @@ button,
     z-index: 0;
 }
 
+/* Sin velo: el fondo ilustrado se ve completo y el texto va sobre placas de papel crema */
 #trail-lobby.portada--ilustrada > .hero-screen-overlay {
-    background: var(--sv-hero-veil-ilustracion);
+    background: none;
+}
+
+.portada--ilustrada .hero-brand-title,
+.portada--ilustrada .hero-brand-tagline,
+.portada--ilustrada .hero-footer-content {
+    width: fit-content;
+    max-width: 100%;
+    box-sizing: border-box;
+    background: var(--sv-surface-panel);
+    border: var(--sv-panel-border);
+    box-shadow: var(--sv-surface-shadow);
+}
+
+.portada--ilustrada .hero-brand-title {
+    padding: 4px 28px 12px;
+    border-radius: var(--sv-radius-lg);
+}
+
+.portada--ilustrada .hero-brand-tagline {
+    padding: 8px 22px;
+    border-radius: var(--sv-radius-full);
+}
+
+.portada--ilustrada .hero-footer-content {
+    padding: 10px 22px;
+    border-radius: var(--sv-radius-lg);
 }
 
 .portada--ilustrada .hero-brand-sendero,

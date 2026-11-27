@@ -325,7 +325,7 @@ function construirHotspots() {
                     <div class="poi-specimen-name">${item.name}</div>
                     <div class="poi-scientific-name">${item.scientific}</div>
                     <div class="poi-cta-hint">
-                        <span>Explorar espécimen</span>
+                        <span>${item.category === 'patrimonio' ? 'Ver ficha' : 'Explorar espécimen'}</span>
                         <i class="fa-solid fa-chevron-right text-[8px]"></i>
                     </div>
                 </div>
@@ -575,12 +575,17 @@ function medallonHTML(item, tam = 'w-10 h-10') {
 const ILUSTRACIONES_URL = 'config/ilustraciones.json';
 let ilustracionesDisponibles = null;
 
-async function ilustracionesQueExisten() {
+function ilustracionesQueExisten() {
     if (!ilustracionesDisponibles) {
-        ilustracionesDisponibles = fetch(ILUSTRACIONES_URL)
-            .then((respuesta) => (respuesta.ok ? respuesta.json() : {}))
-            .then((datos) => (datos && typeof datos === 'object' ? datos : {}))
-            .catch(() => ({}));
+        const promesa = fetch(ILUSTRACIONES_URL, { cache: 'no-cache' })
+            .then((respuesta) => {
+                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+                return respuesta.json();
+            })
+            .then((datos) => (datos && typeof datos === 'object' ? datos : {}));
+        ilustracionesDisponibles = promesa;
+        // Un fallo no se guarda: la siguiente pantalla que se abra vuelve a pedir la lista.
+        promesa.catch(() => { if (ilustracionesDisponibles === promesa) ilustracionesDisponibles = null; });
     }
     return ilustracionesDisponibles;
 }
@@ -600,11 +605,24 @@ function huecoEspecieHTML(item, clase = '') {
     return `<span class="hueco-ilustracion hueco-ilustracion--especie ${clase}" data-ilustracion="especie-${item.id}"${propia}></span>`;
 }
 
+let reintentosDeIlustraciones = 0;
+
 async function llenarHuecosDeIlustracion(raiz = document) {
     const huecos = [...raiz.querySelectorAll('[data-ilustracion]:not([data-ilustracion-lista])')];
     if (!huecos.length) return;
-    const existen = await ilustracionesQueExisten();
+    let existen;
+    try {
+        existen = await ilustracionesQueExisten();
+    } catch (error) {
+        // Los huecos quedan sin marcar: se llenan en el siguiente intento o al abrir otra pantalla.
+        console.warn('No se pudo leer la lista de ilustraciones (config/ilustraciones.json):', error);
+        if (reintentosDeIlustraciones++ < 3) setTimeout(() => llenarHuecosDeIlustracion(raiz), 4000);
+        return;
+    }
+    // El fondo de la portada va al final: su video pesa y no debe adelantarse a las demás imágenes.
+    huecos.sort((a, b) => (a.dataset.ilustracion === 'portada-fondo') - (b.dataset.ilustracion === 'portada-fondo'));
     for (const hueco of huecos) {
+        if (hueco.dataset.ilustracionLista) continue;
         hueco.dataset.ilustracionLista = '1';
         const nombre = hueco.dataset.ilustracion;
         const entrada = existen[nombre];
@@ -621,6 +639,8 @@ async function llenarHuecosDeIlustracion(raiz = document) {
             hueco.replaceChildren(imagen);
             hueco.parentElement?.classList.add('con-ilustracion');
         });
+        // Si la imagen no llega, el hueco se desmarca y se vuelve a intentar al abrir su pantalla.
+        imagen.addEventListener('error', () => { delete hueco.dataset.ilustracionLista; });
         imagen.src = `assets/ilustraciones/${archivo}`;
     }
 }
@@ -1201,7 +1221,7 @@ function switchTab(tab) {
         if (modalTitle) modalTitle.innerText = 'Guía de Especies del Sendero';
         if (modalSub) modalSub.innerText = 'Biodiversidad verificada · Cerros Orientales';
         if (modalBadge) {
-            modalBadge.innerText = `${trailData.length} especies`;
+            modalBadge.innerText = `${trailData.length} registros`;
             modalBadge.style.display = 'inline-block';
         }
 
@@ -1800,6 +1820,8 @@ function openBiodiversityAlbum() {
     // El álbum tapa la hoja de un punto: se cierra con ella su visor 3D.
     cerrarHojaSiEstaAbierta();
     modal.classList.remove('hidden');
+    // Cabecera del álbum y demás huecos que aún no se hayan llenado (la lista pudo tardar o fallar al cargar).
+    llenarHuecosDeIlustracion();
 
     const searchInput = document.getElementById('album-search-input');
     if (searchInput) searchInput.value = '';
@@ -1909,7 +1931,7 @@ function createAlbumCardHTML(item, idx) {
 
             <!-- Descripción y curiosidad botánica/faunística -->
             <p class="album-species-body">
-                ${item.shortDesc || item.fullDesc || item.curiosity || 'Especie representativa de los Cerros Orientales de Bogotá.'}
+                ${item.shortDesc || item.fullDesc || item.curiosity || (item.category === 'patrimonio' ? 'Punto del patrimonio del sendero.' : 'Especie representativa de los Cerros Orientales de Bogotá.')}
             </p>
 
             <!-- Acciones interactivas de la tarjeta -->
