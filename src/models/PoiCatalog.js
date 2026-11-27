@@ -31,8 +31,8 @@ const TYPE_FIELDS = {
 
 // Campos que se muestran al visitante y patrón de lo que no debe aparecer en ellos.
 const VISIBLE_TEXT_FIELDS = ['commonName', 'scientificName', 'typeLabel', 'shortDesc', 'fullDesc',
-    'curiosity', 'sightingTips', 'fieldIdTips', 'historicalNote'];
-const INTERNAL_NOTE = /ART-|binomio|CC BY|grabado por|el equipo/i;
+    'curiosity', 'sightingTips', 'fieldIdTips', 'historicalNote', 'conservation'];
+const INTERNAL_NOTE = /ART-|binomio|CC BY|grabado por|el equipo|del equipo/i;
 
 function isNonEmptyString(value) {
     return typeof value === 'string' && value.trim().length > 0;
@@ -98,7 +98,7 @@ function validatePoi(poi) {
             issues.push({
                 poiId,
                 field,
-                message: 'trae una nota interna o un crédito (ART-, binomio, CC BY, grabado por, el equipo): el crédito del canto va en audioCredit',
+                message: 'trae una nota interna o un crédito (ART-, binomio, CC BY, grabado por, el equipo, del equipo): el crédito del canto va en audioCredit',
                 severity: 'warning'
             });
         }

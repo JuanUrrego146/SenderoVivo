@@ -135,7 +135,7 @@ function desdeContrato(poi) {
         shortDesc: textoVisible(poi.shortDesc),
         fullDesc: textoVisible(poi.fullDesc),
         // Una conservación pendiente no se muestra: nada de un «✓ Por verificar».
-        conservation: poi.conservation ? datoVisible(poi.conservation) : 'Verificado',
+        conservation: datoVisible(poi.conservation),
         curiosity: datoVisible(limpiarCuriosidad(poi.id, poi.curiosity)),
         // La ficha patrimonial omite la distribución altitudinal (RF-030): nada de inventar una altitud.
         altitudeRange: cat === 'patrimonio' ? '' : datoVisible(limpiarAltitud(poi.id, poi.altitudeRange)),
