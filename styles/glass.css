@@ -4215,7 +4215,7 @@ button,
     z-index: 0;
 }
 
-/* Sin velo: el fondo ilustrado se ve completo y el texto va sobre placas de papel crema */
+/* Sin cajas ni velo de pantalla: el fondo ilustrado se ve completo y detrás de cada bloque de texto va un difuminado suave y un halo en las letras */
 #trail-lobby.portada--ilustrada > .hero-screen-overlay {
     background: none;
 }
@@ -4226,36 +4226,41 @@ button,
     width: fit-content;
     max-width: 100%;
     box-sizing: border-box;
-    background: var(--sv-surface-panel);
-    border: var(--sv-panel-border);
-    box-shadow: var(--sv-surface-shadow);
 }
 
-.portada--ilustrada .hero-brand-title {
-    padding: 4px 28px 12px;
-    border-radius: var(--sv-radius-lg);
-}
-
-.portada--ilustrada .hero-brand-tagline {
-    padding: 8px 22px;
-    border-radius: var(--sv-radius-full);
-}
-
+.portada--ilustrada .hero-main-content,
 .portada--ilustrada .hero-footer-content {
-    padding: 10px 22px;
-    border-radius: var(--sv-radius-lg);
+    position: relative;
+    isolation: isolate;
+}
+
+.portada--ilustrada .hero-main-content::before,
+.portada--ilustrada .hero-footer-content::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    background: var(--sv-hero-difuminado);
+}
+
+.portada--ilustrada .hero-main-content::before {
+    inset: -45% -35%;
+}
+
+.portada--ilustrada .hero-footer-content::before {
+    inset: -70% -25%;
 }
 
 .portada--ilustrada .hero-brand-sendero,
 .portada--ilustrada .hero-brand-tagline,
 .portada--ilustrada .hero-footer-slogan {
     color: var(--sv-text-primary) !important;
-    text-shadow: none;
+    text-shadow: var(--sv-hero-texto-halo);
 }
 
 .portada--ilustrada .hero-brand-vivo {
     color: var(--sv-primary-hover);
-    text-shadow: none;
+    text-shadow: var(--sv-hero-texto-halo);
 }
 
 

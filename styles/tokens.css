@@ -145,6 +145,13 @@
     --sv-hueco-especie-ancho: 96px;
     --sv-hueco-especie-alto: 96px;
     --sv-hueco-especie-fila: 64px;
+    /* Portada con fondo ilustrado: difuminado suave detrás de cada bloque de texto y halo en las letras */
+    --sv-hero-difuminado-opacidad: 0.70;
+    --sv-hero-difuminado: radial-gradient(ellipse closest-side,
+        rgba(246, 238, 219, var(--sv-hero-difuminado-opacidad)) 0%,
+        rgba(246, 238, 219, var(--sv-hero-difuminado-opacidad)) 40%,
+        rgba(246, 238, 219, 0) 100%);
+    --sv-hero-texto-halo: 0 0 2px rgba(246, 238, 219, 0.9), 0 1px 12px rgba(246, 238, 219, 0.9);
 
     /* ── Escala Modular de Espaciado (Base 4px / 8px) ── */
     --sv-space-2xs: 0.25rem;  /* 4px */
