@@ -145,6 +145,10 @@
     --sv-hueco-especie-ancho: 96px;
     --sv-hueco-especie-alto: 96px;
     --sv-hueco-especie-fila: 64px;
+    /* Recorrido: ancho de la tarjeta de seguimiento y medidas de «Cómo moverte» */
+    --sv-seguimiento-ancho: 360px;
+    --sv-ayuda-ancho: 340px;
+    --sv-ayuda-boton: 44px;
     /* Portada con fondo ilustrado: difuminado suave detrás de cada bloque de texto y halo en las letras */
     --sv-hero-difuminado-opacidad: 0.70;
     --sv-hero-difuminado: radial-gradient(ellipse closest-side,

@@ -136,48 +136,73 @@ function showHint(html) {
 }
 
 /**
- * Indicación de primera visita (RF-026): cómo moverse, una sola vez por visita. Sale cuando
- * el visitante entra a la escena (se cierra la portada), se va con un fundido al primer
- * movimiento o a los 8 s, y no vuelve en esa pestaña.
+ * «Cómo moverte» (RF-026): panel de ayuda con los controles del recorrido. Sale abierto cuando
+ * el visitante entra a la escena (se cierra la portada), no se pliega solo y se puede plegar a un
+ * botón «?» con «Ocultar». El estado plegado se guarda en sessionStorage y se respeta al volver a
+ * entrar en la misma pestaña. #hint se queda para el editor, el ubicador de POI y el vuelo libre
+ * sin trazado.
  */
-function mostrarIndicacionInicial(app) {
-    const CLAVE = 'sv_indicacion_movimiento';
-    try {
-        if (sessionStorage.getItem(CLAVE)) return;
-    } catch (e) { /* sin almacenamiento: se muestra igual */ }
+const CLAVE_AYUDA_PLEGADA = 'sv_ayuda_movimiento_plegada';
+const AYUDA_ESCRITORIO = [
+    '<strong>W A S D</strong> o las flechas del teclado para caminar · <strong>Shift</strong> para ir más rápido',
+    'Arrastra con el ratón para mirar en 360°',
+    'Toca la <strong>flecha del camino</strong> para avanzar al siguiente punto',
+    'Acércate a un medallón para conocer la especie o el letrero'
+];
+const AYUDA_MOVIL = [
+    'Arrastra el <strong>joystick</strong> para caminar',
+    'Desliza con el dedo para mirar en 360°',
+    'Toca la <strong>flecha del camino</strong> para avanzar',
+    'Acércate a un medallón para conocer la especie o el letrero'
+];
+
+function montarAyudaMovimiento() {
+    const panel = document.getElementById('ayuda-movimiento');
+    if (!panel) return;
+    const lista = panel.querySelector('.ayuda-movimiento-lista');
+    const ocultar = panel.querySelector('.ayuda-movimiento-ocultar');
+    const abrir = panel.querySelector('.ayuda-movimiento-abrir');
+    const escritorio = window.matchMedia('(min-width: 641px)');
+
+    const pintar = () => {
+        lista.innerHTML = (escritorio.matches ? AYUDA_ESCRITORIO : AYUDA_MOVIL).map((texto) => `<li>${texto}</li>`).join('');
+    };
+    pintar();
+    escritorio.addEventListener('change', () => { pintar(); reubicar(); });
+
+    // En celular va debajo de la tarjeta «Detalles del sendero», que crece al abrirse; glass.css
+    // lo baja además por debajo del botón «Siguiente punto», que vive en el borde, a media pantalla.
+    const reubicar = () => {
+        if (escritorio.matches) {
+            panel.style.removeProperty('--sv-ayuda-tope-movil');
+            return;
+        }
+        const tarjeta = document.getElementById('mobile-details-card');
+        if (tarjeta) panel.style.setProperty('--sv-ayuda-tope-movil', `${Math.round(tarjeta.getBoundingClientRect().bottom + 8)}px`);
+    };
+    const tarjetaMovil = document.getElementById('mobile-details-card');
+    if (tarjetaMovil && 'ResizeObserver' in window) new ResizeObserver(reubicar).observe(tarjetaMovil);
+    window.addEventListener('resize', reubicar);
+
+    const plegar = (plegada, guardar = true) => {
+        panel.classList.toggle('ayuda-movimiento--plegada', plegada);
+        ocultar.setAttribute('aria-expanded', String(!plegada));
+        abrir.hidden = !plegada;
+        abrir.setAttribute('aria-expanded', String(!plegada));
+        if (guardar) {
+            try { sessionStorage.setItem(CLAVE_AYUDA_PLEGADA, plegada ? '1' : '0'); } catch (e) { /* sin almacenamiento */ }
+        }
+        if (!plegada) abrir.blur();
+        reubicar();
+    };
+    ocultar.addEventListener('click', () => { plegar(true); abrir.focus({ preventScroll: true }); });
+    abrir.addEventListener('click', () => { plegar(false); ocultar.focus({ preventScroll: true }); });
 
     const mostrar = () => {
-        const movil = window.matchMedia('(max-width: 640px)').matches;
-        showHint(movil
-            ? 'Usa el <strong>joystick</strong> para caminar · desliza para mirar'
-            : '<strong>W A S D</strong> para caminar · arrastra para mirar');
-        hint.classList.add('indicacion-inicial');
-        try { sessionStorage.setItem(CLAVE, '1'); } catch (e) { /* sin almacenamiento */ }
-
-        let inicio = null;
-        let hecho = false;
-        const irse = () => {
-            if (hecho) return;
-            hecho = true;
-            app.off('tour:progress', alMoverse);
-            clearTimeout(reloj);
-            hint.classList.add('indicacion-inicial--fuera');
-            setTimeout(() => { hint.hidden = true; }, 600);
-        };
-        const alMoverse = ({ position }) => {
-            if (!position) return;
-            if (!inicio) { inicio = position; return; }
-            if (Math.hypot(position.x - inicio.x, position.z - inicio.z) > 0.05) irse();
-        };
-        const reloj = setTimeout(irse, 8000);
-        // «Explorar el sendero» da un pasito solo al entrar (shell.js): ese no cuenta como el
-        // primer movimiento del visitante.
-        setTimeout(() => {
-            if (hecho) return;
-            const p = window.senderoTour?.camera?.getPosition();
-            if (p) inicio = { x: p.x, z: p.z };
-            app.on('tour:progress', alMoverse);
-        }, 1500);
+        let plegada = false;
+        try { plegada = sessionStorage.getItem(CLAVE_AYUDA_PLEGADA) === '1'; } catch (e) { /* sin almacenamiento: abierta */ }
+        panel.hidden = false;
+        plegar(plegada, false);
     };
 
     // Detrás de la portada no se ve: espera a que el visitante entre.
@@ -708,7 +733,7 @@ async function setUpNavigation(app, camera, sceneOpts = {}) {
         velo.style.transitionDuration = duracion + 's';
         velo.classList.toggle('corte-recorrido--activo', fase === 'salida');
     });
-    mostrarIndicacionInicial(app);
+    montarAyudaMovimiento();
 
     // R y F suben y bajan la altura de los ojos: son para calibrar una escena, no para el
     // visitante. Solo funcionan con ?debug (el editor del trazado vuela libre y no las usa).

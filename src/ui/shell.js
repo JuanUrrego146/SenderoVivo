@@ -475,12 +475,6 @@ function actualizarTarjetaCercana(item) {
     tarjetaCercana.classList.add('punto-cercano--visible');
 }
 
-/** La franja de datos del recorrido se despliega al tocarla (desnivel, progreso, Bitácora). */
-function alternarTelemetria(tarjeta) {
-    const abierta = tarjeta.classList.toggle('abierta');
-    tarjeta.setAttribute('aria-expanded', String(abierta));
-}
-
 /**
  * Espera hasta que el visor y la cámara real estén disponibles.
  */
@@ -1164,7 +1158,18 @@ function updateDiscoveredProgress() {
     if (elemMobile) {
         elemMobile.innerText = `${count} de ${trailData.length} puntos vistos`;
     }
+    actualizarFilaMovil();
 }
+
+/** Fila plegada de «Detalles del sendero» en celular: «N % · V de M puntos». */
+function actualizarFilaMovil() {
+    const fila = document.getElementById('hud-datos-mobile');
+    if (!fila) return;
+    const vistos = trailData.filter(x => x.discovered).length;
+    const pct = Number.isFinite(window.sendero_progreso_pct) ? window.sendero_progreso_pct : 0;
+    fila.innerText = `${pct} % · ${vistos} de ${trailData.length} puntos`;
+}
+window.actualizarFilaMovil = actualizarFilaMovil;
 
 function switchTab(tab) {
     // Los huecos de ilustración del panel (cabecera de la bitácora) se llenan cuando ya está armado.
@@ -1510,11 +1515,9 @@ function syncHudMobile(altitud, recorrido, desnivel) {
     const a = document.getElementById('hud-altitud-m');
     const r = document.getElementById('hud-recorrido-m');
     const d = document.getElementById('hud-desnivel-m');
-    const s = document.getElementById('hud-datos-mobile');
     if (a) a.innerText = altitud;
     if (r) r.innerText = recorrido;
     if (d) d.innerText = desnivel;
-    if (s) s.innerText = `${altitud} · ${recorrido}`;
 }
 
 function initRenderModelMobile() {

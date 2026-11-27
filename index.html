@@ -774,30 +774,43 @@
 
             <!-- ============ TELEMETRÍA DE EXPEDICIÓN (HUD UNIFICADO PC) ============ -->
             <div id="expedition-telemetry-hud">
-                <!-- Franja compacta arriba a la izquierda: la mitad de abajo de la escena es del camino.
-                     Altitud, recorrido, restante y próximo punto en una línea; lo demás al tocarla. -->
-                <div class="telemetry-card" role="button" tabindex="0" aria-expanded="false" title="Datos del recorrido · toca para ver más"
-                    onclick="alternarTelemetria(this)" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); alternarTelemetria(this); }">
-                    <div class="telemetry-linea">
-                        <span class="telemetry-dato"><svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#alt"/></svg><span id="hud-altitud">—</span></span>
-                        <span class="telemetry-dato"><span class="telemetry-etiqueta">Recorrido</span><span id="hud-recorrido">—</span></span>
-                        <span class="telemetry-dato"><span class="telemetry-etiqueta">Restante</span><span id="hud-restante">—</span></span>
-                        <span class="telemetry-dato telemetry-proximo"><span class="telemetry-etiqueta" id="hud-eta-label">Próximo punto</span><span id="hud-eta">—</span></span>
-                    </div>
-                    <div class="telemetry-detalle">
+                <div class="telemetry-card">
+                    <div class="telemetry-top-row">
+                        <div class="telemetry-alt-chip">
+                            <div class="telemetry-alt-icon">
+                                <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#alt"/></svg>
+                            </div>
+                            <div class="telemetry-alt-numbers">
+                                <span class="telemetry-alt-title">Altitud</span>
+                                <span class="telemetry-alt-val" id="hud-altitud">—</span>
+                            </div>
+                        </div>
+
                         <div class="telemetry-metrics-pills">
                             <div class="telemetry-mini-pill" title="Desnivel acumulado">
-                                <svg class="ic" style="color: var(--sv-secondary);" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#arriba"/></svg>
+                                <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#arriba"/></svg>
                                 <span id="hud-desnivel">+0 m</span>
                             </div>
                             <div class="telemetry-mini-pill" title="Pendiente media">
-                                <i class="fa-solid fa-percent" style="color: var(--sv-secondary);"></i>
+                                <i class="fa-solid fa-percent"></i>
                                 <span id="hud-pendiente">0 %</span>
                             </div>
                         </div>
+                    </div>
+
                     <div class="telemetry-progress-track">
                         <div class="telemetry-progress-header">
-                            <span id="progreso-pct" style="color: var(--sv-text-muted);">Progreso del sendero · 0%</span>
+                            <span id="progreso-pct">Progreso del sendero · 0 %</span>
+                            <span title="Recorrido · distancia restante">
+                                <span class="telemetry-etiqueta">Recorrido </span>
+                                <span id="hud-recorrido">—</span>
+                                <span class="telemetry-etiqueta"> · Restante </span>
+                                <span id="hud-restante">—</span>
+                            </span>
+                        </div>
+                        <div class="telemetry-proximo-fila">
+                            <span id="hud-eta-label">Próximo punto</span> ·
+                            <span id="hud-eta">—</span>
                         </div>
                         <div class="telemetry-bar-bg">
                             <div id="carga-barra-hud" class="telemetry-bar-fill"></div>
@@ -806,16 +819,29 @@
 
                     <div class="telemetry-footer-row">
                         <div class="telemetry-poi-count">
-                            <svg class="ic" style="color: var(--sv-primary); font-size: 11px;" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#binoculares"/></svg>
-                            <span id="discovered-counter">0 de 8 especies vistas</span>
+                            <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#binoculares"/></svg>
+                            <span id="discovered-counter">0 de 0 puntos vistos</span>
                         </div>
-                        <button onclick="event.stopPropagation(); switchTab('quest')" class="telemetry-btn-bitacora">
+                        <button type="button" onclick="switchTab('quest')" class="telemetry-btn-bitacora">
                             <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#bitacora"/></svg> Bitácora
                         </button>
                     </div>
-                    </div>
                 </div>
             </div>
+
+            <!-- Cómo moverte: visible al entrar a la escena y plegable a un botón «?»; lo arma montarAyudaMovimiento (src/controllers/main.js) -->
+            <section id="ayuda-movimiento" class="ayuda-movimiento" aria-labelledby="ayuda-movimiento-titulo" hidden>
+                <div class="ayuda-movimiento-cuerpo">
+                    <div class="ayuda-movimiento-cabecera">
+                        <h2 id="ayuda-movimiento-titulo" class="ayuda-movimiento-titulo">Cómo moverte</h2>
+                        <button type="button" class="ayuda-movimiento-ocultar" aria-expanded="true" aria-controls="ayuda-movimiento-lista">Ocultar</button>
+                    </div>
+                    <ul id="ayuda-movimiento-lista" class="ayuda-movimiento-lista"></ul>
+                </div>
+                <button type="button" class="ayuda-movimiento-abrir" aria-label="Cómo moverte" aria-expanded="false" aria-controls="ayuda-movimiento-lista" hidden>
+                    <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#ayuda"/></svg>
+                </button>
+            </section>
 
             <!-- Tarjeta Detalles móvil (Compacta, desplegable) -->
             <div id="mobile-details-card" class="absolute bottom-20 left-4 right-4 z-30 glass-panel rounded-2xl shadow-xl pointer-events-auto">
@@ -848,6 +874,25 @@
                         <div class="text-center">
                             <div class="text-[11px] font-bold uppercase" style="color: var(--sv-text-dim);">Pendiente</div>
                             <div class="text-[14px] font-bold font-syne" style="color: var(--sv-primary);" id="hud-pendiente-m">—</div>
+                        </div>
+                    </div>
+                    <div class="detalle-movil-pie">
+                        <div class="telemetry-progress-track">
+                            <div class="telemetry-progress-header">
+                                <span id="progreso-pct-m">Progreso del sendero · 0 %</span>
+                            </div>
+                            <div class="telemetry-bar-bg">
+                                <div id="carga-barra-hud-m" class="telemetry-bar-fill"></div>
+                            </div>
+                        </div>
+                        <div class="telemetry-footer-row">
+                            <div class="telemetry-poi-count">
+                                <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#binoculares"/></svg>
+                                <span id="discovered-counter-mobile">0 de 0 puntos vistos</span>
+                            </div>
+                            <button type="button" onclick="switchTab('quest')" class="telemetry-btn-bitacora">
+                                <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#bitacora"/></svg> Bitácora
+                            </button>
                         </div>
                     </div>
                 </div>
