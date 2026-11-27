@@ -109,6 +109,7 @@ Esta es la decisión que define el proyecto. Un modelo 3D hecho a mano es la int
 - **Datos del recorrido en pantalla**: altitud, distancia recorrida y restante, desnivel acumulado, pendiente, tiempo estimado al siguiente punto.
 - **Identidad visual propia**: paleta de grises, negros y verdes que resalta la quebrada y la fauna.
 - **Web para escritorio y celular**: sin instalación.
+- **Prototipo de «Elegir sendero»**: la portada es general y lleva a los nueve senderos de la EAAB en los Cerros Orientales, por sector; Santa Ana es el único que se recorre y los otros ocho salen apagados con «Próximamente» (ampliación de alcance del 27/11/2026, sin cifras inventadas).
 
 > **Ampliar el tramo más allá de los 200 m no está comprometido.** Si al cerrar el Sprint 2 hay holgura de peso, rendimiento y horas, se añade una cuarta etapa (200–260 m). Se decide entonces, con datos reales, y no antes.
 
@@ -122,7 +123,7 @@ Esta lista es vinculante. No es una lista de "fase 2": es una lista de lo que es
 - Realidad virtual.
 - Multijugador o cualquier función social.
 - Captura con dron.
-- Más de un sendero.
+- Más de un sendero recorrible: los otros ocho senderos del Acueducto solo se listan, apagados, en «Elegir sendero».
 
 **Por qué el tramo y no el sendero completo:** en un bosque cada metro es geometría nueva, no hay superficies repetibles, no hay simplificación posible sin perder el sitio, y el navegador tiene un techo duro de memoria y de coste de ordenamiento por profundidad. Capturar los 3,1 km del circuito produciría un archivo que ningún celular puede cargar. Se captura el primer tramo, justo donde el visitante decide si sigue o se devuelve, porque es exactamente el punto donde la información cambia la decisión.
 

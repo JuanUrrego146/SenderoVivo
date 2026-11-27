@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "nota": "Los senderos de la EAAB en los Cerros Orientales de Bogotá, por sector. Sumar un sendero es agregar una entrada, sin tocar código (RNF-009). El mapa es la ilustración assets/ilustraciones/selector-mapa.webp, un esquema sin escala ni coordenadas reales: mapa.x y mapa.y van de 0 a 1 y son el lugar del punto sobre esa imagen (x desde el borde izquierdo, y desde el de arriba). Se midieron a ojo sobre la imagen de 1280 por 723 px, con el norte arriba, la ciudad a la izquierda y los cerros al centro: los del sector Norte arriba, los del Centro en medio y el Sur abajo, con el Humedal Córdoba en la parte urbana de arriba a la izquierda, porque es un humedal de la ciudad. Solo ordenan los puntos en el dibujo; no son la ubicación exacta de ningún sendero. Los senderos «proximamente» no llevan distancia, duración, desnivel ni dificultad porque las fuentes no los dan: no se inventan. La lista sale de la página de senderos de la EAAB, el boletín de reapertura de octubre de 2024 y la reapertura de marzo de 2025 reportada por Infobae; falta que el Acueducto confirme la lista vigente.",
+  "reservaNota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales",
+  "senderos": [
+    {
+      "id": "santa-ana",
+      "nombre": "Santa Ana - La Aguadora",
+      "sector": "norte",
+      "estado": "disponible",
+      "mapa": {
+        "x": 0.49,
+        "y": 0.13
+      },
+      "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
+      "nota": "Es el sendero reconstruido: se recorre en la app con tres zonas, Cumbre, Tramo 1 y Tramo 2.",
+      "render": "sendero-propia",
+      "datos": {
+        "recorribleMetros": 186,
+        "subidaMetros": 68,
+        "altitudMin": 2610,
+        "altitudMax": 2678,
+        "nota": "Datos de lo que se recorre en la app, medidos el 27/11/2026 sobre los trazados de config/. recorribleMetros es la suma, en las tres zonas del selector, del largo del trazado menos sus cortes (campo cuts): Cumbre 37,2 m (config/track-sendero-01.json, sin cortes), Tramo 1 72,0 m menos 16 m de cortes (56,0 m) y Tramo 2 148,7 m menos 56 m de cortes (92,7 m), en total 185,9 m. La altitud de la Cumbre sale del GPS de config/track-sendero-01.json: 2.668,6 m en el extremo de abajo, donde llega la escalera del Tramo 1, y 2.678,4 m en el de arriba. Lo que suben los tramos sale de la y de sus trazados (sceneWaypoints, en metros): el Tramo 1 sube 25,0 m hasta la Cumbre y el Tramo 2 sube 33,3 m hasta el Tramo 1, así que el punto más bajo queda en 2.610,3 m y la subida total, de 2.610 a 2.678 m, es de 68 m. Los cortes se saltan al caminar, pero su desnivel sigue contando. El tiempo de visita que muestra la portada no se guarda aquí: shell.js lo calcula a 0,5 m/s y lo redondea a 5 minutos."
+      }
+    },
+    {
+      "id": "la-serrania",
+      "nombre": "La Serranía",
+      "sector": "norte",
+      "estado": "proximamente",
+      "mapa": {
+        "x": 0.46,
+        "y": 0.25
+      },
+      "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+    },
+    {
+      "id": "camino-del-meta-del-indio",
+      "nombre": "Camino del Meta - Del Indio",
+      "sector": "norte",
+      "estado": "proximamente",
+      "mapa": {
+        "x": 0.5,
+        "y": 0.34
+      },
+      "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+    },
+    {
+      "id": "humedal-cordoba",
+      "nombre": "Humedal Córdoba",
+      "sector": "norte",
+      "estado": "proximamente",
+      "mapa": {
+        "x": 0.3,
+        "y": 0.14
+      },
+      "fuente": "Infobae, 15/03/2025: https://www.infobae.com/colombia/2025/03/16/bogota-reabre-los-senderos-de-los-cerros-orientales-con-nuevas-opciones-para-caminatas-ecologicas/",
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+    },
+    {
+      "id": "quebrada-la-vieja",
+      "nombre": "Quebrada La Vieja",
+      "sector": "centro",
+      "estado": "proximamente",
+      "mapa": {
+        "x": 0.41,
+        "y": 0.46
+      },
+      "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+    },
+    {
+      "id": "conexion-el-granizo",
+      "nombre": "Conexión El Granizo",
+      "sector": "centro",
+      "estado": "proximamente",
+      "mapa": {
+        "x": 0.38,
+        "y": 0.62
+      },
+      "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+    },
+    {
+      "id": "kilometro-11-y-doce-quebradas",
+      "nombre": "Kilómetro 11 y Doce Quebradas",
+      "sector": "centro",
+      "estado": "proximamente",
+      "mapa": {
+        "x": 0.53,
+        "y": 0.52
+      },
+      "fuente": "EAAB, boletín del 10/10/2024: https://www.acueducto.com.co/wps/portal/EAB2/Home/general/sala-de-prensa/boletines/detalle/apertura+caminos+cerros+orientales+octubre",
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+    },
+    {
+      "id": "san-francisco-vicacha",
+      "nombre": "San Francisco - Vicachá",
+      "sector": "centro",
+      "estado": "proximamente",
+      "mapa": {
+        "x": 0.5,
+        "y": 0.66
+      },
+      "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+    },
+    {
+      "id": "guadalupe-aguanoso",
+      "nombre": "Guadalupe - Aguanoso",
+      "sector": "sur",
+      "estado": "proximamente",
+      "mapa": {
+        "x": 0.47,
+        "y": 0.85
+      },
+      "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+    }
+  ]
+}

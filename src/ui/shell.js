@@ -325,7 +325,7 @@ function construirHotspots() {
                     <div class="poi-specimen-name">${item.name}</div>
                     <div class="poi-scientific-name">${item.scientific}</div>
                     <div class="poi-cta-hint">
-                        <span>Explorar espécimen</span>
+                        <span>${item.category === 'patrimonio' ? 'Ver ficha' : 'Explorar espécimen'}</span>
                         <i class="fa-solid fa-chevron-right text-[8px]"></i>
                     </div>
                 </div>
@@ -575,12 +575,17 @@ function medallonHTML(item, tam = 'w-10 h-10') {
 const ILUSTRACIONES_URL = 'config/ilustraciones.json';
 let ilustracionesDisponibles = null;
 
-async function ilustracionesQueExisten() {
+function ilustracionesQueExisten() {
     if (!ilustracionesDisponibles) {
-        ilustracionesDisponibles = fetch(ILUSTRACIONES_URL)
-            .then((respuesta) => (respuesta.ok ? respuesta.json() : {}))
-            .then((datos) => (datos && typeof datos === 'object' ? datos : {}))
-            .catch(() => ({}));
+        const promesa = fetch(ILUSTRACIONES_URL, { cache: 'no-cache' })
+            .then((respuesta) => {
+                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+                return respuesta.json();
+            })
+            .then((datos) => (datos && typeof datos === 'object' ? datos : {}));
+        ilustracionesDisponibles = promesa;
+        // Un fallo no se guarda: la siguiente pantalla que se abra vuelve a pedir la lista.
+        promesa.catch(() => { if (ilustracionesDisponibles === promesa) ilustracionesDisponibles = null; });
     }
     return ilustracionesDisponibles;
 }
@@ -600,11 +605,24 @@ function huecoEspecieHTML(item, clase = '') {
     return `<span class="hueco-ilustracion hueco-ilustracion--especie ${clase}" data-ilustracion="especie-${item.id}"${propia}></span>`;
 }
 
+let reintentosDeIlustraciones = 0;
+
 async function llenarHuecosDeIlustracion(raiz = document) {
     const huecos = [...raiz.querySelectorAll('[data-ilustracion]:not([data-ilustracion-lista])')];
     if (!huecos.length) return;
-    const existen = await ilustracionesQueExisten();
+    let existen;
+    try {
+        existen = await ilustracionesQueExisten();
+    } catch (error) {
+        // Los huecos quedan sin marcar: se llenan en el siguiente intento o al abrir otra pantalla.
+        console.warn('No se pudo leer la lista de ilustraciones (config/ilustraciones.json):', error);
+        if (reintentosDeIlustraciones++ < 3) setTimeout(() => llenarHuecosDeIlustracion(raiz), 4000);
+        return;
+    }
+    // El fondo de la portada va al final: su video pesa y no debe adelantarse a las demás imágenes.
+    huecos.sort((a, b) => (a.dataset.ilustracion === 'portada-fondo') - (b.dataset.ilustracion === 'portada-fondo'));
     for (const hueco of huecos) {
+        if (hueco.dataset.ilustracionLista) continue;
         hueco.dataset.ilustracionLista = '1';
         const nombre = hueco.dataset.ilustracion;
         const entrada = existen[nombre];
@@ -621,6 +639,8 @@ async function llenarHuecosDeIlustracion(raiz = document) {
             hueco.replaceChildren(imagen);
             hueco.parentElement?.classList.add('con-ilustracion');
         });
+        // Si la imagen no llega, el hueco se desmarca y se vuelve a intentar al abrir su pantalla.
+        imagen.addEventListener('error', () => { delete hueco.dataset.ilustracionLista; });
         imagen.src = `assets/ilustraciones/${archivo}`;
     }
 }
@@ -932,6 +952,8 @@ const ZONA_DEL_ENTORNO = {
 function urlEntornoDe(item) {
     return `assets/fondos/entorno-ave-${ZONA_DEL_ENTORNO[item.sceneId] || 'cumbre'}.webp`;
 }
+// PoiCardView (la ficha que se abre desde la escena, un módulo) también la pide.
+window.urlEntornoDe = urlEntornoDe;
 
 function miniaturaHojaHTML(item) {
     return item.previewUrl
@@ -1201,7 +1223,7 @@ function switchTab(tab) {
         if (modalTitle) modalTitle.innerText = 'Guía de Especies del Sendero';
         if (modalSub) modalSub.innerText = 'Biodiversidad verificada · Cerros Orientales';
         if (modalBadge) {
-            modalBadge.innerText = `${trailData.length} especies`;
+            modalBadge.innerText = `${trailData.length} registros`;
             modalBadge.style.display = 'inline-block';
         }
 
@@ -1800,6 +1822,8 @@ function openBiodiversityAlbum() {
     // El álbum tapa la hoja de un punto: se cierra con ella su visor 3D.
     cerrarHojaSiEstaAbierta();
     modal.classList.remove('hidden');
+    // Cabecera del álbum y demás huecos que aún no se hayan llenado (la lista pudo tardar o fallar al cargar).
+    llenarHuecosDeIlustracion();
 
     const searchInput = document.getElementById('album-search-input');
     if (searchInput) searchInput.value = '';
@@ -1909,7 +1933,7 @@ function createAlbumCardHTML(item, idx) {
 
             <!-- Descripción y curiosidad botánica/faunística -->
             <p class="album-species-body">
-                ${item.shortDesc || item.fullDesc || item.curiosity || 'Especie representativa de los Cerros Orientales de Bogotá.'}
+                ${item.shortDesc || item.fullDesc || item.curiosity || (item.category === 'patrimonio' ? 'Punto del patrimonio del sendero.' : 'Especie representativa de los Cerros Orientales de Bogotá.')}
             </p>
 
             <!-- Acciones interactivas de la tarjeta -->
@@ -1982,7 +2006,7 @@ function handleSearch() {}
    ========================================================================== */
 
 // Un solo sendero: el que recorre la app. Distancia, desnivel y tiempo salen de
-// config/portada.json (cargarPortada), no se escriben aquí.
+// config/senderos.json (cargarPortada), no se escriben aquí.
 const TRAILS_VISIT_DATA = {
     'santa-ana': {
         name: 'Sendero Santa Ana',
@@ -1999,45 +2023,61 @@ const TRAILS_VISIT_DATA = {
 };
 
 /*
- * Datos de la portada (RF-001): lo que se recorre en la app, medido sobre los trazados y
- * guardado en config/portada.json con su método. El tiempo de visita se calcula a 0,5 m/s
- * y se redondea a 5 minutos.
+ * Datos de los senderos (RNF-009): config/senderos.json trae los nueve senderos de la EAAB por
+ * sector y, en el disponible, las cifras de lo que se recorre en la app con su método. Sumar un
+ * sendero es agregar una entrada. El tiempo de visita se calcula a 0,5 m/s y se redondea a 5
+ * minutos. La portada es general y no lleva cifras de un sendero: las ve quien elige el sendero.
  */
-const PORTADA_URL = 'config/portada.json';
+const SENDEROS_URL = 'config/senderos.json';
+let promesaSenderos = null;
+
+function cargarSenderos() {
+    if (!promesaSenderos) {
+        promesaSenderos = fetch(SENDEROS_URL).then((respuesta) => {
+            if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+            return respuesta.json();
+        });
+    }
+    return promesaSenderos;
+}
+
+/** Textos de las cifras de un sendero disponible (null si no trae cifras completas). */
+function textosDelSendero(datos) {
+    const metros = Number(datos?.recorribleMetros);
+    const subida = Number(datos?.subidaMetros);
+    const minimo = Number(datos?.altitudMin);
+    const maximo = Number(datos?.altitudMax);
+    if (![metros, subida, minimo, maximo].every(Number.isFinite)) return null;
+    const cifra = (n) => n.toLocaleString('es-CO', { maximumFractionDigits: 0 });
+    const minutos = Math.max(5, Math.round(metros / 0.5 / 60 / 5) * 5);
+    return {
+        recorrido: `${cifra(metros)} m recorribles`,
+        subida: `+${cifra(subida)} m de subida`,
+        altitud: `${cifra(minimo)} a ${cifra(maximo)} m de altitud`,
+        visita: `Unos ${minutos} minutos de visita`,
+        distancia: `${cifra(metros)} m`,
+        desnivel: `+${cifra(subida)} m`,
+        tiempo: `unos ${minutos} min`
+    };
+}
 
 async function cargarPortada() {
     try {
-        const respuesta = await fetch(PORTADA_URL);
-        if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
-        const datos = await respuesta.json();
-        const metros = Number(datos.recorribleMetros);
-        const subida = Number(datos.subidaMetros);
-        const minimo = Number(datos.altitudMin);
-        const maximo = Number(datos.altitudMax);
-        if (![metros, subida, minimo, maximo].every(Number.isFinite)) throw new Error('faltan cifras');
-        const cifra = (n) => n.toLocaleString('es-CO', { maximumFractionDigits: 0 });
-        const minutos = Math.max(5, Math.round(metros / 0.5 / 60 / 5) * 5);
-        const textos = {
-            tecnica: `Unos ${minutos} minutos de visita`,
-            recorrido: `${cifra(metros)} m recorribles`,
-            subida: `+${cifra(subida)} m de subida`,
-            altitud: `${cifra(minimo)} a ${cifra(maximo)} m de altitud`
-        };
-        document.querySelectorAll('[data-portada]').forEach((el) => {
-            const texto = textos[el.dataset.portada];
-            if (texto) el.textContent = texto;
-        });
+        const datos = await cargarSenderos();
+        const sendero = (datos.senderos || []).find((s) => s.estado === 'disponible');
+        const textos = textosDelSendero(sendero?.datos);
+        if (!textos) throw new Error('el sendero disponible no trae cifras completas');
         const visita = TRAILS_VISIT_DATA['santa-ana'];
-        visita.distance = `${cifra(metros)} m`;
-        visita.elevation = `+${cifra(subida)} m`;
-        visita.time = `unos ${minutos} min`;
+        visita.distance = textos.distancia;
+        visita.elevation = textos.desnivel;
+        visita.time = textos.tiempo;
         const estadisticas = { 'preparar-stat-distance': visita.distance, 'preparar-stat-elevation': visita.elevation, 'preparar-stat-time': visita.time };
         for (const [id, texto] of Object.entries(estadisticas)) {
             const el = document.getElementById(id);
             if (el) el.textContent = texto;
         }
     } catch (error) {
-        console.warn('No se pudieron leer los datos de la portada (config/portada.json):', error);
+        console.warn('No se pudieron leer los datos de los senderos (config/senderos.json):', error);
     }
 }
 
@@ -2370,9 +2410,11 @@ function initLobby() {
     const btnBiodiversity = document.getElementById('btn-hero-biodiversity');
 
     if (btnExplore) {
+        // La portada es general: «Explorar los senderos» lleva a Elegir sendero, y de ahí se entra al recorrido.
         const handleExplore = (e) => {
             if (e.type === 'touchend') e.preventDefault();
-            startTrailExploration(false);
+            if (typeof mostrarSenderos === 'function') mostrarSenderos();
+            else startTrailExploration(false);
         };
         btnExplore.addEventListener('click', handleExplore);
         btnExplore.addEventListener('touchend', handleExplore, { passive: false });
