@@ -4093,7 +4093,7 @@ body,
 
 /* Cabecera de la ficha: cielo nublado con cerros, helecho y frailejón detrás del visor 3D */
 .poi-hoja-3d {
-    background: var(--sv-ficha-sky);
+    background: var(--sv-ficha-velo-claro), var(--sv-ficha-foto) center / cover no-repeat, var(--sv-ficha-sky);
     border-radius: var(--sv-radius-lg);
     border: var(--sv-divider-border);
 }
@@ -4108,28 +4108,6 @@ body,
     position: absolute;
     pointer-events: none;
     z-index: 1;
-}
-
-.poi-hoja-3d .ficha-ilu--cerros {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 38%;
-}
-
-.poi-hoja-3d .ficha-ilu--helecho {
-    left: 4%;
-    bottom: 8%;
-    width: 17%;
-    height: 56%;
-}
-
-.poi-hoja-3d .ficha-ilu--frailejon {
-    right: 4%;
-    bottom: 8%;
-    width: 17%;
-    height: 56%;
 }
 
 .poi-hoja-3d .ficha-ilu--propia {

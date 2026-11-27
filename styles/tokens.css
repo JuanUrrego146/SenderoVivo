@@ -117,6 +117,11 @@
     --sv-ficha-sky: linear-gradient(#D1DBDE, #ECE6D3);
     /* Cielo de la cabecera de la ficha; arranca en --sv-escena-cielo-nublado */
     --sv-ficha-veil: rgba(20, 26, 18, 0.42);
+    --sv-ficha-foto: url('../assets/ficha-entorno.webp');
+    /* Entorno realista del visor 3D de la ficha: un cuadro real de la Cumbre, borroso, con un velo
+       claro para que el modelo se lea. Va en lugar de las ilustraciones, que no combinan con un
+       modelo realista. */
+    --sv-ficha-velo-claro: linear-gradient(rgba(246, 238, 219, 0.30), rgba(246, 238, 219, 0.30));
     --sv-hero-veil: linear-gradient(90deg, rgba(20, 26, 18, 0.70) 0%, rgba(20, 26, 18, 0.46) 45%, transparent 75%);
     --sv-portada-ink: #FFFBF0;
     --sv-portada-em: #E8C36A;

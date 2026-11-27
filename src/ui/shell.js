@@ -823,24 +823,13 @@ function miniaturaHojaHTML(item) {
 function visorHojaHTML(item) {
     if (!item.modelUrl) return '';
 
-    // Cielo nublado con cerros, helecho y frailejón detrás del visor (ModelView vacía su contenedor,
-    // por eso las ilustraciones van fuera de él).
-    const ilu = (nombre, clase) =>
-        `<svg class="ilu ficha-ilu ficha-ilu--${clase}" aria-hidden="true"><use href="assets/ilustraciones/${nombre}.svg#ilu"/></svg>`;
-    // Un punto puede traer su propia ilustración (illustrationUrl): va en lugar del helecho y el frailejón.
+    // El entorno del visor es una foto real de la Cumbre (--sv-ficha-foto), a juego con el modelo
+    // realista. Un punto puede traer además su propia ilustración (illustrationUrl).
     const propia = item.illustrationUrl
         ? `<img class="ilu ficha-ilu ficha-ilu--propia" src="${item.illustrationUrl}" alt="" loading="lazy" decoding="async">`
-        : ilu('helecho', 'helecho') + ilu('frailejon', 'frailejon');
-    return `<div class="poi-hoja-3d">${ilu('cerros', 'cerros')}${propia}` +
+        : '';
+    return `<div class="poi-hoja-3d">${propia}` +
         `<div id="poi-hoja-3d" class="poi-hoja-3d-visor">${miniaturaHojaHTML(item)}</div></div>`;
-}
-
-function cerrarHojaSiEstaAbierta() {
-    const hoja = document.getElementById('bottom-sheet');
-
-    if (hoja && !hoja.classList.contains('translate-y-full')) {
-        closeBottomSheet();
-    }
 }
 
 function destruirVisorHoja() {
