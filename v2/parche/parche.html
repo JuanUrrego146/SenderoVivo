@@ -1,0 +1,63 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<!-- Medallon del suelo de la version 2: tapa a quien lleva la camara en el nadir de cada panorama.
+     Dibujos y colores del estilo D ajustado (SenderoVivo-briefs/estilo-27-11/plantilla3.html, .dir-d2).
+     Se dibuja con Edge sin ventana a parche.png (2048 x 2048, fondo transparente) y se proyecta en
+     scripts/v2-panoramas/coser_todo.py. Arriba de la imagen = hacia adelante en el camino. -->
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Nunito:wght@600&display=block" rel="stylesheet">
+<style>
+:root{--hoja1:#4F8A5C;--hoja2:#A3C47E;--hoja3:#3B6B47;--tronco:#8A5E40;--flor:#E8B84A;--flor-c:#C27A2E;--a-cuerpo:#A0714C;--a-ala:#7A5234;--a-pecho:#FBEFD9;--a-cabeza:#B5BCB8;--a-raya:#2E2A1F;--a-collar:#D98A45;--a-pico:#2E2A1F;--a-pata:#7A5234;--g-dorso:#4A6590;--g-ala:#34496E;--g-vientre:#C3C8D0}
+html,body{margin:0;width:2048px;height:2048px;background:transparent;overflow:hidden}
+.disco{position:absolute;left:64px;top:64px;width:1900px;height:1900px;border-radius:50%;background:#F6EEDB;
+ border:14px solid rgba(70,60,40,.26);box-sizing:border-box;box-shadow:22px 22px 0 rgba(28,40,30,.26)}
+.anillo{position:absolute;left:264px;top:264px;width:1500px;height:1500px;border-radius:50%;border:10px solid rgba(59,107,71,.35);box-sizing:border-box}
+.ill{position:absolute;filter:drop-shadow(10px 10px 0 rgba(28,40,30,.28))}
+.planta{width:300px;height:396px}
+.texto{position:absolute;left:0;right:0;top:880px;text-align:center;color:#2E2A1F}
+.t1{font:600 132px/1 'Fredoka',system-ui,sans-serif}
+.t2{font:600 64px/1.2 'Nunito',system-ui,sans-serif;color:#5A5243;margin-top:26px}
+.ave{width:460px}
+</style></head><body><div class="disco"></div><div class="anillo"></div><div id="d"></div>
+<div class="texto"><div class="t1">Sendero Santa Ana</div><div class="t2">Cerros Orientales de Bogotá</div></div>
+<script>
+function cerros(){
+  return `<svg class="ill cerros" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true">
+  <path class="f" fill="var(--cerro1)" d="M0 30 C40 10 70 14 110 24 C150 34 180 8 220 12 C255 15 280 26 300 22 V60 H0Z"/>
+  <path class="f" fill="var(--cerro2)" d="M0 40 C35 28 75 30 120 38 C160 45 200 26 245 30 C270 32 290 38 300 36 V60 H0Z"/>
+  <path class="f" fill="var(--cerro3)" d="M0 50 C50 42 90 46 140 50 C190 54 240 44 300 48 V60 H0Z"/></svg>`;
+}
+function frailejon(){
+  let h = '';
+  for (let i = 0; i < 15; i++){ const a = -172 + i * (164 / 14); h += `<g transform="translate(50 74) rotate(${a.toFixed(1)})"><ellipse class="f" cx="23" cy="0" rx="24" ry="4.6" fill="var(--hoja2)"/></g>`; }
+  for (let i = 0; i < 11; i++){ const a = -160 + i * 14; h += `<g transform="translate(50 74) rotate(${a.toFixed(1)})"><ellipse class="f" cx="15" cy="0" rx="16" ry="3.8" fill="var(--hoja1)"/></g>`; }
+  const flor = (x, y) => { let p = ''; for (let k = 0; k < 10; k++) p += `<ellipse class="f" cx="${x}" cy="${y - 4.6}" rx="1.9" ry="4.2" fill="var(--flor)" transform="rotate(${k * 36} ${x} ${y})"/>`; return p + `<circle class="f" cx="${x}" cy="${y}" r="2.6" fill="var(--flor-c)"/>`; };
+  return `<svg class="ill" viewBox="0 0 100 132" aria-hidden="true"><path class="f" fill="var(--tronco)" d="M43 76 C42 96 41 112 40 128 H60 C59 112 58 96 57 76Z"/><path class="s" stroke="rgba(0,0,0,.25)" stroke-width="1.4" d="M45 86 l4 3 M52 94 l4 -3 M44 104 l5 3 M51 112 l5 -3 M45 120 l4 3"/><path class="s" stroke="var(--hoja3)" stroke-width="2" d="M50 70 Q44 44 35 24 M50 70 Q50 42 52 15 M50 70 Q58 46 67 26"/>${h}${flor(35, 24)}${flor(52, 15)}${flor(67, 26)}</svg>`;
+}
+function helecho(){
+  const P = [[50,128],[47,92],[60,52],[38,10]];
+  const bz = t => { const u = 1 - t; return [0,1].map(k => u*u*u*P[0][k] + 3*u*u*t*P[1][k] + 3*u*t*t*P[2][k] + t*t*t*P[3][k]); };
+  let pin = '';
+  for (let i = 0; i < 15; i++){
+    const t = 0.14 + i * 0.056; const [x, y] = bz(t); const [x2, y2] = bz(t + 0.01);
+    const ang = Math.atan2(y2 - y, x2 - x) * 180 / Math.PI; const L = 17 * (1 - t) + 4; const c = i % 2 ? 'var(--hoja1)' : 'var(--hoja2)';
+    for (const s of [-62, 62]) pin += `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(ang + s).toFixed(1)})"><ellipse class="f" cx="${(-L/2).toFixed(1)}" cy="0" rx="${(L/2).toFixed(1)}" ry="2.8" fill="${c}"/></g>`;
+  }
+  return `<svg class="ill" viewBox="0 0 100 132" aria-hidden="true"><path class="s" stroke="var(--hoja3)" stroke-width="2.4" d="M50 128 C47 92 60 52 38 10"/>${pin}<path class="s" stroke="var(--hoja3)" stroke-width="2.2" d="M38 10 C33 3 25 6 27 12 C29 17 35 14 33 10"/></svg>`;
+}
+function copeton(){
+  return `<svg class="ill" viewBox="0 0 120 92" aria-hidden="true"><path class="s" stroke="var(--tronco)" stroke-width="4" d="M24 86 C55 82 88 87 116 82"/><path class="f" fill="var(--a-ala)" d="M84 50 L114 37 L113 48 L88 61Z"/><ellipse class="f" cx="66" cy="56" rx="26" ry="19" fill="var(--a-cuerpo)"/><ellipse class="f" cx="55" cy="61" rx="17" ry="13" fill="var(--a-pecho)"/><path class="f" fill="var(--a-ala)" d="M60 47 C75 39 92 45 95 56 C84 62 70 61 61 55Z"/><path class="s" stroke="rgba(0,0,0,.28)" stroke-width="1.3" d="M70 49 C78 47 86 50 90 55 M68 53 C76 52 83 54 87 58"/><path class="s" stroke="var(--a-pata)" stroke-width="2" d="M60 73 L58 84 M55 84 L61 84 M69 73 L71 84 M68 84 L74 84"/><path class="f" fill="var(--a-collar)" d="M49 43 C56 38 63 41 65 48 C58 51 52 50 49 43Z"/><circle class="f" cx="44" cy="38" r="14" fill="var(--a-cabeza)"/><path class="f" fill="var(--a-raya)" d="M33 31 C35 21 43 14 47 11 C47 18 51 23 54 28 C47 26 39 27 33 31Z"/><path class="s" stroke="var(--a-raya)" stroke-width="3" d="M33 35 C39 31 48 31 56 35"/><ellipse class="f" cx="40" cy="47" rx="6" ry="4" fill="var(--a-pecho)"/><ellipse class="f" cx="49" cy="53" rx="5" ry="3" fill="var(--a-raya)"/><path class="f" fill="var(--a-pico)" d="M31 39 L21 41.5 L31 44Z"/><circle cx="38.5" cy="38.5" r="2.3" fill="#141414"/><circle cx="37.8" cy="37.8" r=".8" fill="#fff"/></svg>`;
+}
+function golondrina(){
+  return `<svg class="ill" viewBox="0 0 150 96" aria-hidden="true"><path class="s" stroke="var(--tronco)" stroke-width="4" d="M10 84 C50 80 100 86 146 80"/><path class="f" fill="var(--g-ala)" d="M96 52 L146 66 L126 62 L142 78 L94 62Z"/><ellipse class="f" cx="70" cy="54" rx="32" ry="15" fill="var(--g-dorso)"/><path class="f" fill="var(--g-vientre)" d="M44 58 C56 72 84 72 100 60 C84 64 58 64 44 58Z"/><path class="f" fill="var(--g-ala)" d="M60 46 C84 38 112 46 140 60 C112 58 84 56 62 54Z"/><path class="s" stroke="rgba(255,255,255,.18)" stroke-width="1.2" d="M72 48 C90 46 108 50 124 56"/><circle class="f" cx="44" cy="46" r="13" fill="var(--g-dorso)"/><path class="f" fill="var(--g-vientre)" d="M33 51 C37 60 48 62 55 57 C48 55 40 53 33 51Z"/><path class="f" fill="#202326" d="M32 45 L23 47 L32 49Z"/><path class="s" stroke="var(--tronco)" stroke-width="2" d="M64 68 L62 80 M74 68 L76 80"/><circle cx="40" cy="44" r="2.3" fill="#111"/><circle cx="39.3" cy="43.3" r=".8" fill="#fff"/></svg>`;
+}
+
+const d=document.getElementById('d');let h='';
+const N=10;
+for(let i=0;i<N;i++){
+  const a=i*360/N+18, r=790, x=1024+r*Math.sin(a*Math.PI/180), y=1024-r*Math.cos(a*Math.PI/180);
+  const svg=(i%2?helecho():frailejon()).replace('class="ill"','class="ill planta"');
+  h+=`<div style="position:absolute;left:${x-150}px;top:${y-198}px;width:300px;height:396px;transform:rotate(${a}deg) scale(.8)">${svg.replace('class="ill planta"','class="ill planta" style="left:0;top:0"')}</div>`;
+}
+h+=`<div style="position:absolute;left:330px;top:470px">${copeton().replace('class="ill"','class="ill ave" style="position:static"')}</div>`;
+h+=`<div style="position:absolute;left:1180px;top:1230px">${golondrina().replace('class="ill"','class="ill ave" style="position:static;width:560px"')}</div>`;
+d.innerHTML=h;
+</script></body></html>

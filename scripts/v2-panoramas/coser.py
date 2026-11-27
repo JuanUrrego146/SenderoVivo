@@ -10,7 +10,8 @@ Cose una foto .insp de la Insta360 X3 (dos ojos de pez lado a lado) a equirectan
   y se guarda en costura.json.
 - Nivelacion: el EXIF trae en MakerNote la lectura del acelerometro. Se gira cada foto para que esa
   vertical quede vertical, asi el horizonte sale recto y las flechas del visor van sobre el piso.
-- Mezcla: en la franja donde las dos lentes ven (de 84 a 96 grados de su eje), peso lineal. Antes se
+- Mezcla: alrededor de 90 grados del eje de cada lente, con una franja de 4 grados abajo y de 20
+  arriba (ver ancho_mezcla), peso lineal. Antes se
   igualan las ganancias por canal de las dos lentes con la mediana de la franja.
 - Rumbo: la longitud 0 del panorama es el eje de la lente b (la que mira hacia adelante, la a ve al
   operador), proyectado al plano horizontal.
@@ -32,11 +33,10 @@ CALIBRACION = {
 }
 LADO = 5984
 RADIO_UTIL = 2820
-TH_MEZCLA = (84.0, 96.0)
 
 # Del acelerometro (marco del IMU) al marco de la lente a (x derecha, y abajo, z al frente).
 # Se fijo probando las combinaciones sobre fotos inclinadas (ver calibrar_costura.py --imu).
-IMU_A_LENTE = np.array([[0, 0, -1], [1, 0, 0], [0, -1, 0]], np.float64)
+IMU_A_LENTE = np.array([[0, 0, 1], [1, 0, 0], [0, -1, 0]], np.float64)
 
 
 def rot(yaw, pitch, roll):
@@ -85,9 +85,12 @@ def rayos_equirect(ancho):
     return np.stack([cl * np.sin(lon), -np.sin(lat), cl * np.cos(lon)], axis=-1)
 
 
-def proyectar(rayos, lente, escala=1.0):
-    """Rayos en el marco de la lente -> (mx, my, theta en grados)."""
+def proyectar(rayos, lente, escala=1.0, centro=None):
+    """Rayos en el marco de la lente -> (mx, my, theta en grados). centro: (cx, cy) ajustado por la
+    costura, en px del ojo de pez completo."""
     fx, fy, cx, cy, k1, k2, k3, k4 = CALIBRACION[lente]
+    if centro is not None:
+        cx, cy = centro
     x, y, z = rayos[..., 0], rayos[..., 1], rayos[..., 2]
     rho = np.hypot(x, y)
     theta = np.arctan2(rho, z)
@@ -105,15 +108,25 @@ def mapas(ancho, g_imu, costura, escala=1.0):
     rayos = rayos_equirect(ancho) @ R_wa.T            # en el marco de la a
     R_ab = np.diag([-1.0, 1.0, -1.0]) @ rot(*costura["b"])
     rb = rayos @ R_ab.T                               # en el marco de la b (R_ab: a -> b)
-    a = proyectar(rayos, "a", escala)
-    b = proyectar(rb, "b", escala)
+    centros = costura.get("centros", {})
+    a = proyectar(rayos, "a", escala, centros.get("a"))
+    b = proyectar(rb, "b", escala, centros.get("b"))
     return a, b
 
 
-def pesos(theta, dentro):
-    t0, t1 = TH_MEZCLA
-    w = np.clip((t1 - theta) / (t1 - t0), 0, 1).astype(np.float32)
+def pesos(theta, dentro, medio=2.0):
+    """Peso de una lente: 1 hasta (90 - medio) grados de su eje, 0 desde (90 + medio), lineal entre medio."""
+    w = np.clip((90.0 + medio - theta) / (2 * medio), 0, 1).astype(np.float32)
     return w * dentro
+
+
+def ancho_mezcla(alto):
+    """Media franja de mezcla por fila: 2 grados hasta 10 de elevacion (abajo lo cercano tiene paralaje
+    y un corte se nota menos que dos imagenes superpuestas) y 10 grados desde 50 hacia arriba (cielo y
+    copas lejanas: ahi el problema es la diferencia de exposicion entre lentes, que una franja angosta
+    deja como un rectangulo de borde recto)."""
+    lat = 90 - (np.arange(alto, dtype=np.float32) + 0.5) / alto * 180
+    return (2.0 + 8.0 * np.clip((lat - 10) / 40, 0, 1))[:, None]
 
 
 def coser(ruta, ancho, costura=None, reduccion=1, devolver_lentes=False):
@@ -128,14 +141,19 @@ def coser(ruta, ancho, costura=None, reduccion=1, devolver_lentes=False):
     (ax, ay, at, ad), (bx, by, bt, bd) = mapas(ancho, g, costura, escala)
     A = cv2.remap(ojos["a"], ax, ay, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT).astype(np.float32)
     B = cv2.remap(ojos["b"], bx, by, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT).astype(np.float32)
-    wa, wb = pesos(at, ad), pesos(bt, bd)
+    medio = ancho_mezcla(ancho // 2)
+    wa, wb = pesos(at, ad, medio), pesos(bt, bd, medio)
     franja = (wa > 0.05) & (wb > 0.05)
     if franja.sum() > 1000:
         ga = np.median(A[franja], axis=0) + 1
         gb = np.median(B[franja], axis=0) + 1
-        medio = np.sqrt(ga * gb)
-        A *= medio / ga
-        B *= medio / gb
+        comun = np.sqrt(ga * gb)
+        # la correccion no toca las altas luces: un cielo quemado (255) multiplicado por una ganancia
+        # menor que 1 queda gris en una sola lente y se ve el corte
+        for X, gx in ((A, comun / ga), (B, comun / gb)):
+            luz = X.max(axis=2, keepdims=True)
+            k = np.clip((235.0 - luz) / 45.0, 0, 1)
+            X *= 1 + (gx - 1) * k
     if devolver_lentes:
         return A, B, wa, wb
     w = wa + wb

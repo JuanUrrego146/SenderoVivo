@@ -37,7 +37,7 @@ R_UTIL = 2820 / RED
 # Del sensor al marco de la lente a (x derecha, y abajo, z al frente de la lente a). El eje x del
 # sensor apunta hacia abajo con la camara derecha (lee -1 g); los otros dos se fijan comparando con
 # las 3 fotos que traen gravedad en el EXIF y se comprueban al coser.
-IMU_A_LENTE = np.array([[0, 0, -1], [1, 0, 0], [0, -1, 0]], np.float64)
+IMU_A_LENTE = np.array([[0, 0, 1], [1, 0, 0], [0, -1, 0]], np.float64)
 
 
 def imu(ruta):

@@ -1,0 +1,28 @@
+poiId,estado,panorama,yaw,pitch,como_se_decidio
+poi-letrero-indicaciones,ubicado,p006,77.5,-8,Visto en la foto: poste con flechas «Bosque Alto Andino» y «Portería Calle 119» y el medallón del colibrí; el marcador va sobre el medallón.
+poi-letrero-bosque-alto-andino,ubicado,p042,19.5,-7,"Visto en la foto y legible a resolución completa: «Bosque Alto Andino»; el marcador va al centro del tablero."
+poi-letrero-servicios-ambientales,ubicado,p142,-55,-29,"Visto en la foto y legible: «Servicios ambientales», letrero bajo a la izquierda del camino."
+poi-letrero-flecha,ubicado,p144,-100.7,6.3,"Visto en la foto y legible a resolución completa: «La montaña es vida… gracias por cuidarla», cuadro colgado en un tronco."
+poi-tablero-informativo,ubicado,p303,-32,-11,"Visto en la foto en la Cumbre: tablero con techo, escudo y logo de Bogotá, como el modelo del catálogo."
+poi-banca-vieja,ubicado,p260,-46,-22,"Visto en la foto: banca de madera junto al camino, unas 47 paradas (cerca de 280 m) antes de la Cumbre. La versión 1 la pone al arranque del Tramo 1, junto al letrero del observatorio, que dice estar a 270 m del mirador. Probable; confirmar con Juan si es la banca vieja o la silla rota."
+poi-letrero-observatorio-de-aves,pendiente,,,,"No se encontró en las 269 paradas. Su letrero dice que está a 270 m del mirador: debería verse cerca de p255-p265, pero allí no aparece. Preguntar a Juan."
+poi-letrero-prohibido-el-paso,pendiente,,,,No se encontró en las 269 paradas (el letrero blanco de la reja en la Cumbre dice «Servicio de baño»). Preguntar a Juan.
+poi-letrero-bosque-andino-y-pinos,pendiente,,,,"No se encontró en las 269 paradas. Hay letreros ilegibles en p113 (descolorido) y p271 (movido) que podrían ser este u otro. Preguntar a Juan."
+poi-silla-rota,pendiente,,,,"No se identificó: la única banca encontrada se asignó a la banca vieja. Preguntar a Juan."
+poi-puente-madera,pendiente,,,,"Hay varios puentes de madera en el camino (p012, p026, p037, p093) y no se sabe cuál es el del catálogo. Preguntar a Juan."
+poi-muro-antiguo,pendiente,,,,No se identificó un muro antiguo de piedra en las fotos. Preguntar a Juan.
+poi-pino,ubicado,p301,60,10,"Visto en la foto: el bosque de pinos que rodea el claro de la Cumbre; el marcador va sobre los troncos."
+poi-helecho-arborescente,pendiente,,,,"En las fotos hay helechos, pero no se puede confirmar un helecho arborescente (Cyathea). Preguntar a Juan dónde lo vio el equipo."
+poi-aliso,pendiente,,,,No se puede reconocer la especie en las fotos. Preguntar a Juan dónde lo vio el equipo.
+poi-cusumbo,pendiente,,,,"Mamífero sin avistamiento del equipo; no se pone en ningún sitio sin dato."
+poi-copeton,por habitat,p005,-7.7,-14,"Ave de zonas abiertas, prados y bordes; va sobre un poste de la cerca del prado de la planta del Acueducto. Por hábitat de la especie, no por avistamiento: confirmar con Juan."
+poi-colibri-chillon,por habitat,p006,-27,-1,"Colibrí de bordes de bosque y jardines (eBird lo reporta en el sendero, sin punto exacto); va en el borde del bosque junto a la planta. Por hábitat: confirmar con Juan."
+poi-saltapared-comun,por habitat,p005,142,-18,"Ave de matorrales y alrededores de construcciones; va en la cerca junto a la planta. Por hábitat: confirmar con Juan."
+poi-vireo-ojirrojo,por habitat,p048,101,20,"Ave del dosel del bosque; va en la copa del árbol grande del bosque. Por hábitat: confirmar con Juan."
+poi-carpintero-candela,por habitat,p082,75,5,"Carpintero de bosque de montaña; va sobre el tronco grande junto al camino. Por hábitat: confirmar con Juan."
+poi-tucan-andino,por habitat,p100,-75,18,"Ave del dosel del bosque húmedo de montaña; va en la copa del árbol a la izquierda del camino. Por hábitat: confirmar con Juan."
+poi-cucarachero-rufo,por habitat,p265,66,-5,"Ave del sotobosque de chusque (bambú) del bosque alto; va en el chuscal al lado del camino. Por hábitat: confirmar con Juan."
+poi-pibi-ahumado,por habitat,p293,45,5,"Atrapamoscas que caza desde ramas expuestas en bordes de bosque; va en una rama seca junto al claro cerca de la Cumbre. Por hábitat: confirmar con Juan."
+poi-atlapetes-nuquipalido,por habitat,p300,45,-4,"El catálogo lo describe de bordes de bosque altoandino y matorral de subpáramo; va en el matorral del borde del claro de la Cumbre. Por hábitat: confirmar con Juan."
+poi-golondrina-plomiza,por habitat,p297,165,20,"Golondrina que vuela sobre espacios abiertos; va en el cielo abierto del mirador. Por hábitat: confirmar con Juan."
+poi-aguililla-de-swainson,por habitat,p306,17,25,"Rapaz que planea sobre zonas abiertas; va en el cielo sobre la vista de la ciudad desde el mirador. Por hábitat: confirmar con Juan."

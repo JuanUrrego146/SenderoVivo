@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Sendero Santa Ana · recorrido en fotos 360</title>
+    <meta name="description" content="Recorrido de foto en foto por el Sendero Santa Ana, en los Cerros Orientales de Bogotá.">
+    <!-- Estilos de la ficha compartida con la versión 1 -->
+    <link rel="stylesheet" href="../styles/tokens.css">
+    <link rel="stylesheet" href="../styles/glass.css">
+    <link rel="stylesheet" href="../assets/vendor/fontawesome/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Quicksand:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Visor -->
+    <link rel="stylesheet" href="vendor/psv/core/index.css">
+    <link rel="stylesheet" href="vendor/psv/markers-plugin/index.css">
+    <link rel="stylesheet" href="vendor/psv/virtual-tour-plugin/index.css">
+    <link rel="stylesheet" href="estilo.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "./vendor/three/three.module.js",
+            "@photo-sphere-viewer/core": "./vendor/psv/core/index.module.js",
+            "@photo-sphere-viewer/markers-plugin": "./vendor/psv/markers-plugin/index.module.js",
+            "@photo-sphere-viewer/virtual-tour-plugin": "./vendor/psv/virtual-tour-plugin/index.module.js"
+        }
+    }
+    </script>
+</head>
+<body class="v2">
+    <main id="visor" aria-label="Foto 360 del sendero. Arrastra para mirar alrededor."></main>
+
+    <header class="v2-cabecera">
+        <h1>Sendero Santa Ana</h1>
+        <button id="sonido" class="v2-boton v2-redondo" type="button" aria-pressed="true" aria-label="Silenciar"></button>
+    </header>
+
+    <p id="aviso" class="v2-aviso" role="status" aria-live="polite"></p>
+
+    <nav class="v2-barra" aria-label="Recorrido">
+        <button id="volver" class="v2-boton" type="button"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i><span>Volver</span></button>
+        <span id="cuenta" class="v2-cuenta">Cargando…</span>
+        <button id="avanzar" class="v2-boton" type="button"><span>Avanzar</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+    </nav>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

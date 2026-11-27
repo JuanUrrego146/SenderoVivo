@@ -1,0 +1,70 @@
+/* Controles de la versión 2: mínimos y neutros a propósito, para que reciban el estilo que Juan
+   elija para la versión 1 (estilo D) cambiando solo estas variables. */
+:root {
+    --v2-panel: rgba(255, 255, 255, 0.88);
+    --v2-tinta: #1f2421;
+    --v2-tinta-suave: #4a514d;
+    --v2-borde: 1px solid rgba(0, 0, 0, 0.14);
+    --v2-sombra: 0 2px 10px rgba(0, 0, 0, 0.18);
+    --v2-radio: 999px;
+    --v2-letra: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --v2-ave-borde: 2px solid #fff;
+}
+
+html, body.v2 { margin: 0; height: 100%; overflow: hidden; background: #1b1f1c; font-family: var(--v2-letra); }
+#visor { position: fixed; inset: 0; }
+
+.v2-cabecera {
+    position: fixed; top: max(12px, env(safe-area-inset-top)); left: 12px; right: 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; pointer-events: none; z-index: 20;
+}
+.v2-cabecera h1 {
+    margin: 0; padding: 8px 14px; font: 600 16px/1.2 var(--v2-letra); color: var(--v2-tinta);
+    background: var(--v2-panel); border: var(--v2-borde); border-radius: var(--v2-radio); box-shadow: var(--v2-sombra);
+}
+
+.v2-boton {
+    pointer-events: auto; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 44px; padding: 0 16px; font: 600 15px/1 var(--v2-letra); color: var(--v2-tinta);
+    background: var(--v2-panel); border: var(--v2-borde); border-radius: var(--v2-radio); box-shadow: var(--v2-sombra);
+    cursor: pointer;
+}
+.v2-boton:hover:not(:disabled) { background: #fff; }
+.v2-boton:focus-visible { outline: 3px solid #2f6fd6; outline-offset: 2px; }
+.v2-boton:disabled { opacity: 0.45; cursor: default; }
+.v2-redondo { width: 44px; padding: 0; }
+
+.v2-barra {
+    position: fixed; left: 50%; bottom: max(14px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px; z-index: 20;
+}
+.v2-cuenta {
+    min-width: 132px; text-align: center; padding: 10px 14px; font: 600 14px/1 var(--v2-letra); color: var(--v2-tinta);
+    background: var(--v2-panel); border: var(--v2-borde); border-radius: var(--v2-radio); box-shadow: var(--v2-sombra);
+}
+
+.v2-aviso {
+    position: fixed; left: 50%; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 58px); transform: translateX(-50%);
+    margin: 0; max-width: min(92vw, 520px); padding: 8px 14px; font: 500 14px/1.35 var(--v2-letra); color: var(--v2-tinta);
+    text-align: center; background: var(--v2-panel); border: var(--v2-borde); border-radius: 14px; box-shadow: var(--v2-sombra);
+    z-index: 20;
+}
+.v2-aviso:empty { display: none; }
+
+/* Marcador de ave: medallón con la miniatura de la ficha. */
+.v2-ave {
+    width: 64px; height: 64px; padding: 0; border-radius: 50%; overflow: hidden; cursor: pointer;
+    background: #f4f1ea; border: var(--v2-ave-borde); box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+    display: grid; place-items: center; color: #3b6b47; font-size: 28px;
+    animation: v2-flota 3.4s ease-in-out infinite;
+}
+.v2-ave img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+@keyframes v2-flota { 50% { translate: 0 -5px; } }
+@media (prefers-reduced-motion: reduce) { .v2-ave { animation: none; } }
+
+@media (max-width: 480px) {
+    .v2-boton span { display: none; }
+    .v2-boton { width: 48px; padding: 0; }
+    .v2-cuenta { min-width: 120px; }
+    .v2-cabecera h1 { font-size: 15px; }
+}
