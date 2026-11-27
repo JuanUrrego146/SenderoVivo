@@ -366,7 +366,7 @@
 }
 
 .poi-specimen-name {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--sv-font-title);
     font-size: 13.5px;
     font-weight: 700;
     color: var(--sv-text-primary);
@@ -544,7 +544,7 @@
     font-size: 16px;
     font-weight: 700;
     color: var(--sv-text-primary);
-    font-family: 'Playfair Display', serif !important;
+    font-family: var(--sv-font-display) !important;
     font-style: italic !important;
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
@@ -749,7 +749,7 @@
 }
 
 .expedition-trail-name {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--sv-font-title);
     font-size: 13.5px;
     font-weight: 700;
     color: var(--sv-text-primary);
@@ -891,7 +891,7 @@
 }
 
 .search-shortcut {
-    font-family: 'Syne', monospace;
+    font-family: var(--sv-font-title);
     font-size: 9.5px;
     font-weight: 700;
     padding: 2px 6px;
@@ -1220,7 +1220,7 @@
 }
 
 .mobile-brand-title {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--sv-font-title);
     font-size: 11.5px;
     font-weight: 700;
     color: var(--sv-text-primary);
@@ -1700,10 +1700,6 @@
     box-sizing: border-box;
     padding: clamp(24px, 4.5vw, 54px) clamp(24px, 5.5vw, 70px) clamp(20px, 3.5vw, 36px);
     background-color: var(--sv-surface-solid);
-    background-image: url('../assets/portada-cumbre.webp');
-    background-position: center 65%;
-    background-size: cover;
-    background-repeat: no-repeat;
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
@@ -1842,7 +1838,7 @@
 }
 
 .hero-brand-sendero {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--sv-font-display);
     font-size: clamp(3.8rem, 8.5vw, 6.8rem);
     font-weight: 800;
     color: var(--sv-surface-solid);
@@ -1850,7 +1846,7 @@
 }
 
 .hero-brand-vivo {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--sv-font-display);
     font-size: clamp(3.8rem, 8.5vw, 6.8rem);
     font-style: italic;
     font-weight: 700;
@@ -1861,7 +1857,7 @@
 }
 
 .hero-brand-tagline {
-    font-family: 'Quicksand', system-ui, sans-serif;
+    font-family: var(--sv-font-body);
     font-size: clamp(1.25rem, 2.4vw, 1.7rem);
     font-weight: 500;
     color: var(--sv-surface-solid);
@@ -1888,7 +1884,7 @@
     background: linear-gradient(135deg, var(--sv-primary) 0%, var(--sv-primary-hover) 100%);
     border: 1px solid var(--sv-primary-hover);
     color: var(--sv-text-inverse);
-    font-family: 'Quicksand', system-ui, sans-serif;
+    font-family: var(--sv-font-body);
     font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.02em;
@@ -1933,7 +1929,7 @@
     -webkit-backdrop-filter: blur(14px);
     border: 1px solid var(--sv-surface-border);
     color: var(--sv-text-primary);
-    font-family: 'Quicksand', system-ui, sans-serif;
+    font-family: var(--sv-font-body);
     font-size: 15.5px;
     font-weight: 600;
     letter-spacing: 0.01em;
@@ -1988,7 +1984,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-family: 'Playfair Display', serif !important;
+    font-family: var(--sv-font-display) !important;
     font-style: italic !important;
     font-size: clamp(14px, 2vw, 17px);
     font-weight: 700;
@@ -1998,7 +1994,7 @@
 .hero-stat-highlight {
     color: var(--sv-primary-hover) !important;
     font-weight: 700 !important;
-    font-family: 'Playfair Display', serif !important;
+    font-family: var(--sv-font-display) !important;
     font-style: italic !important;
     letter-spacing: 0.02em;
 }
@@ -2011,13 +2007,13 @@
 
 .hero-stat-time {
     color: var(--sv-surface-solid);
-    font-family: 'Playfair Display', serif !important;
+    font-family: var(--sv-font-display) !important;
     font-style: italic !important;
     font-weight: 700 !important;
 }
 
 .hero-footer-slogan {
-    font-family: 'Playfair Display', serif !important;
+    font-family: var(--sv-font-display) !important;
     font-style: italic !important;
     font-size: clamp(1.4rem, 2.5vw, 2.1rem);
     color: var(--sv-primary-hover) !important;
@@ -2214,7 +2210,7 @@
 }
 
 .onboarding-step-title {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--sv-font-title);
     font-size: 20px;
     font-weight: 700;
     color: var(--sv-text-primary);
@@ -2412,7 +2408,7 @@
 }
 
 .album-section-title {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--sv-font-title);
     font-size: 13px;
     font-weight: 700;
     color: var(--sv-text-primary);
@@ -3228,7 +3224,7 @@
     padding: 6px 14px;
     font-size: 11px;
     font-weight: 700;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--sv-font-title);
     color: var(--sv-text-primary);
     display: inline-flex;
     align-items: center;
@@ -3307,7 +3303,7 @@
 .checklist-badge-obligatorio {
     font-size: 11.5px !important;
     font-weight: 700 !important;
-    font-family: 'Playfair Display', serif !important;
+    font-family: var(--sv-font-display) !important;
     font-style: italic !important;
     letter-spacing: 0.2px !important;
     text-transform: none !important;
@@ -3322,7 +3318,7 @@
 .checklist-badge-recomendado {
     font-size: 9.5px;
     font-weight: 800;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--sv-font-title);
     letter-spacing: 0.5px;
     text-transform: uppercase;
     padding: 2px 7px;
@@ -3763,4 +3759,395 @@ button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-vis
     position: absolute;
     inset: 0;
     z-index: 1;
+    background: var(--sv-hero-veil);
+}
+
+
+/* ==========================================================================
+   ESTILO «PAPEL RECORTADO» SUAVE (dirección D)
+   Paneles de papel crema casi opaco con desenfoque leve, borde tenue y sombra corta; botones
+   en píldora; verde apagado para las acciones y ocre para el progreso; letra redondeada e
+   ilustraciones planas. Todo valor sale de styles/tokens.css: cambiar de dirección es cambiar
+   ese bloque de variables, no estas reglas.
+   ========================================================================== */
+
+/* Paneles */
+.telemetry-card,
+#shell-nav-pc,
+#shell-nav-mobile,
+#mobile-details-card,
+.expedition-badge-trigger,
+.expedition-live-pill,
+.render-toggle-deck,
+.command-actions-cluster > *,
+#hint,
+.hero-pill-location,
+.hero-pill-tech,
+.poi-hologram-card,
+.sv-poi-card,
+.sv-joystick,
+.preparar-visita-modal-card,
+.parada-fuera {
+    background: var(--sv-surface-panel);
+    border: var(--sv-panel-border);
+    box-shadow: var(--sv-surface-shadow);
+    backdrop-filter: blur(var(--sv-panel-blur));
+    -webkit-backdrop-filter: blur(var(--sv-panel-blur));
+    color: var(--sv-text-primary);
+}
+
+.telemetry-card,
+#mobile-details-card,
+.poi-hologram-card,
+.sv-poi-card {
+    border-radius: var(--sv-radius-lg);
+}
+
+.preparar-visita-modal-card,
+#bottom-sheet,
+#bottom-sheet .glass-panel {
+    border-radius: var(--sv-radius-xl);
+}
+
+#bottom-sheet,
+#bottom-sheet .glass-panel,
+.tab-modal-card,
+.album-species-card {
+    background: var(--sv-surface-panel);
+    border: var(--sv-panel-border);
+    box-shadow: var(--sv-surface-shadow-lg);
+}
+
+#shell-nav-pc,
+#shell-nav-mobile,
+.expedition-badge-trigger,
+.expedition-live-pill,
+.render-toggle-deck,
+.hero-pill-location,
+.hero-pill-tech,
+.parada-fuera {
+    border-radius: var(--sv-radius-full);
+}
+
+.expedition-badge-trigger {
+    border-radius: var(--sv-radius-lg);
+}
+
+/* Botones: píldora con borde y sombra de papel; el texto nunca se parte en dos líneas */
+.render-btn,
+.telemetry-btn-bitacora,
+.hero-btn-primary,
+.hero-btn-secondary,
+.sv-poi-audio-btn,
+.parada-fuera,
+#shell-nav-pc button,
+#shell-nav-mobile button,
+#bottom-sheet button.rounded-xl {
+    border: var(--sv-btn-border);
+    box-shadow: var(--sv-btn-shadow);
+    border-radius: var(--sv-radius-full);
+    font-family: var(--sv-font-title);
+    font-weight: var(--sv-font-weight-titulo);
+    white-space: nowrap;
+}
+
+.hero-btn-primary,
+.render-btn.activa,
+.parada-fuera {
+    background: var(--sv-primary);
+    color: var(--sv-text-inverse);
+}
+
+.parada-fuera {
+    background: var(--sv-arrow-bg);
+    color: var(--sv-arrow-ink);
+}
+
+.hero-btn-secondary,
+.telemetry-btn-bitacora,
+.sv-poi-audio-btn {
+    background: var(--sv-surface-inset);
+    color: var(--sv-text-primary);
+}
+
+#shell-nav-pc button,
+#shell-nav-mobile button {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+/* Datos y títulos con letra redondeada y cifras de ancho fijo */
+.telemetry-linea,
+#hud-datos,
+.expedition-trail-name,
+.expedition-brand-sup,
+.hero-footer-stats,
+.hero-footer-slogan,
+.poi-specimen-name,
+.album-species-common {
+    font-family: var(--sv-font-title);
+    font-weight: var(--sv-font-weight-titulo);
+    font-variant-numeric: tabular-nums;
+    font-style: var(--sv-font-style-acento);
+}
+
+body,
+.poi-scientific-name,
+.album-species-scientific {
+    font-family: var(--sv-font-body);
+}
+
+/* Iconos de trazo (assets/ilustraciones/iconos.svg), en el verde de acción */
+.ic {
+    width: 1.25em;
+    height: 1.25em;
+    flex-shrink: 0;
+    vertical-align: -0.2em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: var(--sv-icon-stroke);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    color: var(--sv-primary);
+}
+
+.ic.ic-nav {
+    width: 22px;
+    height: 22px;
+    color: inherit;
+}
+
+.poi-hoja-3d-visor {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+.telemetry-btn-bitacora .ic,
+.hero-btn-primary .ic,
+.render-btn.activa .ic {
+    color: inherit;
+}
+
+/* Barra de progreso: ocre sobre la barra vacía */
+.telemetry-bar-bg {
+    background: var(--sv-surface-bar);
+}
+
+.telemetry-bar-fill {
+    background: var(--sv-secondary);
+}
+
+.telemetry-mini-pill .fa-solid,
+.telemetry-mini-pill .ic {
+    color: var(--sv-primary);
+}
+
+/* Marcador del punto y su vista previa */
+.poi-gem-body {
+    border: var(--sv-marker-border);
+}
+
+.poi-hologram-card {
+    border-radius: var(--sv-radius-lg);
+}
+
+.poi-cat-badge,
+.poi-3d-tag {
+    border: 0;
+}
+
+/* Divisores y cajas internas */
+.telemetry-footer-row,
+.telemetry-detalle,
+.trail-metric-card,
+.preparar-content-grid > * {
+    border-color: var(--sv-surface-border-subtle);
+}
+
+/* Ilustraciones planas: sombra de papel y sin nada flotando sin panel detrás */
+.ilu {
+    filter: var(--sv-ilu-sombra);
+    overflow: visible;
+}
+
+/* Portada: foto real, velo, título y cerros al pie */
+.hero-foto,
+.hero-foto img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#trail-lobby > .hero-foto {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-foto img {
+    object-fit: cover;
+    object-position: center 65%;
+}
+
+.hero-brand-title {
+    letter-spacing: 0;
+}
+
+.hero-brand-sendero,
+.hero-brand-vivo {
+    font-weight: var(--sv-font-weight-portada);
+    font-style: var(--sv-font-style-acento);
+}
+
+.hero-brand-sendero {
+    color: var(--sv-portada-ink);
+}
+
+.hero-brand-vivo {
+    color: var(--sv-portada-em);
+}
+
+.hero-brand-tagline {
+    color: var(--sv-portada-ink);
+    font-weight: 700;
+}
+
+.hero-bottom-footer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 200px;
+    margin-left: calc(-1 * clamp(24px, 5.5vw, 70px));
+    margin-right: calc(-1 * clamp(24px, 5.5vw, 70px));
+    margin-bottom: calc(-1 * clamp(20px, 3.5vw, 36px));
+    padding: 0 clamp(24px, 5.5vw, 70px) clamp(14px, 2.5vw, 24px);
+}
+
+.hero-bottom-footer > .hero-bottom-divider {
+    display: none;
+}
+
+.hero-bottom-footer > .hero-footer-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-cerros {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 150%;
+    z-index: 0;
+}
+
+.hero-frailejon {
+    position: absolute;
+    bottom: 54%;
+    width: clamp(46px, 6vw, 74px);
+    height: clamp(60px, 8vw, 98px);
+    z-index: 1;
+}
+
+.hero-frailejon--a {
+    right: 9%;
+}
+
+.hero-frailejon--b {
+    right: 17%;
+    bottom: 62%;
+    transform: scale(0.8);
+}
+
+.hero-footer-stats,
+.hero-footer-stats *,
+.hero-footer-slogan {
+    color: var(--sv-portada-ink) !important;
+    font-style: var(--sv-font-style-acento) !important;
+}
+
+.hero-footer-slogan {
+    color: var(--sv-portada-em) !important;
+}
+
+/* Ayuda de primera visita: el copetón dentro del panel */
+#hint .ilu-copeton {
+    width: 44px;
+    height: 34px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Tarjeta del sendero: el frailejón pequeño */
+.expedition-badge-icon .ilu-frailejon {
+    width: 22px;
+    height: 29px;
+}
+
+/* Cabecera de la ficha: cielo nublado con cerros, helecho y frailejón detrás del visor 3D */
+.poi-hoja-3d {
+    background: var(--sv-ficha-sky);
+    border-radius: var(--sv-radius-lg);
+    border: var(--sv-divider-border);
+}
+
+.poi-hoja-3d model-viewer {
+    background: transparent !important;
+    position: relative;
+    z-index: 2;
+}
+
+.poi-hoja-3d .ficha-ilu {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.poi-hoja-3d .ficha-ilu--cerros {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 38%;
+}
+
+.poi-hoja-3d .ficha-ilu--helecho {
+    left: 4%;
+    bottom: 8%;
+    width: 17%;
+    height: 56%;
+}
+
+.poi-hoja-3d .ficha-ilu--frailejon {
+    right: 4%;
+    bottom: 8%;
+    width: 17%;
+    height: 56%;
+}
+
+.poi-hoja-3d .ficha-ilu--propia {
+    left: 4%;
+    bottom: 8%;
+    width: 24%;
+    height: 60%;
+    object-fit: contain;
+}
+
+.poi-hoja-3d-miniatura {
+    position: relative;
+    z-index: 2;
+}
+
+/* Nada decorativo sobre la escena sin un panel detrás; ningún texto de botón en dos líneas */
+button,
+.parada-fuera,
+.render-btn {
+    white-space: nowrap;
 }

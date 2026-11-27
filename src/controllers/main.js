@@ -145,9 +145,10 @@ function mostrarIndicacionInicial(app) {
 
     const mostrar = () => {
         const movil = window.matchMedia('(max-width: 640px)').matches;
-        showHint(movil
+        const copeton = '<svg class="ilu ilu-copeton" aria-hidden="true"><use href="assets/ilustraciones/copeton.svg#ilu"/></svg>';
+        showHint(copeton + (movil
             ? 'Usa el <strong>joystick</strong> para caminar · desliza para mirar'
-            : '<strong>W A S D</strong> para caminar · arrastra para mirar');
+            : '<strong>W A S D</strong> para caminar · arrastra para mirar'));
         hint.classList.add('indicacion-inicial');
         try { sessionStorage.setItem(CLAVE, '1'); } catch (e) { /* sin almacenamiento */ }
 

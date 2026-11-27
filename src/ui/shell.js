@@ -154,6 +154,7 @@ function desdeContrato(poi) {
         // Rutas reales declaradas en config/pois.json
         modelUrl: poi.modelUrl || '',
         previewUrl: poi.previewUrl || '',
+        illustrationUrl: poi.illustrationUrl || '',
         idleAnimation: poi.idleAnimation || '',
         narrationUrl: poi.narrationUrl || '',
         birdCallUrl: poi.birdCallUrl || '',
@@ -588,7 +589,7 @@ function accionesMediaHTML(item) {
                 class="w-full py-3.5 px-3 rounded-xl text-xs sm:text-[13px] font-bold transition flex items-center justify-center gap-2 touch-manipulation cursor-pointer shadow-sm hover:translate-y-[-1px] active:scale-[0.98]"
                 style="background: var(--sv-surface-solid-warm); border: 1.5px solid var(--sv-surface-border); color: var(--sv-text-primary); min-height: 46px;"
             >
-                <i class="fa-solid fa-volume-high text-sm" style="color: var(--sv-primary);"></i>
+                <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#canto"/></svg>
                 <span class="truncate">Escuchar canto</span>
             </button>
         `);
@@ -613,7 +614,7 @@ function accionesMediaHTML(item) {
                 class="w-full py-3.5 px-3 rounded-xl text-xs sm:text-[13px] font-bold transition flex items-center justify-center gap-2 touch-manipulation cursor-pointer shadow-sm hover:translate-y-[-1px] active:scale-[0.98]"
                 style="background: var(--sv-surface-solid-warm); border: 1.5px solid var(--sv-surface-border); color: var(--sv-text-primary); min-height: 46px;"
             >
-                <i class="fa-solid fa-headphones text-sm" style="color: var(--sv-primary);"></i>
+                <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#voz"/></svg>
                 <span class="truncate">Narración</span>
             </button>
         `);
@@ -822,7 +823,16 @@ function miniaturaHojaHTML(item) {
 function visorHojaHTML(item) {
     if (!item.modelUrl) return '';
 
-    return `<div id="poi-hoja-3d" class="poi-hoja-3d">${miniaturaHojaHTML(item)}</div>`;
+    // Cielo nublado con cerros, helecho y frailejón detrás del visor (ModelView vacía su contenedor,
+    // por eso las ilustraciones van fuera de él).
+    const ilu = (nombre, clase) =>
+        `<svg class="ilu ficha-ilu ficha-ilu--${clase}" aria-hidden="true"><use href="assets/ilustraciones/${nombre}.svg#ilu"/></svg>`;
+    // Un punto puede traer su propia ilustración (illustrationUrl): va en lugar del helecho y el frailejón.
+    const propia = item.illustrationUrl
+        ? `<img class="ilu ficha-ilu ficha-ilu--propia" src="${item.illustrationUrl}" alt="" loading="lazy" decoding="async">`
+        : ilu('helecho', 'helecho') + ilu('frailejon', 'frailejon');
+    return `<div class="poi-hoja-3d">${ilu('cerros', 'cerros')}${propia}` +
+        `<div id="poi-hoja-3d" class="poi-hoja-3d-visor">${miniaturaHojaHTML(item)}</div></div>`;
 }
 
 function cerrarHojaSiEstaAbierta() {
@@ -1863,8 +1873,8 @@ const TRAILS_VISIT_DATA = {
         time: '',
         ecosystemTag: 'Circuito Bosque de Pinos y Cuenca Hídrica',
         description: 'Camino ecológico ancestral rodeado de imponentes bosques de pinos y vegetación nativa altoandina. Un sendero de pendiente amable ideal para caminatas contemplativas, avistamiento de aves andinas y conexión profunda con la naturaleza.',
-        image: 'assets/portada-cumbre.webp',
-        mapImage: 'assets/portada-cumbre.webp',
+        image: 'assets/portada-mirador.webp',
+        mapImage: 'assets/portada-mirador.webp',
         hitos: ['01 · Entrada Cl. 119', '02 · Bosque Pinos', '03 · Mirador Aguadora', '04 · Reserva']
     }
 };
@@ -1914,7 +1924,7 @@ async function cargarPortada() {
 
 // Precarga inmediata de assets visuales WebP para evitar microstutters
 try {
-    const _imgP1 = new Image(); _imgP1.src = 'assets/portada-cumbre.webp';
+    const _imgP1 = new Image(); _imgP1.src = 'assets/portada-mirador.webp';
 } catch (e) {}
 
 let currentPrepararTrailKey = 'santa-ana';

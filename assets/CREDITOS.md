@@ -1,3 +1,3 @@
 # Créditos de las imágenes de la app
 
-- `portada-cumbre.webp`: cuadro 0009 de la toma `c_Plataforma_VistaTramo1`, grabada en el mirador de la Cumbre del Sendero Santa Ana con un celular (E:/SenderoCelular2/frames/c_Plataforma_VistaTramo1). Foto del equipo de Sendero Vivo, convertida a WebP de 1280 por 720 px.
+- `portada-mirador.webp` y `portada-mirador-movil.webp`: foto del mirador de la Cumbre del Sendero Santa Ana, tomada con un celular en la salida de campo del equipo de Sendero Vivo y convertida a WebP (1280 y 390 px de ancho).

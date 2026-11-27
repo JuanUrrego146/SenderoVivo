@@ -147,7 +147,7 @@ export class PoiCardView {
                     id="poi-card-title"
                     style="
                         margin: 0;
-                        font-family: var(--sv-font-title, 'Syne', sans-serif);
+                        font-family: var(--sv-font-title, var(--sv-font-title));
                         font-size: clamp(20px, 3.5vw, 24px);
                         font-weight: 700;
                         color: var(--sv-text-primary);

@@ -1,6 +1,6 @@
 const POIS_CONFIG_URL = 'config/pois.json';
 const POI_TYPES = new Set(['fauna', 'flora', 'patrimonio']);
-const RESOURCE_FIELDS = ['modelUrl', 'previewUrl', 'narrationUrl', 'birdCallUrl'];
+const RESOURCE_FIELDS = ['modelUrl', 'previewUrl', 'illustrationUrl', 'narrationUrl', 'birdCallUrl'];
 
 const COMMON_FIELDS = {
     id: 'texto',
