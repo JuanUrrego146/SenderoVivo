@@ -102,6 +102,19 @@
             el.append(crear('span', 'sendero-etiqueta', 'Próximamente'));
             el.append(crear('p', 'sendero-nota', sendero.nota || datos.reservaNota || ''));
         }
+        // Preparar la visita de este sendero (también los próximamente): no lo selecciona ni abre la escena.
+        const preparar = crear('button', 'sendero-preparar');
+        preparar.type = 'button';
+        preparar.append(icono('hoja'), crear('span', '', 'Preparar la visita'));
+        preparar.addEventListener('click', (evento) => {
+            evento.stopPropagation();
+            if (typeof openPrepararVisita === 'function') openPrepararVisita(sendero.id);
+        });
+        const acciones = crear('div', 'sendero-acciones');
+        const entrarBoton = el.querySelector('.sendero-entrar');
+        if (entrarBoton) acciones.append(entrarBoton);
+        acciones.append(preparar);
+        el.append(acciones);
         el.addEventListener('click', () => seleccionar(sendero.id));
         el.addEventListener('keydown', (evento) => {
             if (evento.target === el && (evento.key === 'Enter' || evento.key === ' ')) {
@@ -171,12 +184,13 @@
             grupo.append(tarjetas);
             sectores.append(grupo);
         }
+        // La nota de reserva va dentro de la columna de tarjetas, justo después del último sector.
+        sectores.append(crear('p', 'senderos-pie', datos.reservaNota
+            ? `${datos.reservaNota}. Los senderos que aún no están en la app se muestran apagados.`
+            : ''));
         cuerpo.append(sectores);
 
-        const pie = crear('p', 'senderos-pie', datos.reservaNota
-            ? `${datos.reservaNota}. Los senderos que aún no están en la app se muestran apagados.`
-            : '');
-        pantalla.append(cabecera, cuerpo, pie);
+        pantalla.append(cabecera, cuerpo);
         if (typeof llenarHuecosDeIlustracion === 'function') llenarHuecosDeIlustracion(pantalla);
         const primero = senderos.find(disponible) || senderos[0];
         if (primero) seleccionar(primero.id);
@@ -217,6 +231,7 @@
     }
 
     window.mostrarSenderos = abrir;
+    window.cerrarSenderos = cerrar;
     window.abrirSenderos = () => {
         if (typeof closeBottomSheet === 'function') closeBottomSheet();
         if (typeof closeTabPanel === 'function') closeTabPanel();

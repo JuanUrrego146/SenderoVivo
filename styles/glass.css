@@ -544,8 +544,8 @@
     font-size: 16px;
     font-weight: 700;
     color: var(--sv-text-primary);
-    font-family: var(--sv-font-display) !important;
-    font-style: italic !important;
+    font-family: var(--sv-font-title);
+    font-style: var(--sv-font-style-acento);
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
 }
@@ -2884,7 +2884,7 @@
     inset: 0 !important;
     /* Se abre desde la portada (#trail-lobby, z-index 10000): tiene que quedar encima,
        igual que el álbum de biodiversidad. */
-    z-index: 10005 !important;
+    z-index: 10020 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -3592,53 +3592,35 @@ button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-vis
 /* ==========================================================================
    LA MITAD DE ABAJO ES DEL CAMINO
    Abajo solo quedan la barra de secciones (escritorio) o el joystick y la barra
-   (celular). Los datos del recorrido van en una franja compacta arriba, la vista
-   previa de un punto aparece arriba de la barra solo con un punto a menos de 6 m,
-   y la indicación de primera visita va arriba al centro y se va sola.
+   (celular). La tarjeta de seguimiento (altitud, desnivel, progreso, puntos vistos y
+   Bitácora) va siempre abierta arriba a la izquierda, la vista previa de un punto
+   aparece arriba de la barra solo con un punto a menos de 6 m, y «Cómo moverte» va abajo
+   a la izquierda en escritorio, plegable a un botón «?».
    ========================================================================== */
 #expedition-telemetry-hud {
     top: 84px;
     bottom: auto;
     left: 20px;
-    width: auto;
+    width: var(--sv-seguimiento-ancho);
     max-width: calc(100vw - 40px);
 }
 
 #expedition-telemetry-hud .telemetry-card {
-    gap: 0;
-    padding: 8px 14px;
-    border-radius: 14px;
-    cursor: pointer;
-}
-
-.telemetry-linea {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    min-height: 26px;
-    white-space: nowrap;
-    font-size: 12px;
-    line-height: 1.3;
-    color: var(--sv-text-muted);
-    font-variant-numeric: tabular-nums;
-}
-
-.telemetry-dato {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 5px;
-}
-
-.telemetry-dato .fa-mountain {
-    font-size: 11px;
-    color: var(--sv-primary);
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: var(--sv-radius-lg);
 }
 
 .telemetry-etiqueta {
     color: var(--sv-text-dim);
 }
 
-#hud-altitud,
+.telemetry-proximo-fila {
+    font-size: 12px;
+    color: var(--sv-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
 #hud-recorrido,
 #hud-restante {
     font-weight: 700;
@@ -3650,16 +3632,119 @@ button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-vis
     color: var(--sv-primary);
 }
 
-.telemetry-detalle {
-    display: none;
+#progreso-pct,
+#progreso-pct-m {
+    color: var(--sv-text-muted);
 }
 
-.telemetry-card.abierta .telemetry-detalle {
+.detalle-movil-pie {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-width: 380px;
-    margin-top: 10px;
+    padding: 0 12px 12px;
+}
+
+/* Cómo moverte: panel plegable con los controles del recorrido */
+.ayuda-movimiento {
+    position: absolute;
+    left: 20px;
+    bottom: 24px;
+    z-index: 30;
+    width: min(var(--sv-ayuda-ancho), calc(100vw - 40px));
+    pointer-events: auto;
+}
+
+.ayuda-movimiento[hidden] {
+    display: none;
+}
+
+.ayuda-movimiento-cuerpo {
+    padding: 14px 16px;
+    background: var(--sv-surface-panel);
+    border: var(--sv-panel-border);
+    border-radius: var(--sv-radius-lg);
+    box-shadow: var(--sv-surface-shadow);
+    color: var(--sv-text-primary);
+}
+
+.ayuda-movimiento-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.ayuda-movimiento-titulo {
+    margin: 0;
+    font-family: var(--sv-font-title);
+    font-weight: var(--sv-font-weight-titulo);
+    font-size: 17px;
+}
+
+.ayuda-movimiento-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 15px;
+    line-height: 1.35;
+}
+
+.ayuda-movimiento-ocultar {
+    min-height: 32px;
+    padding: 0 14px;
+    border: var(--sv-btn-border);
+    border-radius: var(--sv-radius-full);
+    background: var(--sv-surface-inset);
+    color: var(--sv-text-primary);
+    font-family: var(--sv-font-title);
+    font-weight: var(--sv-font-weight-titulo);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.ayuda-movimiento-abrir {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--sv-ayuda-boton);
+    height: var(--sv-ayuda-boton);
+    padding: 0;
+    border: var(--sv-btn-border);
+    border-radius: var(--sv-radius-full);
+    background: var(--sv-surface-panel);
+    box-shadow: var(--sv-btn-shadow);
+    color: var(--sv-primary);
+    cursor: pointer;
+}
+
+.ayuda-movimiento-abrir[hidden] {
+    display: none;
+}
+
+.ayuda-movimiento--plegada {
+    width: auto;
+}
+
+.ayuda-movimiento--plegada .ayuda-movimiento-cuerpo {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    .ayuda-movimiento {
+        left: 16px;
+        right: 16px;
+        bottom: auto;
+        width: auto;
+        top: max(var(--sv-ayuda-tope-movil, 188px), calc(42% + 30px));
+    }
+
+    .ayuda-movimiento--plegada {
+        right: auto;
+    }
 }
 
 #shell-nav-pc {
@@ -3692,29 +3777,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-vis
     opacity: 1;
     transform: translateX(-50%);
     pointer-events: auto;
-}
-
-/* Indicación de primera visita (RF-026). */
-#hint.indicacion-inicial {
-    display: block;
-    top: 140px;
-    bottom: auto;
-    left: 50%;
-    right: auto;
-    z-index: 31;
-    max-width: calc(100vw - 32px);
-    transform: translateX(-50%);
-    text-align: center;
-    white-space: nowrap;
-    transition: opacity 0.6s ease;
-}
-
-#hint.indicacion-inicial[hidden] {
-    display: none;
-}
-
-#hint.indicacion-inicial--fuera {
-    opacity: 0;
 }
 
 /* Crédito del canto: línea de créditos bajo el botón, en letra pequeña y tenue. */
@@ -3751,12 +3813,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-vis
         bottom: auto !important;
     }
 
-    #hint.indicacion-inicial {
-        top: calc(var(--sv-tope-datos-movil, 136px) + 52px);
-        white-space: normal;
-        width: max-content;
-        font-size: 12px;
-    }
 }
 
 /* El velo de la portada cubre toda la foto: la regla #trail-lobby > * le ponía
@@ -3884,7 +3940,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-vis
 }
 
 /* Datos y títulos con letra redondeada y cifras de ancho fijo */
-.telemetry-linea,
+.telemetry-alt-val,
 #hud-datos,
 .expedition-trail-name,
 .expedition-brand-sup,
@@ -3966,7 +4022,6 @@ body,
 
 /* Divisores y cajas internas */
 .telemetry-footer-row,
-.telemetry-detalle,
 .trail-metric-card,
 .preparar-content-grid > * {
     border-color: var(--sv-surface-border-subtle);
@@ -4215,7 +4270,7 @@ button,
     z-index: 0;
 }
 
-/* Sin velo: el fondo ilustrado se ve completo y el texto va sobre placas de papel crema */
+/* Sin cajas ni velo de pantalla: el fondo ilustrado se ve completo y detrás de cada bloque de texto va un difuminado suave y un halo en las letras */
 #trail-lobby.portada--ilustrada > .hero-screen-overlay {
     background: none;
 }
@@ -4226,36 +4281,41 @@ button,
     width: fit-content;
     max-width: 100%;
     box-sizing: border-box;
-    background: var(--sv-surface-panel);
-    border: var(--sv-panel-border);
-    box-shadow: var(--sv-surface-shadow);
 }
 
-.portada--ilustrada .hero-brand-title {
-    padding: 4px 28px 12px;
-    border-radius: var(--sv-radius-lg);
-}
-
-.portada--ilustrada .hero-brand-tagline {
-    padding: 8px 22px;
-    border-radius: var(--sv-radius-full);
-}
-
+.portada--ilustrada .hero-main-content,
 .portada--ilustrada .hero-footer-content {
-    padding: 10px 22px;
-    border-radius: var(--sv-radius-lg);
+    position: relative;
+    isolation: isolate;
+}
+
+.portada--ilustrada .hero-main-content::before,
+.portada--ilustrada .hero-footer-content::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    background: var(--sv-hero-difuminado);
+}
+
+.portada--ilustrada .hero-main-content::before {
+    inset: -45% -35%;
+}
+
+.portada--ilustrada .hero-footer-content::before {
+    inset: -70% -25%;
 }
 
 .portada--ilustrada .hero-brand-sendero,
 .portada--ilustrada .hero-brand-tagline,
 .portada--ilustrada .hero-footer-slogan {
     color: var(--sv-text-primary) !important;
-    text-shadow: none;
+    text-shadow: var(--sv-hero-texto-halo);
 }
 
 .portada--ilustrada .hero-brand-vivo {
     color: var(--sv-primary-hover);
-    text-shadow: none;
+    text-shadow: var(--sv-hero-texto-halo);
 }
 
 
@@ -4320,8 +4380,6 @@ button,
 }
 
 .senderos-mapa {
-    position: sticky;
-    top: 0;
     margin: 0;
 }
 
@@ -4476,6 +4534,7 @@ button,
 }
 
 .sendero-entrar,
+.sendero-preparar,
 .senderos-cerrar,
 .senderos-volver {
     display: inline-flex;
@@ -4495,10 +4554,26 @@ button,
 }
 
 .sendero-entrar {
-    align-self: flex-start;
-    margin-top: 6px;
     background: var(--sv-primary);
     color: var(--sv-text-inverse);
+}
+
+/* Botones de la tarjeta: «Entrar al recorrido» (solo el disponible) y «Preparar la visita», abajo */
+.sendero-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 8px;
+}
+
+.sendero-preparar {
+    background: var(--sv-surface-panel);
+    color: var(--sv-text-primary);
+}
+
+.sendero-preparar .ic {
+    color: var(--sv-primary);
 }
 
 .sendero-entrar .ic {
@@ -4524,13 +4599,58 @@ button,
     font-size: 0.85rem;
 }
 
-@media (max-width: 640px) {
+/* Escritorio: la pantalla llena el alto sin scroll de página. El mapa va enmarcado a la izquierda,
+   y las tarjetas, con su propio scroll y todas del mismo alto, a la derecha. */
+@media (min-width: 641px) {
+    .senderos {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        box-sizing: border-box;
+        height: 100dvh;
+        overflow: hidden;
+    }
+
+    .senderos[hidden] {
+        display: none;
+    }
+
     .senderos-cuerpo {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 3fr) minmax(380px, 2fr);
+        align-items: stretch;
+        min-height: 0;
     }
 
     .senderos-mapa {
-        position: static;
+        container-type: size;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--sv-surface-panel);
+        border: var(--sv-panel-border);
+        border-radius: var(--sv-radius-lg);
+    }
+
+    .senderos-mapa-dibujo {
+        width: min(calc(100cqw - 32px), calc((100cqh - 56px) * 1280 / 723));
+        max-width: none;
+    }
+
+    .senderos-sectores {
+        min-height: 0;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    .sendero-tarjeta {
+        box-sizing: border-box;
+        min-height: var(--sv-sendero-tarjeta-alto);
+    }
+}
+
+@media (max-width: 640px) {
+    .senderos-cuerpo {
+        grid-template-columns: 1fr;
     }
 
     .senderos-tarjetas {
@@ -4540,4 +4660,32 @@ button,
     .senderos-volver {
         display: none;
     }
+}
+
+/* Preparar visita de cada sendero: cifras solo en los disponibles y listas de texto */
+#preparar-visita-modal [hidden] {
+    display: none !important;
+}
+
+.preparar-sin-cifras {
+    margin: 0 0 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--sv-text-muted);
+}
+
+.preparar-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--sv-text-muted);
+}
+
+.preparar-lista strong {
+    color: var(--sv-text-primary);
 }

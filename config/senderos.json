@@ -2,6 +2,70 @@
   "version": 1,
   "nota": "Los senderos de la EAAB en los Cerros Orientales de Bogotá, por sector. Sumar un sendero es agregar una entrada, sin tocar código (RNF-009). El mapa es la ilustración assets/ilustraciones/selector-mapa.webp, un esquema sin escala ni coordenadas reales: mapa.x y mapa.y van de 0 a 1 y son el lugar del punto sobre esa imagen (x desde el borde izquierdo, y desde el de arriba). Se midieron a ojo sobre la imagen de 1280 por 723 px, con el norte arriba, la ciudad a la izquierda y los cerros al centro: los del sector Norte arriba, los del Centro en medio y el Sur abajo, con el Humedal Córdoba en la parte urbana de arriba a la izquierda, porque es un humedal de la ciudad. Solo ordenan los puntos en el dibujo; no son la ubicación exacta de ningún sendero. Los senderos «proximamente» no llevan distancia, duración, desnivel ni dificultad porque las fuentes no los dan: no se inventan. La lista sale de la página de senderos de la EAAB, el boletín de reapertura de octubre de 2024 y la reapertura de marzo de 2025 reportada por Infobae; falta que el Acueducto confirme la lista vigente.",
   "reservaNota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales",
+  "visitaGeneral": {
+    "revisado": false,
+    "antesDeSalir": [
+      {
+        "titulo": "Reserva confirmada",
+        "texto": "Todos los senderos exigen reserva previa en la app Caminos de los Cerros Orientales o en la página del Acueducto. Ten a mano el correo de confirmación de cada persona inscrita.",
+        "obligatorio": true,
+        "fuente": "https://bogota.gov.co/mi-ciudad/habitat/pasos-para-agendar-cita-y-visitar-los-senderos-ecologicos-en-bogota"
+      },
+      {
+        "titulo": "Agua",
+        "texto": "Lleva agua en un termo o una botella reutilizable para todo el recorrido.",
+        "obligatorio": false,
+        "fuente": "https://bogota.gov.co/en/node/179876"
+      },
+      {
+        "titulo": "Calzado con agarre",
+        "texto": "Botas o tenis con labrado: la piedra y el barro de los caminos se ponen resbalosos con la lluvia.",
+        "obligatorio": false
+      },
+      {
+        "titulo": "Chaqueta impermeable",
+        "texto": "En los cerros el clima cambia rápido: lleva una capa de abrigo que aguante la lluvia, aunque salgas con sol.",
+        "obligatorio": false
+      }
+    ],
+    "reglas": [
+      {
+        "titulo": "Ingreso",
+        "texto": "En la entrada, el personal del sendero pide el correo de confirmación de todas las personas inscritas.",
+        "fuente": "https://bogota.gov.co/mi-ciudad/habitat/pasos-para-agendar-cita-y-visitar-los-senderos-ecologicos-en-bogota"
+      },
+      {
+        "titulo": "Horario",
+        "texto": "El horario cambia según el sendero y la temporada, y puede haber cierres por mantenimiento. Consúltalo en la app al reservar.",
+        "fuente": "https://www.infobae.com/colombia/2024/04/11/habilitan-caminos-de-los-cerros-orientales-de-bogota-para-los-visitantes-horarios-y-recomendaciones/"
+      },
+      {
+        "titulo": "Sin mascotas",
+        "texto": "No se permite entrar con mascotas.",
+        "fuente": "https://bogota.gov.co/mi-ciudad/habitat/caminatas-ecologicas-en-senderos-de-cerro-orientales-de-bogota-2025",
+        "verificar": "La guía de la Alcaldía es de 2025; confirmar que sigue vigente."
+      },
+      {
+        "titulo": "Sin residuos",
+        "texto": "No dejes basura ni ningún otro elemento en el área natural: lo que entra contigo sale contigo.",
+        "fuente": "https://bogota.gov.co/en/node/179876"
+      }
+    ]
+  },
+  "sectores": {
+    "norte": {
+      "revisado": false,
+      "texto": "Los senderos del norte suben por el bosque de los cerros hacia sus miradores. Arriba hace más frío que en la ciudad y el clima cambia rápido, así que lleva una capa de abrigo aunque salgas con sol."
+    },
+    "centro": {
+      "revisado": false,
+      "texto": "Los senderos del centro acompañan quebradas y ríos que bajan de los cerros. Con lluvia, la piedra y el barro junto al agua se ponen resbalosos: camina despacio en las bajadas y no te salgas del camino."
+    },
+    "sur": {
+      "revisado": false,
+      "texto": "El sendero del sur sube hacia las partes altas de los cerros, donde puede haber niebla, viento y lluvia aunque en la ciudad haga sol. Lleva abrigo e impermeable."
+    }
+  },
   "senderos": [
     {
       "id": "santa-ana",
@@ -21,6 +85,24 @@
         "altitudMin": 2610,
         "altitudMax": 2678,
         "nota": "Datos de lo que se recorre en la app, medidos el 27/11/2026 sobre los trazados de config/. recorribleMetros es la suma, en las tres zonas del selector, del largo del trazado menos sus cortes (campo cuts): Cumbre 37,2 m (config/track-sendero-01.json, sin cortes), Tramo 1 72,0 m menos 16 m de cortes (56,0 m) y Tramo 2 148,7 m menos 56 m de cortes (92,7 m), en total 185,9 m. La altitud de la Cumbre sale del GPS de config/track-sendero-01.json: 2.668,6 m en el extremo de abajo, donde llega la escalera del Tramo 1, y 2.678,4 m en el de arriba. Lo que suben los tramos sale de la y de sus trazados (sceneWaypoints, en metros): el Tramo 1 sube 25,0 m hasta la Cumbre y el Tramo 2 sube 33,3 m hasta el Tramo 1, así que el punto más bajo queda en 2.610,3 m y la subida total, de 2.610 a 2.678 m, es de 68 m. Los cortes se saltan al caminar, pero su desnivel sigue contando. El tiempo de visita que muestra la portada no se guarda aquí: shell.js lo calcula a 0,5 m/s y lo redondea a 5 minutos."
+      },
+      "visita": {
+        "etiquetaEcosistema": "Circuito Bosque de Pinos y Cuenca Hídrica",
+        "descripcion": "Camino ecológico ancestral rodeado de imponentes bosques de pinos y vegetación nativa altoandina. Un sendero de pendiente amable ideal para caminatas contemplativas, avistamiento de aves andinas y conexión profunda con la naturaleza.",
+        "imagen": "assets/portada-mirador.webp",
+        "imagenMapa": "assets/portada-mirador.webp",
+        "hitos": [
+          "01 · Entrada Cl. 119",
+          "02 · Bosque Pinos",
+          "03 · Mirador Aguadora",
+          "04 · Reserva"
+        ],
+        "revisado": false,
+        "recomendacionesEquipo": [
+          "Antes de ir, recorre en Sendero Vivo la Cumbre, el Tramo 1 y el Tramo 2 para reconocer el camino y los puntos que vas a encontrar.",
+          "En las escaleras, baja despacio y con las manos libres: guarda el celular mientras caminas.",
+          "Desde el mirador se ve la ciudad: es el mejor lugar para detenerse, mirar y escuchar las aves."
+        ]
       }
     },
     {
@@ -33,7 +115,14 @@
         "y": 0.25
       },
       "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
-      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales",
+      "visita": {
+        "revisado": false,
+        "recomendacionesEquipo": [
+          "Revisa en la app el horario y el punto de ingreso de este sendero antes de salir de casa.",
+          "Lleva ropa por capas: en los cerros puedes pasar del sol a la niebla en pocos minutos."
+        ]
+      }
     },
     {
       "id": "camino-del-meta-del-indio",
@@ -45,7 +134,14 @@
         "y": 0.34
       },
       "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
-      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales",
+      "visita": {
+        "revisado": false,
+        "recomendacionesEquipo": [
+          "Lleva calzado con buen agarre: en los caminos de tierra y piedra el piso se pone resbaloso con la lluvia.",
+          "Camina por el trazado marcado y no tomes atajos: los atajos erosionan la ladera."
+        ]
+      }
     },
     {
       "id": "humedal-cordoba",
@@ -57,7 +153,15 @@
         "y": 0.14
       },
       "fuente": "Infobae, 15/03/2025: https://www.infobae.com/colombia/2025/03/16/bogota-reabre-los-senderos-de-los-cerros-orientales-con-nuevas-opciones-para-caminatas-ecologicas/",
-      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales",
+      "visita": {
+        "revisado": false,
+        "recomendacionesEquipo": [
+          "A diferencia de los otros senderos del norte, este no sube a los cerros: es un humedal dentro de la ciudad.",
+          "Camina en silencio y, si puedes, lleva binoculares: así ves las aves del humedal sin espantarlas.",
+          "No te salgas del camino: la orilla del humedal es frágil y es refugio de muchas especies."
+        ]
+      }
     },
     {
       "id": "quebrada-la-vieja",
@@ -69,7 +173,14 @@
         "y": 0.46
       },
       "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
-      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales",
+      "visita": {
+        "revisado": false,
+        "recomendacionesEquipo": [
+          "El camino acompaña la quebrada: no te metas al agua, no la ensucies y no saques plantas ni piedras.",
+          "Con lluvia, las piedras junto al agua resbalan: pisa despacio y busca dónde apoyarte."
+        ]
+      }
     },
     {
       "id": "conexion-el-granizo",
@@ -81,7 +192,14 @@
         "y": 0.62
       },
       "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
-      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales",
+      "visita": {
+        "revisado": false,
+        "recomendacionesEquipo": [
+          "Revisa en la app el horario y el punto de ingreso antes de salir: no todos los senderos abren los mismos días.",
+          "Lleva agua suficiente para la ida y la vuelta: no cuentes con conseguirla en el camino."
+        ]
+      }
     },
     {
       "id": "kilometro-11-y-doce-quebradas",
@@ -93,7 +211,14 @@
         "y": 0.52
       },
       "fuente": "EAAB, boletín del 10/10/2024: https://www.acueducto.com.co/wps/portal/EAB2/Home/general/sala-de-prensa/boletines/detalle/apertura+caminos+cerros+orientales+octubre",
-      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales",
+      "visita": {
+        "revisado": false,
+        "recomendacionesEquipo": [
+          "Como dice su nombre, el camino cruza varias quebradas: cuida el agua y no dejes nada en ella.",
+          "Al cruzar sobre piedras mojadas, pisa despacio y con las manos libres."
+        ]
+      }
     },
     {
       "id": "san-francisco-vicacha",
@@ -105,7 +230,15 @@
         "y": 0.66
       },
       "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
-      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales",
+      "visita": {
+        "revisado": false,
+        "verificar": "Confirmar que el camino va junto al río San Francisco en todo su trazado.",
+        "recomendacionesEquipo": [
+          "El camino acompaña el río San Francisco: cuida el agua, no la ensucies y no saques plantas ni piedras.",
+          "Detente un momento en silencio cerca del agua: es buen lugar para escuchar las aves."
+        ]
+      }
     },
     {
       "id": "guadalupe-aguanoso",
@@ -117,7 +250,14 @@
         "y": 0.85
       },
       "fuente": "EAAB, página de senderos: https://www.acueducto.com.co/wps/portal/EAB2/Home/ambiente/senderos",
-      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales"
+      "nota": "La visita real requiere reserva en la app Caminos de los Cerros Orientales",
+      "visita": {
+        "revisado": false,
+        "recomendacionesEquipo": [
+          "Sal temprano y lleva abrigo e impermeable: arriba el clima cambia rápido.",
+          "Lleva agua y algo de comer para todo el recorrido."
+        ]
+      }
     }
   ]
 }

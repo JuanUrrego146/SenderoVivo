@@ -475,12 +475,6 @@ function actualizarTarjetaCercana(item) {
     tarjetaCercana.classList.add('punto-cercano--visible');
 }
 
-/** La franja de datos del recorrido se despliega al tocarla (desnivel, progreso, Bitácora). */
-function alternarTelemetria(tarjeta) {
-    const abierta = tarjeta.classList.toggle('abierta');
-    tarjeta.setAttribute('aria-expanded', String(abierta));
-}
-
 /**
  * Espera hasta que el visor y la cámara real estén disponibles.
  */
@@ -1164,7 +1158,18 @@ function updateDiscoveredProgress() {
     if (elemMobile) {
         elemMobile.innerText = `${count} de ${trailData.length} puntos vistos`;
     }
+    actualizarFilaMovil();
 }
+
+/** Fila plegada de «Detalles del sendero» en celular: «N % · V de M puntos». */
+function actualizarFilaMovil() {
+    const fila = document.getElementById('hud-datos-mobile');
+    if (!fila) return;
+    const vistos = trailData.filter(x => x.discovered).length;
+    const pct = Number.isFinite(window.sendero_progreso_pct) ? window.sendero_progreso_pct : 0;
+    fila.innerText = `${pct} % · ${vistos} de ${trailData.length} puntos`;
+}
+window.actualizarFilaMovil = actualizarFilaMovil;
 
 function switchTab(tab) {
     // Los huecos de ilustración del panel (cabecera de la bitácora) se llenan cuando ya está armado.
@@ -1510,11 +1515,9 @@ function syncHudMobile(altitud, recorrido, desnivel) {
     const a = document.getElementById('hud-altitud-m');
     const r = document.getElementById('hud-recorrido-m');
     const d = document.getElementById('hud-desnivel-m');
-    const s = document.getElementById('hud-datos-mobile');
     if (a) a.innerText = altitud;
     if (r) r.innerText = recorrido;
     if (d) d.innerText = desnivel;
-    if (s) s.innerText = `${altitud} · ${recorrido}`;
 }
 
 function initRenderModelMobile() {
@@ -2005,23 +2008,6 @@ function handleSearch() {}
    PREPARAR VISITA — FICHA TÉCNICA Y REQUISITOS EAAB
    ========================================================================== */
 
-// Un solo sendero: el que recorre la app. Distancia, desnivel y tiempo salen de
-// config/senderos.json (cargarPortada), no se escriben aquí.
-const TRAILS_VISIT_DATA = {
-    'santa-ana': {
-        name: 'Sendero Santa Ana',
-        subtitle: 'Cerros Orientales de Bogotá · Localidad de Usaquén (Cl. 119)',
-        distance: '',
-        elevation: '',
-        time: '',
-        ecosystemTag: 'Circuito Bosque de Pinos y Cuenca Hídrica',
-        description: 'Camino ecológico ancestral rodeado de imponentes bosques de pinos y vegetación nativa altoandina. Un sendero de pendiente amable ideal para caminatas contemplativas, avistamiento de aves andinas y conexión profunda con la naturaleza.',
-        image: 'assets/portada-mirador.webp',
-        mapImage: 'assets/portada-mirador.webp',
-        hitos: ['01 · Entrada Cl. 119', '02 · Bosque Pinos', '03 · Mirador Aguadora', '04 · Reserva']
-    }
-};
-
 /*
  * Datos de los senderos (RNF-009): config/senderos.json trae los nueve senderos de la EAAB por
  * sector y, en el disponible, las cifras de lo que se recorre en la app con su método. Sumar un
@@ -2061,40 +2047,25 @@ function textosDelSendero(datos) {
     };
 }
 
-async function cargarPortada() {
-    try {
-        const datos = await cargarSenderos();
-        const sendero = (datos.senderos || []).find((s) => s.estado === 'disponible');
-        const textos = textosDelSendero(sendero?.datos);
-        if (!textos) throw new Error('el sendero disponible no trae cifras completas');
-        const visita = TRAILS_VISIT_DATA['santa-ana'];
-        visita.distance = textos.distancia;
-        visita.elevation = textos.desnivel;
-        visita.time = textos.tiempo;
-        const estadisticas = { 'preparar-stat-distance': visita.distance, 'preparar-stat-elevation': visita.elevation, 'preparar-stat-time': visita.time };
-        for (const [id, texto] of Object.entries(estadisticas)) {
-            const el = document.getElementById(id);
-            if (el) el.textContent = texto;
-        }
-    } catch (error) {
-        console.warn('No se pudieron leer los datos de los senderos (config/senderos.json):', error);
-    }
-}
-
 // Precarga inmediata de assets visuales WebP para evitar microstutters
 try {
     const _imgP1 = new Image(); _imgP1.src = 'assets/portada-mirador.webp';
 } catch (e) {}
 
-let currentPrepararTrailKey = 'santa-ana';
 const CHECKLIST_STORAGE_KEY = 'sv_visit_checklist_state';
+const SECTORES_NOMBRE = { norte: 'Norte', centro: 'Centro', sur: 'Sur' };
+
+/** Escapa un texto de config/senderos.json antes de ponerlo en el HTML de la ficha. */
+function escaparHTML(texto) {
+    return String(texto ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
 
 function getChecklistState() {
     try {
         const saved = localStorage.getItem(CHECKLIST_STORAGE_KEY);
         if (saved) return JSON.parse(saved);
     } catch (e) {}
-    return { 0: false, 1: false, 2: false, 3: false };
+    return {};
 }
 
 function saveChecklistState(state) {
@@ -2105,26 +2076,24 @@ function saveChecklistState(state) {
 
 function updateChecklistUI() {
     const state = getChecklistState();
+    const tarjetas = [...document.querySelectorAll('#preparar-checklist .checklist-item-card')];
+    const total = tarjetas.length;
     let checkedCount = 0;
-    const total = 4;
 
-    for (let i = 0; i < total; i++) {
+    tarjetas.forEach((card, i) => {
         const isChecked = !!state[i];
         if (isChecked) checkedCount++;
-        const card = document.getElementById(`checklist-item-${i}`);
+        card.classList.toggle('is-checked', isChecked);
         const checkIcon = document.getElementById(`checklist-icon-${i}`);
-        if (card) {
-            card.classList.toggle('is-checked', isChecked);
-        }
         if (checkIcon) {
             checkIcon.innerHTML = isChecked ? '<i class="fa-solid fa-check"></i>' : '';
         }
-    }
+    });
 
     const counter = document.getElementById('checklist-counter-badge');
     if (counter) {
         counter.innerText = `${checkedCount}/${total} listo`;
-        if (checkedCount === total) {
+        if (total > 0 && checkedCount === total) {
             counter.style.background = 'var(--sv-primary-surface)';
             counter.style.color = 'var(--sv-primary)';
             counter.style.borderColor = 'var(--sv-primary-border)';
@@ -2145,55 +2114,119 @@ function toggleChecklistItem(index) {
     updateChecklistUI();
 }
 
-function switchPrepararTrail(trailKey) {
-    if (!TRAILS_VISIT_DATA[trailKey]) return;
-    currentPrepararTrailKey = trailKey;
-    const data = TRAILS_VISIT_DATA[trailKey];
+/**
+ * Arma Preparar visita de un sendero con config/senderos.json (RNF-009): las cifras solo en los
+ * disponibles, el ecosistema y el mapa de hitos solo si el sendero los trae, el texto del sector,
+ * las recomendaciones del equipo, la lista «Antes de salir» y las reglas del Acueducto. El campo
+ * «revisado» de los textos es para Juan y el equipo: no se muestra.
+ */
+function armarPrepararVisita(sendero, datos) {
+    const visita = sendero.visita || {};
+    const general = datos.visitaGeneral || {};
+    const disponible = sendero.estado === 'disponible';
+    const poner = (id, texto) => { const el = document.getElementById(id); if (el) el.innerText = texto; };
+    const mostrar = (id, visible) => { const el = document.getElementById(id); if (el) el.hidden = !visible; };
 
-    // Actualizar botones de selector
-    document.querySelectorAll('.trail-select-pill').forEach(btn => {
-        const isSel = btn.dataset.trail === trailKey;
-        btn.classList.toggle('active', isSel);
-    });
+    poner('preparar-trail-title', sendero.nombre);
+    const sub = document.getElementById('preparar-trail-sub');
+    if (sub) {
+        sub.innerHTML = `<i class="fa-solid fa-location-dot mr-1.5" style="color: var(--sv-primary);"></i>${escaparHTML(`Sector ${SECTORES_NOMBRE[sendero.sector] || sendero.sector} · Cerros Orientales · Bogotá`)}`;
+    }
 
-    // Actualizar textos y métricas
-    const titleEl = document.getElementById('preparar-trail-title');
-    const subEl = document.getElementById('preparar-trail-sub');
-    const distEl = document.getElementById('preparar-stat-distance');
-    const elevEl = document.getElementById('preparar-stat-elevation');
-    const timeEl = document.getElementById('preparar-stat-time');
-    const ecoTagEl = document.getElementById('preparar-eco-tag');
-    const descEl = document.getElementById('preparar-eco-desc');
-    const bannerEl = document.getElementById('preparar-eco-banner');
-    const mapImgEl = document.getElementById('preparar-map-img');
-    const hitosContainer = document.getElementById('preparar-map-hitos');
+    // Cifras: solo los senderos disponibles las traen; los demás dicen que las fuentes no las publican.
+    const textos = disponible ? textosDelSendero(sendero.datos) : null;
+    mostrar('preparar-cifras', Boolean(textos));
+    mostrar('preparar-sin-cifras', !textos);
+    if (textos) {
+        poner('preparar-stat-distance', textos.distancia);
+        poner('preparar-stat-elevation', textos.desnivel);
+        poner('preparar-stat-time', textos.tiempo);
+    }
 
-    if (titleEl) titleEl.innerText = data.name;
-    if (subEl) subEl.innerHTML = `<i class="fa-solid fa-location-dot mr-1" style="color: var(--sv-primary);"></i>${data.subtitle}`;
-    if (distEl) distEl.innerText = data.distance;
-    if (elevEl) elevEl.innerText = data.elevation;
-    if (timeEl) timeEl.innerText = data.time;
-    if (ecoTagEl) ecoTagEl.innerText = data.ecosystemTag;
-    if (descEl) descEl.innerText = data.description;
-    if (bannerEl) bannerEl.style.backgroundImage = `url('${data.image}')`;
-    if (mapImgEl && data.mapImage) mapImgEl.style.backgroundImage = `url('${data.mapImage}')`;
-    if (hitosContainer && data.hitos) {
-        hitosContainer.innerHTML = data.hitos.map((h, idx) => `
-            <span class="map-waypoint-pill">
-                <span class="w-2 h-2 rounded-full ${idx % 2 === 0 ? 'bg-emerald-600' : 'bg-emerald-500'}"></span> ${h}
-            </span>
+    // Ecosistema y mapa de hitos: solo con descripción y hitos.
+    const trae = Boolean(visita.descripcion && Array.isArray(visita.hitos) && visita.hitos.length);
+    mostrar('preparar-eco-bloque', trae);
+    if (trae) {
+        poner('preparar-eco-tag', visita.etiquetaEcosistema || '');
+        poner('preparar-eco-desc', visita.descripcion);
+        const banner = document.getElementById('preparar-eco-banner');
+        if (banner && visita.imagen) banner.style.backgroundImage = `url('${visita.imagen}')`;
+        const mapa = document.getElementById('preparar-map-img');
+        if (mapa && visita.imagenMapa) mapa.style.backgroundImage = `url('${visita.imagenMapa}')`;
+        const hitos = document.getElementById('preparar-map-hitos');
+        if (hitos) {
+            hitos.innerHTML = visita.hitos.map((h, idx) => `
+                <span class="map-waypoint-pill">
+                    <span class="w-2 h-2 rounded-full ${idx % 2 === 0 ? 'bg-emerald-600' : 'bg-emerald-500'}"></span> ${escaparHTML(h)}
+                </span>
+            `).join('');
+        }
+    }
+
+    // En este sector y recomendaciones del equipo
+    const sector = datos.sectores?.[sendero.sector];
+    mostrar('preparar-sector-bloque', Boolean(sector?.texto));
+    poner('preparar-sector-texto', sector?.texto || '');
+    const recomendaciones = Array.isArray(visita.recomendacionesEquipo) ? visita.recomendacionesEquipo : [];
+    mostrar('preparar-equipo-bloque', recomendaciones.length > 0);
+    const equipo = document.getElementById('preparar-equipo-lista');
+    if (equipo) equipo.innerHTML = recomendaciones.map((r) => `<li>${escaparHTML(r)}</li>`).join('');
+
+    // Antes de salir: lista interactiva
+    const antes = Array.isArray(general.antesDeSalir) ? general.antesDeSalir : [];
+    const lista = document.getElementById('preparar-checklist');
+    if (lista) {
+        lista.innerHTML = antes.map((item, i) => `
+            <div id="checklist-item-${i}" onclick="toggleChecklistItem(${i})" class="checklist-item-card">
+                <div id="checklist-icon-${i}" class="checklist-checkbox"></div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
+                        <h4 class="text-xs sm:text-[14px] font-bold font-syne" style="color: var(--sv-text-primary);">${escaparHTML(item.titulo)}</h4>
+                        <span class="checklist-badge-obligatorio">${item.obligatorio === true ? 'Obligatorio' : 'Recomendado'}</span>
+                    </div>
+                    <p class="text-xs sm:text-[12.5px] font-medium leading-relaxed" style="color: var(--sv-text-muted);">${escaparHTML(item.texto)}</p>
+                </div>
+            </div>
         `).join('');
     }
+
+    // Reglas del Acueducto y horario
+    const reglas = Array.isArray(general.reglas) ? general.reglas : [];
+    const listaReglas = document.getElementById('preparar-reglas-lista');
+    if (listaReglas) {
+        listaReglas.innerHTML = reglas.map((r) => `<li><strong>${escaparHTML(r.titulo)}.</strong> ${escaparHTML(r.texto)}</li>`).join('');
+    }
+    const horario = reglas.find((r) => r.titulo === 'Horario');
+    poner('preparar-horario-texto', horario ? horario.texto : '');
+
+    // Pie: solo los disponibles se pueden recorrer
+    mostrar('preparar-btn-iniciar', disponible);
 }
 
-function openPrepararVisita() {
+/**
+ * Abre Preparar visita de un sendero (sin id, el sendero disponible). Va por encima de la portada y
+ * de Elegir sendero; «Volver» la cierra y deja a la vista la pantalla desde donde se abrió.
+ */
+async function openPrepararVisita(id) {
     closeBiodiversityAlbum();
     closeBottomSheet();
     closeTabPanel();
     const modal = document.getElementById('preparar-visita-modal');
     if (!modal) return;
+    let datos;
+    try {
+        datos = await cargarSenderos();
+    } catch (error) {
+        console.warn('No se pudieron leer los datos de los senderos (config/senderos.json):', error);
+        return;
+    }
+    const senderos = datos.senderos || [];
+    const sendero = senderos.find((s) => s.id === id) || senderos.find((s) => s.estado === 'disponible') || senderos[0];
+    if (!sendero) return;
+    armarPrepararVisita(sendero, datos);
     modal.classList.remove('hidden');
-    switchPrepararTrail(currentPrepararTrailKey);
+    const cuerpo = modal.querySelector('.preparar-scroll-container');
+    if (cuerpo) cuerpo.scrollTop = 0;
     updateChecklistUI();
 }
 
@@ -2206,6 +2239,8 @@ function closePrepararVisita() {
 
 function launchExplorationFromVisit() {
     closePrepararVisita();
+    // Si se abrió desde Elegir sendero, esa pantalla se cierra al entrar al recorrido.
+    if (typeof window.cerrarSenderos === 'function') window.cerrarSenderos();
     startTrailExploration(false);
 }
 
@@ -2485,7 +2520,6 @@ window.setRenderModelMobile = setRenderModelMobile;
 // Preparar Visita (Ficha Técnica & Requisitos)
 window.openPrepararVisita = openPrepararVisita;
 window.closePrepararVisita = closePrepararVisita;
-window.switchPrepararTrail = switchPrepararTrail;
 window.toggleChecklistItem = toggleChecklistItem;
 window.launchExplorationFromVisit = launchExplorationFromVisit;
 
@@ -2515,7 +2549,6 @@ window.finishOnboarding = finishOnboarding;
 
 // Los huecos de ilustración se llenan cuanto antes: el de la pantalla de carga vive solo mientras baja la escena.
 llenarHuecosDeIlustracion();
-cargarPortada();
 
 cargarCatalogo()
     .catch(error => {

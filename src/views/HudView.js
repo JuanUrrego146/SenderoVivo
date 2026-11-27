@@ -67,13 +67,23 @@ export class HudView {
             return;
         }
 
-        element.innerText =
-            `Progreso sendero · ${Math.round(percent)} %`;
+        const redondeado = Math.round(percent);
+        const texto = `Progreso del sendero · ${redondeado} %`;
 
-        const bar = this.get('carga-barra-hud');
-        if (bar) {
-            bar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+        element.innerText = texto;
+
+        const textoMovil = this.get('progreso-pct-m');
+        if (textoMovil) textoMovil.innerText = texto;
+
+        const ancho = `${Math.max(0, Math.min(100, percent))}%`;
+        for (const id of ['carga-barra-hud', 'carga-barra-hud-m']) {
+            const bar = this.get(id);
+            if (bar) bar.style.width = ancho;
         }
+
+        // La fila plegada del celular dice «N % · V de M puntos» (shell.js).
+        window.sendero_progreso_pct = redondeado;
+        if (typeof window.actualizarFilaMovil === 'function') window.actualizarFilaMovil();
     }
 
 
@@ -218,19 +228,6 @@ export class HudView {
             this.setEta(data.eta, data.nextPoi);
         }
 
-        if (
-            data.altitud !== undefined ||
-            data.recorrido !== undefined ||
-            data.restante !== undefined
-        ) {
-            const values = [
-                data.altitud,
-                data.recorrido,
-                data.restante
-            ].filter(value => value !== undefined);
-            const mobile = this.get('hud-datos-mobile');
-            if (mobile) mobile.innerText = values.join(' · ');
-        }
 
 
         if (
