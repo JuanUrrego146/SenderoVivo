@@ -4257,8 +4257,286 @@ button,
     text-shadow: none;
 }
 
-/* Las cifras del pie llevan colores en línea pensados para la foto oscura: sobre el velo crema van en tinta */
-.portada--ilustrada .hero-footer-stats,
-.portada--ilustrada .hero-footer-stats * {
-    color: var(--sv-text-primary) !important;
+
+
+/* ==========================================================================
+   ELEGIR SENDERO (src/ui/selectorSenderos.js, datos en config/senderos.json)
+   Pantalla con los senderos de la EAAB por sector: un mapa esquemático y una tarjeta por
+   sendero. Los que aún no están en la app salen apagados por token. Solo tokens.
+   ========================================================================== */
+.senderos {
+    position: fixed;
+    inset: 0;
+    z-index: 10010;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: clamp(16px, 3vw, 32px);
+    overflow-y: auto;
+    background: var(--sv-surface-inset);
+    color: var(--sv-text-primary);
+    font-family: var(--sv-font-body);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.senderos[hidden] {
+    display: none;
+}
+
+.senderos.senderos--visible {
+    opacity: 1;
+    transform: none;
+}
+
+.senderos-cabecera {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.senderos-titulo {
+    margin: 0;
+    font-family: var(--sv-font-title);
+    font-weight: var(--sv-font-weight-titulo);
+    font-size: clamp(1.5rem, 3.4vw, 2.2rem);
+    line-height: 1.1;
+}
+
+.senderos-subtitulo {
+    margin: 4px 0 0;
+    color: var(--sv-text-muted);
+    font-size: 0.95rem;
+}
+
+.senderos-cuerpo {
+    display: grid;
+    grid-template-columns: minmax(300px, 46%) 1fr;
+    gap: clamp(16px, 3vw, 28px);
+    align-items: start;
+}
+
+.senderos-mapa {
+    position: sticky;
+    top: 0;
+    margin: 0;
+}
+
+.senderos-mapa-dibujo {
+    position: relative;
+    width: 100%;
+    max-width: var(--sv-mapa-ancho-max);
+    aspect-ratio: var(--sv-mapa-proporcion);
+    margin: 0 auto;
+}
+
+.senderos-mapa-dibujo > [data-ilustracion="selector-mapa"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    margin: 0;
+}
+
+.senderos-mapa-dibujo > [data-ilustracion="selector-mapa"] img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    filter: var(--sv-ilu-sombra);
+}
+
+.senderos-punto {
+    position: absolute;
+    z-index: 3;
+    width: var(--sv-mapa-punto);
+    height: var(--sv-mapa-punto);
+    padding: 0;
+    border: var(--sv-marker-border);
+    border-radius: var(--sv-radius-full);
+    background: var(--sv-primary);
+    box-shadow: var(--sv-btn-shadow);
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.senderos-punto::after {
+    content: '';
+    position: absolute;
+    inset: -11px;
+}
+
+.senderos-punto--apagado {
+    background: var(--sv-surface-inset);
+    border: var(--sv-btn-border);
+    opacity: var(--sv-sendero-apagado-opacidad);
+}
+
+.senderos-punto.seleccionado {
+    transform: translate(-50%, -50%) scale(1.25);
+    outline: 3px solid var(--sv-secondary);
+}
+
+.senderos-mapa-pie {
+    min-height: 1.3em;
+    margin-top: 8px;
+    text-align: center;
+    color: var(--sv-text-muted);
+    font-size: 0.8rem;
+}
+
+.senderos-sectores {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.senderos-sector-nombre {
+    margin: 0 0 8px;
+    font-family: var(--sv-font-title);
+    font-weight: var(--sv-font-weight-titulo);
+    font-size: 1.1rem;
+}
+
+.senderos-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+}
+
+.sendero-tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 16px;
+    background: var(--sv-surface-panel);
+    border: var(--sv-panel-border);
+    border-radius: var(--sv-radius-lg);
+    box-shadow: var(--sv-surface-shadow);
+    cursor: pointer;
+}
+
+.sendero-tarjeta.seleccionado {
+    outline: 3px solid var(--sv-primary);
+}
+
+.sendero-tarjeta--apagado {
+    opacity: var(--sv-sendero-apagado-opacidad);
+    filter: saturate(var(--sv-sendero-apagado-saturacion));
+    cursor: default;
+}
+
+.sendero-nombre {
+    margin: 0;
+    font-family: var(--sv-font-title);
+    font-weight: var(--sv-font-weight-titulo);
+    font-size: 1.05rem;
+    line-height: 1.2;
+}
+
+.sendero-sector {
+    margin: 0;
+    color: var(--sv-text-muted);
+    font-size: 0.85rem;
+}
+
+.sendero-cifras {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 4px 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--sv-font-title);
+    font-weight: var(--sv-font-weight-titulo);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.9rem;
+}
+
+.sendero-etiqueta {
+    align-self: flex-start;
+    padding: 2px 12px;
+    border: var(--sv-btn-border);
+    border-radius: var(--sv-radius-full);
+    background: var(--sv-surface-inset);
+    font-family: var(--sv-font-title);
+    font-weight: var(--sv-font-weight-titulo);
+    font-size: 0.8rem;
+}
+
+.sendero-nota {
+    margin: 0;
+    color: var(--sv-text-muted);
+    font-size: 0.8rem;
+    line-height: 1.35;
+}
+
+.sendero-entrar,
+.senderos-cerrar,
+.senderos-volver {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 18px;
+    border: var(--sv-btn-border);
+    border-radius: var(--sv-radius-full);
+    box-shadow: var(--sv-btn-shadow);
+    font-family: var(--sv-font-title);
+    font-weight: var(--sv-font-weight-titulo);
+    white-space: nowrap;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.sendero-entrar {
+    align-self: flex-start;
+    margin-top: 6px;
+    background: var(--sv-primary);
+    color: var(--sv-text-inverse);
+}
+
+.sendero-entrar .ic {
+    color: inherit;
+}
+
+.senderos-cerrar,
+.senderos-volver {
+    background: var(--sv-surface-panel);
+    color: var(--sv-text-primary);
+}
+
+.senderos-volver {
+    min-height: 36px;
+    padding: 0 14px;
+    backdrop-filter: blur(var(--sv-panel-blur));
+    -webkit-backdrop-filter: blur(var(--sv-panel-blur));
+}
+
+.senderos-pie {
+    margin: 0;
+    color: var(--sv-text-muted);
+    font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+    .senderos-cuerpo {
+        grid-template-columns: 1fr;
+    }
+
+    .senderos-mapa {
+        position: static;
+    }
+
+    .senderos-tarjetas {
+        grid-template-columns: 1fr;
+    }
+
+    .senderos-volver {
+        display: none;
+    }
 }

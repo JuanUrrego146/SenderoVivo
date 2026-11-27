@@ -1,9 +1,0 @@
-{
-  "version": 1,
-  "nombre": "Sendero Santa Ana",
-  "recorribleMetros": 186,
-  "subidaMetros": 68,
-  "altitudMin": 2610,
-  "altitudMax": 2678,
-  "nota": "Datos de lo que se recorre en la app, medidos el 27/11/2026 sobre los trazados de config/. recorribleMetros es la suma, en las tres zonas del selector, del largo del trazado menos sus cortes (campo cuts): Cumbre 37,2 m (config/track-sendero-01.json, sin cortes), Tramo 1 72,0 m menos 16 m de cortes (56,0 m) y Tramo 2 148,7 m menos 56 m de cortes (92,7 m), en total 185,9 m. La altitud de la Cumbre sale del GPS de config/track-sendero-01.json: 2.668,6 m en el extremo de abajo, donde llega la escalera del Tramo 1, y 2.678,4 m en el de arriba. Lo que suben los tramos sale de la y de sus trazados (sceneWaypoints, en metros): el Tramo 1 sube 25,0 m hasta la Cumbre y el Tramo 2 sube 33,3 m hasta el Tramo 1, así que el punto más bajo queda en 2.610,3 m y la subida total, de 2.610 a 2.678 m, es de 68 m. Los cortes se saltan al caminar, pero su desnivel sigue contando. El tiempo de visita que muestra la portada no se guarda aquí: shell.js lo calcula a 0,5 m/s y lo redondea a 5 minutos."
-}

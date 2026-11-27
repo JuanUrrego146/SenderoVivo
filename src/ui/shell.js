@@ -2004,7 +2004,7 @@ function handleSearch() {}
    ========================================================================== */
 
 // Un solo sendero: el que recorre la app. Distancia, desnivel y tiempo salen de
-// config/portada.json (cargarPortada), no se escriben aquí.
+// config/senderos.json (cargarPortada), no se escriben aquí.
 const TRAILS_VISIT_DATA = {
     'santa-ana': {
         name: 'Sendero Santa Ana',
@@ -2021,45 +2021,61 @@ const TRAILS_VISIT_DATA = {
 };
 
 /*
- * Datos de la portada (RF-001): lo que se recorre en la app, medido sobre los trazados y
- * guardado en config/portada.json con su método. El tiempo de visita se calcula a 0,5 m/s
- * y se redondea a 5 minutos.
+ * Datos de los senderos (RNF-009): config/senderos.json trae los nueve senderos de la EAAB por
+ * sector y, en el disponible, las cifras de lo que se recorre en la app con su método. Sumar un
+ * sendero es agregar una entrada. El tiempo de visita se calcula a 0,5 m/s y se redondea a 5
+ * minutos. La portada es general y no lleva cifras de un sendero: las ve quien elige el sendero.
  */
-const PORTADA_URL = 'config/portada.json';
+const SENDEROS_URL = 'config/senderos.json';
+let promesaSenderos = null;
+
+function cargarSenderos() {
+    if (!promesaSenderos) {
+        promesaSenderos = fetch(SENDEROS_URL).then((respuesta) => {
+            if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+            return respuesta.json();
+        });
+    }
+    return promesaSenderos;
+}
+
+/** Textos de las cifras de un sendero disponible (null si no trae cifras completas). */
+function textosDelSendero(datos) {
+    const metros = Number(datos?.recorribleMetros);
+    const subida = Number(datos?.subidaMetros);
+    const minimo = Number(datos?.altitudMin);
+    const maximo = Number(datos?.altitudMax);
+    if (![metros, subida, minimo, maximo].every(Number.isFinite)) return null;
+    const cifra = (n) => n.toLocaleString('es-CO', { maximumFractionDigits: 0 });
+    const minutos = Math.max(5, Math.round(metros / 0.5 / 60 / 5) * 5);
+    return {
+        recorrido: `${cifra(metros)} m recorribles`,
+        subida: `+${cifra(subida)} m de subida`,
+        altitud: `${cifra(minimo)} a ${cifra(maximo)} m de altitud`,
+        visita: `Unos ${minutos} minutos de visita`,
+        distancia: `${cifra(metros)} m`,
+        desnivel: `+${cifra(subida)} m`,
+        tiempo: `unos ${minutos} min`
+    };
+}
 
 async function cargarPortada() {
     try {
-        const respuesta = await fetch(PORTADA_URL);
-        if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
-        const datos = await respuesta.json();
-        const metros = Number(datos.recorribleMetros);
-        const subida = Number(datos.subidaMetros);
-        const minimo = Number(datos.altitudMin);
-        const maximo = Number(datos.altitudMax);
-        if (![metros, subida, minimo, maximo].every(Number.isFinite)) throw new Error('faltan cifras');
-        const cifra = (n) => n.toLocaleString('es-CO', { maximumFractionDigits: 0 });
-        const minutos = Math.max(5, Math.round(metros / 0.5 / 60 / 5) * 5);
-        const textos = {
-            tecnica: `Unos ${minutos} minutos de visita`,
-            recorrido: `${cifra(metros)} m recorribles`,
-            subida: `+${cifra(subida)} m de subida`,
-            altitud: `${cifra(minimo)} a ${cifra(maximo)} m de altitud`
-        };
-        document.querySelectorAll('[data-portada]').forEach((el) => {
-            const texto = textos[el.dataset.portada];
-            if (texto) el.textContent = texto;
-        });
+        const datos = await cargarSenderos();
+        const sendero = (datos.senderos || []).find((s) => s.estado === 'disponible');
+        const textos = textosDelSendero(sendero?.datos);
+        if (!textos) throw new Error('el sendero disponible no trae cifras completas');
         const visita = TRAILS_VISIT_DATA['santa-ana'];
-        visita.distance = `${cifra(metros)} m`;
-        visita.elevation = `+${cifra(subida)} m`;
-        visita.time = `unos ${minutos} min`;
+        visita.distance = textos.distancia;
+        visita.elevation = textos.desnivel;
+        visita.time = textos.tiempo;
         const estadisticas = { 'preparar-stat-distance': visita.distance, 'preparar-stat-elevation': visita.elevation, 'preparar-stat-time': visita.time };
         for (const [id, texto] of Object.entries(estadisticas)) {
             const el = document.getElementById(id);
             if (el) el.textContent = texto;
         }
     } catch (error) {
-        console.warn('No se pudieron leer los datos de la portada (config/portada.json):', error);
+        console.warn('No se pudieron leer los datos de los senderos (config/senderos.json):', error);
     }
 }
 
@@ -2392,9 +2408,11 @@ function initLobby() {
     const btnBiodiversity = document.getElementById('btn-hero-biodiversity');
 
     if (btnExplore) {
+        // La portada es general: «Explorar los senderos» lleva a Elegir sendero, y de ahí se entra al recorrido.
         const handleExplore = (e) => {
             if (e.type === 'touchend') e.preventDefault();
-            startTrailExploration(false);
+            if (typeof mostrarSenderos === 'function') mostrarSenderos();
+            else startTrailExploration(false);
         };
         btnExplore.addEventListener('click', handleExplore);
         btnExplore.addEventListener('touchend', handleExplore, { passive: false });

@@ -288,9 +288,6 @@
                     <i class="fa-solid fa-location-dot"></i>
                     <span>Cerros Orientales de Bogotá</span>
                 </div>
-                <div class="hero-pill-tech">
-                    <span data-portada="tecnica">Recorrido en 3D</span>
-                </div>
             </header>
 
             <!-- Bloque Central Izquierdo: Título y Acciones -->
@@ -302,13 +299,13 @@
                 <p class="hero-brand-tagline">Naturaleza que nos conecta</p>
 
                 <div class="hero-cta-group">
-                    <button id="btn-hero-explore" class="hero-btn-primary" type="button" onclick="startTrailExploration(false)" aria-label="Explorar el sendero">
-                        <span>Explorar el sendero</span>
+                    <button id="btn-hero-explore" class="hero-btn-primary" type="button" aria-label="Explorar los senderos">
+                        <span>Explorar los senderos</span>
                         <span class="hero-arrow">→</span>
                     </button>
                     <button id="btn-hero-visit" class="hero-btn-secondary" type="button" onclick="openPrepararVisita()" aria-label="Preparar visita al sendero">
                         <i class="fa-solid fa-clipboard-check"></i>
-                        <span>Preparar Visita</span>
+                        <span>Preparar la visita</span>
                     </button>
                     <button id="btn-hero-biodiversity" class="hero-btn-secondary" type="button" onclick="openBiodiversityAlbum()" aria-label="Ver álbum de biodiversidad">
                         <i class="fa-solid fa-leaf"></i>
@@ -321,19 +318,15 @@
             <footer class="hero-bottom-footer">
                 <div class="hero-bottom-divider"></div>
                 <div class="hero-footer-content">
-                    <div class="hero-footer-stats" style="font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700;">
-                        <span data-portada="recorrido" class="hero-stat-highlight" style="font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700; color: var(--sv-primary-hover);"></span>
-                        <span class="hero-stat-sep">·</span>
-                        <span data-portada="subida" class="hero-stat-highlight" style="font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700; color: var(--sv-primary-hover);"></span>
-                        <span class="hero-stat-sep">·</span>
-                        <span data-portada="altitud" class="hero-stat-time" style="font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700; color: var(--sv-surface-solid);"></span>
-                    </div>
                     <div class="hero-footer-slogan" style="font-family: var(--sv-font-display); font-style: var(--sv-font-style-acento); font-weight: 700; color: var(--sv-primary-hover);">
                         Buenos senderos, mejores personas
                     </div>
                 </div>
             </footer>
         </div>
+
+        <!-- ============ ELEGIR SENDERO: los senderos de la EAAB por sector (config/senderos.json) ============ -->
+        <section id="senderos-lista" class="senderos" role="dialog" aria-modal="true" aria-labelledby="senderos-titulo" hidden></section>
 
         <!-- Cierre del recorrido: pantalla propia, todavía sin contenido; espera su ilustración -->
         <section id="cierre-recorrido" hidden>
@@ -703,7 +696,7 @@
             <!-- ============ BARRA DE COMANDO SUPERIOR (HORIZON COMMAND BAR - PC) ============ -->
             <header id="expedition-top-bar">
                 <div class="command-bar-left">
-                    <button class="expedition-badge-trigger" onclick="openTrailLobby()" title="Ficha técnica del sendero y detalles">
+                    <button class="expedition-badge-trigger" onclick="abrirSenderos()" title="Elegir sendero">
                         <div class="expedition-badge-icon">
                             <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#monte"/></svg>
                         </div>
@@ -711,6 +704,10 @@
                             <span class="expedition-brand-sup">Cerros Orientales · Bogotá</span>
                             <h2 class="expedition-trail-name">Sendero Santa Ana</h2>
                         </div>
+                    </button>
+                    <button type="button" class="senderos-volver" onclick="abrirSenderos()">
+                        <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#sendero"/></svg>
+                        <span>Elegir sendero</span>
                     </button>
                 </div>
 
@@ -740,7 +737,7 @@
                     </script>
 
                     <div class="command-actions-cluster">
-                        <button onclick="openTrailLobby()" class="command-icon-btn" title="Ficha del sendero">
+                        <button onclick="abrirSenderos()" class="command-icon-btn" aria-label="Elegir sendero" title="Elegir sendero">
                             <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#monte"/></svg>
                         </button>
                         <button onclick="openOnboarding(true)" class="command-icon-btn" title="Tutorial de interacción">
@@ -753,7 +750,7 @@
             <!-- ============ BARRA SUPERIOR MÓVIL (MINIMALISTA) ============ -->
             <header id="mobile-top-bar">
                 <div class="mobile-top-main">
-                    <button class="mobile-brand-pill" onclick="openTrailLobby()" title="Información del sendero">
+                    <button class="mobile-brand-pill" onclick="abrirSenderos()" title="Elegir sendero">
                         <div class="mobile-brand-icon">
                             <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#monte"/></svg>
                         </div>
@@ -766,8 +763,8 @@
                         <button id="btn-ambient-audio-toggle-m" onclick="toggleAmbientAudio()" class="mobile-action-icon" aria-label="Sonido ambiental" title="Activar / Silenciar sonido de bosque">
                             <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#sonido"/></svg>
                         </button>
-                        <button onclick="openTrailLobby()" class="mobile-action-icon" aria-label="Información del sendero" title="Ficha técnica">
-                            <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#ayuda"/></svg>
+                        <button onclick="abrirSenderos()" class="mobile-action-icon" aria-label="Elegir sendero" title="Elegir sendero">
+                            <svg class="ic" aria-hidden="true"><use href="assets/ilustraciones/iconos.svg#sendero"/></svg>
                         </button>
                     </div>
                 </div>
@@ -953,5 +950,6 @@
         <script type="module" src="src/ui/conexionesSendero.js"></script>
         <script type="module" src="src/ui/acomodoMovil.js"></script>
         <script src="src/ui/shell.js" defer></script>
+        <script src="src/ui/selectorSenderos.js" defer></script>
     </body>
 </html>

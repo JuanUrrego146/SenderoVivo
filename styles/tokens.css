@@ -128,8 +128,14 @@
     /* ── Huecos de ilustración (pantallas propias: portada, elegir sendero, carga, álbum, bitácora y cierre) ──
        Tamaño de cada hueco en escritorio y, más abajo, en celular. Donde se ve la escena o un modelo 3D no hay huecos. ── */
     --sv-ilu-sombra: drop-shadow(2px 2px 0 rgba(28, 40, 30, 0.28));
-    --sv-hueco-selector-mapa-ancho: 560px;
-    --sv-hueco-selector-mapa-alto: 360px;
+    --sv-hueco-selector-mapa-ancho: 100%;
+    --sv-hueco-selector-mapa-alto: 100%;
+    --sv-mapa-proporcion: 1280 / 723;
+    --sv-mapa-ancho-max: 640px;
+    --sv-mapa-punto: 22px;
+    /* ── Elegir sendero: senderos apagados («Próximamente») ── */
+    --sv-sendero-apagado-opacidad: 0.7;
+    --sv-sendero-apagado-saturacion: 0.55;
     --sv-hueco-carga-ancho: 240px;
     --sv-hueco-carga-alto: 240px;
     --sv-hueco-cabecera-proporcion: 4.2 / 1;
@@ -269,7 +275,8 @@
 @media (max-width: 639px) {
     :root {
         --sv-hueco-selector-mapa-ancho: 100%;
-        --sv-hueco-selector-mapa-alto: 240px;
+        --sv-hueco-selector-mapa-alto: 100%;
+        --sv-mapa-punto: 20px;
         --sv-hueco-carga-ancho: 160px;
         --sv-hueco-carga-alto: 160px;
         --sv-hueco-cabecera-alto-min: 120px;
